@@ -31,8 +31,8 @@
 		<!--  ANTLR model checker -->
 		<dependency>
 			<groupId>org.antlr</groupId>
-			<artifactId>antlr4</artifactId>
-			<version>4.5</version>
+			<artifactId>antlr4-runtime</artifactId>
+			<version>4.7</version>
 		</dependency>
 				  
   	</dependencies>
