@@ -1,9 +1,8 @@
-package main;
+package main.java.uuv.parser;
 
 import auxiliary.DSLException;
 import auxiliary.Utility;
 import org.antlr.v4.runtime.*;
-import org.antlr.v4.runtime.misc.Nullable;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import uuv.dsl.UUVListener;
@@ -101,8 +100,8 @@ public class ParserEngine {
         BaseErrorListener errorListener = new BaseErrorListener() {
 
             @Override
-            public void syntaxError(Recognizer<?, ?> recognizer, @Nullable Object offendingSymbol, int line,
-                                    int charPositionInLine, String msg, @Nullable RecognitionException e) {
+            public void syntaxError(Recognizer<?, ?> recognizer, Object offendingSymbol, int line,
+                                    int charPositionInLine, String msg, RecognitionException e) {
                 //Print the syntax error 
                 System.out.printf("\t%s at (%d, %d)%n", msg, line, charPositionInLine);
             }
@@ -144,6 +143,7 @@ public class ParserEngine {
         ParseTreeWalker walker = new ParseTreeWalker();
         // Create a listener
         UUVListener listener = new UUVListener();
+
         // Walk the tree created during the parse, trigger callbacks
         walker.walk(listener, tree);
 

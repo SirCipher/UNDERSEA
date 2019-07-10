@@ -113,7 +113,7 @@
 	                <transformers>
 	                    <transformer
 	                        implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-							<mainClass>main.ParserEngine</mainClass>
+							<mainClass>main.java.uuv.parser.ParserEngine</mainClass>
 	                    </transformer>
 	                </transformers>
 	            </configuration>

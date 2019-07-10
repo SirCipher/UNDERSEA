@@ -2,7 +2,10 @@ package uuv.properties;
 
 import auxiliary.DSLException;
 import auxiliary.Utility;
-import main.ParserEngine;
+import main.java.uuv.parser.ParserEngine;
+import uuv.dsl.model.Range;
+import uuv.dsl.model.Sensor;
+import uuv.dsl.model.UUV;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -146,7 +149,7 @@ public class UUVproperties {
 
         //generate sensors moos files
         for (Sensor sensor : sensorsMap.values()) {
-            String filename = ParserEngine.missionDir + "/plug_" + sensor.name + ".moos";
+            String filename = ParserEngine.missionDir + "/plug_" + sensor.getName() + ".moos";
             Utility.exportToFile(filename, sensor.toString(), false);
         }
 
@@ -290,189 +293,7 @@ public class UUVproperties {
     }
 
 
-    class UUV {
-        /**
-         * name
-         */
-        private String name;
 
-        /**
-         * name
-         */
-        private String rate;
-
-        /**
-         * port
-         */
-        private String port;
-
-        /**
-         * speed range
-         */
-        private Range speedRange;
-
-
-        public UUV(String name, String port, double min, double max, int steps) {
-            this.name = name;
-            this.port = port;
-            this.speedRange = new Range(min, max, steps + 1);
-            this.rate = "4";
-        }
-
-
-        public String getName() {
-            return this.name;
-        }
-
-
-        public String getPort() {
-            return this.port;
-        }
-
-
-        public double getSpeedMax() {
-            return speedRange.max;
-        }
-
-
-        public double getSpeedMin() {
-            return speedRange.min;
-        }
-
-
-        public int getSpeedSteps() {
-            return (int) speedRange.value;
-        }
-
-
-        public String toString() {
-            StringBuilder str = new StringBuilder();
-            str.append("//------------------------------------------\n");
-            str.append("// sUUV config block\n");
-            str.append("//------------------------------------------\n");
-            str.append("ProcessConfig = " + name + "\n");
-            str.append("{\n");
-            str.append("\t AppTick = " + rate + "\n");
-            str.append("\t CommsTick = " + rate + "\n");
-            str.append("\t MAX_APPCAST_EVENTS = 25 \n");
-            str.append("\t NAME = " + name + "\n");
-            str.append("\t PORT = " + port + "\n");
-
-            String sensorsStr = "";
-            Iterator<String> iterator = sensorsMap.keySet().iterator();
-            while (iterator.hasNext()) {
-                sensorsStr += iterator.next();
-                if (iterator.hasNext())
-                    sensorsStr += ",";
-            }
-            str.append("\t SENSORS = " + sensorsStr + "\n");
-
-            str.append("}\n\n");
-
-            return str.toString();
-        }
-    }
-
-
-    class Sensor {
-        /**
-         * name
-         */
-        private String name;
-
-        /**
-         * rate
-         */
-        private double rate;
-
-        /**
-         * reliability
-         */
-        private double reliability;
-
-        /**
-         * changes list
-         */
-        private List<Range> changesList;
-
-
-        public Sensor(String name, double rate, double reliability) {
-            this.name = name;
-            this.rate = rate;
-            this.reliability = reliability;
-            this.changesList = new ArrayList<Range>();
-        }
-
-
-        protected void addChange(Range change) {
-            changesList.add(change);
-        }
-
-
-        protected String getName() {
-            return this.name;
-        }
-
-
-        protected double getRate() {
-            return this.rate;
-        }
-
-
-        protected double getReliability() {
-            return this.reliability;
-        }
-
-
-        public String toString() {
-            StringBuilder str = new StringBuilder();
-            str.append("//------------------------------------------\n");
-            str.append("// sSensor config block\n");
-            str.append("//------------------------------------------\n");
-            str.append("ProcessConfig = " + name + "\n");
-            str.append("{\n");
-            str.append("\t AppTick = " + rate + "\n");
-            str.append("\t CommsTick = " + rate + "\n");
-            str.append("\t MAX_APPCAST_EVENTS = 25 \n");
-            str.append("\t NAME = " + name + "\n");
-            str.append("\t RELIABILITY = " + reliability + "\n");
-            for (Range d : changesList) {
-                str.append("\t CHANGE = " + d.toString() + "\n");
-            }
-            str.append("}\n");
-
-            return str.toString();
-        }
-
-    }
-
-
-    class Range {
-        /**
-         * begin
-         */
-        private double min;
-
-        /**
-         * end
-         */
-        private double max;
-
-        /**
-         * percentage
-         */
-        private Number value;
-
-        public Range(double min, double max, Number value) {
-            this.min = min;
-            this.max = max;
-            this.value = value;
-        }
-
-        public String toString() {
-            return min + ":" + max + ":" + value;
-        }
-    }
 }
 
 

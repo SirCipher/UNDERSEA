@@ -1,6 +1,6 @@
 package auxiliary;
 
-import main.ParserEngine;
+import main.java.uuv.parser.ParserEngine;
 
 import java.io.*;
 import java.nio.channels.FileChannel;

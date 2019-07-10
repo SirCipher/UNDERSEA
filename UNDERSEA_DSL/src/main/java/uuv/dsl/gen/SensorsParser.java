@@ -119,6 +119,11 @@ public class SensorsParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof SensorsListener ) ((SensorsListener)listener).exitModel(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof SensorsVisitor ) return ((SensorsVisitor<? extends T>)visitor).visitModel(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final ModelContext model() throws RecognitionException {
@@ -204,6 +209,11 @@ public class SensorsParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof SensorsListener ) ((SensorsListener)listener).exitSensor(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof SensorsVisitor ) return ((SensorsVisitor<? extends T>)visitor).visitSensor(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -347,6 +357,11 @@ public class SensorsParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof SensorsListener ) ((SensorsListener)listener).exitChange(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof SensorsVisitor ) return ((SensorsVisitor<? extends T>)visitor).visitChange(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 

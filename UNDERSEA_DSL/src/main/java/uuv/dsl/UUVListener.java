@@ -3,7 +3,6 @@ package uuv.dsl;
 import auxiliary.DSLException;
 import uuv.dsl.gen.UUVBaseListener;
 import uuv.dsl.gen.UUVParser;
-import uuv.dsl.gen.UUVParser.ChangeContext;
 import uuv.properties.UUVproperties;
 
 public class UUVListener extends UUVBaseListener {
@@ -82,36 +81,6 @@ public class UUVListener extends UUVBaseListener {
             System.err.println("ERROR (l:" + ctx.value.getLine() + ")\t" + e.getMessage());
         }
 
-    }
-
-
-    @Override
-    public void enterSensor(UUVParser.SensorContext ctx) {
-//		System.out.println(ctx.getText());
-        try {
-            String name = ctx.name.getText();
-            double reliability = Double.parseDouble(ctx.reliability.getText());
-            double rate = Double.parseDouble(ctx.rate.getText());
-
-            properties.setSensor(name, rate, reliability);
-
-            for (ChangeContext d : ctx.change()) {
-                double begin = Double.parseDouble(d.begin.getText());
-                double end = Double.parseDouble(d.end.getText());
-                double percentage = Double.parseDouble(d.value.getText());
-
-                properties.setChange(name, begin, end, percentage);
-
-            }
-
-            //		System.out.println( 	name +"\n"
-            //							+ 	reliability +"\n"
-            //							+ 	rate +"\n"
-            //							+	Arrays.toString(degradationList.toArray())
-            //						  );
-        } catch (DSLException e) {
-            System.err.println("ERROR (l:" + (ctx.name.getLine() - 1) + ")\t" + e.getMessage());
-        }
     }
 
 

@@ -52,7 +52,7 @@ uuv:
 				NAME ASSIGN name=ID
 			|	SPEED ASSIGN min=(INT | DOUBLE) ':' max=(INT | DOUBLE) ':' steps=INT
 			|	SERVER_PORT ASSIGN value=INT
-			|   SENSOR ASSIGN sensors=ID+
+			|   SENSOR ASSIGN sensors=ID (',' ID)*
 			)+
 		'}'
 ;

@@ -20,10 +20,10 @@ public class UUVParser extends Parser {
 	protected static final PredictionContextCache _sharedContextCache =
 		new PredictionContextCache();
 	public static final int
-		T__0=1, T__1=2, T__2=3, T__3=4, T__4=5, ASSIGN=6, SERVER_HOST=7, SERVER_PORT=8, 
-		SIMULATION_TIME=9, TIME_WINDOW=10, SIMULATION_SPEED=11, SPEED=12, SENSOR=13, 
-		NAME=14, RATE=15, CHANGE=16, RELIABILITY=17, SLCOMMENT=18, ID=19, INT=20, 
-		DOUBLE=21, IP=22, OCTET=23, STRING=24, WS=25;
+		T__0=1, T__1=2, T__2=3, T__3=4, T__4=5, T__5=6, ASSIGN=7, SERVER_HOST=8, 
+		SERVER_PORT=9, SIMULATION_TIME=10, TIME_WINDOW=11, SIMULATION_SPEED=12, 
+		SPEED=13, SENSOR=14, NAME=15, RATE=16, CHANGE=17, RELIABILITY=18, SLCOMMENT=19, 
+		ID=20, INT=21, DOUBLE=22, IP=23, OCTET=24, STRING=25, WS=26;
 	public static final int
 		RULE_model = 0, RULE_simulation = 1, RULE_invocation = 2, RULE_host = 3, 
 		RULE_port = 4, RULE_speed = 5, RULE_uuv = 6;
@@ -36,15 +36,15 @@ public class UUVParser extends Parser {
 
 	private static String[] makeLiteralNames() {
 		return new String[] {
-			null, "'localhost'", "'UUV'", "'{'", "':'", "'}'", "'='", "'host'", "'port'", 
-			"'simulation time'", "'time window'", "'simulation speed'", "'speed'", 
-			"'sensor'", "'name'", "'rate'", "'change'", "'reliability'"
+			null, "'localhost'", "'UUV'", "'{'", "':'", "','", "'}'", "'='", "'host'", 
+			"'port'", "'simulation time'", "'time window'", "'simulation speed'", 
+			"'speed'", "'sensor'", "'name'", "'rate'", "'change'", "'reliability'"
 		};
 	}
 	private static final String[] _LITERAL_NAMES = makeLiteralNames();
 	private static String[] makeSymbolicNames() {
 		return new String[] {
-			null, null, null, null, null, null, "ASSIGN", "SERVER_HOST", "SERVER_PORT", 
+			null, null, null, null, null, null, null, "ASSIGN", "SERVER_HOST", "SERVER_PORT", 
 			"SIMULATION_TIME", "TIME_WINDOW", "SIMULATION_SPEED", "SPEED", "SENSOR", 
 			"NAME", "RATE", "CHANGE", "RELIABILITY", "SLCOMMENT", "ID", "INT", "DOUBLE", 
 			"IP", "OCTET", "STRING", "WS"
@@ -504,12 +504,12 @@ public class UUVParser extends Parser {
 			match(T__1);
 			setState(43);
 			match(T__2);
-			setState(64); 
+			setState(67); 
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			do {
 				{
-				setState(64);
+				setState(67);
 				_errHandler.sync(this);
 				switch (_input.LA(1)) {
 				case NAME:
@@ -574,32 +574,36 @@ public class UUVParser extends Parser {
 					match(SENSOR);
 					setState(58);
 					match(ASSIGN);
-					setState(60); 
+					setState(59);
+					((UuvContext)_localctx).sensors = match(ID);
+					setState(64);
 					_errHandler.sync(this);
 					_la = _input.LA(1);
-					do {
+					while (_la==T__4) {
 						{
 						{
-						setState(59);
-						((UuvContext)_localctx).sensors = match(ID);
+						setState(60);
+						match(T__4);
+						setState(61);
+						match(ID);
 						}
 						}
-						setState(62); 
+						setState(66);
 						_errHandler.sync(this);
 						_la = _input.LA(1);
-					} while ( _la==ID );
+					}
 					}
 					break;
 				default:
 					throw new NoViableAltException(this);
 				}
 				}
-				setState(66); 
+				setState(69); 
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 			} while ( (((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << SERVER_PORT) | (1L << SPEED) | (1L << SENSOR) | (1L << NAME))) != 0) );
-			setState(68);
-			match(T__4);
+			setState(71);
+			match(T__5);
 			}
 		}
 		catch (RecognitionException re) {
@@ -614,25 +618,26 @@ public class UUVParser extends Parser {
 	}
 
 	public static final String _serializedATN =
-		"\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3\33I\4\2\t\2\4\3\t"+
+		"\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3\34L\4\2\t\2\4\3\t"+
 		"\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7\4\b\t\b\3\2\3\2\3\2\3\2\3\2\3\2\5\2"+
 		"\27\n\2\3\3\3\3\3\3\3\3\3\4\3\4\3\4\3\4\3\5\3\5\3\5\3\5\3\6\3\6\3\6\3"+
 		"\6\3\7\3\7\3\7\3\7\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b"+
-		"\3\b\3\b\3\b\3\b\3\b\6\b?\n\b\r\b\16\b@\6\bC\n\b\r\b\16\bD\3\b\3\b\3\b"+
-		"\2\2\t\2\4\6\b\n\f\16\2\4\3\2\26\27\4\2\3\3\30\30\2K\2\26\3\2\2\2\4\30"+
-		"\3\2\2\2\6\34\3\2\2\2\b \3\2\2\2\n$\3\2\2\2\f(\3\2\2\2\16,\3\2\2\2\20"+
-		"\27\5\4\3\2\21\27\5\6\4\2\22\27\5\b\5\2\23\27\5\n\6\2\24\27\5\16\b\2\25"+
-		"\27\5\f\7\2\26\20\3\2\2\2\26\21\3\2\2\2\26\22\3\2\2\2\26\23\3\2\2\2\26"+
-		"\24\3\2\2\2\26\25\3\2\2\2\27\3\3\2\2\2\30\31\7\13\2\2\31\32\7\b\2\2\32"+
-		"\33\7\26\2\2\33\5\3\2\2\2\34\35\7\f\2\2\35\36\7\b\2\2\36\37\t\2\2\2\37"+
-		"\7\3\2\2\2 !\7\t\2\2!\"\7\b\2\2\"#\t\3\2\2#\t\3\2\2\2$%\7\n\2\2%&\7\b"+
-		"\2\2&\'\7\26\2\2\'\13\3\2\2\2()\7\r\2\2)*\7\b\2\2*+\7\26\2\2+\r\3\2\2"+
-		"\2,-\7\4\2\2-B\7\5\2\2./\7\20\2\2/\60\7\b\2\2\60C\7\25\2\2\61\62\7\16"+
-		"\2\2\62\63\7\b\2\2\63\64\t\2\2\2\64\65\7\6\2\2\65\66\t\2\2\2\66\67\7\6"+
-		"\2\2\67C\7\26\2\289\7\n\2\29:\7\b\2\2:C\7\26\2\2;<\7\17\2\2<>\7\b\2\2"+
-		"=?\7\25\2\2>=\3\2\2\2?@\3\2\2\2@>\3\2\2\2@A\3\2\2\2AC\3\2\2\2B.\3\2\2"+
-		"\2B\61\3\2\2\2B8\3\2\2\2B;\3\2\2\2CD\3\2\2\2DB\3\2\2\2DE\3\2\2\2EF\3\2"+
-		"\2\2FG\7\7\2\2G\17\3\2\2\2\6\26@BD";
+		"\3\b\3\b\3\b\3\b\3\b\3\b\3\b\7\bA\n\b\f\b\16\bD\13\b\6\bF\n\b\r\b\16\b"+
+		"G\3\b\3\b\3\b\2\2\t\2\4\6\b\n\f\16\2\4\3\2\27\30\4\2\3\3\31\31\2N\2\26"+
+		"\3\2\2\2\4\30\3\2\2\2\6\34\3\2\2\2\b \3\2\2\2\n$\3\2\2\2\f(\3\2\2\2\16"+
+		",\3\2\2\2\20\27\5\4\3\2\21\27\5\6\4\2\22\27\5\b\5\2\23\27\5\n\6\2\24\27"+
+		"\5\16\b\2\25\27\5\f\7\2\26\20\3\2\2\2\26\21\3\2\2\2\26\22\3\2\2\2\26\23"+
+		"\3\2\2\2\26\24\3\2\2\2\26\25\3\2\2\2\27\3\3\2\2\2\30\31\7\f\2\2\31\32"+
+		"\7\t\2\2\32\33\7\27\2\2\33\5\3\2\2\2\34\35\7\r\2\2\35\36\7\t\2\2\36\37"+
+		"\t\2\2\2\37\7\3\2\2\2 !\7\n\2\2!\"\7\t\2\2\"#\t\3\2\2#\t\3\2\2\2$%\7\13"+
+		"\2\2%&\7\t\2\2&\'\7\27\2\2\'\13\3\2\2\2()\7\16\2\2)*\7\t\2\2*+\7\27\2"+
+		"\2+\r\3\2\2\2,-\7\4\2\2-E\7\5\2\2./\7\21\2\2/\60\7\t\2\2\60F\7\26\2\2"+
+		"\61\62\7\17\2\2\62\63\7\t\2\2\63\64\t\2\2\2\64\65\7\6\2\2\65\66\t\2\2"+
+		"\2\66\67\7\6\2\2\67F\7\27\2\289\7\13\2\29:\7\t\2\2:F\7\27\2\2;<\7\20\2"+
+		"\2<=\7\t\2\2=B\7\26\2\2>?\7\7\2\2?A\7\26\2\2@>\3\2\2\2AD\3\2\2\2B@\3\2"+
+		"\2\2BC\3\2\2\2CF\3\2\2\2DB\3\2\2\2E.\3\2\2\2E\61\3\2\2\2E8\3\2\2\2E;\3"+
+		"\2\2\2FG\3\2\2\2GE\3\2\2\2GH\3\2\2\2HI\3\2\2\2IJ\7\b\2\2J\17\3\2\2\2\6"+
+		"\26BEG";
 	public static final ATN _ATN =
 		new ATNDeserializer().deserialize(_serializedATN.toCharArray());
 	static {

@@ -1,6 +1,6 @@
 package auxiliary;
 
-public class DSLException extends Exception {
+public class DSLException extends RuntimeException {
 
     /**
      *
@@ -9,7 +9,6 @@ public class DSLException extends Exception {
 
     public DSLException(String message) {
         super(message);
-        // TODO Auto-generated constructor stub
     }
 
     public String toString() {
