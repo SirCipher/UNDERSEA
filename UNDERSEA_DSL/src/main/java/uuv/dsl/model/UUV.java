@@ -50,15 +50,17 @@ public class UUV {
         str.append("\t PORT = " + port + "\n");
 
         String sensorsStr = "";
-        Iterator<String> iterator = sensorsMap.keySet().iterator();
-        while (iterator.hasNext()) {
-            sensorsStr += iterator.next();
-            if (iterator.hasNext())
-                sensorsStr += ",";
-        }
-        str.append("\t SENSORS = " + sensorsStr + "\n");
 
-        str.append("}\n\n");
+        // TODO: Fetch corresponding sensors from simulation properties
+//        Iterator<String> iterator = sensorsMap.keySet().iterator();
+//        while (iterator.hasNext()) {
+//            sensorsStr += iterator.next();
+//            if (iterator.hasNext())
+//                sensorsStr += ",";
+//        }
+//        str.append("\t SENSORS = " + sensorsStr + "\n");
+//
+//        str.append("}\n\n");
 
         return str.toString();
     }

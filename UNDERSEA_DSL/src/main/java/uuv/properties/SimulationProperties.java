@@ -8,7 +8,20 @@ import java.util.Map;
 
 public class SimulationProperties {
 
-    enum EnvironmentValue {
+    private static SimulationProperties instance = null;
+
+    private SimulationProperties() {
+    }
+
+    public static SimulationProperties getInstance() {
+        if (instance == null) {
+            instance = new SimulationProperties();
+        }
+
+        return instance;
+    }
+
+    public enum EnvironmentValue {
         SIMULATION_TIME("(e.g., simulation time = 10)"),
         SIMULATION_SPEED("(e.g., simulation speed = 2)"),
         HOST("(e.g., host = localhost)"),
@@ -18,7 +31,7 @@ public class SimulationProperties {
         private String errorMessage;
 
         EnvironmentValue(String errorMessage) {
-            this.errorMessage=errorMessage;
+            this.errorMessage = errorMessage;
         }
     }
 
@@ -26,8 +39,20 @@ public class SimulationProperties {
     private Map<String, Sensor> globalSensors;
     private Map<String, UUV> agents;
 
+    public Map<String, Sensor> getGlobalSensors() {
+        return globalSensors;
+    }
+
+    public void addUUV(UUV uuv) {
+        if (this.agents.containsKey(uuv.getName())) {
+            throw new DSLException("Duplicate UUV created: " + uuv.getName());
+        }
+
+        this.agents.put(uuv.getName(), uuv);
+    }
+
     public void setEnvironmentValue(EnvironmentValue name, String value) {
-        if (environmentValues.get(name) != null) {
+        if (environmentValues.containsKey(name)) {
             throw new DSLException(name + " is already defined!");
         }
 
@@ -38,7 +63,7 @@ public class SimulationProperties {
         StringBuilder errors = new StringBuilder();
 
         for (EnvironmentValue value : EnvironmentValue.values()) {
-            if (environmentValues.get(value) == null) {
+            if (environmentValues.containsKey(value)) {
                 errors.append(value.name()).append(" not defined: ").append(value.errorMessage);
             }
         }

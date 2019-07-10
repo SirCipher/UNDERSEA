@@ -5,18 +5,17 @@ import uuv.dsl.gen.SensorsBaseListener;
 import uuv.dsl.gen.SensorsParser;
 import uuv.dsl.model.Range;
 import uuv.dsl.model.Sensor;
-
-import java.util.Map;
+import uuv.properties.SimulationProperties;
 
 public class SensorListener extends SensorsBaseListener {
 
-    public static Map<String, Sensor> sensorMap;
+    private SimulationProperties simulationProperties;
 
     @Override
     public void enterSensor(SensorsParser.SensorContext ctx) {
         String name = ctx.name.getText();
 
-        if (sensorMap.get(name) != null) {
+        if (simulationProperties.getGlobalSensors().get(name) != null) {
             throw new DSLException("Duplicate sensor defined: " + name);
         }
 
@@ -34,6 +33,10 @@ public class SensorListener extends SensorsBaseListener {
             newSensor.addChange(newChange);
         }
 
-        sensorMap.put(name, newSensor);
+        simulationProperties.getGlobalSensors().put(name, newSensor);
+    }
+
+    public void setSimulationProperties(SimulationProperties simulationProperties) {
+        this.simulationProperties = simulationProperties;
     }
 }
