@@ -1,6 +1,6 @@
 grammar UUV;
 
-import UUV_Terminals; // includes all rules from UUV_Terminals.g4
+import UUV_Terminals;
 
 @parser::header {
   package uuv.dsl.gen;
@@ -22,7 +22,7 @@ model:
 	 	| port
 	 	| uuv
 	 	| speed
-	 	| sensor)+
+	 	)
 ;
 
 simulation:
@@ -45,18 +45,6 @@ speed:
 		SIMULATION_SPEED ASSIGN value=INT
 ;
 
-sensor:
-		'SENSOR'
-		'{'
-			(
-				NAME 		ASSIGN name=ID
-			|	RATE 		ASSIGN rate=(INT | DOUBLE)
-			|	RELIABILITY	ASSIGN reliability=(INT | DOUBLE)
-			|	change+
-			)+
-		'}'
-;
-
 uuv:
 		'UUV'
 		'{'
@@ -64,11 +52,7 @@ uuv:
 				NAME ASSIGN name=ID
 			|	SPEED ASSIGN min=(INT | DOUBLE) ':' max=(INT | DOUBLE) ':' steps=INT
 			|	SERVER_PORT ASSIGN value=INT
-			|   SENSOR ASSIGN sensors=sensor+
+			|   SENSOR ASSIGN sensors=ID+
 			)+
 		'}'
-;
-
-change:
-		CHANGE	ASSIGN begin=(INT | DOUBLE) ':' end=(INT | DOUBLE) ':' value=(INT | DOUBLE)
 ;
