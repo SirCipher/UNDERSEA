@@ -10,4 +10,3 @@ ProcessConfig = bravo
 	 PORT = 8888
 	 SENSORS = SENSOR3,SENSOR4
 }
-

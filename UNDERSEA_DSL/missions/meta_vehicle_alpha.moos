@@ -8,6 +8,7 @@ Community    = alpha
 LatOrigin    = 43.825300
 LongOrigin   = -70.330400
 MOOSTimeWarp = 1
+
 //------------------------------------------
 // Antler configuration  block
 //------------------------------------------
@@ -23,9 +24,10 @@ ProcessConfig = ANTLER
 	 Run = uTimerScript  @ NewConsole = false
 	 Run = pHelmIvP      @ NewConsole = false
 	 Run = sUUV          @ NewConsole = false ~alpha
-	   Run = sSensor		@ NewConsole = false ~SENSOR1
-	   Run = sSensor		@ NewConsole = false ~SENSOR2
+	 Run = sSensor       @ NewConsole = false ~SENSOR1
+	 Run = sSensor       @ NewConsole = false ~SENSOR2
 }
+
 #include plug_uProcessWatch.moos
 #include plug_uSimMarine.moos
 #include plug_uTimerScript.moos
@@ -36,4 +38,3 @@ ProcessConfig = ANTLER
 #include plug_UUV_alpha.moos
 #include plug_SENSOR1.moos
 #include plug_SENSOR2.moos
-

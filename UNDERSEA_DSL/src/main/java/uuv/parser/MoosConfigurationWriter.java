@@ -117,7 +117,7 @@ public class MoosConfigurationWriter {
         vehicleBlock.append("Community    = " + uuv.getName() + "\n");
         vehicleBlock.append("LatOrigin    = 43.825300\n");
         vehicleBlock.append("LongOrigin   = -70.330400\n");
-        vehicleBlock.append("MOOSTimeWarp = " + simulationProperties.getEnvironmentValue(SimulationProperties.EnvironmentValue.SIMULATION_SPEED) + "\n");
+        vehicleBlock.append("MOOSTimeWarp = " + simulationProperties.getEnvironmentValue(SimulationProperties.EnvironmentValue.SIMULATION_SPEED) + "\n\n");
 
         vehicleBlock.append("//------------------------------------------\n");
         vehicleBlock.append("// Antler configuration  block\n");
@@ -136,10 +136,10 @@ public class MoosConfigurationWriter {
         vehicleBlock.append("\t Run = sUUV          @ NewConsole = false ~" + uuv.getName() + "\n");
 
         for (Sensor sensor : uuv.getSensors()) {
-            vehicleBlock.append("\t   Run = sSensor		@ NewConsole = false ~" + sensor.getName() + "\n");
+            vehicleBlock.append("\t Run = sSensor       @ NewConsole = false ~" + sensor.getName() + "\n");
         }
 
-        vehicleBlock.append("}\n");
+        vehicleBlock.append("}\n\n");
 
         vehicleBlock.append("#include plug_uProcessWatch.moos\n");
         vehicleBlock.append("#include plug_uSimMarine.moos\n");

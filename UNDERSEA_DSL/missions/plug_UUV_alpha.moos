@@ -10,4 +10,3 @@ ProcessConfig = alpha
 	 PORT = 8888
 	 SENSORS = SENSOR1,SENSOR2
 }
-

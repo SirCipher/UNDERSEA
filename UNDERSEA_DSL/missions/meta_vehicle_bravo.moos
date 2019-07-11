@@ -8,6 +8,7 @@ Community    = bravo
 LatOrigin    = 43.825300
 LongOrigin   = -70.330400
 MOOSTimeWarp = 1
+
 //------------------------------------------
 // Antler configuration  block
 //------------------------------------------
@@ -23,9 +24,10 @@ ProcessConfig = ANTLER
 	 Run = uTimerScript  @ NewConsole = false
 	 Run = pHelmIvP      @ NewConsole = false
 	 Run = sUUV          @ NewConsole = false ~bravo
-	   Run = sSensor		@ NewConsole = false ~SENSOR3
-	   Run = sSensor		@ NewConsole = false ~SENSOR4
+	 Run = sSensor       @ NewConsole = false ~SENSOR3
+	 Run = sSensor       @ NewConsole = false ~SENSOR4
 }
+
 #include plug_uProcessWatch.moos
 #include plug_uSimMarine.moos
 #include plug_uTimerScript.moos
@@ -36,4 +38,3 @@ ProcessConfig = ANTLER
 #include plug_UUV_bravo.moos
 #include plug_SENSOR3.moos
 #include plug_SENSOR4.moos
-

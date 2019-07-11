@@ -10,4 +10,3 @@ ProcessConfig = SENSOR4
 	 RELIABILITY = 0.9
 	 CHANGE = 10.0:50.0:2.0
 }
-

@@ -45,7 +45,7 @@ public class Utility {
     public static void exportToFile(String fileName, String output, boolean append) {
         try {
             FileWriter writer = new FileWriter(fileName, append);
-            writer.append(output).append("\n");
+            writer.append(output);
             writer.flush();
             writer.close();
         } catch (IOException e) {
