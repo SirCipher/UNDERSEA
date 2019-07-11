@@ -22,7 +22,7 @@ public class ParserEngine {
     public static String propertiesFile = "resources/config.properties";
     private static SimulationProperties simulationProperties = SimulationProperties.getInstance();
     private static String controllerDir;
-    private static String missionDir;
+    public static String missionDir;
     private static String configFile;
     private static String sensorsFile;
     private static boolean errorsFound = false;
@@ -166,7 +166,7 @@ public class ParserEngine {
 
         // generate moos files
         // TODO: Add MOOS file generation
-//        properties.generateMoosBlocks();
+        simulationProperties.generateMoosBlocks();
     }
 
 }

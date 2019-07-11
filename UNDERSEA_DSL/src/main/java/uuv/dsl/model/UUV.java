@@ -1,6 +1,7 @@
 package uuv.dsl.model;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class UUV {
@@ -15,7 +16,6 @@ public class UUV {
         this.name = name;
         this.port = port;
         this.speedRange = new Range(min, max, steps + 1);
-        // TODO: What's this?
         this.rate = "4";
     }
 
@@ -64,18 +64,18 @@ public class UUV {
         str.append("\t NAME = " + name + "\n");
         str.append("\t PORT = " + port + "\n");
 
-        String sensorsStr = "";
+        StringBuilder sensorsStr = new StringBuilder();
 
-        // TODO: Fetch corresponding sensors from simulation properties
-//        Iterator<String> iterator = sensorsMap.keySet().iterator();
-//        while (iterator.hasNext()) {
-//            sensorsStr += iterator.next();
-//            if (iterator.hasNext())
-//                sensorsStr += ",";
-//        }
-//        str.append("\t SENSORS = " + sensorsStr + "\n");
-//
-//        str.append("}\n\n");
+        Iterator<Sensor> iterator = sensors.iterator();
+
+        while (iterator.hasNext()) {
+            sensorsStr.append(iterator.next().getName());
+
+            if (iterator.hasNext()) {
+                sensorsStr.append(",");
+            }
+        }
+        str.append("\t SENSORS = ").append(sensorsStr).append("\n").append("}\n\n");
 
         return str.toString();
     }

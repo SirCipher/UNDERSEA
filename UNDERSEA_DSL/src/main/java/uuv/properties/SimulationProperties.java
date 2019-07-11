@@ -1,12 +1,15 @@
 package uuv.properties;
 
 import auxiliary.DSLException;
+import auxiliary.Utility;
 import uuv.dsl.model.Sensor;
 import uuv.dsl.model.UUV;
+import uuv.parser.ParserEngine;
 
 import java.util.HashMap;
 import java.util.Map;
 
+@SuppressWarnings("Duplicates")
 public class SimulationProperties {
 
     private static SimulationProperties instance = null;
