@@ -1,0 +1,22 @@
+# Mac
+.DS_Store
+
+
+# Eclipse
+.classpath
+#.project
+.settings/
+
+
+# Maven
+target/
+*/target/**
+/bin/
+*/target/*
+
+
+Prism.g4
+PrismTerminals.g4
+
+
+

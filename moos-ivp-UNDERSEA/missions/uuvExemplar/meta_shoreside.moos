@@ -1,0 +1,169 @@
+//-------------------------------------------------
+// Author: Simos Gerasimou, University of York, UK
+// Shoreside Configuration File
+//-------------------------------------------------
+
+
+ServerHost = localhost
+ServerPort = $(SERVER_PORT)
+Community  = $(COMMUNITY_NAME)
+
+#include plug_origin_warp.moos
+
+//-------------------------------------------------
+ProcessConfig = ANTLER
+{
+	MSBetweenLaunches = 100
+
+	Run = MOOSDB 			@ NewConsole = false
+	Run = pMarineViewer		@ NewConsole = false
+	Run = uProcessWatch		@ NewConsole = false
+	Run = uTimerScript		@ NewConsole = false
+
+	Run = pHostInfo			  @ NewConsole = false
+	Run = pShare			    @ NewConsole = false
+	Run = uFldShoreBroker	@ NewConsole = false
+
+  Run = uFldNodeComms   @ NewConsole = false
+
+}
+
+#include plug_pHostInfo.moos
+#include plug_pShare.moos
+
+//--------------------------------------------------
+// uFldNodeComms block
+
+ProcessConfig = uFldNodeComms
+{
+  AppTick   = 2
+  CommsTick = 2
+
+  comms_range      = 500
+  min_msg_interval = 5
+  max_msg_length   = 1000
+  view_node_rpt_pulses = true
+}
+
+
+//--------------------------------------------------
+// uFldShoreBroker Configuration Block
+
+ProcessConfig = uFldShoreBroker
+{
+  AppTick       = 1
+  CommsTick     = 1
+
+  // Note: [QBRIDGE = FOO]  is shorthand for                    
+  //       [BRIDGE = src=FOO_$V,  alias=FOO] and                
+  //       [BRIDGE = src=FOO_ALL, alias=FOO]
+
+  QBRIDGE  = DEPLOY, RETURN,  NODE_REPORT//, NODE_MESSAGE
+  QBRIDGE  = MOOS_MANUAL_OVERIDE, APPCAST_REQ
+
+// BRIDGE   = src=NODE_REPORT_$V, alias=NODE_REPORT
+ BRIDGE   = src=NODE_MESSAGE_$V, alias=NODE_MESSAGE
+
+  BRIDGE   = src=RETURN_ALL, alias=RETURN
+  BRIDGE   = src=RETURN_$V,  alias=RETURN
+
+  BRIDGE   = src=DEPTH_VALUE_$V,             alias=DEPTH_VALUE
+
+//    BRIDGE   = src=CAPABILITY_SUMMARY_$V, alias=CAPABILITY_SUMMARY
+}
+
+
+//------------------------------------------
+// pMarineViewer config block
+
+ProcessConfig = pMarineViewer
+{
+  AppTick    = 2
+  CommsTick  = 2
+
+  TIFF_FILE            = forrest19.tif
+
+  //Backview
+  set_pan_x            = -90
+  set_pan_y            = -280
+  zoom                 = 0.6
+  hash_delta           = 50
+  hash_shade           = 0.4
+  hash_viewable        = false
+
+  //Vehicle variables
+  vehicle_shape_scale     = 5
+  vehicles_name_mode      = names
+  trails_connect_viewable = false
+  vehicles_active_color   = red
+  vehicles_inactive_color = red
+  vehicles_viewable       = true
+  trails_viewable         = false
+
+
+  // Appcast configuration
+  appcast_height       = 70
+  appcast_width        = 30
+  appcast_viewable     = false
+  appcast_color_scheme = indigo
+  appcast_font_size    = xsmall
+  nodes_font_size      = small
+  procs_font_size      = small
+  
+  //datum_viewable = true
+  //datum_size     = 18
+  //gui_size = small
+
+//  left_context[survey-point] = DEPLOY=true
+// left_context[survey-point] = MOOS_MANUAL_OVERIDE=false
+//  left_context[survey-point] = RETURN=false
+
+//  right_context[return] = DEPLOY=true
+//  right_context[return] = MOOS_MANUAL_OVERIDE=false
+//  right_context[return] = RETURN=false
+//  left_context[polyvert] = POLY_VERT=x=$(XPOS),y=$(YPOS)
+
+  //scope = TOTAL_DISTANCE
+
+  button_one = DEPLOY # DEPLOY_ALL=true
+  button_one = MOOS_MANUAL_OVERIDE_ALL=false # RETURN_ALL=false
+  button_two = RETURN:T # RETURN_ALL=true
+  button_three = Region:A # REGION=REGIONA
+  button_four = Region:B # REGION=REGIONB
+
+  action  = MENU_KEY=deploy # DEPLOY = true # RETURN = false
+  action+ = MENU_KEY=deploy # MOOS_MANUAL_OVERIDE=false
+  action  = RETURN_ALL=true
+  action  = UPDATES_RETURN=speed=1.4
+}
+
+
+//------------------------------------------
+// uProcessWatch config block
+
+ProcessConfig = uProcessWatch
+{
+	AppTick 	= 2
+	CommsTick	= 2
+
+
+  summary_wait = 5
+
+  nowatch   = uXMS*
+  nowatch   = uMAC*
+  nowatch   = uPokeDB*
+  nowatch   = uTermCommand*
+  watch_all = true
+}
+
+ProcessConfig = uTimerScript
+{
+	AppTick 	= 2
+	CommsTick	= 2
+
+  //delay_start    = 10
+	event = var=MOOS_MANUAL_OVERIDE_ALL, val=false
+	event = var=DEPLOY_ALL, val=true
+	event = quit, time=50:60
+}
+

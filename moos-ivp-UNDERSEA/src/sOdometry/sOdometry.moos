@@ -1,0 +1,9 @@
+//------------------------------------------------
+// sOdometry config block
+
+ProcessConfig = sOdometry
+{
+   AppTick   = 4
+   CommsTick = 4
+}
+
