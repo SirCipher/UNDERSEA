@@ -1,17 +1,34 @@
 package uuv.dsl.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class UUV {
 
     private String name;
     private String rate;
     private String port;
     private Range speedRange;
+    private List<Sensor> sensors = new ArrayList<>();
 
     public UUV(String name, String port, double min, double max, int steps) {
         this.name = name;
         this.port = port;
         this.speedRange = new Range(min, max, steps + 1);
+        // TODO: What's this?
         this.rate = "4";
+    }
+
+    public String getRate() {
+        return rate;
+    }
+
+    public Range getSpeedRange() {
+        return speedRange;
+    }
+
+    public List<Sensor> getSensors() {
+        return sensors;
     }
 
     public String getName() {
@@ -61,5 +78,9 @@ public class UUV {
 //        str.append("}\n\n");
 
         return str.toString();
+    }
+
+    public void setSensors(List<Sensor> sensors) {
+        this.sensors = sensors;
     }
 }

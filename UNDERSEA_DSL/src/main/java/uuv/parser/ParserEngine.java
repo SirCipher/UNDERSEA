@@ -89,8 +89,8 @@ public class ParserEngine {
 
     public static void main(String[] args) throws IOException {
         parseCommandLineArguments(args);
+        runSensorListener();
         runUUVListener();
-//        runSensorListener();
 
         simulationProperties.validateEnvironmentValues();
 
@@ -141,7 +141,6 @@ public class ParserEngine {
 
         // Create a listener
         SensorListener listener = new SensorListener();
-        listener.setSimulationProperties(simulationProperties);
 
         // Walk the tree created during the parse, trigger callbacks
         walker.walk(listener, tree);

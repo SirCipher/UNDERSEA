@@ -7,7 +7,7 @@ import UUV_Terminals;
 }
 
 model:
-    (sensor)+
+    sensor+
 ;
 
 sensor:

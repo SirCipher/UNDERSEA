@@ -61,8 +61,6 @@ public class SimulationProperties {
         if (errors.length() > 0) {
             throw new DSLException("Incorrect configuration file!\n" + errors.toString());
         }
-
-        System.out.println(environmentValues.size());
     }
 
     public enum EnvironmentValue {

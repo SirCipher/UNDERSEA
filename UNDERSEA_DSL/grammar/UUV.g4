@@ -62,8 +62,8 @@ uuv:
 			(
 				NAME ASSIGN name=ID
 			|	SPEED ASSIGN min=(INT | DOUBLE) ':' max=(INT | DOUBLE) ':' steps=INT
-			|	SERVER_PORT ASSIGN value=INT
-			//|   SENSORS ASSIGN value=BEGL elems? ENDL
+			|	SERVER_PORT ASSIGN uuvPort=INT
+			|   SENSORS ASSIGN sensors=BEGL elems? ENDL
 			)+
 		'}'
 ;
