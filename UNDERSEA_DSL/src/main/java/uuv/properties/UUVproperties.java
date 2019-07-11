@@ -237,7 +237,8 @@
 //
 //        str.append("\t   Domain     = course:0:359:360\n");
 //        str.append("\t   Domain     = depth:0:100:101\n");
-//        str.append("\t   Domain     = speed:" + uuv.getSpeedMin() + ":" + uuv.getSpeedMax() + ":" + uuv.getSpeedSteps() + "\n");
+//        str.append("\t   Domain     = speed:" + uuv.getSpeedMin() + ":" + uuv.getSpeedMax() + ":" + uuv
+//        .getSpeedSteps() + "\n");
 //
 //        str.append("}\n\n");
 //

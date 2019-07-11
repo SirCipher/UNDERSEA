@@ -2,11 +2,8 @@ package uuv.dsl;
 
 import uuv.dsl.gen.UUVBaseListener;
 import uuv.dsl.gen.UUVParser;
-import uuv.dsl.model.Sensor;
 import uuv.dsl.model.UUV;
 import uuv.properties.SimulationProperties;
-
-import java.util.Map;
 
 public class UUVListener extends UUVBaseListener {
 
@@ -14,13 +11,15 @@ public class UUVListener extends UUVBaseListener {
 
     @Override
     public void enterSimulation(UUVParser.SimulationContext ctx) {
-        simulationProperties.setEnvironmentValue(SimulationProperties.EnvironmentValue.SIMULATION_TIME, ctx.value.getText());
+        simulationProperties.setEnvironmentValue(SimulationProperties.EnvironmentValue.SIMULATION_TIME,
+                ctx.value.getText());
     }
 
 
     @Override
     public void enterInvocation(UUVParser.InvocationContext ctx) {
-        simulationProperties.setEnvironmentValue(SimulationProperties.EnvironmentValue.TIME_WINDOW, ctx.value.getText());
+        simulationProperties.setEnvironmentValue(SimulationProperties.EnvironmentValue.TIME_WINDOW,
+                ctx.value.getText());
     }
 
 
@@ -38,7 +37,8 @@ public class UUVListener extends UUVBaseListener {
 
     @Override
     public void enterSpeed(UUVParser.SpeedContext ctx) {
-        simulationProperties.setEnvironmentValue(SimulationProperties.EnvironmentValue.SIMULATION_SPEED, ctx.value.getText());
+        simulationProperties.setEnvironmentValue(SimulationProperties.EnvironmentValue.SIMULATION_SPEED,
+                ctx.value.getText());
     }
 
 

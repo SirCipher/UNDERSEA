@@ -23,32 +23,6 @@ public class Utility {
         }
     }
 
-
-    public static Set<Entry<Object, Object>> getPropertiesEntrySet() {
-        return properties.entrySet();
-    }
-
-
-    public static String getProperty(String key) {
-        String result = properties.getProperty(key);
-        if (result == null)
-            throw new IllegalArgumentException(key.toUpperCase() + " name not found!");
-        return result;
-    }
-
-
-    public static void exportToFile(String fileName, String output, boolean append) {
-        try {
-            FileWriter writer = new FileWriter(fileName, append);
-            writer.append(output + "\n");
-            writer.flush();
-            writer.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-
     public static void createFileAndExport(String inputFileName, String outputFileName, String outputStr) {
         FileChannel inputChannel = null;
         FileChannel outputChannel = null;
@@ -70,12 +44,40 @@ public class Utility {
         }
     }
 
+    public static void exportToFile(String fileName, String output, boolean append) {
+        try {
+            FileWriter writer = new FileWriter(fileName, append);
+            writer.append(output + "\n");
+            writer.flush();
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static boolean fileExists(String fileName) throws FileNotFoundException {
+        File f = new File(fileName);
+        if (!f.exists())
+            throw new FileNotFoundException("File " + fileName + " does not exist!. Please fix this error.\n");
+        return true;
+
+    }
+
+    public static Set<Entry<Object, Object>> getPropertiesEntrySet() {
+        return properties.entrySet();
+    }
+
+    public static String getProperty(String key) {
+        String result = properties.getProperty(key);
+        if (result == null)
+            throw new IllegalArgumentException(key.toUpperCase() + " name not found!");
+        return result;
+    }
 
     public static String readFile(String fileName) throws FileNotFoundException {
         File file = new File(fileName);
         if (!file.exists())
             throw new FileNotFoundException("File " + fileName + " does not exist!. Please fix this error.\n");
-
 
         StringBuilder model = new StringBuilder(100);
         BufferedReader bfr = null;
@@ -92,14 +94,5 @@ public class Utility {
             System.exit(-1);
         }
         return null;
-    }
-
-
-    public static boolean fileExists(String fileName) throws FileNotFoundException {
-        File f = new File(fileName);
-        if (!f.exists())
-            throw new FileNotFoundException("File " + fileName + " does not exist!. Please fix this error.\n");
-        return true;
-
     }
 }

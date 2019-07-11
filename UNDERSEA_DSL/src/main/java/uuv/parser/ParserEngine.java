@@ -24,6 +24,68 @@ public class ParserEngine {
     private static String configFile;
     private static String sensorsFile;
 
+    private static SensorsParser createSensorParser(String source) {
+        // create a CharStream that reads from standard input
+        // TODO: Update
+        ANTLRInputStream input = new ANTLRInputStream(source);
+
+        // create a lexer that feeds off of input CharStream
+        UUVLexer lexer = new UUVLexer(input);
+
+        // create a buffer of tokens pulled from the lexer
+        CommonTokenStream tokens = new CommonTokenStream(lexer);
+
+        // create error parser
+        BaseErrorListener errorListener = new BaseErrorListener() {
+            @Override
+            public void syntaxError(Recognizer<?, ?> recognizer, Object offendingSymbol, int line,
+                                    int charPositionInLine, String msg, RecognitionException e) {
+                //Print the syntax error
+                System.out.printf("\t%s at (%d, %d)%n", msg, line, charPositionInLine);
+            }
+        };
+
+        // create a parser that feeds off the tokens buffer
+        SensorsParser parser = new SensorsParser(tokens);
+
+        // add error listener to parser and lexer
+        lexer.addErrorListener(errorListener);
+        parser.addErrorListener(errorListener);
+
+        return parser;
+    }
+
+    private static UUVParser createUUVParser(String source) {
+        // create a CharStream that reads from standard input
+        // TODO: Update
+        ANTLRInputStream input = new ANTLRInputStream(source);
+
+        // create a lexer that feeds off of input CharStream
+        UUVLexer lexer = new UUVLexer(input);
+
+        // create a buffer of tokens pulled from the lexer
+        CommonTokenStream tokens = new CommonTokenStream(lexer);
+
+        // create error parser
+        BaseErrorListener errorListener = new BaseErrorListener() {
+            @Override
+            public void syntaxError(Recognizer<?, ?> recognizer, Object offendingSymbol, int line,
+                                    int charPositionInLine, String msg, RecognitionException e) {
+                //Print the syntax error
+                System.out.printf("\t%s at (%d, %d)%n", msg, line, charPositionInLine);
+            }
+        };
+
+        // create a parser that feeds off the tokens buffer
+        UUVParser parser = new UUVParser(tokens);
+
+        // add error listener to parser and lexer
+        lexer.addErrorListener(errorListener);
+        parser.addErrorListener(errorListener);
+
+        return parser;
+    }
+
     public static void main(String[] args) throws FileNotFoundException {
         parseCommandLineArguments(args);
         runUUVListener();
@@ -59,35 +121,26 @@ public class ParserEngine {
         }
     }
 
-    private static UUVParser createUUVParser(String source) {
-        // create a CharStream that reads from standard input
-        // TODO: Update
-        ANTLRInputStream input = new ANTLRInputStream(source);
+    private static void runSensorListener() throws FileNotFoundException {
+        String source = Utility.readFile(sensorsFile);
 
-        // create a lexer that feeds off of input CharStream
-        UUVLexer lexer = new UUVLexer(input);
+        //create parser
+        SensorsParser parser = createSensorParser(source);
 
-        // create a buffer of tokens pulled from the lexer
-        CommonTokenStream tokens = new CommonTokenStream(lexer);
+        // begin parsing at model rule
+        ParseTree tree = parser.model();
 
-        // create error parser
-        BaseErrorListener errorListener = new BaseErrorListener() {
-            @Override
-            public void syntaxError(Recognizer<?, ?> recognizer, Object offendingSymbol, int line,
-                                    int charPositionInLine, String msg, RecognitionException e) {
-                //Print the syntax error
-                System.out.printf("\t%s at (%d, %d)%n", msg, line, charPositionInLine);
-            }
-        };
+        // Create a generic parse tree walker that can trigger callbacks
+        ParseTreeWalker walker = new ParseTreeWalker();
 
-        // create a parser that feeds off the tokens buffer
-        UUVParser parser = new UUVParser(tokens);
+        // Create a listener
+        SensorListener listener = new SensorListener();
+        listener.setSimulationProperties(simulationProperties);
 
-        // add error listener to parser and lexer
-        lexer.addErrorListener(errorListener);
-        parser.addErrorListener(errorListener);
+        // Walk the tree created during the parse, trigger callbacks
+        walker.walk(listener, tree);
 
-        return parser;
+        System.out.println("Sensor configuration file parsed successfully\n");
     }
 
     private static void runUUVListener() throws FileNotFoundException {
@@ -114,59 +167,6 @@ public class ParserEngine {
 //        properties.generateMoosBlocks();
 
         System.out.println("UUV configuration file parsed successfully\n");
-    }
-
-    private static SensorsParser createSensorParser(String source) {
-        // create a CharStream that reads from standard input
-        // TODO: Update
-        ANTLRInputStream input = new ANTLRInputStream(source);
-
-        // create a lexer that feeds off of input CharStream
-        UUVLexer lexer = new UUVLexer(input);
-
-        // create a buffer of tokens pulled from the lexer
-        CommonTokenStream tokens = new CommonTokenStream(lexer);
-
-        // create error parser
-        BaseErrorListener errorListener = new BaseErrorListener() {
-            @Override
-            public void syntaxError(Recognizer<?, ?> recognizer, Object offendingSymbol, int line,
-                                    int charPositionInLine, String msg, RecognitionException e) {
-                //Print the syntax error
-                System.out.printf("\t%s at (%d, %d)%n", msg, line, charPositionInLine);
-            }
-        };
-
-        // create a parser that feeds off the tokens buffer
-        SensorsParser parser = new SensorsParser(tokens);
-
-        // add error listener to parser and lexer
-        lexer.addErrorListener(errorListener);
-        parser.addErrorListener(errorListener);
-
-        return parser;
-    }
-
-    private static void runSensorListener() throws FileNotFoundException {
-        String source = Utility.readFile(sensorsFile);
-
-        //create parser
-        SensorsParser parser = createSensorParser(source);
-
-        // begin parsing at model rule
-        ParseTree tree = parser.model();
-
-        // Create a generic parse tree walker that can trigger callbacks
-        ParseTreeWalker walker = new ParseTreeWalker();
-
-        // Create a listener
-        SensorListener listener = new SensorListener();
-        listener.setSimulationProperties(simulationProperties);
-
-        // Walk the tree created during the parse, trigger callbacks
-        walker.walk(listener, tree);
-
-        System.out.println("Sensor configuration file parsed successfully\n");
     }
 
 }

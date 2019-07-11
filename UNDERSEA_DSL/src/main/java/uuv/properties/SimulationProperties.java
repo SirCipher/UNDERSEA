@@ -9,6 +9,9 @@ import java.util.Map;
 public class SimulationProperties {
 
     private static SimulationProperties instance = null;
+    private Map<EnvironmentValue, String> environmentValues;
+    private Map<String, Sensor> globalSensors;
+    private Map<String, UUV> agents;
 
     private SimulationProperties() {
     }
@@ -21,34 +24,16 @@ public class SimulationProperties {
         return instance;
     }
 
-    public enum EnvironmentValue {
-        SIMULATION_TIME("(e.g., simulation time = 10)"),
-        SIMULATION_SPEED("(e.g., simulation speed = 2)"),
-        HOST("(e.g., host = localhost)"),
-        PORT("(e.g., port = 12345)"),
-        TIME_WINDOW("(e.g., time window = 10)");
-
-        private String errorMessage;
-
-        EnvironmentValue(String errorMessage) {
-            this.errorMessage = errorMessage;
-        }
-    }
-
-    private Map<EnvironmentValue, String> environmentValues;
-    private Map<String, Sensor> globalSensors;
-    private Map<String, UUV> agents;
-
-    public Map<String, Sensor> getGlobalSensors() {
-        return globalSensors;
-    }
-
     public void addUUV(UUV uuv) {
         if (this.agents.containsKey(uuv.getName())) {
             throw new DSLException("Duplicate UUV created: " + uuv.getName());
         }
 
         this.agents.put(uuv.getName(), uuv);
+    }
+
+    public Map<String, Sensor> getGlobalSensors() {
+        return globalSensors;
     }
 
     public void setEnvironmentValue(EnvironmentValue name, String value) {
@@ -70,6 +55,20 @@ public class SimulationProperties {
 
         if (errors.length() > 0) {
             throw new DSLException("Incorrect configuration file!\n" + errors.toString());
+        }
+    }
+
+    public enum EnvironmentValue {
+        SIMULATION_TIME("(e.g., simulation time = 10)"),
+        SIMULATION_SPEED("(e.g., simulation speed = 2)"),
+        HOST("(e.g., host = localhost)"),
+        PORT("(e.g., port = 12345)"),
+        TIME_WINDOW("(e.g., time window = 10)");
+
+        private String errorMessage;
+
+        EnvironmentValue(String errorMessage) {
+            this.errorMessage = errorMessage;
         }
     }
 

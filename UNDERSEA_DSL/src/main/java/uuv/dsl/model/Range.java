@@ -21,12 +21,12 @@ public class Range {
         this.value = value;
     }
 
-    public double getMin() {
-        return min;
-    }
-
     public double getMax() {
         return max;
+    }
+
+    public double getMin() {
+        return min;
     }
 
     public Number getValue() {

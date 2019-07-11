@@ -20,29 +20,7 @@ public class UUVBaseVisitor<T> extends AbstractParseTreeVisitor<T> implements UU
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public T visitModel(UUVParser.ModelContext ctx) {
-        return visitChildren(ctx);
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * <p>The default implementation returns the result of calling
-     * {@link #visitChildren} on {@code ctx}.</p>
-     */
-    @Override
-    public T visitSimulation(UUVParser.SimulationContext ctx) {
-        return visitChildren(ctx);
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * <p>The default implementation returns the result of calling
-     * {@link #visitChildren} on {@code ctx}.</p>
-     */
-    @Override
-    public T visitInvocation(UUVParser.InvocationContext ctx) {
+    public T visitChange(UUVParser.ChangeContext ctx) {
         return visitChildren(ctx);
     }
 
@@ -64,7 +42,7 @@ public class UUVBaseVisitor<T> extends AbstractParseTreeVisitor<T> implements UU
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public T visitPort(UUVParser.PortContext ctx) {
+    public T visitInvocation(UUVParser.InvocationContext ctx) {
         return visitChildren(ctx);
     }
 
@@ -75,7 +53,18 @@ public class UUVBaseVisitor<T> extends AbstractParseTreeVisitor<T> implements UU
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public T visitSpeed(UUVParser.SpeedContext ctx) {
+    public T visitModel(UUVParser.ModelContext ctx) {
+        return visitChildren(ctx);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation returns the result of calling
+     * {@link #visitChildren} on {@code ctx}.</p>
+     */
+    @Override
+    public T visitPort(UUVParser.PortContext ctx) {
         return visitChildren(ctx);
     }
 
@@ -97,7 +86,7 @@ public class UUVBaseVisitor<T> extends AbstractParseTreeVisitor<T> implements UU
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public T visitUuv(UUVParser.UuvContext ctx) {
+    public T visitSimulation(UUVParser.SimulationContext ctx) {
         return visitChildren(ctx);
     }
 
@@ -108,7 +97,18 @@ public class UUVBaseVisitor<T> extends AbstractParseTreeVisitor<T> implements UU
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public T visitChange(UUVParser.ChangeContext ctx) {
+    public T visitSpeed(UUVParser.SpeedContext ctx) {
+        return visitChildren(ctx);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation returns the result of calling
+     * {@link #visitChildren} on {@code ctx}.</p>
+     */
+    @Override
+    public T visitUuv(UUVParser.UuvContext ctx) {
         return visitChildren(ctx);
     }
 }

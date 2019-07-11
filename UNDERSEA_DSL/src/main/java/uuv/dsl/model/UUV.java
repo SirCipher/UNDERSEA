@@ -1,7 +1,5 @@
 package uuv.dsl.model;
 
-import java.util.Iterator;
-
 public class UUV {
 
     private String name;
