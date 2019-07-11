@@ -1,10 +1,7 @@
 package uuv.properties;
 
 import auxiliary.DSLException;
-import auxiliary.Utility;
-import uuv.dsl.model.Sensor;
 import uuv.dsl.model.UUV;
-import uuv.parser.ParserEngine;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -14,7 +11,6 @@ public class SimulationProperties {
 
     private static SimulationProperties instance = null;
     private Map<EnvironmentValue, String> environmentValues = new HashMap<>();
-    private Map<String, Sensor> globalSensors = new HashMap<>();
     private Map<String, UUV> agents = new HashMap<>();
 
     private SimulationProperties() {
@@ -36,8 +32,12 @@ public class SimulationProperties {
         this.agents.put(uuv.getName(), uuv);
     }
 
-    public Map<String, Sensor> getGlobalSensors() {
-        return globalSensors;
+    public Map<String, UUV> getAgents() {
+        return agents;
+    }
+
+    public Map<EnvironmentValue, String> getEnvironmentValues() {
+        return environmentValues;
     }
 
     public void setEnvironmentValue(EnvironmentValue name, String value) {

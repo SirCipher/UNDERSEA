@@ -15,6 +15,14 @@ SENSORS:
     'sensors'
 ;
 
+BEHAVIOUR_FILE:
+    'behaviour file'
+;
+
+BHV_FILE:
+    ID '.bhv'
+;
+
 SERVER_PORT: 
 	'port'
 ;

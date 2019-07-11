@@ -166,7 +166,7 @@ public class ParserEngine {
 
         // generate moos files
         // TODO: Add MOOS file generation
-        simulationProperties.generateMoosBlocks();
+//        simulationProperties.generateMoosBlocks();
     }
 
 }

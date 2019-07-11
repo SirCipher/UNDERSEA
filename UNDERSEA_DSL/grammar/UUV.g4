@@ -63,6 +63,7 @@ uuv:
 				NAME ASSIGN name=ID
 			|	SPEED ASSIGN min=(INT | DOUBLE) ':' max=(INT | DOUBLE) ':' steps=INT
 			|	SERVER_PORT ASSIGN uuvPort=INT
+            |   BEHAVIOUR_FILE ASSIGN behaviourFile=BHV_FILE
 			|   SENSORS ASSIGN sensors=BEGL elems? ENDL
 			)+
 		'}'

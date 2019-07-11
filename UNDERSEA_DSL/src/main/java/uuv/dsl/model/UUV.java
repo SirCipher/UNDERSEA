@@ -9,26 +9,20 @@ public class UUV {
     private String name;
     private String rate;
     private String port;
+    private String behaviourFile;
     private Range speedRange;
     private List<Sensor> sensors = new ArrayList<>();
 
-    public UUV(String name, String port, double min, double max, int steps) {
+    public UUV(String name, String port, String behaviourFile, double min, double max, int steps) {
         this.name = name;
         this.port = port;
+        this.behaviourFile = behaviourFile;
         this.speedRange = new Range(min, max, steps + 1);
         this.rate = "4";
     }
 
-    public String getRate() {
-        return rate;
-    }
-
-    public Range getSpeedRange() {
-        return speedRange;
-    }
-
-    public List<Sensor> getSensors() {
-        return sensors;
+    public String getBehaviourFile() {
+        return behaviourFile;
     }
 
     public String getName() {
@@ -39,12 +33,28 @@ public class UUV {
         return this.port;
     }
 
+    public String getRate() {
+        return rate;
+    }
+
+    public List<Sensor> getSensors() {
+        return sensors;
+    }
+
+    public void setSensors(List<Sensor> sensors) {
+        this.sensors = sensors;
+    }
+
     public double getSpeedMax() {
         return speedRange.getMax();
     }
 
     public double getSpeedMin() {
         return speedRange.getMin();
+    }
+
+    public Range getSpeedRange() {
+        return speedRange;
     }
 
     public int getSpeedSteps() {
@@ -78,9 +88,5 @@ public class UUV {
         str.append("\t SENSORS = ").append(sensorsStr).append("\n").append("}\n\n");
 
         return str.toString();
-    }
-
-    public void setSensors(List<Sensor> sensors) {
-        this.sensors = sensors;
     }
 }

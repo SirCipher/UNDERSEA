@@ -18,8 +18,9 @@ public class UUVListener extends UUVBaseListener {
     private List<Sensor> sensors = new ArrayList<>();
 
     @Override
-    public void enterHost(UUVParser.HostContext ctx) {
-        simulationProperties.setEnvironmentValue(SimulationProperties.EnvironmentValue.HOST, ctx.value.getText());
+    public void enterSimulation(UUVParser.SimulationContext ctx) {
+        simulationProperties.setEnvironmentValue(SimulationProperties.EnvironmentValue.SIMULATION_TIME,
+                ctx.value.getText());
     }
 
     @Override
@@ -29,14 +30,13 @@ public class UUVListener extends UUVBaseListener {
     }
 
     @Override
-    public void enterPort(UUVParser.PortContext ctx) {
-        simulationProperties.setEnvironmentValue(SimulationProperties.EnvironmentValue.PORT, ctx.value.getText());
+    public void enterHost(UUVParser.HostContext ctx) {
+        simulationProperties.setEnvironmentValue(SimulationProperties.EnvironmentValue.HOST, ctx.value.getText());
     }
 
     @Override
-    public void enterSimulation(UUVParser.SimulationContext ctx) {
-        simulationProperties.setEnvironmentValue(SimulationProperties.EnvironmentValue.SIMULATION_TIME,
-                ctx.value.getText());
+    public void enterPort(UUVParser.PortContext ctx) {
+        simulationProperties.setEnvironmentValue(SimulationProperties.EnvironmentValue.PORT, ctx.value.getText());
     }
 
     @Override
@@ -55,14 +55,16 @@ public class UUVListener extends UUVBaseListener {
     public void enterUuv(UUVParser.UuvContext ctx) {
         String name = ctx.name.getText();
         String port = ctx.uuvPort.getText();
+        String behaviourFile = ctx.behaviourFile.getText();
         double min = Double.parseDouble(ctx.min.getText());
         double max = Double.parseDouble(ctx.max.getText());
         int steps = Integer.parseInt(ctx.steps.getText());
 
-        UUV uuv = new UUV(name, port, min, max, steps);
-        uuv.setSensors(sensors);;
+        UUV uuv = new UUV(name, port, behaviourFile, min, max, steps);
+        uuv.setSensors(sensors);
+        ;
 
-        simulationProperties.addUUV(new UUV(name, port, min, max, steps));
+        simulationProperties.addUUV(uuv);
     }
 
     public void setSimulationProperties(SimulationProperties simulationProperties) {
