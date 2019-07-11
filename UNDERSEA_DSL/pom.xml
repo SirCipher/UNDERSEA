@@ -41,8 +41,9 @@
  	<!-- Build  -->  
 	<build>
   		<finalName>UNDERSEA_DSL</finalName>
-		<sourceDirectory>src</sourceDirectory>
-		
+		<sourceDirectory>src/main/java</sourceDirectory>
+
+
   		<plugins>
 			<!-- download source code in Eclipse, best practice -->
 			<plugin>
