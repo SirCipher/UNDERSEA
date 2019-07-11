@@ -24,6 +24,7 @@ public class UUVListener extends UUVBaseListener {
 
         try {
             serverPortStart = Integer.parseInt(ctx.value.getText());
+            serverPortStart++;
         } catch (NumberFormatException e) {
             throw new NumberFormatException("Unparseable port start value: " + ctx.value.getText());
         }

@@ -7,6 +7,6 @@ ProcessConfig = charlie
 	 CommsTick = 4
 	 MAX_APPCAST_EVENTS = 25 
 	 NAME = charlie
-	 PORT = 9002
+	 PORT = 9003
 	 SENSORS = SENSOR1,SENSOR4
 }

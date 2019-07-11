@@ -2,7 +2,7 @@
 // Meta vehicle config file
 //------------------------------------------
 ServerHost   = localhost
-ServerPort   = 9000
+ServerPort   = 9001
 Simulator    = true
 Community    = alpha
 LatOrigin    = 43.825300
@@ -20,7 +20,6 @@ ProcessConfig = ANTLER
 	 Run = uSimMarine    @ NewConsole = false
 	 Run = pNodeReporter @ NewConsole = false
 	 Run = pMarinePID    @ NewConsole = false
-	 Run = pMarineViewer @ NewConsole = false
 	 Run = uTimerScript  @ NewConsole = false
 	 Run = pHelmIvP      @ NewConsole = false
 	 Run = sUUV          @ NewConsole = false ~alpha
@@ -33,8 +32,17 @@ ProcessConfig = ANTLER
 #include plug_uTimerScript.moos
 #include plug_pNodeReporter.moos
 #include plug_pMarinePID.moos
-#include plug_pMarineViewer.moos
 #include plug_pHelmIvP_alpha.moos
 #include plug_UUV_alpha.moos
 #include plug_SENSOR1.moos
 #include plug_SENSOR2.moos
+
+ProcessConfig = pShare
+{
+    AppTick    = 4
+    CommsTick  = 4  
+    input  = route = localhost:9201
+    output = src_name=NODE_REPORT_LOCAL, dest_name=NODE_REPORT, route=localhost:9000
+    output = src_name=VIEW_SEGLIST, route=localhost:9000
+    output = src_name=VIEW_POINT, route=localhost:9000
+}
