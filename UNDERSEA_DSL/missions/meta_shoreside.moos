@@ -69,12 +69,55 @@ ProcessConfig = pMarineViewer
     action+ = MENU_KEY=deploy # MOOS_MANUAL_OVERRIDE_ALL=false
     action  = RETURN_ALL=true
     action  = UPDATES_RETURN_ALL=speed=1.4
-    action  = MENU_KEY=deploy-alpha # DEPLOY_ALPHA = true # RETURN_ALPHA = false
-    action+ = MENU_KEY=deploy-alpha # MOOS_MANUAL_OVERRIDE_ALPHA=false
     action  = MENU_KEY=deploy-bravo # DEPLOY_BRAVO = true # RETURN_BRAVO = false
     action+ = MENU_KEY=deploy-bravo # MOOS_MANUAL_OVERRIDE_BRAVO=false
-    action  = MENU_KEY = return-alpha # RETURN_ALPHA=true
-    action+ = UPDATES_RETURN_ALPHA=speed=1.4
     action  = MENU_KEY = return-bravo # RETURN_BRAVO=true
     action+ = UPDATES_RETURN_BRAVO=speed=1.4
+    action  = MENU_KEY=deploy-alpha # DEPLOY_ALPHA = true # RETURN_ALPHA = false
+    action+ = MENU_KEY=deploy-alpha # MOOS_MANUAL_OVERRIDE_ALPHA=false
+    action  = MENU_KEY = return-alpha # RETURN_ALPHA=true
+    action+ = UPDATES_RETURN_ALPHA=speed=1.4
+    action  = MENU_KEY=deploy-charlie # DEPLOY_CHARLIE = true # RETURN_CHARLIE = false
+    action+ = MENU_KEY=deploy-charlie # MOOS_MANUAL_OVERRIDE_CHARLIE=false
+    action  = MENU_KEY = return-charlie # RETURN_CHARLIE=true
+    action+ = UPDATES_RETURN_CHARLIE=speed=1.4
+}
+
+//------------------------------------------
+// pShare configuration block
+//------------------------------------------
+ProcessConfig = pShare
+{
+   AppTick    = 4
+   CommsTick  = 4
+
+   input  = route = localhost:9200
+
+   output = src_name=DEPLOY_ALL, dest_name= DEPLOY, route=localhost:9202
+   output = src_name=RETURN_ALL, dest_name= RETURN, route=localhost:9202
+   output = src_name=MOOS_MANUAL_OVERRIDE_ALL, dest_name= MOOS_MANUAL_OVERRIDE, route=localhost:9202
+   output = src_name=UPDATES_RETURN_ALL, dest_name = UPDATES_RETURN, route=localhost:9202
+   output = src_name=DEPLOY_BRAVO, dest_name= DEPLOY, route=localhost:9202
+   output = src_name=RETURN_BRAVO, dest_name= RETURN, route=localhost:9202
+   output = src_name=MOOS_MANUAL_OVERRIDE_BRAVO dest_name= MOOS_MANUAL_OVERRIDE, route=localhost:9202
+   output = src_name=UPDATES_RETURN_BRAVO, dest_name = UPDATES_RETURN, route=localhost:9202
+
+   output = src_name=DEPLOY_ALL, dest_name= DEPLOY, route=localhost:9201
+   output = src_name=RETURN_ALL, dest_name= RETURN, route=localhost:9201
+   output = src_name=MOOS_MANUAL_OVERRIDE_ALL, dest_name= MOOS_MANUAL_OVERRIDE, route=localhost:9201
+   output = src_name=UPDATES_RETURN_ALL, dest_name = UPDATES_RETURN, route=localhost:9201
+   output = src_name=DEPLOY_ALPHA, dest_name= DEPLOY, route=localhost:9201
+   output = src_name=RETURN_ALPHA, dest_name= RETURN, route=localhost:9201
+   output = src_name=MOOS_MANUAL_OVERRIDE_ALPHA dest_name= MOOS_MANUAL_OVERRIDE, route=localhost:9201
+   output = src_name=UPDATES_RETURN_ALPHA, dest_name = UPDATES_RETURN, route=localhost:9201
+
+   output = src_name=DEPLOY_ALL, dest_name= DEPLOY, route=localhost:9203
+   output = src_name=RETURN_ALL, dest_name= RETURN, route=localhost:9203
+   output = src_name=MOOS_MANUAL_OVERRIDE_ALL, dest_name= MOOS_MANUAL_OVERRIDE, route=localhost:9203
+   output = src_name=UPDATES_RETURN_ALL, dest_name = UPDATES_RETURN, route=localhost:9203
+   output = src_name=DEPLOY_CHARLIE, dest_name= DEPLOY, route=localhost:9203
+   output = src_name=RETURN_CHARLIE, dest_name= RETURN, route=localhost:9203
+   output = src_name=MOOS_MANUAL_OVERRIDE_CHARLIE dest_name= MOOS_MANUAL_OVERRIDE, route=localhost:9203
+   output = src_name=UPDATES_RETURN_CHARLIE, dest_name = UPDATES_RETURN, route=localhost:9203
+
 }

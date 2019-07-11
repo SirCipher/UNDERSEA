@@ -183,14 +183,52 @@ class MoosConfigurationWriter {
         shoreside.append("    action+ = MENU_KEY=deploy # MOOS_MANUAL_OVERRIDE_ALL=false\n");
         shoreside.append("    action  = RETURN_ALL=true\n");
         shoreside.append("    action  = UPDATES_RETURN_ALL=speed=1.4\n");
-        shoreside.append("    action  = MENU_KEY=deploy-alpha # DEPLOY_ALPHA = true # RETURN_ALPHA = false\n");
-        shoreside.append("    action+ = MENU_KEY=deploy-alpha # MOOS_MANUAL_OVERRIDE_ALPHA=false\n");
-        shoreside.append("    action  = MENU_KEY=deploy-bravo # DEPLOY_BRAVO = true # RETURN_BRAVO = false\n");
-        shoreside.append("    action+ = MENU_KEY=deploy-bravo # MOOS_MANUAL_OVERRIDE_BRAVO=false\n");
-        shoreside.append("    action  = MENU_KEY = return-alpha # RETURN_ALPHA=true\n");
-        shoreside.append("    action+ = UPDATES_RETURN_ALPHA=speed=1.4\n");
-        shoreside.append("    action  = MENU_KEY = return-bravo # RETURN_BRAVO=true\n");
-        shoreside.append("    action+ = UPDATES_RETURN_BRAVO=speed=1.4\n");
+
+        for (Map.Entry<String, UUV> entry : simulationProperties.getAgents().entrySet()) {
+            UUV uuv = entry.getValue();
+            String lower = uuv.getName().toLowerCase();
+            String upper = uuv.getName().toUpperCase();
+
+            shoreside.append("    action  = MENU_KEY=deploy-" + lower + " # DEPLOY_" + upper + " = true # RETURN_" + upper + " = false\n");
+            shoreside.append("    action+ = MENU_KEY=deploy-" + lower + " # MOOS_MANUAL_OVERRIDE_" + upper + "=false" +
+                    "\n");
+            shoreside.append("    action  = MENU_KEY = return-" + lower + " # RETURN_" + upper + "=true\n");
+            shoreside.append("    action+ = UPDATES_RETURN_" + upper + "=speed=1.4\n");
+        }
+
+        shoreside.append("}\n");
+
+        shoreside.append("\n//------------------------------------------\n");
+        shoreside.append("// pShare configuration block\n");
+        shoreside.append("//------------------------------------------\n");
+        shoreside.append("ProcessConfig = pShare\n");
+        shoreside.append("{\n");
+        shoreside.append("   AppTick    = 4\n");
+        shoreside.append("   CommsTick  = 4\n");
+        shoreside.append("\n");
+        shoreside.append("   input  = route = localhost:9200\n");
+        shoreside.append("\n");
+
+        for (Map.Entry<String, UUV> entry : simulationProperties.getAgents().entrySet()) {
+            UUV uuv = entry.getValue();
+            String upper = uuv.getName().toUpperCase();
+            // TODO: Align pShare ports
+            int port = Integer.parseInt(uuv.getPort()) + 200;
+            String targetUri =
+                    simulationProperties.getEnvironmentValue(SimulationProperties.EnvironmentValue.HOST) + ":" + port;
+
+            shoreside.append("   output = src_name=DEPLOY_ALL, dest_name= DEPLOY, route=" + targetUri + "\n");
+            shoreside.append("   output = src_name=RETURN_ALL, dest_name= RETURN, route=" + targetUri + "\n");
+            shoreside.append(
+                    "   output = src_name=MOOS_MANUAL_OVERRIDE_ALL, dest_name= MOOS_MANUAL_OVERRIDE, route=" + targetUri + "\n");
+            shoreside.append("   output = src_name=UPDATES_RETURN_ALL, dest_name = UPDATES_RETURN, route=" + targetUri + "\n");
+            shoreside.append("   output = src_name=DEPLOY_" + upper + ", dest_name= DEPLOY, route=" + targetUri + "\n");
+            shoreside.append("   output = src_name=RETURN_" + upper + ", dest_name= RETURN, route=" + targetUri + "\n");
+            shoreside.append("   output = src_name=MOOS_MANUAL_OVERRIDE_" + upper + " dest_name= " +
+                    "MOOS_MANUAL_OVERRIDE, route=" + targetUri + "\n");
+            shoreside.append("   output = src_name=UPDATES_RETURN_" + upper + ", dest_name = UPDATES_RETURN, route=" + targetUri + "\n\n");
+        }
+
         shoreside.append("}\n");
 
         Utility.exportToFile(ParserEngine.missionDir + "/meta_shoreside.moos",
