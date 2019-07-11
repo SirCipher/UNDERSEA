@@ -27,8 +27,6 @@ ProcessConfig = ANTLER
 	   Run = pHelmIvP		@ NewConsole = false
 
 	   Run = sUUV			@ NewConsole = false ~bravo
-	   Run = sSensor		@ NewConsole = false ~SENSOR1
-	   Run = sSensor		@ NewConsole = false ~SENSOR2
 	   Run = sSensor		@ NewConsole = false ~SENSOR3
 	   Run = sSensor		@ NewConsole = false ~SENSOR4
 }
@@ -41,8 +39,6 @@ ProcessConfig = ANTLER
 #include plug_pMarineViewer.moos
 #include plug_pHelmIvP_bravo.moos
 #include plug_UUV_bravo.moos
-#include plug_SENSOR1.moos
-#include plug_SENSOR2.moos
 #include plug_SENSOR3.moos
 #include plug_SENSOR4.moos
 

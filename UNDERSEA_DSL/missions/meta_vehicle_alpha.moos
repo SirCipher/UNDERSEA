@@ -29,8 +29,6 @@ ProcessConfig = ANTLER
 	   Run = sUUV			@ NewConsole = false ~alpha
 	   Run = sSensor		@ NewConsole = false ~SENSOR1
 	   Run = sSensor		@ NewConsole = false ~SENSOR2
-	   Run = sSensor		@ NewConsole = false ~SENSOR3
-	   Run = sSensor		@ NewConsole = false ~SENSOR4
 }
 
 #include plug_uProcessWatch.moos
@@ -43,6 +41,4 @@ ProcessConfig = ANTLER
 #include plug_UUV_alpha.moos
 #include plug_SENSOR1.moos
 #include plug_SENSOR2.moos
-#include plug_SENSOR3.moos
-#include plug_SENSOR4.moos
 

@@ -46,12 +46,6 @@ public class UUVListener extends UUVBaseListener {
     }
 
     @Override
-    public void enterElem(UUVParser.ElemContext ctx) {
-        Sensor sensor = sensorFactory.get(ctx.getText());
-        sensors.add(sensor);
-    }
-
-    @Override
     public void enterUuv(UUVParser.UuvContext ctx) {
         String name = ctx.name.getText();
         String port = ctx.uuvPort.getText();
@@ -59,6 +53,13 @@ public class UUVListener extends UUVBaseListener {
         double min = Double.parseDouble(ctx.min.getText());
         double max = Double.parseDouble(ctx.max.getText());
         int steps = Integer.parseInt(ctx.steps.getText());
+
+        List<Sensor> sensors = new ArrayList<>();
+
+        for(UUVParser.ElemContext context : ctx.elems(0).elem()){
+            Sensor sensor = sensorFactory.get(context.getText());
+            sensors.add(sensor);
+        }
 
         UUV uuv = new UUV(name, port, behaviourFile, min, max, steps);
         uuv.setSensors(sensors);

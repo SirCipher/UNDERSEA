@@ -51,15 +51,16 @@ public class MoosConfigurationWriter {
             properties.put("PORT", uuv.getPort());
 
             StringBuilder sensorsNames = new StringBuilder();
-            Iterator<Map.Entry<String, Sensor>> it = sensorFactory.getSensors().entrySet().iterator();
 
-            while (it.hasNext()) {
-                sensorsNames.append(it.next().getValue().getName());
+            for (int i = 0; i < uuv.getSensors().size(); i++) {
+                Sensor sensor = uuv.getSensors().get(i);
+                sensorsNames.append(sensor.getName());
 
-                if (it.hasNext()) {
+                if (i + 1 == uuv.getSensors().size()) {
                     sensorsNames.append(",");
                 }
             }
+
             properties.put("SENSORS", sensorsNames.toString());
 
             properties.put("SPEED", uuv.getSpeedMin() + "," + uuv.getSpeedMax() + "," + uuv.getSpeedSteps());
