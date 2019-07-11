@@ -111,23 +111,41 @@ public class UUVParser extends Parser {
 	}
 
 	public static class ModelContext extends ParserRuleContext {
-		public SimulationContext simulation() {
-			return getRuleContext(SimulationContext.class,0);
+		public List<SimulationContext> simulation() {
+			return getRuleContexts(SimulationContext.class);
 		}
-		public InvocationContext invocation() {
-			return getRuleContext(InvocationContext.class,0);
+		public SimulationContext simulation(int i) {
+			return getRuleContext(SimulationContext.class,i);
 		}
-		public HostContext host() {
-			return getRuleContext(HostContext.class,0);
+		public List<InvocationContext> invocation() {
+			return getRuleContexts(InvocationContext.class);
 		}
-		public PortContext port() {
-			return getRuleContext(PortContext.class,0);
+		public InvocationContext invocation(int i) {
+			return getRuleContext(InvocationContext.class,i);
 		}
-		public UuvContext uuv() {
-			return getRuleContext(UuvContext.class,0);
+		public List<HostContext> host() {
+			return getRuleContexts(HostContext.class);
 		}
-		public SpeedContext speed() {
-			return getRuleContext(SpeedContext.class,0);
+		public HostContext host(int i) {
+			return getRuleContext(HostContext.class,i);
+		}
+		public List<PortContext> port() {
+			return getRuleContexts(PortContext.class);
+		}
+		public PortContext port(int i) {
+			return getRuleContext(PortContext.class,i);
+		}
+		public List<UuvContext> uuv() {
+			return getRuleContexts(UuvContext.class);
+		}
+		public UuvContext uuv(int i) {
+			return getRuleContext(UuvContext.class,i);
+		}
+		public List<SpeedContext> speed() {
+			return getRuleContexts(SpeedContext.class);
+		}
+		public SpeedContext speed(int i) {
+			return getRuleContext(SpeedContext.class,i);
 		}
 		public ModelContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -151,51 +169,62 @@ public class UUVParser extends Parser {
 	public final ModelContext model() throws RecognitionException {
 		ModelContext _localctx = new ModelContext(_ctx, getState());
 		enterRule(_localctx, 0, RULE_model);
+		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(26);
+			setState(26); 
 			_errHandler.sync(this);
-			switch (_input.LA(1)) {
-			case SIMULATION_TIME:
+			_la = _input.LA(1);
+			do {
 				{
-				setState(20);
-				simulation();
+				setState(26);
+				_errHandler.sync(this);
+				switch (_input.LA(1)) {
+				case SIMULATION_TIME:
+					{
+					setState(20);
+					simulation();
+					}
+					break;
+				case TIME_WINDOW:
+					{
+					setState(21);
+					invocation();
+					}
+					break;
+				case SERVER_HOST:
+					{
+					setState(22);
+					host();
+					}
+					break;
+				case SERVER_PORT:
+					{
+					setState(23);
+					port();
+					}
+					break;
+				case T__1:
+					{
+					setState(24);
+					uuv();
+					}
+					break;
+				case SIMULATION_SPEED:
+					{
+					setState(25);
+					speed();
+					}
+					break;
+				default:
+					throw new NoViableAltException(this);
 				}
-				break;
-			case TIME_WINDOW:
-				{
-				setState(21);
-				invocation();
 				}
-				break;
-			case SERVER_HOST:
-				{
-				setState(22);
-				host();
-				}
-				break;
-			case SERVER_PORT:
-				{
-				setState(23);
-				port();
-				}
-				break;
-			case T__1:
-				{
-				setState(24);
-				uuv();
-				}
-				break;
-			case SIMULATION_SPEED:
-				{
-				setState(25);
-				speed();
-				}
-				break;
-			default:
-				throw new NoViableAltException(this);
-			}
+				setState(28); 
+				_errHandler.sync(this);
+				_la = _input.LA(1);
+			} while ( (((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << T__1) | (1L << SERVER_HOST) | (1L << SERVER_PORT) | (1L << SIMULATION_TIME) | (1L << TIME_WINDOW) | (1L << SIMULATION_SPEED))) != 0) );
 			}
 		}
 		catch (RecognitionException re) {
@@ -239,11 +268,11 @@ public class UUVParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(28);
-			match(SIMULATION_TIME);
-			setState(29);
-			match(ASSIGN);
 			setState(30);
+			match(SIMULATION_TIME);
+			setState(31);
+			match(ASSIGN);
+			setState(32);
 			((SimulationContext)_localctx).value = match(INT);
 			}
 		}
@@ -290,11 +319,11 @@ public class UUVParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(32);
-			match(TIME_WINDOW);
-			setState(33);
-			match(ASSIGN);
 			setState(34);
+			match(TIME_WINDOW);
+			setState(35);
+			match(ASSIGN);
+			setState(36);
 			((InvocationContext)_localctx).value = _input.LT(1);
 			_la = _input.LA(1);
 			if ( !(_la==INT || _la==DOUBLE) ) {
@@ -349,11 +378,11 @@ public class UUVParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(36);
-			match(SERVER_HOST);
-			setState(37);
-			match(ASSIGN);
 			setState(38);
+			match(SERVER_HOST);
+			setState(39);
+			match(ASSIGN);
+			setState(40);
 			((HostContext)_localctx).value = _input.LT(1);
 			_la = _input.LA(1);
 			if ( !(_la==T__0 || _la==IP) ) {
@@ -407,11 +436,11 @@ public class UUVParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(40);
-			match(SERVER_PORT);
-			setState(41);
-			match(ASSIGN);
 			setState(42);
+			match(SERVER_PORT);
+			setState(43);
+			match(ASSIGN);
+			setState(44);
 			((PortContext)_localctx).value = match(INT);
 			}
 		}
@@ -456,11 +485,11 @@ public class UUVParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(44);
-			match(SIMULATION_SPEED);
-			setState(45);
-			match(ASSIGN);
 			setState(46);
+			match(SIMULATION_SPEED);
+			setState(47);
+			match(ASSIGN);
+			setState(48);
 			((SpeedContext)_localctx).value = match(INT);
 			}
 		}
@@ -507,19 +536,19 @@ public class UUVParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(48);
-			match(BEGL);
 			setState(50);
+			match(BEGL);
+			setState(52);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			if (_la==ID) {
 				{
-				setState(49);
+				setState(51);
 				elems();
 				}
 			}
 
-			setState(52);
+			setState(54);
 			match(ENDL);
 			}
 		}
@@ -571,21 +600,21 @@ public class UUVParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(54);
+			setState(56);
 			elem();
-			setState(59);
+			setState(61);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			while (_la==SEP) {
 				{
 				{
-				setState(55);
+				setState(57);
 				match(SEP);
-				setState(56);
+				setState(58);
 				elem();
 				}
 				}
-				setState(61);
+				setState(63);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 			}
@@ -629,7 +658,7 @@ public class UUVParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(62);
+			setState(64);
 			match(ID);
 			}
 		}
@@ -704,35 +733,35 @@ public class UUVParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(64);
+			setState(66);
 			match(T__1);
-			setState(65);
+			setState(67);
 			match(T__2);
-			setState(79); 
+			setState(81); 
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			do {
 				{
-				setState(79);
+				setState(81);
 				_errHandler.sync(this);
 				switch (_input.LA(1)) {
 				case NAME:
 					{
-					setState(66);
-					match(NAME);
-					setState(67);
-					match(ASSIGN);
 					setState(68);
+					match(NAME);
+					setState(69);
+					match(ASSIGN);
+					setState(70);
 					((UuvContext)_localctx).name = match(ID);
 					}
 					break;
 				case SPEED:
 					{
-					setState(69);
-					match(SPEED);
-					setState(70);
-					match(ASSIGN);
 					setState(71);
+					match(SPEED);
+					setState(72);
+					match(ASSIGN);
+					setState(73);
 					((UuvContext)_localctx).min = _input.LT(1);
 					_la = _input.LA(1);
 					if ( !(_la==INT || _la==DOUBLE) ) {
@@ -743,9 +772,9 @@ public class UUVParser extends Parser {
 						_errHandler.reportMatch(this);
 						consume();
 					}
-					setState(72);
+					setState(74);
 					match(T__3);
-					setState(73);
+					setState(75);
 					((UuvContext)_localctx).max = _input.LT(1);
 					_la = _input.LA(1);
 					if ( !(_la==INT || _la==DOUBLE) ) {
@@ -756,19 +785,19 @@ public class UUVParser extends Parser {
 						_errHandler.reportMatch(this);
 						consume();
 					}
-					setState(74);
+					setState(76);
 					match(T__3);
-					setState(75);
+					setState(77);
 					((UuvContext)_localctx).steps = match(INT);
 					}
 					break;
 				case SERVER_PORT:
 					{
-					setState(76);
-					match(SERVER_PORT);
-					setState(77);
-					match(ASSIGN);
 					setState(78);
+					match(SERVER_PORT);
+					setState(79);
+					match(ASSIGN);
+					setState(80);
 					((UuvContext)_localctx).value = match(INT);
 					}
 					break;
@@ -776,11 +805,11 @@ public class UUVParser extends Parser {
 					throw new NoViableAltException(this);
 				}
 				}
-				setState(81); 
+				setState(83); 
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 			} while ( (((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << SERVER_PORT) | (1L << SPEED) | (1L << NAME))) != 0) );
-			setState(83);
+			setState(85);
 			match(T__4);
 			}
 		}
@@ -796,28 +825,29 @@ public class UUVParser extends Parser {
 	}
 
 	public static final String _serializedATN =
-		"\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3\37X\4\2\t\2\4\3\t"+
+		"\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3\37Z\4\2\t\2\4\3\t"+
 		"\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7\4\b\t\b\4\t\t\t\4\n\t\n\4\13\t\13\3"+
-		"\2\3\2\3\2\3\2\3\2\3\2\5\2\35\n\2\3\3\3\3\3\3\3\3\3\4\3\4\3\4\3\4\3\5"+
-		"\3\5\3\5\3\5\3\6\3\6\3\6\3\6\3\7\3\7\3\7\3\7\3\b\3\b\5\b\65\n\b\3\b\3"+
-		"\b\3\t\3\t\3\t\7\t<\n\t\f\t\16\t?\13\t\3\n\3\n\3\13\3\13\3\13\3\13\3\13"+
-		"\3\13\3\13\3\13\3\13\3\13\3\13\3\13\3\13\3\13\3\13\6\13R\n\13\r\13\16"+
-		"\13S\3\13\3\13\3\13\2\2\f\2\4\6\b\n\f\16\20\22\24\2\4\3\2\32\33\4\2\3"+
-		"\3\34\34\2W\2\34\3\2\2\2\4\36\3\2\2\2\6\"\3\2\2\2\b&\3\2\2\2\n*\3\2\2"+
-		"\2\f.\3\2\2\2\16\62\3\2\2\2\208\3\2\2\2\22@\3\2\2\2\24B\3\2\2\2\26\35"+
-		"\5\4\3\2\27\35\5\6\4\2\30\35\5\b\5\2\31\35\5\n\6\2\32\35\5\24\13\2\33"+
-		"\35\5\f\7\2\34\26\3\2\2\2\34\27\3\2\2\2\34\30\3\2\2\2\34\31\3\2\2\2\34"+
-		"\32\3\2\2\2\34\33\3\2\2\2\35\3\3\2\2\2\36\37\7\f\2\2\37 \7\b\2\2 !\7\32"+
-		"\2\2!\5\3\2\2\2\"#\7\r\2\2#$\7\b\2\2$%\t\2\2\2%\7\3\2\2\2&\'\7\t\2\2\'"+
-		"(\7\b\2\2()\t\3\2\2)\t\3\2\2\2*+\7\13\2\2+,\7\b\2\2,-\7\32\2\2-\13\3\2"+
-		"\2\2./\7\16\2\2/\60\7\b\2\2\60\61\7\32\2\2\61\r\3\2\2\2\62\64\7\27\2\2"+
-		"\63\65\5\20\t\2\64\63\3\2\2\2\64\65\3\2\2\2\65\66\3\2\2\2\66\67\7\30\2"+
-		"\2\67\17\3\2\2\28=\5\22\n\29:\7\31\2\2:<\5\22\n\2;9\3\2\2\2<?\3\2\2\2"+
-		"=;\3\2\2\2=>\3\2\2\2>\21\3\2\2\2?=\3\2\2\2@A\7\26\2\2A\23\3\2\2\2BC\7"+
-		"\4\2\2CQ\7\5\2\2DE\7\21\2\2EF\7\b\2\2FR\7\26\2\2GH\7\17\2\2HI\7\b\2\2"+
-		"IJ\t\2\2\2JK\7\6\2\2KL\t\2\2\2LM\7\6\2\2MR\7\32\2\2NO\7\13\2\2OP\7\b\2"+
-		"\2PR\7\32\2\2QD\3\2\2\2QG\3\2\2\2QN\3\2\2\2RS\3\2\2\2SQ\3\2\2\2ST\3\2"+
-		"\2\2TU\3\2\2\2UV\7\7\2\2V\25\3\2\2\2\7\34\64=QS";
+		"\2\3\2\3\2\3\2\3\2\3\2\6\2\35\n\2\r\2\16\2\36\3\3\3\3\3\3\3\3\3\4\3\4"+
+		"\3\4\3\4\3\5\3\5\3\5\3\5\3\6\3\6\3\6\3\6\3\7\3\7\3\7\3\7\3\b\3\b\5\b\67"+
+		"\n\b\3\b\3\b\3\t\3\t\3\t\7\t>\n\t\f\t\16\tA\13\t\3\n\3\n\3\13\3\13\3\13"+
+		"\3\13\3\13\3\13\3\13\3\13\3\13\3\13\3\13\3\13\3\13\3\13\3\13\6\13T\n\13"+
+		"\r\13\16\13U\3\13\3\13\3\13\2\2\f\2\4\6\b\n\f\16\20\22\24\2\4\3\2\32\33"+
+		"\4\2\3\3\34\34\2Z\2\34\3\2\2\2\4 \3\2\2\2\6$\3\2\2\2\b(\3\2\2\2\n,\3\2"+
+		"\2\2\f\60\3\2\2\2\16\64\3\2\2\2\20:\3\2\2\2\22B\3\2\2\2\24D\3\2\2\2\26"+
+		"\35\5\4\3\2\27\35\5\6\4\2\30\35\5\b\5\2\31\35\5\n\6\2\32\35\5\24\13\2"+
+		"\33\35\5\f\7\2\34\26\3\2\2\2\34\27\3\2\2\2\34\30\3\2\2\2\34\31\3\2\2\2"+
+		"\34\32\3\2\2\2\34\33\3\2\2\2\35\36\3\2\2\2\36\34\3\2\2\2\36\37\3\2\2\2"+
+		"\37\3\3\2\2\2 !\7\f\2\2!\"\7\b\2\2\"#\7\32\2\2#\5\3\2\2\2$%\7\r\2\2%&"+
+		"\7\b\2\2&\'\t\2\2\2\'\7\3\2\2\2()\7\t\2\2)*\7\b\2\2*+\t\3\2\2+\t\3\2\2"+
+		"\2,-\7\13\2\2-.\7\b\2\2./\7\32\2\2/\13\3\2\2\2\60\61\7\16\2\2\61\62\7"+
+		"\b\2\2\62\63\7\32\2\2\63\r\3\2\2\2\64\66\7\27\2\2\65\67\5\20\t\2\66\65"+
+		"\3\2\2\2\66\67\3\2\2\2\678\3\2\2\289\7\30\2\29\17\3\2\2\2:?\5\22\n\2;"+
+		"<\7\31\2\2<>\5\22\n\2=;\3\2\2\2>A\3\2\2\2?=\3\2\2\2?@\3\2\2\2@\21\3\2"+
+		"\2\2A?\3\2\2\2BC\7\26\2\2C\23\3\2\2\2DE\7\4\2\2ES\7\5\2\2FG\7\21\2\2G"+
+		"H\7\b\2\2HT\7\26\2\2IJ\7\17\2\2JK\7\b\2\2KL\t\2\2\2LM\7\6\2\2MN\t\2\2"+
+		"\2NO\7\6\2\2OT\7\32\2\2PQ\7\13\2\2QR\7\b\2\2RT\7\32\2\2SF\3\2\2\2SI\3"+
+		"\2\2\2SP\3\2\2\2TU\3\2\2\2US\3\2\2\2UV\3\2\2\2VW\3\2\2\2WX\7\7\2\2X\25"+
+		"\3\2\2\2\b\34\36\66?SU";
 	public static final ATN _ATN =
 		new ATNDeserializer().deserialize(_serializedATN.toCharArray());
 	static {

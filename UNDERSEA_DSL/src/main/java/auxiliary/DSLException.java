@@ -12,6 +12,6 @@ public class DSLException extends RuntimeException {
     }
 
     public String toString() {
-        return "Error: " + getMessage() + ".";
+        return "Error: \t" + getMessage();
     }
 }

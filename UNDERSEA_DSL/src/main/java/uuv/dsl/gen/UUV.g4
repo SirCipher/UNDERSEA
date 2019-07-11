@@ -21,7 +21,7 @@ model:
 		| host
 	 	| port
 	 	| uuv
-	 	| speed)
+	 	| speed)+
 ;
 
 simulation:
