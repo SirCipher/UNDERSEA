@@ -7,6 +7,7 @@ import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import uuv.dsl.SensorListener;
 import uuv.dsl.UUVListener;
+import uuv.dsl.gen.SensorsLexer;
 import uuv.dsl.gen.SensorsParser;
 import uuv.dsl.gen.UUVLexer;
 import uuv.dsl.gen.UUVParser;
@@ -31,7 +32,7 @@ public class ParserEngine {
         CharStream codePointCharStream = CharStreams.fromFileName(sensorsFile);
 
         // create a lexer that feeds off of input CharStream
-        UUVLexer lexer = new UUVLexer(codePointCharStream);
+        SensorsLexer lexer = new SensorsLexer(codePointCharStream);
 
         // create a buffer of tokens pulled from the lexer
         CommonTokenStream tokens = new CommonTokenStream(lexer);
