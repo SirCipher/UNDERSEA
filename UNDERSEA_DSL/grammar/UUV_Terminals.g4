@@ -11,6 +11,10 @@ SERVER_HOST:
 	'host'
 ;
 
+SENSORS:
+    'sensors'
+;
+
 SERVER_PORT: 
 	'port'
 ;
@@ -31,6 +35,9 @@ SPEED:
 	'speed'
 ;
 
+SENSOR:
+    'sensor'
+;
 
 NAME:
 	'name'
@@ -54,6 +61,18 @@ SLCOMMENT:
 
 ID: 
 	[a-zA-Z_][0-9a-zA-Z_]* 
+;
+
+BEGL:
+    '['
+;
+
+ENDL:
+    ']'
+;
+
+SEP:
+    ','
 ;
 
 INT: 
