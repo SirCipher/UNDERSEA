@@ -14,13 +14,12 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.Properties;
 
-@SuppressWarnings("Duplicates")
-public class MoosConfigurationWriter {
+class MoosConfigurationWriter {
 
-    private SimulationProperties simulationProperties = SimulationProperties.getInstance();
-    private SensorFactory sensorFactory = FactoryProvider.getSensorFactory();
+    private static SimulationProperties simulationProperties = SimulationProperties.getInstance();
+    private static SensorFactory sensorFactory = FactoryProvider.getSensorFactory();
 
-    private void generateControllerProperties(UUV uuv) {
+    private static void generateControllerProperties(UUV uuv) {
         try {
             String propertiesDirName = ParserEngine.controllerDir + "/resources/";
             String propertiesFilename = propertiesDirName + "config.properties";
@@ -73,7 +72,7 @@ public class MoosConfigurationWriter {
         }
     }
 
-    private void generateIvPHelmBlock(UUV uuv) {
+    private static void generateIvPHelmBlock(UUV uuv) {
         StringBuilder str = new StringBuilder();
         str.append("//------------------------------------------\n");
         str.append("// Helm IvP configuration  block\n");
@@ -98,7 +97,7 @@ public class MoosConfigurationWriter {
                 false);
     }
 
-    private void generateSensors() {
+    private static void generateSensors() {
         for (Map.Entry<String, Sensor> entry : sensorFactory.getSensors().entrySet()) {
             Sensor sensor = entry.getValue();
             String filename = ParserEngine.missionDir + "/plug_" + sensor.getName() + ".moos";
@@ -106,13 +105,13 @@ public class MoosConfigurationWriter {
         }
     }
 
-    private void generateTargetVehicleBlock(UUV uuv) {
+    private static void generateTargetVehicleBlock(UUV uuv) {
         StringBuilder vehicleBlock = new StringBuilder();
         vehicleBlock.append("//------------------------------------------\n");
         vehicleBlock.append("// Meta vehicle config file\n");
         vehicleBlock.append("//------------------------------------------\n");
         vehicleBlock.append("ServerHost   = " + simulationProperties.getEnvironmentValue(SimulationProperties.EnvironmentValue.HOST) + "\n");
-        vehicleBlock.append("ServerPort   = " + simulationProperties.getEnvironmentValue(SimulationProperties.EnvironmentValue.PORT) + "\n");
+        vehicleBlock.append("ServerPort   = " + uuv.getPort() + "\n");
         vehicleBlock.append("Simulator    = true\n");
         vehicleBlock.append("Community    = " + uuv.getName() + "\n");
         vehicleBlock.append("LatOrigin    = 43.825300\n");
@@ -160,7 +159,7 @@ public class MoosConfigurationWriter {
                 false);
     }
 
-    public void run() {
+    static void run() {
         generateSensors();
         Map<String, UUV> agents = simulationProperties.getAgents();
 

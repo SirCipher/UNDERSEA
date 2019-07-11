@@ -15,7 +15,19 @@ public class UUVListener extends UUVBaseListener {
 
     private SimulationProperties simulationProperties;
     private AbstractFactory<Sensor> sensorFactory = FactoryProvider.getSensorFactory();
-    private List<Sensor> sensors = new ArrayList<>();
+    private int serverPortStart;
+
+    @Override
+    public void enterPortStart(UUVParser.PortStartContext ctx) {
+        simulationProperties.setEnvironmentValue(SimulationProperties.EnvironmentValue.PORT_START,
+                ctx.value.getText());
+
+        try {
+            serverPortStart = Integer.parseInt(ctx.value.getText());
+        } catch (NumberFormatException e) {
+            throw new NumberFormatException("Unparseable port start value: " + ctx.value.getText());
+        }
+    }
 
     @Override
     public void enterSimulation(UUVParser.SimulationContext ctx) {
@@ -48,7 +60,7 @@ public class UUVListener extends UUVBaseListener {
     @Override
     public void enterUuv(UUVParser.UuvContext ctx) {
         String name = ctx.name.getText();
-        String port = ctx.uuvPort.getText();
+        String port = Integer.toString(serverPortStart++);
         String behaviourFile = ctx.behaviourFile.getText();
         double min = Double.parseDouble(ctx.min.getText());
         double max = Double.parseDouble(ctx.max.getText());
@@ -56,7 +68,7 @@ public class UUVListener extends UUVBaseListener {
 
         List<Sensor> sensors = new ArrayList<>();
 
-        for(UUVParser.ElemContext context : ctx.elems(0).elem()){
+        for (UUVParser.ElemContext context : ctx.elems(0).elem()) {
             Sensor sensor = sensorFactory.get(context.getText());
             sensors.add(sensor);
         }

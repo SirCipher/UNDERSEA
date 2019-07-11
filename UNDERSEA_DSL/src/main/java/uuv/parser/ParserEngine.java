@@ -20,9 +20,9 @@ import java.io.IOException;
 public class ParserEngine {
 
     public static String propertiesFile = "resources/config.properties";
+    static String controllerDir;
+    static String missionDir;
     private static SimulationProperties simulationProperties = SimulationProperties.getInstance();
-    public static String controllerDir;
-    public static String missionDir;
     private static String configFile;
     private static String sensorsFile;
     private static boolean errorsFound = false;
@@ -99,8 +99,7 @@ public class ParserEngine {
             System.out.println("Errors found while parsing configuration files");
         } else {
             System.out.println("Successfully parsed configuration files");
-            MoosConfigurationWriter writer = new MoosConfigurationWriter();
-            writer.run();
+            MoosConfigurationWriter.run();
         }
     }
 

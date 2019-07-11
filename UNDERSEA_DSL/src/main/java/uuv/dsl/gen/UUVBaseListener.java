@@ -31,6 +31,18 @@ public class UUVBaseListener implements UUVListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterPortStart(UUVParser.PortStartContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitPortStart(UUVParser.PortStartContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterSimulation(UUVParser.SimulationContext ctx) { }
 	/**
 	 * {@inheritDoc}

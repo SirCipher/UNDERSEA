@@ -7,6 +7,6 @@ ProcessConfig = bravo
 	 CommsTick = 4
 	 MAX_APPCAST_EVENTS = 25 
 	 NAME = bravo
-	 PORT = 8888
+	 PORT = 9001
 	 SENSORS = SENSOR3,SENSOR4
 }

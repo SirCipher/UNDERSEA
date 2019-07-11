@@ -2,9 +2,9 @@
 // Meta vehicle config file
 //------------------------------------------
 ServerHost   = localhost
-ServerPort   = 9000
+ServerPort   = 9002
 Simulator    = true
-Community    = alpha
+Community    = charlie
 LatOrigin    = 43.825300
 LongOrigin   = -70.330400
 MOOSTimeWarp = 1
@@ -23,9 +23,9 @@ ProcessConfig = ANTLER
 	 Run = pMarineViewer @ NewConsole = false
 	 Run = uTimerScript  @ NewConsole = false
 	 Run = pHelmIvP      @ NewConsole = false
-	 Run = sUUV          @ NewConsole = false ~alpha
+	 Run = sUUV          @ NewConsole = false ~charlie
 	 Run = sSensor       @ NewConsole = false ~SENSOR1
-	 Run = sSensor       @ NewConsole = false ~SENSOR2
+	 Run = sSensor       @ NewConsole = false ~SENSOR4
 }
 
 #include plug_uProcessWatch.moos
@@ -34,7 +34,7 @@ ProcessConfig = ANTLER
 #include plug_pNodeReporter.moos
 #include plug_pMarinePID.moos
 #include plug_pMarineViewer.moos
-#include plug_pHelmIvP_alpha.moos
-#include plug_UUV_alpha.moos
+#include plug_pHelmIvP_charlie.moos
+#include plug_UUV_charlie.moos
 #include plug_SENSOR1.moos
-#include plug_SENSOR2.moos
+#include plug_SENSOR4.moos

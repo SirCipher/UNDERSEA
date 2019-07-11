@@ -2,7 +2,7 @@
 // Meta vehicle config file
 //------------------------------------------
 ServerHost   = localhost
-ServerPort   = 9999
+ServerPort   = 9001
 Simulator    = true
 Community    = bravo
 LatOrigin    = 43.825300

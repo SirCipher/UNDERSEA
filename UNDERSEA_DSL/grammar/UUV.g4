@@ -16,12 +16,17 @@ import java.util.*;
  * a model is assembled by a model type and a set of abstract elements*/
 
 model:
-		( simulation
+		( portStart
+		| simulation
 		| invocation
 		| host
 	 	| port
 	 	| uuv
 	 	| speed)+
+;
+
+portStart:
+    PORT_START ASSIGN value=INT
 ;
 
 simulation:
@@ -62,7 +67,6 @@ uuv:
 			(
 				NAME ASSIGN name=ID
 			|	SPEED ASSIGN min=(INT | DOUBLE) ':' max=(INT | DOUBLE) ':' steps=INT
-			|	SERVER_PORT ASSIGN uuvPort=INT
             |   BEHAVIOUR_FILE ASSIGN behaviourFile=BHV_FILE
 			|   SENSORS ASSIGN sensors=BEGL elems? ENDL
 			)+
