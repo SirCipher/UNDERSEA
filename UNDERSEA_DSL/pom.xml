@@ -28,13 +28,19 @@
   	<!-- Dependencies -->
 	<dependencies>
   
-		<!--  ANTLR model checker -->
+		<!--  ANTLR4 model checker -->
 		<dependency>
 			<groupId>org.antlr</groupId>
 			<artifactId>antlr4-runtime</artifactId>
-			<version>4.7</version>
+			<version>4.7.2</version>
 		</dependency>
-				  
+
+		<!--  ANTLR4 grammar compiler -->
+		<dependency>
+			<groupId>org.antlr</groupId>
+			<artifactId>antlr4</artifactId>
+			<version>4.7.2</version>
+		</dependency>
   	</dependencies>
   	
   	
@@ -42,7 +48,6 @@
 	<build>
   		<finalName>UNDERSEA_DSL</finalName>
 		<sourceDirectory>src/main/java</sourceDirectory>
-
 
   		<plugins>
 			<!-- download source code in Eclipse, best practice -->
