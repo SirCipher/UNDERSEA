@@ -85,7 +85,7 @@ public class UUV {
                 sensorsStr.append(",");
             }
         }
-        str.append("\t SENSORS = ").append(sensorsStr).append("\n").append("}\n\n");
+        str.append("\t SENSORS = ").append(sensorsStr).append("\n").append("}\n");
 
         return str.toString();
     }

@@ -11,7 +11,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
 
@@ -81,19 +80,18 @@ public class MoosConfigurationWriter {
         str.append("//------------------------------------------\n");
         str.append("ProcessConfig = pHelmIvP\n");
         str.append("{\n");
-        str.append("\t   AppTick    = 4\n");
-        str.append("\t   CommsTick  = 4\n");
-        str.append("\t   Behaviors  = " + uuv.getBehaviourFileName() + "\n");
-        str.append("\t   Verbose    = quiet\n");
-        str.append("\t   ok_skew = any\n");
-        str.append("\t   active_start = false\n");
-
-        str.append("\t   Domain     = course:0:359:360\n");
-        str.append("\t   Domain     = depth:0:100:101\n");
-        str.append("\t   Domain     = speed:" + uuv.getSpeedMin() + ":" + uuv.getSpeedMax() + ":" + uuv
+        str.append("\t   AppTick        = 4\n");
+        str.append("\t   CommsTick      = 4\n");
+        str.append("\t   Behaviors      = " + uuv.getBehaviourFileName() + "\n");
+        str.append("\t   Verbose        = quiet\n");
+        str.append("\t   ok_skew        = any\n");
+        str.append("\t   active_start   = false\n");
+        str.append("\t   Domain         = course:0:359:360\n");
+        str.append("\t   Domain         = depth:0:100:101\n");
+        str.append("\t   Domain         = speed:" + uuv.getSpeedMin() + ":" + uuv.getSpeedMax() + ":" + uuv
                 .getSpeedSteps() + "\n");
 
-        str.append("}\n\n");
+        str.append("}");
 
         //write
         Utility.exportToFile(ParserEngine.missionDir + "/plug_pHelmIvP_" + uuv.getName() + ".moos", str.toString(),
@@ -115,11 +113,11 @@ public class MoosConfigurationWriter {
         vehicleBlock.append("//------------------------------------------\n");
         vehicleBlock.append("ServerHost   = " + simulationProperties.getEnvironmentValue(SimulationProperties.EnvironmentValue.HOST) + "\n");
         vehicleBlock.append("ServerPort   = " + simulationProperties.getEnvironmentValue(SimulationProperties.EnvironmentValue.PORT) + "\n");
-        vehicleBlock.append("Simulator    =  true\n");
+        vehicleBlock.append("Simulator    = true\n");
         vehicleBlock.append("Community    = " + uuv.getName() + "\n");
         vehicleBlock.append("LatOrigin    = 43.825300\n");
         vehicleBlock.append("LongOrigin   = -70.330400\n");
-        vehicleBlock.append("MOOSTimeWarp = " + simulationProperties.getEnvironmentValue(SimulationProperties.EnvironmentValue.SIMULATION_SPEED) + "\n\n");
+        vehicleBlock.append("MOOSTimeWarp = " + simulationProperties.getEnvironmentValue(SimulationProperties.EnvironmentValue.SIMULATION_SPEED) + "\n");
 
         vehicleBlock.append("//------------------------------------------\n");
         vehicleBlock.append("// Antler configuration  block\n");
@@ -127,21 +125,21 @@ public class MoosConfigurationWriter {
         vehicleBlock.append("ProcessConfig = ANTLER\n");
         vehicleBlock.append("{\n");
         vehicleBlock.append("\t MSBetweenLaunches = 200\n");
-        vehicleBlock.append("\t   Run = MOOSDB			@ NewConsole = false\n");
-        vehicleBlock.append("\t   Run = uProcessWatch	@ NewConsole = false\n");
-        vehicleBlock.append("\t   Run = uSimMarine		@ NewConsole = false\n");
-        vehicleBlock.append("\t   Run = pNodeReporter	@ NewConsole = false\n");
-        vehicleBlock.append("\t   Run = pMarinePID		@ NewConsole = false\n");
-        vehicleBlock.append("\t   Run = pMarineViewer	@ NewConsole = false\n\n");
-        vehicleBlock.append("\t   Run = uTimerScript 	@ NewConsole = false\n\n");
-        vehicleBlock.append("\t   Run = pHelmIvP		@ NewConsole = false\n\n");
-        vehicleBlock.append("\t   Run = sUUV			@ NewConsole = false ~" + uuv.getName() + "\n");
+        vehicleBlock.append("\t Run = MOOSDB        @ NewConsole = false\n");
+        vehicleBlock.append("\t Run = uProcessWatch @ NewConsole = false\n");
+        vehicleBlock.append("\t Run = uSimMarine    @ NewConsole = false\n");
+        vehicleBlock.append("\t Run = pNodeReporter @ NewConsole = false\n");
+        vehicleBlock.append("\t Run = pMarinePID    @ NewConsole = false\n");
+        vehicleBlock.append("\t Run = pMarineViewer @ NewConsole = false\n");
+        vehicleBlock.append("\t Run = uTimerScript  @ NewConsole = false\n");
+        vehicleBlock.append("\t Run = pHelmIvP      @ NewConsole = false\n");
+        vehicleBlock.append("\t Run = sUUV          @ NewConsole = false ~" + uuv.getName() + "\n");
 
         for (Sensor sensor : uuv.getSensors()) {
             vehicleBlock.append("\t   Run = sSensor		@ NewConsole = false ~" + sensor.getName() + "\n");
         }
 
-        vehicleBlock.append("}\n\n");
+        vehicleBlock.append("}\n");
 
         vehicleBlock.append("#include plug_uProcessWatch.moos\n");
         vehicleBlock.append("#include plug_uSimMarine.moos\n");

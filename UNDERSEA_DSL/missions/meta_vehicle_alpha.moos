@@ -3,34 +3,29 @@
 //------------------------------------------
 ServerHost   = localhost
 ServerPort   = 9999
-Simulator    =  true
+Simulator    = true
 Community    = alpha
 LatOrigin    = 43.825300
 LongOrigin   = -70.330400
 MOOSTimeWarp = 1
-
 //------------------------------------------
 // Antler configuration  block
 //------------------------------------------
 ProcessConfig = ANTLER
 {
 	 MSBetweenLaunches = 200
-	   Run = MOOSDB			@ NewConsole = false
-	   Run = uProcessWatch	@ NewConsole = false
-	   Run = uSimMarine		@ NewConsole = false
-	   Run = pNodeReporter	@ NewConsole = false
-	   Run = pMarinePID		@ NewConsole = false
-	   Run = pMarineViewer	@ NewConsole = false
-
-	   Run = uTimerScript 	@ NewConsole = false
-
-	   Run = pHelmIvP		@ NewConsole = false
-
-	   Run = sUUV			@ NewConsole = false ~alpha
+	 Run = MOOSDB        @ NewConsole = false
+	 Run = uProcessWatch @ NewConsole = false
+	 Run = uSimMarine    @ NewConsole = false
+	 Run = pNodeReporter @ NewConsole = false
+	 Run = pMarinePID    @ NewConsole = false
+	 Run = pMarineViewer @ NewConsole = false
+	 Run = uTimerScript  @ NewConsole = false
+	 Run = pHelmIvP      @ NewConsole = false
+	 Run = sUUV          @ NewConsole = false ~alpha
 	   Run = sSensor		@ NewConsole = false ~SENSOR1
 	   Run = sSensor		@ NewConsole = false ~SENSOR2
 }
-
 #include plug_uProcessWatch.moos
 #include plug_uSimMarine.moos
 #include plug_uTimerScript.moos
