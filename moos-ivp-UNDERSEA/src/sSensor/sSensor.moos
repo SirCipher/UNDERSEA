@@ -1,9 +1,0 @@
-//------------------------------------------------
-// sSensor config block
-
-ProcessConfig = sSensor
-{
-   AppTick   = 4
-   CommsTick = 4
-}
-

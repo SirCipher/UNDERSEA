@@ -1,9 +1,0 @@
-//------------------------------------------------
-// sUUV config block
-
-ProcessConfig = sUUV
-{
-   AppTick   = 4
-   CommsTick = 4
-}
-
