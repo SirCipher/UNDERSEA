@@ -11,7 +11,10 @@
 //import java.io.FileInputStream;
 //import java.io.FileOutputStream;
 //import java.io.IOException;
-//import java.util.*;
+//import java.util.HashMap;
+//import java.util.Iterator;
+//import java.util.Map;
+//import java.util.Properties;
 //
 //@SuppressWarnings("Duplicates")
 //public class UUVproperties {
@@ -85,64 +88,72 @@
 //
 //    }
 //
+//    private void generateControllerProperties() {
+//        try {
+//            String propertiesDirName = ParserEngine.controllerDir + "/resources/";
+//            String propertiesFilename = propertiesDirName + "config.properties";
+//            File propertiesDir = new File(propertiesDirName);
+//            File propertiesFile = new File(propertiesFilename);
 //
-//    public void setSimulationTime(String sm) throws DSLException {
-//        if (simulationTime != null)
-//            throw new DSLException("Simulation time is already defined.Value Ignored!");
-//        this.simulationTime = sm;
+//            if (!propertiesDir.exists())
+//                propertiesDir.mkdirs();
+//
+//            if (!propertiesFile.exists())
+//                //create new properties file
+//                propertiesFile.createNewFile();
+//
+//            Properties properties = new Properties();
+//            properties.load(new FileInputStream(propertiesFilename));
+//            properties.put("TIME_WINDOW", timeWindow);
+//            properties.put("SIMULATION_TIME", simulationTime);
+//            properties.put("SIMULATION_SPEED", simulationSpeed);
+//            properties.put("PORT", uuv.port);
+//
+//            String sensorsNames = "";
+//            Iterator<String> it = sensorsMap.keySet().iterator();
+//            while (it.hasNext()) {
+//                sensorsNames += it.next();
+//                if (it.hasNext())
+//                    sensorsNames += ",";
+//            }
+//            properties.put("SENSORS", sensorsNames);
+//
+//            properties.put("SPEED", uuv.getSpeedMin() + "," + uuv.getSpeedMax() + "," + uuv.getSpeedSteps());
+//
+//            FileOutputStream out = new FileOutputStream(propertiesFile);
+//            properties.store(out, null);
+//            out.close();
+//
+//
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
 //    }
 //
+//    private void generateIvPHelmBlock() {
+//        StringBuilder str = new StringBuilder();
+//        str.append("//------------------------------------------\n");
+//        str.append("// Helm IvP configuration  block\n");
+//        str.append("//------------------------------------------\n");
+//        str.append("ProcessConfig = pHelmIvP\n");
+//        str.append("{\n");
+//        str.append("\t   AppTick    = 4\n");
+//        str.append("\t   CommsTick  = 4\n");
+//        str.append("\t   Behaviors  = targ_uuv.bhv\n");
+//        str.append("\t   Verbose    = quiet\n");
+//        str.append("\t   ok_skew = any\n");
+//        str.append("\t   active_start = false\n");
 //
-//    public void setTimeWindow(String tw) throws DSLException {
-//        if (timeWindow != null)
-//            throw new DSLException("Time Window is already defined. Value Ignored!");
-//        this.timeWindow = tw;
+//        str.append("\t   Domain     = course:0:359:360\n");
+//        str.append("\t   Domain     = depth:0:100:101\n");
+//        str.append("\t   Domain     = speed:" + uuv.getSpeedMin() + ":" + uuv.getSpeedMax() + ":" + uuv
+//                .getSpeedSteps() + "\n");
+//
+//        str.append("}\n\n");
+//
+//        //write
+//        Utility.exportToFile(ParserEngine.missionDir + "/plug_pHelmIvP.moos", str.toString(), false);
 //    }
-//
-//
-//    public void setHost(String h) throws DSLException {
-//        if (host != null)
-//            throw new DSLException("Host is already defined. Value Ignored!");
-//        this.host = h;
-//    }
-//
-//
-//    public void setPort(String p) throws DSLException {
-//        if (port != null)
-//            throw new DSLException("Port is already defined. Value Ignored!");
-//        this.port = p;
-//    }
-//
-//
-//    public void setSpeed(String s) throws DSLException {
-//        if (simulationSpeed != null)
-//            throw new DSLException("Speed is already defined. Value Ignored!");
-//        this.simulationSpeed = s;
-//    }
-//
-//
-//    public void setUUV(String name, String port, double min, double max, int steps) throws DSLException {
-//        if (uuv != null)
-//            throw new DSLException("UUV properties already defined. Block Ignored!");
-//        uuv = new UUV(name, port, min, max, steps);
-//    }
-//
-//
-//    public void setSensor(String name, double rate, double reliability) throws DSLException {
-//        if (sensorsMap.containsKey(name))
-//            throw new DSLException("Sensor " + name + " properties already defined. Block Ignored!");
-//        Sensor newSensor = new Sensor(name, rate, reliability);
-//        sensorsMap.put(name, newSensor);
-//    }
-//
-//
-//    public void setChange(String sensorName, double begin, double end, double percentage) throws DSLException {
-////		if (sensorsMap.containsKey(name))
-////			throw new DSLException("Sensor "+ name + "properties already defined. Block Ignored!");
-//        Range newChange = new Range(begin, end, percentage);
-//        sensorsMap.get(sensorName).addChange(newChange);
-//    }
-//
 //
 //    public void generateMoosBlocks() {
 //        //generate UUV moos block
@@ -163,7 +174,6 @@
 //        //generate controller properties
 //        generateControllerProperties();
 //    }
-//
 //
 //    private void generateTargetVehicleBlock() {
 //        StringBuilder str = new StringBuilder();
@@ -216,83 +226,60 @@
 //            str.append("#include plug_" + sensorName + ".moos\n");
 //        }
 //
-//
 //        //write
 //        Utility.exportToFile(ParserEngine.missionDir + "/meta_vehicle.moos", str.toString(), false);
 //
 //    }
 //
-//
-//    private void generateIvPHelmBlock() {
-//        StringBuilder str = new StringBuilder();
-//        str.append("//------------------------------------------\n");
-//        str.append("// Helm IvP configuration  block\n");
-//        str.append("//------------------------------------------\n");
-//        str.append("ProcessConfig = pHelmIvP\n");
-//        str.append("{\n");
-//        str.append("\t   AppTick    = 4\n");
-//        str.append("\t   CommsTick  = 4\n");
-//        str.append("\t   Behaviors  = targ_uuv.bhv\n");
-//        str.append("\t   Verbose    = quiet\n");
-//        str.append("\t   ok_skew = any\n");
-//        str.append("\t   active_start = false\n");
-//
-//        str.append("\t   Domain     = course:0:359:360\n");
-//        str.append("\t   Domain     = depth:0:100:101\n");
-//        str.append("\t   Domain     = speed:" + uuv.getSpeedMin() + ":" + uuv.getSpeedMax() + ":" + uuv
-//        .getSpeedSteps() + "\n");
-//
-//        str.append("}\n\n");
-//
-//
-//        //write
-//        Utility.exportToFile(ParserEngine.missionDir + "/plug_pHelmIvP.moos", str.toString(), false);
+//    public void setChange(String sensorName, double begin, double end, double percentage) throws DSLException {
+////		if (sensorsMap.containsKey(name))
+////			throw new DSLException("Sensor "+ name + "properties already defined. Block Ignored!");
+//        Range newChange = new Range(begin, end, percentage);
+//        sensorsMap.get(sensorName).addChange(newChange);
 //    }
 //
-//
-//    private void generateControllerProperties() {
-//        try {
-//            String propertiesDirName = ParserEngine.controllerDir + "/resources/";
-//            String propertiesFilename = propertiesDirName + "config.properties";
-//            File propertiesDir = new File(propertiesDirName);
-//            File propertiesFile = new File(propertiesFilename);
-//
-//            if (!propertiesDir.exists())
-//                propertiesDir.mkdirs();
-//
-//            if (!propertiesFile.exists())
-//                //create new properties file
-//                propertiesFile.createNewFile();
-//
-//            Properties properties = new Properties();
-//            properties.load(new FileInputStream(propertiesFilename));
-//            properties.put("TIME_WINDOW", timeWindow);
-//            properties.put("SIMULATION_TIME", simulationTime);
-//            properties.put("SIMULATION_SPEED", simulationSpeed);
-//            properties.put("PORT", uuv.port);
-//
-//            String sensorsNames = "";
-//            Iterator<String> it = sensorsMap.keySet().iterator();
-//            while (it.hasNext()) {
-//                sensorsNames += it.next();
-//                if (it.hasNext())
-//                    sensorsNames += ",";
-//            }
-//            properties.put("SENSORS", sensorsNames);
-//
-//            properties.put("SPEED", uuv.getSpeedMin() + "," + uuv.getSpeedMax() + "," + uuv.getSpeedSteps());
-//
-//
-//            FileOutputStream out = new FileOutputStream(propertiesFile);
-//            properties.store(out, null);
-//            out.close();
-//
-//
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
+//    public void setHost(String h) throws DSLException {
+//        if (host != null)
+//            throw new DSLException("Host is already defined. Value Ignored!");
+//        this.host = h;
 //    }
 //
+//    public void setPort(String p) throws DSLException {
+//        if (port != null)
+//            throw new DSLException("Port is already defined. Value Ignored!");
+//        this.port = p;
+//    }
+//
+//    public void setSensor(String name, double rate, double reliability) throws DSLException {
+//        if (sensorsMap.containsKey(name))
+//            throw new DSLException("Sensor " + name + " properties already defined. Block Ignored!");
+//        Sensor newSensor = new Sensor(name, rate, reliability);
+//        sensorsMap.put(name, newSensor);
+//    }
+//
+//    public void setSimulationTime(String sm) throws DSLException {
+//        if (simulationTime != null)
+//            throw new DSLException("Simulation time is already defined.Value Ignored!");
+//        this.simulationTime = sm;
+//    }
+//
+//    public void setSpeed(String s) throws DSLException {
+//        if (simulationSpeed != null)
+//            throw new DSLException("Speed is already defined. Value Ignored!");
+//        this.simulationSpeed = s;
+//    }
+//
+//    public void setTimeWindow(String tw) throws DSLException {
+//        if (timeWindow != null)
+//            throw new DSLException("Time Window is already defined. Value Ignored!");
+//        this.timeWindow = tw;
+//    }
+//
+//    public void setUUV(String name, String port, double min, double max, int steps) throws DSLException {
+//        if (uuv != null)
+//            throw new DSLException("UUV properties already defined. Block Ignored!");
+//        uuv = new UUV(name, port, min, max, steps);
+//    }
 //
 //
 //}

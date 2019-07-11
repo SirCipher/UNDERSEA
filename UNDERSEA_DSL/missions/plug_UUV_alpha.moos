@@ -1,0 +1,14 @@
+//------------------------------------------
+// sUUV config block
+//------------------------------------------
+ProcessConfig = alpha
+{
+	 AppTick = 4
+	 CommsTick = 4
+	 MAX_APPCAST_EVENTS = 25 
+	 NAME = alpha
+	 PORT = 8888
+	 SENSORS = SENSOR1,SENSOR2,SENSOR3,SENSOR4
+}
+
+

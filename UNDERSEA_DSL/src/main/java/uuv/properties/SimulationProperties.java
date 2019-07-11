@@ -6,7 +6,6 @@ import uuv.dsl.model.UUV;
 import java.util.HashMap;
 import java.util.Map;
 
-@SuppressWarnings("Duplicates")
 public class SimulationProperties {
 
     private static SimulationProperties instance = null;
@@ -36,8 +35,8 @@ public class SimulationProperties {
         return agents;
     }
 
-    public Map<EnvironmentValue, String> getEnvironmentValues() {
-        return environmentValues;
+    public String getEnvironmentValue(EnvironmentValue environmentValue) {
+        return environmentValues.get(environmentValue);
     }
 
     public void setEnvironmentValue(EnvironmentValue name, String value) {

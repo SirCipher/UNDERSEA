@@ -21,7 +21,7 @@ public class ParserEngine {
 
     public static String propertiesFile = "resources/config.properties";
     private static SimulationProperties simulationProperties = SimulationProperties.getInstance();
-    private static String controllerDir;
+    public static String controllerDir;
     public static String missionDir;
     private static String configFile;
     private static String sensorsFile;
@@ -99,6 +99,8 @@ public class ParserEngine {
             System.out.println("Errors found while parsing configuration files");
         } else {
             System.out.println("Successfully parsed configuration files");
+            MoosConfigurationWriter writer = new MoosConfigurationWriter();
+            writer.run();
         }
     }
 
@@ -163,10 +165,6 @@ public class ParserEngine {
 
         // Walk the tree created during the parse, trigger callbacks
         walker.walk(listener, tree);
-
-        // generate moos files
-        // TODO: Add MOOS file generation
-//        simulationProperties.generateMoosBlocks();
     }
 
 }

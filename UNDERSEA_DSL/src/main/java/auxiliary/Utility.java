@@ -42,7 +42,7 @@ public class Utility {
         }
     }
 
-    private static void exportToFile(String fileName, String output, boolean append) {
+    public static void exportToFile(String fileName, String output, boolean append) {
         try {
             FileWriter writer = new FileWriter(fileName, append);
             writer.append(output).append("\n");

@@ -62,7 +62,6 @@ public class UUVListener extends UUVBaseListener {
 
         UUV uuv = new UUV(name, port, behaviourFile, min, max, steps);
         uuv.setSensors(sensors);
-        ;
 
         simulationProperties.addUUV(uuv);
     }

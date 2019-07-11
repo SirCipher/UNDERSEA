@@ -9,20 +9,20 @@ public class UUV {
     private String name;
     private String rate;
     private String port;
-    private String behaviourFile;
+    private String behaviourFileName;
     private Range speedRange;
     private List<Sensor> sensors = new ArrayList<>();
 
-    public UUV(String name, String port, String behaviourFile, double min, double max, int steps) {
+    public UUV(String name, String port, String behaviourFileName, double min, double max, int steps) {
         this.name = name;
         this.port = port;
-        this.behaviourFile = behaviourFile;
+        this.behaviourFileName = behaviourFileName;
         this.speedRange = new Range(min, max, steps + 1);
         this.rate = "4";
     }
 
-    public String getBehaviourFile() {
-        return behaviourFile;
+    public String getBehaviourFileName() {
+        return behaviourFileName;
     }
 
     public String getName() {

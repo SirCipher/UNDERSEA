@@ -49,4 +49,8 @@ public class SensorFactory implements AbstractFactory<Sensor> {
             return sensors.get(name);
         }
     }
+
+    public Map<String, Sensor> getSensors() {
+        return sensors;
+    }
 }
