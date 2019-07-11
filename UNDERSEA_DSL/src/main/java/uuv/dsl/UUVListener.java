@@ -10,11 +10,9 @@ public class UUVListener extends UUVBaseListener {
     private SimulationProperties simulationProperties;
 
     @Override
-    public void enterSimulation(UUVParser.SimulationContext ctx) {
-        simulationProperties.setEnvironmentValue(SimulationProperties.EnvironmentValue.SIMULATION_TIME,
-                ctx.value.getText());
+    public void enterHost(UUVParser.HostContext ctx) {
+        simulationProperties.setEnvironmentValue(SimulationProperties.EnvironmentValue.HOST, ctx.value.getText());
     }
-
 
     @Override
     public void enterInvocation(UUVParser.InvocationContext ctx) {
@@ -22,25 +20,22 @@ public class UUVListener extends UUVBaseListener {
                 ctx.value.getText());
     }
 
-
-    @Override
-    public void enterHost(UUVParser.HostContext ctx) {
-        simulationProperties.setEnvironmentValue(SimulationProperties.EnvironmentValue.HOST, ctx.value.getText());
-    }
-
-
     @Override
     public void enterPort(UUVParser.PortContext ctx) {
         simulationProperties.setEnvironmentValue(SimulationProperties.EnvironmentValue.PORT, ctx.value.getText());
     }
 
+    @Override
+    public void enterSimulation(UUVParser.SimulationContext ctx) {
+        simulationProperties.setEnvironmentValue(SimulationProperties.EnvironmentValue.SIMULATION_TIME,
+                ctx.value.getText());
+    }
 
     @Override
     public void enterSpeed(UUVParser.SpeedContext ctx) {
         simulationProperties.setEnvironmentValue(SimulationProperties.EnvironmentValue.SIMULATION_SPEED,
                 ctx.value.getText());
     }
-
 
     @Override
     public void enterUuv(UUVParser.UuvContext ctx) {

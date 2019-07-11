@@ -1,10 +1,10 @@
 grammar UUV;
 
-import UUV_Terminals;
+import UUV_Terminals; // includes all rules from UUV_Terminals.g4
 
 @parser::header {
-  package uuv.dsl.gen;
-  import java.util.*;
+package uuv.dsl.gen;
+import java.util.*;
 }
 
 @parser::members {
@@ -21,8 +21,7 @@ model:
 		| host
 	 	| port
 	 	| uuv
-	 	| speed
-	 	)
+	 	| speed)
 ;
 
 simulation:
@@ -45,6 +44,18 @@ speed:
 		SIMULATION_SPEED ASSIGN value=INT
 ;
 
+list:
+    BEGL elems? ENDL
+;
+
+elems:
+    elem ( SEP elem )*
+;
+
+elem:
+    ID
+;
+
 uuv:
 		'UUV'
 		'{'
@@ -52,7 +63,7 @@ uuv:
 				NAME ASSIGN name=ID
 			|	SPEED ASSIGN min=(INT | DOUBLE) ':' max=(INT | DOUBLE) ':' steps=INT
 			|	SERVER_PORT ASSIGN value=INT
-			|   SENSOR ASSIGN sensors=ID (',' ID)*
+			//|   SENSORS ASSIGN value=BEGL elems? ENDL
 			)+
 		'}'
 ;

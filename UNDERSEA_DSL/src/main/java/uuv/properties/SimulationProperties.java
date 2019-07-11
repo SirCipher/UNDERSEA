@@ -4,14 +4,15 @@ import auxiliary.DSLException;
 import uuv.dsl.model.Sensor;
 import uuv.dsl.model.UUV;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public class SimulationProperties {
 
     private static SimulationProperties instance = null;
-    private Map<EnvironmentValue, String> environmentValues;
-    private Map<String, Sensor> globalSensors;
-    private Map<String, UUV> agents;
+    private Map<EnvironmentValue, String> environmentValues = new HashMap<>();
+    private Map<String, Sensor> globalSensors = new HashMap<>();
+    private Map<String, UUV> agents = new HashMap<>();
 
     private SimulationProperties() {
     }
@@ -48,14 +49,20 @@ public class SimulationProperties {
         StringBuilder errors = new StringBuilder();
 
         for (EnvironmentValue value : EnvironmentValue.values()) {
-            if (environmentValues.containsKey(value)) {
-                errors.append(value.name()).append(" not defined: ").append(value.errorMessage);
+            if (!environmentValues.containsKey(value)) {
+                errors.append("\t\t")
+                        .append(value.name())
+                        .append(" not defined: ")
+                        .append(value.errorMessage)
+                        .append("\n");
             }
         }
 
         if (errors.length() > 0) {
             throw new DSLException("Incorrect configuration file!\n" + errors.toString());
         }
+
+        System.out.println(environmentValues.size());
     }
 
     public enum EnvironmentValue {

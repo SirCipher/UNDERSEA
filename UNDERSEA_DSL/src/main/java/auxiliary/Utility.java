@@ -1,6 +1,6 @@
 package auxiliary;
 
-import main.java.uuv.parser.ParserEngine;
+import uuv.parser.ParserEngine;
 
 import java.io.*;
 import java.nio.channels.FileChannel;
@@ -14,12 +14,10 @@ public class Utility {
 
     static {
         try {
-            if (properties == null) {
-                properties = new Properties();
-                properties.load(new FileInputStream(ParserEngine.propertiesFile));
-            }
+            properties = new Properties();
+            properties.load(new FileInputStream(ParserEngine.propertiesFile));
         } catch (IOException e) {
-//			e.printStackTrace();
+            e.printStackTrace();
         }
     }
 
@@ -44,10 +42,10 @@ public class Utility {
         }
     }
 
-    public static void exportToFile(String fileName, String output, boolean append) {
+    private static void exportToFile(String fileName, String output, boolean append) {
         try {
             FileWriter writer = new FileWriter(fileName, append);
-            writer.append(output + "\n");
+            writer.append(output).append("\n");
             writer.flush();
             writer.close();
         } catch (IOException e) {
@@ -57,10 +55,11 @@ public class Utility {
 
     public static boolean fileExists(String fileName) throws FileNotFoundException {
         File f = new File(fileName);
-        if (!f.exists())
+        if (!f.exists()) {
             throw new FileNotFoundException("File " + fileName + " does not exist!. Please fix this error.\n");
-        return true;
+        }
 
+        return true;
     }
 
     public static Set<Entry<Object, Object>> getPropertiesEntrySet() {
@@ -74,25 +73,4 @@ public class Utility {
         return result;
     }
 
-    public static String readFile(String fileName) throws FileNotFoundException {
-        File file = new File(fileName);
-        if (!file.exists())
-            throw new FileNotFoundException("File " + fileName + " does not exist!. Please fix this error.\n");
-
-        StringBuilder model = new StringBuilder(100);
-        BufferedReader bfr = null;
-
-        try {
-            bfr = new BufferedReader(new FileReader(file));
-            String line = null;
-            while ((line = bfr.readLine()) != null) {
-                model.append(line + "\n");
-            }
-            return model.toString();
-        } catch (IOException e) {
-            e.printStackTrace();
-            System.exit(-1);
-        }
-        return null;
-    }
 }

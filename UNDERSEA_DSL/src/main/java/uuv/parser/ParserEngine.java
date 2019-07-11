@@ -13,6 +13,7 @@ import uuv.dsl.gen.UUVParser;
 import uuv.properties.SimulationProperties;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 
 @SuppressWarnings("Duplicates")
 public class ParserEngine {
@@ -23,14 +24,14 @@ public class ParserEngine {
     private static String missionDir;
     private static String configFile;
     private static String sensorsFile;
+    private static boolean errorsFound = false;
 
-    private static SensorsParser createSensorParser(String source) {
+    private static SensorsParser createSensorParser() throws IOException {
         // create a CharStream that reads from standard input
-        // TODO: Update
-        ANTLRInputStream input = new ANTLRInputStream(source);
+        CharStream codePointCharStream = CharStreams.fromFileName(sensorsFile);
 
         // create a lexer that feeds off of input CharStream
-        UUVLexer lexer = new UUVLexer(input);
+        UUVLexer lexer = new UUVLexer(codePointCharStream);
 
         // create a buffer of tokens pulled from the lexer
         CommonTokenStream tokens = new CommonTokenStream(lexer);
@@ -55,13 +56,12 @@ public class ParserEngine {
         return parser;
     }
 
-    private static UUVParser createUUVParser(String source) {
+    private static UUVParser createUUVParser() throws IOException {
         // create a CharStream that reads from standard input
-        // TODO: Update
-        ANTLRInputStream input = new ANTLRInputStream(source);
+        CharStream codePointCharStream = CharStreams.fromFileName(configFile);
 
         // create a lexer that feeds off of input CharStream
-        UUVLexer lexer = new UUVLexer(input);
+        UUVLexer lexer = new UUVLexer(codePointCharStream);
 
         // create a buffer of tokens pulled from the lexer
         CommonTokenStream tokens = new CommonTokenStream(lexer);
@@ -73,6 +73,7 @@ public class ParserEngine {
                                     int charPositionInLine, String msg, RecognitionException e) {
                 //Print the syntax error
                 System.out.printf("\t%s at (%d, %d)%n", msg, line, charPositionInLine);
+                errorsFound = true;
             }
         };
 
@@ -86,21 +87,28 @@ public class ParserEngine {
         return parser;
     }
 
-    public static void main(String[] args) throws FileNotFoundException {
+    public static void main(String[] args) throws IOException {
         parseCommandLineArguments(args);
         runUUVListener();
-        runSensorListener();
+//        runSensorListener();
 
         simulationProperties.validateEnvironmentValues();
+
+        if (errorsFound) {
+            System.out.println("Errors found while parsing configuration files");
+        } else {
+            System.out.println("Successfully parsed configuration files");
+        }
     }
 
     private static void parseCommandLineArguments(String[] args) throws FileNotFoundException {
         if (args.length != 4) {
-            throw new DSLException("Incorrect number of arguments! Please fix this error!\n" +
-                    "\tArg 1) configuration file (e.g., mission.config)\n" +
-                    "\tArg 2) sensor configuration file (e.g., sensors.config\n" +
-                    "\tArg 3) controller directory (e.g., UUV_Controller)\n" +
-                    "\tArg 4) mission directory (e.g., moos-ivp-extend/missions/uuvExemplar)\n"
+            throw new DSLException(
+                    "Incorrect number of arguments! Please fix this error!\n" +
+                            "\tArg 1) configuration file (e.g., mission.config)\n" +
+                            "\tArg 2) sensor configuration file (e.g., sensors.config\n" +
+                            "\tArg 3) controller directory (e.g., UUV_Controller)\n" +
+                            "\tArg 4) mission directory (e.g., moos-ivp-extend/missions/uuvExemplar)\n"
             );
         }
 
@@ -121,11 +129,9 @@ public class ParserEngine {
         }
     }
 
-    private static void runSensorListener() throws FileNotFoundException {
-        String source = Utility.readFile(sensorsFile);
-
+    private static void runSensorListener() throws IOException {
         //create parser
-        SensorsParser parser = createSensorParser(source);
+        SensorsParser parser = createSensorParser();
 
         // begin parsing at model rule
         ParseTree tree = parser.model();
@@ -139,15 +145,11 @@ public class ParserEngine {
 
         // Walk the tree created during the parse, trigger callbacks
         walker.walk(listener, tree);
-
-        System.out.println("Sensor configuration file parsed successfully\n");
     }
 
-    private static void runUUVListener() throws FileNotFoundException {
-        String source = Utility.readFile(configFile);
-
+    private static void runUUVListener() throws IOException {
         //create parser
-        UUVParser parser = createUUVParser(source);
+        UUVParser parser = createUUVParser();
 
         // begin parsing at model rule
         ParseTree tree = parser.model();
@@ -165,8 +167,6 @@ public class ParserEngine {
         // generate moos files
         // TODO: Add MOOS file generation
 //        properties.generateMoosBlocks();
-
-        System.out.println("UUV configuration file parsed successfully\n");
     }
 
 }
