@@ -138,59 +138,59 @@ class MoosConfigurationWriter {
         shoreside.append("//------------------------------------------\n");
         shoreside.append("ProcessConfig = pMarineViewer\n");
         shoreside.append("{\n");
-        shoreside.append("    AppTick    = 4\n");
-        shoreside.append("    CommsTick  = 4\n");
+        shoreside.append("\tAppTick    = 4\n");
+        shoreside.append("\tCommsTick  = 4\n");
         shoreside.append("\n");
-        shoreside.append("    tiff_file            = forrest19.tif\n");
-        shoreside.append("    set_pan_x            = -90\n");
-        shoreside.append("    set_pan_y            = -280\n");
-        shoreside.append("    zoom                 = 0.65\n");
-        shoreside.append("    vehicle_shape_scale  = 1.5\n");
-        shoreside.append("    hash_delta           = 50\n");
-        shoreside.append("    hash_shade           = 0.22\n");
-        shoreside.append("    hash_viewable        = true\n");
-        shoreside.append("    trails_point_size    = 1\n");
+        shoreside.append("\ttiff_file            = forrest19.tif\n");
+        shoreside.append("\tset_pan_x            = -90\n");
+        shoreside.append("\tset_pan_y            = -280\n");
+        shoreside.append("\tzoom                 = 0.65\n");
+        shoreside.append("\tvehicle_shape_scale  = 1.5\n");
+        shoreside.append("\thash_delta           = 50\n");
+        shoreside.append("\thash_shade           = 0.22\n");
+        shoreside.append("\thash_viewable        = true\n");
+        shoreside.append("\ttrails_point_size    = 1\n");
         shoreside.append("\n");
-        shoreside.append("    // Appcast configuration\n");
-        shoreside.append("    appcast_height       = 75\n");
-        shoreside.append("    appcast_width        = 30\n");
-        shoreside.append("    appcast_viewable     = true\n");
-        shoreside.append("    appcast_color_scheme = indigo\n");
-        shoreside.append("    nodes_font_size      = medium\n");
-        shoreside.append("    procs_font_size      = medium\n");
-        shoreside.append("    appcast_font_size    = small\n");
+        shoreside.append("\t// Appcast configuration\n");
+        shoreside.append("\tappcast_height       = 75\n");
+        shoreside.append("\tappcast_width        = 30\n");
+        shoreside.append("\tappcast_viewable     = true\n");
+        shoreside.append("\tappcast_color_scheme = indigo\n");
+        shoreside.append("\tnodes_font_size      = medium\n");
+        shoreside.append("\tprocs_font_size      = medium\n");
+        shoreside.append("\tappcast_font_size    = small\n");
         shoreside.append("\n");
-        shoreside.append("    right_context[return] = DEPLOY=true\n");
-        shoreside.append("    right_context[return] = MOOS_MANUAL_OVERRIDE=false\n");
-        shoreside.append("    right_context[return] = RETURN=false\n");
+        shoreside.append("\tright_context[return] = DEPLOY=true\n");
+        shoreside.append("\tright_context[return] = MOOS_MANUAL_OVERRIDE=false\n");
+        shoreside.append("\tright_context[return] = RETURN=false\n");
         shoreside.append("\n");
-        shoreside.append("    scope  = RETURN\n");
-        shoreside.append("    scope  = WPT_STAT\n");
-        shoreside.append("    scope  = VIEW_SEGLIST\n");
-        shoreside.append("    scope  = VIEW_POINT\n");
-        shoreside.append("    scope  = VIEW_POLYGON\n");
-        shoreside.append("    scope  = MVIEWER_LCLICK\n");
-        shoreside.append("    scope  = MVIEWER_RCLICK\n");
+        shoreside.append("\tscope  = RETURN\n");
+        shoreside.append("\tscope  = WPT_STAT\n");
+        shoreside.append("\tscope  = VIEW_SEGLIST\n");
+        shoreside.append("\tscope  = VIEW_POINT\n");
+        shoreside.append("\tscope  = VIEW_POLYGON\n");
+        shoreside.append("\tscope  = MVIEWER_LCLICK\n");
+        shoreside.append("\tscope  = MVIEWER_RCLICK\n");
         shoreside.append("\n");
-        shoreside.append("    button_one = DEPLOY # DEPLOY_ALL=true\n");
-        shoreside.append("    button_one = MOOS_MANUAL_OVERRIDE_ALL=false # RETURN_ALL=false\n");
-        shoreside.append("    button_two = RETURN # RETURN_ALL=true\n");
+        shoreside.append("\tbutton_one = DEPLOY # DEPLOY_ALL=true\n");
+        shoreside.append("\tbutton_one = MOOS_MANUAL_OVERRIDE_ALL=false # RETURN_ALL=false\n");
+        shoreside.append("\tbutton_two = RETURN # RETURN_ALL=true\n");
         shoreside.append("\n");
-        shoreside.append("    action  = MENU_KEY=deploy # DEPLOY_ALL = true # RETURN_ALL = false\n");
-        shoreside.append("    action+ = MENU_KEY=deploy # MOOS_MANUAL_OVERRIDE_ALL=false\n");
-        shoreside.append("    action  = RETURN_ALL=true\n");
-        shoreside.append("    action  = UPDATES_RETURN_ALL=speed=1.4\n");
+        shoreside.append("\taction  = MENU_KEY=deploy # DEPLOY_ALL = true # RETURN_ALL = false\n");
+        shoreside.append("\taction+ = MENU_KEY=deploy # MOOS_MANUAL_OVERRIDE_ALL=false\n");
+        shoreside.append("\taction  = RETURN_ALL=true\n");
+        shoreside.append("\taction  = UPDATES_RETURN_ALL=speed=1.4\n");
 
         for (Map.Entry<String, UUV> entry : simulationProperties.getAgents().entrySet()) {
             UUV uuv = entry.getValue();
             String lower = uuv.getName().toLowerCase();
             String upper = uuv.getName().toUpperCase();
 
-            shoreside.append("    action  = MENU_KEY=deploy-" + lower + " # DEPLOY_" + upper + " = true # RETURN_" + upper + " = false\n");
-            shoreside.append("    action+ = MENU_KEY=deploy-" + lower + " # MOOS_MANUAL_OVERRIDE_" + upper + "=false" +
+            shoreside.append("\taction  = MENU_KEY=deploy-" + lower + " # DEPLOY_" + upper + " = true # RETURN_" + upper + " = false\n");
+            shoreside.append("\taction+ = MENU_KEY=deploy-" + lower + " # MOOS_MANUAL_OVERRIDE_" + upper + "=false" +
                     "\n");
-            shoreside.append("    action  = MENU_KEY = return-" + lower + " # RETURN_" + upper + "=true\n");
-            shoreside.append("    action+ = UPDATES_RETURN_" + upper + "=speed=1.4\n");
+            shoreside.append("\taction  = MENU_KEY = return-" + lower + " # RETURN_" + upper + "=true\n");
+            shoreside.append("\taction+ = UPDATES_RETURN_" + upper + "=speed=1.4\n");
         }
 
         shoreside.append("}\n");
@@ -200,10 +200,10 @@ class MoosConfigurationWriter {
         shoreside.append("//------------------------------------------\n");
         shoreside.append("ProcessConfig = pShare\n");
         shoreside.append("{\n");
-        shoreside.append("   AppTick    = 4\n");
-        shoreside.append("   CommsTick  = 4\n");
+        shoreside.append("\tAppTick    = 4\n");
+        shoreside.append("\tCommsTick  = 4\n");
         shoreside.append("\n");
-        shoreside.append("   input  = route = localhost:9200\n");
+        shoreside.append("\tinput  = route = localhost:9200\n");
         shoreside.append("\n");
 
         for (Map.Entry<String, UUV> entry : simulationProperties.getAgents().entrySet()) {
@@ -217,9 +217,9 @@ class MoosConfigurationWriter {
             shoreside.append(new PShareConfig.Output("MOOS_MANUAL_OVERRIDE_ALL", "MOOS_MANUAL_OVERRIDE", route));
             shoreside.append(new PShareConfig.Output("UPDATES_RETURN_ALL", "UPDATES_RETURN", route));
             shoreside.append(new PShareConfig.Output("DEPLOY_" + upper, "DEPLOY", route));
-            shoreside.append(new PShareConfig.Output("RETURN_"+upper, "DEPLOY", route));
-            shoreside.append(new PShareConfig.Output("MOOS_MANUAL_OVERRIDE_"+upper, "MOOS_MANUAL_OVERRIDE", route));
-            shoreside.append(new PShareConfig.Output("UPDATES_RETURN_"+upper, "UPDATES_RETURN", route));
+            shoreside.append(new PShareConfig.Output("RETURN_" + upper, "DEPLOY", route));
+            shoreside.append(new PShareConfig.Output("MOOS_MANUAL_OVERRIDE_" + upper, "MOOS_MANUAL_OVERRIDE", route));
+            shoreside.append(new PShareConfig.Output("UPDATES_RETURN_" + upper, "UPDATES_RETURN", route));
 
             shoreside.append("\n");
         }

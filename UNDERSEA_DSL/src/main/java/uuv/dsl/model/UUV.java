@@ -15,10 +15,6 @@ public class UUV {
     private List<Sensor> sensors = new ArrayList<>();
     private PShareConfig pShareConfig;
 
-    public void setpShareConfig(PShareConfig pShareConfig) {
-        this.pShareConfig = pShareConfig;
-    }
-
     public UUV(String name, String serverPort, String behaviourFileName, double min, double max, int steps) {
         this.name = name;
         this.serverPort = serverPort;
@@ -29,6 +25,10 @@ public class UUV {
 
     public PShareConfig getpShareConfig() {
         return pShareConfig;
+    }
+
+    public void setpShareConfig(PShareConfig pShareConfig) {
+        this.pShareConfig = pShareConfig;
     }
 
     public String getBehaviourFileName() {

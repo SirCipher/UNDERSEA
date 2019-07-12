@@ -12,10 +12,6 @@ public class PShareConfig {
     private UUV parentUuv;
     private int pSharePort;
 
-    public int getpSharePort() {
-        return pSharePort;
-    }
-
     public PShareConfig(UUV parentUuv) {
         this.parentUuv = parentUuv;
 
@@ -34,6 +30,10 @@ public class PShareConfig {
         this.outputs.add(new Output("VIEW_POINT", null, route));
     }
 
+    public int getpSharePort() {
+        return pSharePort;
+    }
+
     public void addOutput(String src_name, String dest_name, String route) {
         this.outputs.add(new Output(src_name, dest_name, route));
     }
@@ -46,8 +46,8 @@ public class PShareConfig {
 
         config.append("\nProcessConfig = pShare\n");
         config.append("{\n");
-        config.append("    AppTick    = 4\n");
-        config.append("    CommsTick  = 4  \n");
+        config.append("\tAppTick    = 4\n");
+        config.append("\tCommsTick  = 4  \n");
         config.append(input.toString()).append("\n");
 
         for (Output output : outputs) {
@@ -61,20 +61,6 @@ public class PShareConfig {
 
     public List<Output> getOutputs() {
         return outputs;
-    }
-
-    public class Input {
-        private String input;
-
-        Input(UUV uuv) {
-            SimulationProperties properties = SimulationProperties.getInstance();
-            this.input = "    input = route = " + properties.getEnvironmentValue(SimulationProperties.EnvironmentValue.HOST) + ":" + pSharePort;
-        }
-
-        @Override
-        public String toString() {
-            return input;
-        }
     }
 
     public static class Output {
@@ -96,7 +82,21 @@ public class PShareConfig {
 
         @Override
         public String toString() {
-            return "    output = src_name=" + src_name + ", dest_name=" + dest_name + ", route=" + route + "\n";
+            return "\toutput = src_name=" + src_name + ", dest_name=" + dest_name + ", route=" + route + "\n";
+        }
+    }
+
+    public class Input {
+        private String input;
+
+        Input(UUV uuv) {
+            SimulationProperties properties = SimulationProperties.getInstance();
+            this.input = "\tinput = route = " + properties.getEnvironmentValue(SimulationProperties.EnvironmentValue.HOST) + ":" + pSharePort;
+        }
+
+        @Override
+        public String toString() {
+            return input;
         }
     }
 

@@ -3,9 +3,7 @@ package uuv.properties;
 import auxiliary.DSLException;
 import uuv.dsl.model.UUV;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class SimulationProperties {
