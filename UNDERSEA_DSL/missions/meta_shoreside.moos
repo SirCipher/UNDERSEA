@@ -93,31 +93,31 @@ ProcessConfig = pShare
 
    input  = route = localhost:9200
 
-   output = src_name=DEPLOY_ALL, dest_name= DEPLOY, route=localhost:9202
-   output = src_name=RETURN_ALL, dest_name= RETURN, route=localhost:9202
-   output = src_name=MOOS_MANUAL_OVERRIDE_ALL, dest_name= MOOS_MANUAL_OVERRIDE, route=localhost:9202
-   output = src_name=UPDATES_RETURN_ALL, dest_name = UPDATES_RETURN, route=localhost:9202
-   output = src_name=DEPLOY_BRAVO, dest_name= DEPLOY, route=localhost:9202
-   output = src_name=RETURN_BRAVO, dest_name= RETURN, route=localhost:9202
-   output = src_name=MOOS_MANUAL_OVERRIDE_BRAVO dest_name= MOOS_MANUAL_OVERRIDE, route=localhost:9202
-   output = src_name=UPDATES_RETURN_BRAVO, dest_name = UPDATES_RETURN, route=localhost:9202
+    output = src_name=DEPLOY_ALL, dest_name=DEPLOY, route=localhost:9202
+    output = src_name=RETURN_ALL, dest_name=RETURN, route=localhost:9202
+    output = src_name=MOOS_MANUAL_OVERRIDE_ALL, dest_name=MOOS_MANUAL_OVERRIDE, route=localhost:9202
+    output = src_name=UPDATES_RETURN_ALL, dest_name=UPDATES_RETURN, route=localhost:9202
+    output = src_name=DEPLOY_BRAVO, dest_name=DEPLOY, route=localhost:9202
+    output = src_name=RETURN_BRAVO, dest_name=DEPLOY, route=localhost:9202
+    output = src_name=MOOS_MANUAL_OVERRIDE_BRAVO, dest_name=MOOS_MANUAL_OVERRIDE, route=localhost:9202
+    output = src_name=UPDATES_RETURN_BRAVO, dest_name=UPDATES_RETURN, route=localhost:9202
 
-   output = src_name=DEPLOY_ALL, dest_name= DEPLOY, route=localhost:9201
-   output = src_name=RETURN_ALL, dest_name= RETURN, route=localhost:9201
-   output = src_name=MOOS_MANUAL_OVERRIDE_ALL, dest_name= MOOS_MANUAL_OVERRIDE, route=localhost:9201
-   output = src_name=UPDATES_RETURN_ALL, dest_name = UPDATES_RETURN, route=localhost:9201
-   output = src_name=DEPLOY_ALPHA, dest_name= DEPLOY, route=localhost:9201
-   output = src_name=RETURN_ALPHA, dest_name= RETURN, route=localhost:9201
-   output = src_name=MOOS_MANUAL_OVERRIDE_ALPHA dest_name= MOOS_MANUAL_OVERRIDE, route=localhost:9201
-   output = src_name=UPDATES_RETURN_ALPHA, dest_name = UPDATES_RETURN, route=localhost:9201
+    output = src_name=DEPLOY_ALL, dest_name=DEPLOY, route=localhost:9201
+    output = src_name=RETURN_ALL, dest_name=RETURN, route=localhost:9201
+    output = src_name=MOOS_MANUAL_OVERRIDE_ALL, dest_name=MOOS_MANUAL_OVERRIDE, route=localhost:9201
+    output = src_name=UPDATES_RETURN_ALL, dest_name=UPDATES_RETURN, route=localhost:9201
+    output = src_name=DEPLOY_ALPHA, dest_name=DEPLOY, route=localhost:9201
+    output = src_name=RETURN_ALPHA, dest_name=DEPLOY, route=localhost:9201
+    output = src_name=MOOS_MANUAL_OVERRIDE_ALPHA, dest_name=MOOS_MANUAL_OVERRIDE, route=localhost:9201
+    output = src_name=UPDATES_RETURN_ALPHA, dest_name=UPDATES_RETURN, route=localhost:9201
 
-   output = src_name=DEPLOY_ALL, dest_name= DEPLOY, route=localhost:9203
-   output = src_name=RETURN_ALL, dest_name= RETURN, route=localhost:9203
-   output = src_name=MOOS_MANUAL_OVERRIDE_ALL, dest_name= MOOS_MANUAL_OVERRIDE, route=localhost:9203
-   output = src_name=UPDATES_RETURN_ALL, dest_name = UPDATES_RETURN, route=localhost:9203
-   output = src_name=DEPLOY_CHARLIE, dest_name= DEPLOY, route=localhost:9203
-   output = src_name=RETURN_CHARLIE, dest_name= RETURN, route=localhost:9203
-   output = src_name=MOOS_MANUAL_OVERRIDE_CHARLIE dest_name= MOOS_MANUAL_OVERRIDE, route=localhost:9203
-   output = src_name=UPDATES_RETURN_CHARLIE, dest_name = UPDATES_RETURN, route=localhost:9203
+    output = src_name=DEPLOY_ALL, dest_name=DEPLOY, route=localhost:9203
+    output = src_name=RETURN_ALL, dest_name=RETURN, route=localhost:9203
+    output = src_name=MOOS_MANUAL_OVERRIDE_ALL, dest_name=MOOS_MANUAL_OVERRIDE, route=localhost:9203
+    output = src_name=UPDATES_RETURN_ALL, dest_name=UPDATES_RETURN, route=localhost:9203
+    output = src_name=DEPLOY_CHARLIE, dest_name=DEPLOY, route=localhost:9203
+    output = src_name=RETURN_CHARLIE, dest_name=DEPLOY, route=localhost:9203
+    output = src_name=MOOS_MANUAL_OVERRIDE_CHARLIE, dest_name=MOOS_MANUAL_OVERRIDE, route=localhost:9203
+    output = src_name=UPDATES_RETURN_CHARLIE, dest_name=UPDATES_RETURN, route=localhost:9203
 
 }

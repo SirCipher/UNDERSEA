@@ -12,6 +12,10 @@ public class PShareConfig {
     private UUV parentUuv;
     private int pSharePort;
 
+    public int getpSharePort() {
+        return pSharePort;
+    }
+
     public PShareConfig(UUV parentUuv) {
         this.parentUuv = parentUuv;
 
@@ -59,7 +63,7 @@ public class PShareConfig {
         return outputs;
     }
 
-    private class Input {
+    public class Input {
         private String input;
 
         Input(UUV uuv) {
@@ -73,12 +77,12 @@ public class PShareConfig {
         }
     }
 
-    private class Output {
+    public static class Output {
         private String src_name;
         private String dest_name;
         private String route;
 
-        Output(String src_name, String dest_name, String route) {
+        public Output(String src_name, String dest_name, String route) {
             this.src_name = src_name;
 
             if (dest_name == null) {

@@ -3,6 +3,7 @@ package uuv.parser;
 import auxiliary.Utility;
 import uuv.dsl.factory.FactoryProvider;
 import uuv.dsl.factory.SensorFactory;
+import uuv.dsl.model.PShareConfig;
 import uuv.dsl.model.Sensor;
 import uuv.dsl.model.UUV;
 import uuv.properties.SimulationProperties;
@@ -208,21 +209,19 @@ class MoosConfigurationWriter {
         for (Map.Entry<String, UUV> entry : simulationProperties.getAgents().entrySet()) {
             UUV uuv = entry.getValue();
             String upper = uuv.getName().toUpperCase();
-            // TODO: Align pShare ports
-            int port = Integer.parseInt(uuv.getServerPort()) + 200;
-            String targetUri =
-                    simulationProperties.getEnvironmentValue(SimulationProperties.EnvironmentValue.HOST) + ":" + port;
+            String route =
+                    simulationProperties.getEnvironmentValue(SimulationProperties.EnvironmentValue.HOST) + ":" + uuv.getpShareConfig().getpSharePort();
 
-            shoreside.append("   output = src_name=DEPLOY_ALL, dest_name= DEPLOY, route=" + targetUri + "\n");
-            shoreside.append("   output = src_name=RETURN_ALL, dest_name= RETURN, route=" + targetUri + "\n");
-            shoreside.append(
-                    "   output = src_name=MOOS_MANUAL_OVERRIDE_ALL, dest_name= MOOS_MANUAL_OVERRIDE, route=" + targetUri + "\n");
-            shoreside.append("   output = src_name=UPDATES_RETURN_ALL, dest_name = UPDATES_RETURN, route=" + targetUri + "\n");
-            shoreside.append("   output = src_name=DEPLOY_" + upper + ", dest_name= DEPLOY, route=" + targetUri + "\n");
-            shoreside.append("   output = src_name=RETURN_" + upper + ", dest_name= RETURN, route=" + targetUri + "\n");
-            shoreside.append("   output = src_name=MOOS_MANUAL_OVERRIDE_" + upper + " dest_name= " +
-                    "MOOS_MANUAL_OVERRIDE, route=" + targetUri + "\n");
-            shoreside.append("   output = src_name=UPDATES_RETURN_" + upper + ", dest_name = UPDATES_RETURN, route=" + targetUri + "\n\n");
+            shoreside.append(new PShareConfig.Output("DEPLOY_ALL", "DEPLOY", route));
+            shoreside.append(new PShareConfig.Output("RETURN_ALL", "RETURN", route));
+            shoreside.append(new PShareConfig.Output("MOOS_MANUAL_OVERRIDE_ALL", "MOOS_MANUAL_OVERRIDE", route));
+            shoreside.append(new PShareConfig.Output("UPDATES_RETURN_ALL", "UPDATES_RETURN", route));
+            shoreside.append(new PShareConfig.Output("DEPLOY_" + upper, "DEPLOY", route));
+            shoreside.append(new PShareConfig.Output("RETURN_"+upper, "DEPLOY", route));
+            shoreside.append(new PShareConfig.Output("MOOS_MANUAL_OVERRIDE_"+upper, "MOOS_MANUAL_OVERRIDE", route));
+            shoreside.append(new PShareConfig.Output("UPDATES_RETURN_"+upper, "UPDATES_RETURN", route));
+
+            shoreside.append("\n");
         }
 
         shoreside.append("}\n");
