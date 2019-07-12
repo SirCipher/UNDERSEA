@@ -7,6 +7,8 @@ import undersea.uuv.properties.SimulationProperties;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.Map;
@@ -55,9 +57,18 @@ class EnvironmentBuilder {
             String target = uuv.getMetaFileName().replaceFirst("meta", "targ");
 
             try {
-                String[] args = new String[]{"/home/tom/Desktop/PACS/moos-ivp/bin/nsplug", "missions/" + uuv.getMetaFileName(), "missions/" + target};
+                System.out.println("Running nsplug on " + uuv.getMetaFileName());
+                String[] args = new String[]{"/home/tom/Desktop/PACS/moos-ivp/bin/nsplug", uuv.getMetaFileName(), target};
                 ProcessBuilder proc = new ProcessBuilder(args);
+                proc.directory(new File("missions"));
                 Process process = proc.start();
+
+                // Overwrite files
+                OutputStream os = process.getOutputStream();
+                PrintWriter writer=new PrintWriter(os);
+                writer.write("y\n");
+                writer.flush();
+
                 String output = IOUtils.toString(process.getInputStream());
                 System.out.println(output);
                 process.destroy();
