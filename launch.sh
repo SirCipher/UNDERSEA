@@ -86,12 +86,14 @@ cd $BUILD_DIR
 #start uuv simulator
 printf "\nLaunching the mission!\n"
 
-FILES = find . -type f -name "*.moos"
-echo $FILES 
+FILES="$(find . -type f -name '*.moos')"
 
-exit 1
+for i in $FILES
+do
+  trimmed=${i#*./}
+  pAntler $trimmed >& /dev/null &
+done
 
-pAntler targ_uuv.moos >& /dev/null &
 
 sleep 3
 
