@@ -10,14 +10,17 @@ import java.util.Properties;
 
 public class Utility {
 
-    private static Properties properties;
+    private static Properties properties = new Properties();
 
-    static {
+    private Utility() {
+
+    }
+
+    public static void setProperties() {
         try {
-            properties = new Properties();
             properties.load(new FileInputStream(ParserEngine.propertiesFile));
         } catch (IOException e) {
-            System.out.println("config.properties file not provided");
+            System.out.println("Could not find config.properties file");
         }
     }
 

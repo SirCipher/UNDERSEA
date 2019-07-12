@@ -49,6 +49,10 @@ class EnvironmentBuilder {
 
     private static void generateTargetFiles() {
         UUV shoreside = simulationProperties.getShoreside();
+
+        System.out.println("Using build directory: " + buildDir.getAbsolutePath());
+        System.out.println("Writing mission files to: " + missionDir.getPath());
+
         nsplug(shoreside.getMetaFileName());
 
         for (Map.Entry<String, UUV> entry : simulationProperties.getAgents().entrySet()) {
@@ -68,11 +72,11 @@ class EnvironmentBuilder {
             }
 
             String[] args = new String[]{moosivpLocation + "/nsplug", fileName,
-                    "../" + buildDir.getPath() + File.separator + fileName};
+                    missionDir.getCanonicalPath() + File.separator + fileName};
             System.out.println("Running nsplug on " + fileName);
 
             ProcessBuilder proc = new ProcessBuilder(args);
-            proc.directory(new File("missions"));
+            proc.directory(missionDir);
             Process process = proc.start();
 
             // Overwrite files

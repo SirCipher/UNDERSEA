@@ -1,9 +1,9 @@
 package undersea;
 
-import undersea.auxiliary.Utility;
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
+import undersea.auxiliary.Utility;
 import undersea.uuv.dsl.SensorListener;
 import undersea.uuv.dsl.UUVListener;
 import undersea.uuv.dsl.gen.SensorsLexer;
@@ -17,7 +17,7 @@ import java.io.IOException;
 
 public class ParserEngine {
 
-    public static String propertiesFile = "resources/config.properties";
+    public static String propertiesFile;
     static String controllerDir;
     static String missionDir;
     private static SimulationProperties simulationProperties = SimulationProperties.getInstance();
@@ -103,14 +103,21 @@ public class ParserEngine {
     }
 
     private static void parseCommandLineArguments(String[] args) throws FileNotFoundException {
-        if (args.length != 4) {
+        if (args.length != 5) {
             throw new DSLException(
                     "Incorrect number of arguments! Please fix this error!\n" +
-                            "\tArg 1) configuration file (e.g., mission.config)\n" +
-                            "\tArg 2) sensor configuration file (e.g., sensors.config\n" +
-                            "\tArg 3) controller directory (e.g., UUV_Controller)\n" +
-                            "\tArg 4) mission directory (e.g., moos-ivp-extend/missions/uuvExemplar)\n"
+                            "\tArg 1) Mission configuration file (e.g., mission.config)\n" +
+                            "\tArg 2) Sensor configuration file (e.g., sensors.config\n" +
+                            "\tArg 3) Controller directory (e.g., UUV_Controller)\n" +
+                            "\tArg 4) Mission directory (e.g., moos-ivp-extend/missions/uuvExemplar)\n" +
+                            "\tArg 5) Config.properties file"
+
             );
+        }
+
+        if (Utility.fileExists(args[4])) {
+            propertiesFile = args[4];
+            Utility.setProperties();
         }
 
         if (Utility.fileExists(args[0])) {
