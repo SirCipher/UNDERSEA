@@ -4,7 +4,7 @@
 HOME=`pwd`
 
 if [ $# -eq 0 ]; then
-	printf "\nNo mission file provided. Stopping execution!\n\n" $CONFIG_FILE
+	printf "\nNo mission or sensor file provided. Stopping execution!\n\n"
 	exit 0
 fi
 
@@ -12,6 +12,7 @@ fi
 MISSION_DIR=moos-ivp-UNDERSEA/missions/uuvExemplar
 
 CONFIG_FILE=$1
+SENSOR_FILE=$2
 
 CONTROLLER_DIR=UNDERSEA_Controller
 
@@ -34,9 +35,11 @@ fi
 
 printf "Gerenating UUV mission given in %s\n" $CONFIG_FILE
 
-java -jar build/UNDERSEA_DSL.jar $CONFIG_FILE $CONTROLLER_DIR $MISSION_DIR
+java -jar build/UNDERSEA_DSL.jar $CONFIG_FILE $SENSOR_FILE $CONTROLLER_DIR $MISSION_DIR
 
 if [[ $? -eq 0 ]]; then
+	echo "DSL built"
+else
   printf "Error parsing configuration file. Building aborted!\n"
   exit 0
 fi
