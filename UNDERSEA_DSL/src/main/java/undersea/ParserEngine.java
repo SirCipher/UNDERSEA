@@ -18,7 +18,8 @@ import java.io.IOException;
 public class ParserEngine {
 
     public static String propertiesFile;
-    static String controllerDir;
+    static String buildDir;
+    private static String controllerDir;
     static String missionDir;
     private static SimulationProperties simulationProperties = SimulationProperties.getInstance();
     private static String configFile;
@@ -89,7 +90,7 @@ public class ParserEngine {
     public static void main(String[] args) throws IOException {
         parseCommandLineArguments(args);
 
-        EnvironmentBuilder.initDirectories(controllerDir, missionDir, configFile, sensorsFile);
+        EnvironmentBuilder.initDirectories(missionDir, buildDir);
 
         runSensorListener();
         runUUVListener();
@@ -106,14 +107,15 @@ public class ParserEngine {
     }
 
     private static void parseCommandLineArguments(String[] args) throws FileNotFoundException {
-        if (args.length != 5) {
+        if (args.length != 6) {
             throw new DSLException(
                     "Incorrect number of arguments! Please fix this error!\n" +
                             "\tArg 1) Mission configuration file (e.g., mission.config)\n" +
                             "\tArg 2) Sensor configuration file (e.g., sensors.config\n" +
                             "\tArg 3) Controller directory (e.g., UUV_Controller)\n" +
                             "\tArg 4) Mission directory (e.g., moos-ivp-extend/missions/uuvExemplar)\n" +
-                            "\tArg 5) Config.properties file"
+                            "\tArg 5) Config.properties file" +
+                            "\tArg 6) Output dir (e.g, build/resources)"
 
             );
         }
@@ -137,6 +139,10 @@ public class ParserEngine {
 
         if (Utility.fileExists(args[3])) {
             missionDir = args[3];
+        }
+
+        if (Utility.fileExists(args[5])) {
+            buildDir = args[5];
         }
     }
 

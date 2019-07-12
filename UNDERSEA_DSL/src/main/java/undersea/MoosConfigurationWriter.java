@@ -23,8 +23,9 @@ public class MoosConfigurationWriter {
 
     private static void generateControllerProperties(UUV uuv) {
         try {
-            String propertiesDirName = ParserEngine.controllerDir + "/resources/";
-            String propertiesFilename = propertiesDirName + "config.properties";
+            String propertiesDirName = ParserEngine.buildDir;
+            String propertiesFilename = propertiesDirName + File.separator + "resources" + File.separator + "config" +
+                    ".properties";
             File propertiesDir = new File(propertiesDirName);
             File propertiesFile = new File(propertiesFilename);
 
@@ -35,7 +36,7 @@ public class MoosConfigurationWriter {
             }
 
             if (!propertiesFile.exists()) {
-                if (!propertiesFile.createNewFile()) {
+                if (!propertiesFile.getParentFile().mkdirs() || !propertiesFile.createNewFile()) {
                     throw new IOException("Unable to create properties file in directory: " + propertiesFile.getAbsolutePath());
                 }
             }
@@ -48,7 +49,8 @@ public class MoosConfigurationWriter {
                     simulationProperties.getEnvironmentValue(SimulationProperties.EnvironmentValue.SIMULATION_TIME));
             properties.put("SIMULATION_SPEED",
                     simulationProperties.getEnvironmentValue(SimulationProperties.EnvironmentValue.SIMULATION_SPEED));
-            properties.put("PORT", uuv.getServerPort());
+            properties.put("PORT",
+                    simulationProperties.getEnvironmentValue(SimulationProperties.EnvironmentValue.PORT_START));
 
             StringBuilder sensorsNames = new StringBuilder();
 
@@ -62,7 +64,6 @@ public class MoosConfigurationWriter {
             }
 
             properties.put("SENSORS", sensorsNames.toString());
-
             properties.put("SPEED", uuv.getSpeedMin() + "," + uuv.getSpeedMax() + "," + uuv.getSpeedSteps());
 
             FileOutputStream out = new FileOutputStream(propertiesFile);
@@ -232,6 +233,7 @@ public class MoosConfigurationWriter {
         uuv.setMetaFileName(fileName);
 
         simulationProperties.addUUV(uuv);
+        generateControllerProperties(uuv);
 
         Utility.exportToFile(ParserEngine.missionDir + "/" + fileName,
                 shoreside.toString(),
@@ -297,6 +299,7 @@ public class MoosConfigurationWriter {
     static void run() {
         generateShoreside();
         generateSensors();
+
         Map<String, UUV> agents = simulationProperties.getAgents();
 
         for (Map.Entry<String, UUV> entry : agents.entrySet()) {
@@ -313,7 +316,6 @@ public class MoosConfigurationWriter {
             generateIvPHelmBlock(uuv);
 
             //generate controller properties
-            generateControllerProperties(uuv);
         }
     }
 

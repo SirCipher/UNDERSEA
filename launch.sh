@@ -6,9 +6,7 @@ HOME=`pwd`
 BUILD_DIR="$HOME/build"
 
 CONTROLLER="UNDERSEA_Controller.jar"
-MOOS="targ_uuv.moos"
-BHV="targ_uuv.bhv"
-PROPERTIES="resources/config.properties"
+PROPERTIES=$BUILD_DIR"/resources/config.properties"
 
 if [[ "$OSTYPE" == "linux-gnu" ]]; then
   export LD_LIBRARY_PATH=$BUILD_DIR/repo/prism/linux/
@@ -68,14 +66,6 @@ if [ ! -e "$CONTROLLER" ]; then
   printf "\nERROR: %s does not exist in build directory\n" $CONTROLLER
   ERROR="1"
 fi
-if [ ! -e "$MOOS" ]; then
-  printf "\nERROR: File %s does not exist in build directory\n" $MOOS
-  ERROR="1"
-fi
-if [ ! -e "$BHV" ]; then
-  printf "\nERROR: File %s does not exist in build directory\n" $BHV
-  ERROR="1"
-fi
 if [ ! -e "$PROPERTIES" ]; then
   printf "\nERROR: Properties %s does not exist\n" $PROPERTIES
   ERROR="1"
@@ -87,9 +77,6 @@ if [ "$ERROR" -eq "1" ]; then
   exit 0
 fi
 
-
-
-
 #-------------------------------------------------------
 #  Part 3: Launch the shoreside, the UUV & its controller
 #-------------------------------------------------------
@@ -98,6 +85,12 @@ cd $BUILD_DIR
 
 #start uuv simulator
 printf "\nLaunching the mission!\n"
+
+FILES = find . -type f -name "*.moos"
+echo $FILES 
+
+exit 1
+
 pAntler targ_uuv.moos >& /dev/null &
 
 sleep 3
