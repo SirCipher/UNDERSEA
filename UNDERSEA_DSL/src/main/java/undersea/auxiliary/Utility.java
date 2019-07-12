@@ -4,6 +4,8 @@ import undersea.ParserEngine;
 
 import java.io.*;
 import java.nio.channels.FileChannel;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.Set;
@@ -18,6 +20,15 @@ public class Utility {
             properties.load(new FileInputStream(ParserEngine.propertiesFile));
         } catch (IOException e) {
             System.out.println("config.properties file not provided");
+        }
+    }
+
+    public static void copyFile(File source, File dest) {
+        try {
+            Files.copy(source.toPath(), dest.toPath(), StandardCopyOption.REPLACE_EXISTING);
+            System.out.println("Copied " + source.getName() + " to " + dest.getCanonicalFile());
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to copy " + source.getName() + " to " + dest.getPath(), e);
         }
     }
 

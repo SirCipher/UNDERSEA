@@ -1,7 +1,7 @@
 package undersea;
 
-import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
+import undersea.auxiliary.Utility;
 import undersea.uuv.dsl.model.UUV;
 import undersea.uuv.properties.SimulationProperties;
 
@@ -36,47 +36,55 @@ class EnvironmentBuilder {
 
         if (controllerProperties.exists()) {
             try {
-                Files.copy(controllerProperties.toPath(), new File(buildDir.getCanonicalPath() + "/config.properties").toPath(), StandardCopyOption.REPLACE_EXISTING);
-                System.out.println("Copied controller config.properties to " + buildDir.getCanonicalFile());
+                File dest = new File(buildDir.getCanonicalPath() + "/config.properties");
+                Utility.copyFile(controllerProperties, dest);
             } catch (IOException e) {
-                throw new RuntimeException("Failed to copy config.properties to " + buildDir.getPath());
+                throw new RuntimeException("Failed to copy " + controllerProperties.getName() + " to " + buildDir.getPath() + "/config.properties", e);
             }
         } else {
             System.out.println("Controller config.properties missing. Skipping");
         }
 
-        nsplug();
+        generateTargetFiles();
     }
 
-    private static void nsplug() {
+    private static void nsplug(String fileName) {
+        try {
+            String target = fileName.replaceFirst("meta", "targ");
+            String[] args = new String[]{"/home/tom/Desktop/PACS/moos-ivp/bin/nsplug", fileName, target};
+
+            System.out.println("Running nsplug on " + fileName);
+
+            ProcessBuilder proc = new ProcessBuilder(args);
+            proc.directory(new File("missions"));
+            Process process = proc.start();
+
+            // Overwrite files
+            OutputStream os = process.getOutputStream();
+            PrintWriter writer = new PrintWriter(os);
+            writer.write("y\n");
+            writer.flush();
+
+            String output = IOUtils.toString(process.getInputStream());
+            System.out.println(output);
+            process.destroy();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    private static void generateTargetFiles() {
         SimulationProperties simulationProperties = SimulationProperties.getInstance();
 
+        UUV shoreside = simulationProperties.getShoreside();
+        nsplug(shoreside.getMetaFileName());
 
         for (Map.Entry<String, UUV> entry : simulationProperties.getAgents().entrySet()) {
             UUV uuv = entry.getValue();
-            String target = uuv.getMetaFileName().replaceFirst("meta", "targ");
-
-            try {
-                System.out.println("Running nsplug on " + uuv.getMetaFileName());
-                String[] args = new String[]{"/home/tom/Desktop/PACS/moos-ivp/bin/nsplug", uuv.getMetaFileName(), target};
-                ProcessBuilder proc = new ProcessBuilder(args);
-                proc.directory(new File("missions"));
-                Process process = proc.start();
-
-                // Overwrite files
-                OutputStream os = process.getOutputStream();
-                PrintWriter writer=new PrintWriter(os);
-                writer.write("y\n");
-                writer.flush();
-
-                String output = IOUtils.toString(process.getInputStream());
-                System.out.println(output);
-                process.destroy();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            nsplug(uuv.getMetaFileName());
+            nsplug(uuv.getBehaviourFileName());
         }
-
     }
 
 }
