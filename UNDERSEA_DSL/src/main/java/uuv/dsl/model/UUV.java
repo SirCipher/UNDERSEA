@@ -4,21 +4,31 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+// TODO: Convert to builder pattern
 public class UUV {
 
     private String name;
     private String rate;
-    private String port;
+    private String serverPort;
     private String behaviourFileName;
     private Range speedRange;
     private List<Sensor> sensors = new ArrayList<>();
+    private PShareConfig pShareConfig;
 
-    public UUV(String name, String port, String behaviourFileName, double min, double max, int steps) {
+    public void setpShareConfig(PShareConfig pShareConfig) {
+        this.pShareConfig = pShareConfig;
+    }
+
+    public UUV(String name, String serverPort, String behaviourFileName, double min, double max, int steps) {
         this.name = name;
-        this.port = port;
+        this.serverPort = serverPort;
         this.behaviourFileName = behaviourFileName;
         this.speedRange = new Range(min, max, steps + 1);
         this.rate = "4";
+    }
+
+    public PShareConfig getpShareConfig() {
+        return pShareConfig;
     }
 
     public String getBehaviourFileName() {
@@ -29,8 +39,8 @@ public class UUV {
         return this.name;
     }
 
-    public String getPort() {
-        return this.port;
+    public String getServerPort() {
+        return this.serverPort;
     }
 
     public String getRate() {
@@ -61,6 +71,7 @@ public class UUV {
         return (int) speedRange.getValue();
     }
 
+    @Override
     public String toString() {
         StringBuilder str = new StringBuilder();
         str.append("//------------------------------------------\n");
@@ -72,7 +83,7 @@ public class UUV {
         str.append("\t CommsTick = " + rate + "\n");
         str.append("\t MAX_APPCAST_EVENTS = 25 \n");
         str.append("\t NAME = " + name + "\n");
-        str.append("\t PORT = " + port + "\n");
+        str.append("\t PORT = " + serverPort + "\n");
 
         StringBuilder sensorsStr = new StringBuilder();
 

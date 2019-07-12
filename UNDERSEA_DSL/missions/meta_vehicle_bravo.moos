@@ -41,8 +41,8 @@ ProcessConfig = pShare
 {
     AppTick    = 4
     CommsTick  = 4  
-    input  = route = localhost:9200
+    input = route = localhost:9202
     output = src_name=NODE_REPORT_LOCAL, dest_name=NODE_REPORT, route=localhost:9000
-    output = src_name=VIEW_SEGLIST, route=localhost:9000
-    output = src_name=VIEW_POINT, route=localhost:9000
+    output = src_name=VIEW_SEGLIST, dest_name=VIEW_SEGLIST, route=localhost:9000
+    output = src_name=VIEW_POINT, dest_name=VIEW_POINT, route=localhost:9000
 }

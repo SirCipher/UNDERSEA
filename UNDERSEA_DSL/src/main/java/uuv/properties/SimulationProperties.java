@@ -3,7 +3,9 @@ package uuv.properties;
 import auxiliary.DSLException;
 import uuv.dsl.model.UUV;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class SimulationProperties {
@@ -13,6 +15,7 @@ public class SimulationProperties {
     private Map<String, UUV> agents = new HashMap<>();
 
     private SimulationProperties() {
+
     }
 
     public static SimulationProperties getInstance() {

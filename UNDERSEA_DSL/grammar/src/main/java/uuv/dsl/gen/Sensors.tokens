@@ -25,7 +25,7 @@ WS=24
 '='=1
 'host'=2
 'sensors'=3
-'port'=4
+'serverPort'=4
 'simulation time'=5
 'time window'=6
 'simulation speed'=7

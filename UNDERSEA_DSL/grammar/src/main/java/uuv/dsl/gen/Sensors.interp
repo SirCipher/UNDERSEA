@@ -3,7 +3,7 @@ null
 '='
 'host'
 'sensors'
-'port'
+'serverPort'
 'simulation time'
 'time window'
 'simulation speed'

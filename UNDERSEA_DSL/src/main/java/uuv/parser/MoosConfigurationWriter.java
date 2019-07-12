@@ -14,15 +14,11 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.Properties;
 
+@SuppressWarnings("StringConcatenationInsideStringBufferAppend")
 class MoosConfigurationWriter {
 
     private static SimulationProperties simulationProperties = SimulationProperties.getInstance();
-    private static final String pShareServerUri =
-            simulationProperties.getEnvironmentValue(SimulationProperties.EnvironmentValue.HOST) + ":"
-                    + Integer.parseInt(simulationProperties.getEnvironmentValue(SimulationProperties.EnvironmentValue.PORT));
     private static SensorFactory sensorFactory = FactoryProvider.getSensorFactory();
-    private static int pShareInputPort =
-            Integer.parseInt(simulationProperties.getEnvironmentValue(SimulationProperties.EnvironmentValue.PORT)) + 200;
 
     private static void generateControllerProperties(UUV uuv) {
         try {
@@ -51,7 +47,7 @@ class MoosConfigurationWriter {
                     simulationProperties.getEnvironmentValue(SimulationProperties.EnvironmentValue.SIMULATION_TIME));
             properties.put("SIMULATION_SPEED",
                     simulationProperties.getEnvironmentValue(SimulationProperties.EnvironmentValue.SIMULATION_SPEED));
-            properties.put("PORT", uuv.getPort());
+            properties.put("PORT", uuv.getServerPort());
 
             StringBuilder sensorsNames = new StringBuilder();
 
@@ -213,7 +209,7 @@ class MoosConfigurationWriter {
             UUV uuv = entry.getValue();
             String upper = uuv.getName().toUpperCase();
             // TODO: Align pShare ports
-            int port = Integer.parseInt(uuv.getPort()) + 200;
+            int port = Integer.parseInt(uuv.getServerPort()) + 200;
             String targetUri =
                     simulationProperties.getEnvironmentValue(SimulationProperties.EnvironmentValue.HOST) + ":" + port;
 
@@ -242,7 +238,7 @@ class MoosConfigurationWriter {
         vehicleBlock.append("// Meta vehicle config file\n");
         vehicleBlock.append("//------------------------------------------\n");
         vehicleBlock.append("ServerHost   = " + simulationProperties.getEnvironmentValue(SimulationProperties.EnvironmentValue.HOST) + "\n");
-        vehicleBlock.append("ServerPort   = " + uuv.getPort() + "\n");
+        vehicleBlock.append("ServerPort   = " + uuv.getServerPort() + "\n");
         vehicleBlock.append("Simulator    = true\n");
         vehicleBlock.append("Community    = " + uuv.getName() + "\n");
         vehicleBlock.append("LatOrigin    = 43.825300\n");
@@ -282,18 +278,7 @@ class MoosConfigurationWriter {
             vehicleBlock.append("#include plug_" + sensor.getName() + ".moos\n");
         }
 
-        String uri = simulationProperties.getEnvironmentValue(SimulationProperties.EnvironmentValue.HOST)
-                + ":" + pShareInputPort++;
-
-        vehicleBlock.append("\nProcessConfig = pShare\n");
-        vehicleBlock.append("{\n");
-        vehicleBlock.append("    AppTick    = 4\n");
-        vehicleBlock.append("    CommsTick  = 4  \n");
-        vehicleBlock.append("    input  = route = " + uri + "\n");
-        vehicleBlock.append("    output = src_name=NODE_REPORT_LOCAL, dest_name=NODE_REPORT, route=" + pShareServerUri + "\n");
-        vehicleBlock.append("    output = src_name=VIEW_SEGLIST, route=" + pShareServerUri + "\n");
-        vehicleBlock.append("    output = src_name=VIEW_POINT, route=" + pShareServerUri + "\n");
-        vehicleBlock.append("}\n");
+        vehicleBlock.append(uuv.getpShareConfig().toString());
 
         Utility.exportToFile(ParserEngine.missionDir + "/meta_vehicle_" + uuv.getName() + ".moos",
                 vehicleBlock.toString(),

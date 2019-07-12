@@ -4,6 +4,7 @@ import uuv.dsl.factory.AbstractFactory;
 import uuv.dsl.factory.FactoryProvider;
 import uuv.dsl.gen.UUVBaseListener;
 import uuv.dsl.gen.UUVParser;
+import uuv.dsl.model.PShareConfig;
 import uuv.dsl.model.Sensor;
 import uuv.dsl.model.UUV;
 import uuv.properties.SimulationProperties;
@@ -70,6 +71,8 @@ public class UUVListener extends UUVBaseListener {
         }
 
         UUV uuv = new UUV(name, port, behaviourFile, min, max, steps);
+        PShareConfig pShareConfig = new PShareConfig(uuv);
+        uuv.setpShareConfig(pShareConfig);
         uuv.setSensors(sensors);
 
         simulationProperties.addUUV(uuv);

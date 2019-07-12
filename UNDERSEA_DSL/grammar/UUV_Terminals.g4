@@ -24,7 +24,7 @@ BHV_FILE:
 ;
 
 PORT_START:
-    'port start'
+    'serverPort start'
 ;
 
 SIMULATION_TIME: 
