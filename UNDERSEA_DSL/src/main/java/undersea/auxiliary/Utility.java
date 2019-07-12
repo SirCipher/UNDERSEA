@@ -6,9 +6,7 @@ import java.io.*;
 import java.nio.channels.FileChannel;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
-import java.util.Map.Entry;
 import java.util.Properties;
-import java.util.Set;
 
 public class Utility {
 
@@ -73,8 +71,8 @@ public class Utility {
         return true;
     }
 
-    public static Set<Entry<Object, Object>> getPropertiesEntrySet() {
-        return properties.entrySet();
+    public static Properties getProperties() {
+        return properties;
     }
 
     public static String getProperty(String key) {

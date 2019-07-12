@@ -9,9 +9,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
-import java.nio.file.Files;
-import java.nio.file.StandardCopyOption;
 import java.util.Map;
+import java.util.Properties;
 
 class EnvironmentBuilder {
 
@@ -48,9 +47,28 @@ class EnvironmentBuilder {
         generateTargetFiles();
     }
 
+    private static void generateTargetFiles() {
+        UUV shoreside = simulationProperties.getShoreside();
+        nsplug(shoreside.getMetaFileName());
+
+        for (Map.Entry<String, UUV> entry : simulationProperties.getAgents().entrySet()) {
+            UUV uuv = entry.getValue();
+            nsplug(uuv.getMetaFileName());
+            nsplug(uuv.getBehaviourFileName());
+        }
+    }
+
     private static void nsplug(String fileName) {
         try {
-            String[] args = new String[]{"/home/tom/Desktop/PACS/moos-ivp/bin/nsplug", fileName, "../" + buildDir.getPath() + File.separator + fileName};
+            Properties properties = Utility.getProperties();
+            Object moosivpLocation = properties.getProperty("moosivp");
+
+            if (moosivpLocation == null) {
+                throw new IllegalArgumentException("MOOS-IVP bin location not specified");
+            }
+
+            String[] args = new String[]{moosivpLocation + "/nsplug", fileName,
+                    "../" + buildDir.getPath() + File.separator + fileName};
             System.out.println("Running nsplug on " + fileName);
 
             ProcessBuilder proc = new ProcessBuilder(args);
@@ -68,18 +86,6 @@ class EnvironmentBuilder {
             process.destroy();
         } catch (IOException e) {
             e.printStackTrace();
-        }
-    }
-
-
-    private static void generateTargetFiles() {
-        UUV shoreside = simulationProperties.getShoreside();
-        nsplug(shoreside.getMetaFileName());
-
-        for (Map.Entry<String, UUV> entry : simulationProperties.getAgents().entrySet()) {
-            UUV uuv = entry.getValue();
-            nsplug(uuv.getMetaFileName());
-            nsplug(uuv.getBehaviourFileName());
         }
     }
 
