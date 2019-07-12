@@ -27,7 +27,6 @@ public class Utility {
     public static void copyFile(File source, File dest) {
         try {
             Files.copy(source.toPath(), dest.toPath(), StandardCopyOption.REPLACE_EXISTING);
-            System.out.println("Copied " + source.getName() + " to " + dest.getCanonicalFile());
         } catch (IOException e) {
             throw new RuntimeException("Failed to copy " + source.getName() + " to " + dest.getPath(), e);
         }

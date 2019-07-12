@@ -88,6 +88,9 @@ public class ParserEngine {
 
     public static void main(String[] args) throws IOException {
         parseCommandLineArguments(args);
+
+        EnvironmentBuilder.initDirectories(controllerDir, missionDir, configFile, sensorsFile);
+
         runSensorListener();
         runUUVListener();
 
@@ -98,7 +101,7 @@ public class ParserEngine {
         } else {
             System.out.println("Successfully parsed configuration files");
             MoosConfigurationWriter.run();
-            EnvironmentBuilder.build(controllerDir, missionDir, configFile, sensorsFile);
+            EnvironmentBuilder.build();
         }
     }
 

@@ -28,8 +28,8 @@ for ARGI; do
     	printf "%s [SWITCHES]                       \n" $0
     	printf "Switches:                           \n"
     	printf "  --help, -h                        \n"
-            printf "  --debug,   -d                     \n"
-            printf "  --release, -r                     \n"
+      printf "  --debug,   -d                     \n"
+      printf "  --release, -r                     \n"
     	printf "Notes:                              \n"
     	printf " (1) All other command line args will be passed as args    \n"
     	printf "     to \"make\" when it is eventually invoked.            \n"
