@@ -20,7 +20,7 @@ class EnvironmentBuilder {
     private static File configFile;
     private static File sensorsFile;
     private static File buildDir = new File("../build/resources");
-
+    private static SimulationProperties simulationProperties = SimulationProperties.getInstance();
 
     static void build(String controllerDirPath, String missionDirPath, String configFilePath, String sensorsFilePath) {
         controllerDir = new File(controllerDirPath);
@@ -50,9 +50,7 @@ class EnvironmentBuilder {
 
     private static void nsplug(String fileName) {
         try {
-            String target = fileName.replaceFirst("meta", "targ");
-            String[] args = new String[]{"/home/tom/Desktop/PACS/moos-ivp/bin/nsplug", fileName, target};
-
+            String[] args = new String[]{"/home/tom/Desktop/PACS/moos-ivp/bin/nsplug", fileName, "../" + buildDir.getPath() + File.separator + fileName};
             System.out.println("Running nsplug on " + fileName);
 
             ProcessBuilder proc = new ProcessBuilder(args);
@@ -75,8 +73,6 @@ class EnvironmentBuilder {
 
 
     private static void generateTargetFiles() {
-        SimulationProperties simulationProperties = SimulationProperties.getInstance();
-
         UUV shoreside = simulationProperties.getShoreside();
         nsplug(shoreside.getMetaFileName());
 
