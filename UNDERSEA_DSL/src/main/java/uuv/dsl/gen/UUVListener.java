@@ -61,16 +61,6 @@ public interface UUVListener extends ParseTreeListener {
 	 */
 	void exitHost(UUVParser.HostContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link UUVParser#port}.
-	 * @param ctx the parse tree
-	 */
-	void enterPort(UUVParser.PortContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link UUVParser#port}.
-	 * @param ctx the parse tree
-	 */
-	void exitPort(UUVParser.PortContext ctx);
-	/**
 	 * Enter a parse tree produced by {@link UUVParser#speed}.
 	 * @param ctx the parse tree
 	 */

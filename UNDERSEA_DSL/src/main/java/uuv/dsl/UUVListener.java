@@ -48,11 +48,6 @@ public class UUVListener extends UUVBaseListener {
     }
 
     @Override
-    public void enterPort(UUVParser.PortContext ctx) {
-        simulationProperties.setEnvironmentValue(SimulationProperties.EnvironmentValue.PORT, ctx.value.getText());
-    }
-
-    @Override
     public void enterSpeed(UUVParser.SpeedContext ctx) {
         simulationProperties.setEnvironmentValue(SimulationProperties.EnvironmentValue.SIMULATION_SPEED,
                 ctx.value.getText());

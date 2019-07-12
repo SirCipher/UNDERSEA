@@ -55,13 +55,6 @@ public class UUVBaseVisitor<T> extends AbstractParseTreeVisitor<T> implements UU
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitPort(UUVParser.PortContext ctx) { return visitChildren(ctx); }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation returns the result of calling
-	 * {@link #visitChildren} on {@code ctx}.</p>
-	 */
 	@Override public T visitSpeed(UUVParser.SpeedContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}

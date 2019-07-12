@@ -20,7 +20,6 @@ model:
 		| simulation
 		| invocation
 		| host
-	 	| port
 	 	| uuv
 	 	| speed)+
 ;
@@ -39,10 +38,6 @@ invocation:
 
 host:
 		SERVER_HOST ASSIGN value=(IP | 'localhost')
-;
-
-port:
-		SERVER_PORT ASSIGN value=INT
 ;
 
 speed:

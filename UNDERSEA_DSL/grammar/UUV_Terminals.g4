@@ -27,10 +27,6 @@ PORT_START:
     'port start'
 ;
 
-SERVER_PORT: 
-	'port'
-;
-
 SIMULATION_TIME: 
 	'simulation time'
 ;

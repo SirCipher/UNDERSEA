@@ -69,7 +69,6 @@ public class SimulationProperties {
         SIMULATION_TIME("(e.g., simulation time = 10)"),
         SIMULATION_SPEED("(e.g., simulation speed = 2)"),
         HOST("(e.g., host = localhost)"),
-        PORT("(e.g., port = 12345)"),
         PORT_START("(e.g., port start = 9000)"),
         TIME_WINDOW("(e.g., time window = 10)");
 
