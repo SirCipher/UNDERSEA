@@ -42,7 +42,9 @@ class EnvironmentBuilder {
             for (File missionFile :
                     Objects.requireNonNull(missionDir.listFiles(f -> !f.getName().equals(".DS_Store")))) {
                 if (!includeFile.isDirectory() && includeFile.getName().equals(missionFile.getName())) {
-                    if (!missionFile.delete()) {
+                    if (missionFile.delete()) {
+                        continue;
+                    } else {
                         throw new RuntimeException("Cleaning up mission directory. Unable to delete file: " + missionFile.getName());
                     }
                 }
@@ -78,11 +80,7 @@ class EnvironmentBuilder {
         }
 
         if (!missionIncludeDir.exists()) {
-            missionIncludeDir = new File("mission-includes");
-
-            if (!missionIncludeDir.exists()) {
-                throw new RuntimeException("Missing mission-include directory or files. Expected: " + missionIncludeDir.getAbsolutePath());
-            }
+            throw new RuntimeException("Missing mission-include directory or files. Expected: " + missionIncludeDir.getAbsolutePath());
         }
 
         if (missionIncludeDir.listFiles() == null) {
@@ -96,14 +94,16 @@ class EnvironmentBuilder {
 
     private static void nsplug(String fileName) {
         try {
-            Properties properties = Utility.getProperties();
-            Object moosivpLocation = properties.getProperty("moosivp");
+            Properties properties = Utility.getMoosProperties();
+            String moosivpLocation = properties.getProperty("moosivp");
 
             if (moosivpLocation == null) {
-                throw new IllegalArgumentException("MOOS-IVP bin location not specified");
+                throw new IllegalArgumentException("MOOS-IVP bin location not specified in resources/moos.properties");
             }
 
-            String[] args = new String[]{moosivpLocation + File.separator + "nsplug", fileName,
+            moosivpLocation = moosivpLocation.endsWith("/") ? moosivpLocation + "nsplug" : moosivpLocation + File.separator + "nsplug";
+
+            String[] args = new String[]{moosivpLocation, fileName,
                     buildDir.getCanonicalPath() + File.separator + fileName};
             System.out.println("Running nsplug on " + fileName);
 

@@ -24,13 +24,19 @@ public class Utility {
         }
     }
 
+    /**
+     * Creates the given file
+     *
+     * @param source file to create
+     * @throws RuntimeException if unable to create the given file
+     */
     public static void createFile(File source) {
         try {
             if (!source.createNewFile()) {
                 throw new IOException();
             }
         } catch (IOException e) {
-            throw new RuntimeException("Failed to create file: " + source.getAbsolutePath());
+            throw new RuntimeException("Failed to create file: " + source.getAbsolutePath(), e);
         }
     }
 
@@ -66,13 +72,24 @@ public class Utility {
         }
     }
 
-    public static boolean fileExists(String fileName) throws FileNotFoundException {
+    public static boolean fileExists(String fileName, boolean isFolder, boolean create) throws FileNotFoundException {
         File f = new File(fileName);
         if (!f.exists()) {
-            throw new FileNotFoundException("File " + fileName + " does not exist!. Please fix this error.\n");
+            if (create) {
+                Utility.createFolder(new File(fileName));
+                return true;
+            }
+
+            throw new FileNotFoundException((isFolder ? "Folder '" : "File '") + fileName + "' does not exist!. Please fix this error.\n");
         }
 
         return true;
+    }
+
+    public static void createFolder(File folder) {
+        if (!folder.mkdirs()) {
+            throw new RuntimeException("Failed to create folder: " + folder.getAbsolutePath());
+        }
     }
 
     public static Properties getProperties() {
@@ -84,6 +101,16 @@ public class Utility {
         if (result == null)
             throw new IllegalArgumentException(key.toUpperCase() + " name not found!");
         return result;
+    }
+
+    public static Properties getMoosProperties() {
+        try {
+            Properties moosProperties = new Properties();
+            moosProperties.load(new FileInputStream("resources/moos.properties"));
+            return moosProperties;
+        } catch (IOException e) {
+            throw new RuntimeException("Unable to load or find moos.properties", e);
+        }
     }
 
     public static void setProperties() {

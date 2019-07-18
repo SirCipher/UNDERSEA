@@ -124,29 +124,29 @@ public class ParserEngine {
             );
         }
 
-        if (Utility.fileExists(args[4])) {
+        if (Utility.fileExists(args[4], false, false)) {
             propertiesFile = args[4];
             Utility.setProperties();
         }
 
-        if (Utility.fileExists(args[0])) {
+        if (Utility.fileExists(args[0], false, false)) {
             configFile = args[0];
             missionDirectory = new File(configFile).getParentFile();
         }
 
-        if (Utility.fileExists(args[1])) {
+        if (Utility.fileExists(args[1], false, false)) {
             sensorsFile = args[1];
         }
 
-        if (Utility.fileExists(args[2])) {
+        if (Utility.fileExists(args[2], true, true)) {
             controllerDir = args[2];
         }
 
-        if (Utility.fileExists(args[3])) {
+        if (Utility.fileExists(args[3], true, true)) {
             missionDir = args[3];
         }
 
-        if (Utility.fileExists(args[5])) {
+        if (Utility.fileExists(args[5], true, true)) {
             buildDir = args[5];
         }
     }
