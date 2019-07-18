@@ -80,7 +80,8 @@ public class Utility {
                 return true;
             }
 
-            throw new FileNotFoundException((isFolder ? "Folder '" : "File '") + fileName + "' does not exist!. Please fix this error.\n");
+            throw new FileNotFoundException((isFolder ? "Folder '" : "File '") + fileName + "' does not exist!. " +
+                    "Please fix this error.\n");
         }
 
         return true;
@@ -109,7 +110,8 @@ public class Utility {
             moosProperties.load(new FileInputStream("resources/moos.properties"));
             return moosProperties;
         } catch (IOException e) {
-            throw new RuntimeException("Unable to load or find moos.properties. Have you created it? (resources/moos.properties)", e);
+            throw new RuntimeException("Unable to load or find moos.properties. Have you created it? (resources/moos" +
+                    ".properties)", e);
         }
     }
 

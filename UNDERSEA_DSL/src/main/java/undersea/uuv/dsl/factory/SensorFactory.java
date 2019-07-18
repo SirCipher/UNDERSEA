@@ -1,7 +1,7 @@
 package undersea.uuv.dsl.factory;
 
-import undersea.DSLException;
 import org.antlr.v4.runtime.ParserRuleContext;
+import undersea.DSLException;
 import undersea.uuv.dsl.gen.SensorsParser;
 import undersea.uuv.dsl.model.Range;
 import undersea.uuv.dsl.model.Sensor;

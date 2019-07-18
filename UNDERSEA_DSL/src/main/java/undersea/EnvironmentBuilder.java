@@ -37,6 +37,10 @@ class EnvironmentBuilder {
         cleanup();
     }
 
+    /**
+     * Cleans up the output mission directory so it only contains the files/folders required to run the mission.
+     * Removing all mission include files required for the NSPLUG.
+     */
     private static void cleanup() {
         for (File includeFile : Objects.requireNonNull(missionIncludeDir.listFiles())) {
             for (File missionFile :
@@ -101,7 +105,8 @@ class EnvironmentBuilder {
                 throw new IllegalArgumentException("MOOS-IVP bin location not specified in resources/moos.properties");
             }
 
-            moosivpLocation = moosivpLocation.endsWith("/") ? moosivpLocation + "nsplug" : moosivpLocation + File.separator + "nsplug";
+            moosivpLocation = moosivpLocation.endsWith("/") ? moosivpLocation + "nsplug" :
+                    moosivpLocation + File.separator + "nsplug";
 
             String[] args = new String[]{moosivpLocation, fileName,
                     buildDir.getCanonicalPath() + File.separator + fileName};

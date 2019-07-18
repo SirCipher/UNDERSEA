@@ -35,7 +35,7 @@ public class SimulationProperties {
 
     public Map<String, UUV> getAgents() {
         return agents.entrySet().stream()
-                .filter(a->!a.getValue().getName().equals("shoreside"))
+                .filter(a -> !a.getValue().getName().equals("shoreside"))
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
 

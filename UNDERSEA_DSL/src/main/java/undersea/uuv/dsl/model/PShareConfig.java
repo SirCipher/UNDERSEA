@@ -91,7 +91,8 @@ public class PShareConfig {
 
         Input(UUV uuv) {
             SimulationProperties properties = SimulationProperties.getInstance();
-            this.input = "\tinput = route = " + properties.getEnvironmentValue(SimulationProperties.EnvironmentValue.HOST) + ":" + pSharePort;
+            this.input =
+                    "\tinput = route = " + properties.getEnvironmentValue(SimulationProperties.EnvironmentValue.HOST) + ":" + pSharePort;
         }
 
         @Override
