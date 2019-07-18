@@ -17,3 +17,5 @@ target/
 
 Prism.g4
 PrismTerminals.g4
+
+resources/moos.properties
