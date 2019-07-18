@@ -14,7 +14,7 @@ class ParserEngineTest {
     @Test
     void testParser() throws IOException {
         String[] args = {"resources/mission.config", "resources/sensors.config", "../UNDERSEA_Controller",
-                "build", "resources/config.properties", "build"};
+                "mission", "resources/config.properties", "mission"};
 //                "../moos-ivp-UNDERSEA/missions/uuvExemplar"};
 
         try {

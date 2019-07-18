@@ -84,14 +84,10 @@ class EnvironmentBuilder {
         }
 
         if (!missionIncludeDir.exists()) {
-            throw new RuntimeException("Missing mission-include directory or files. Expected: " + missionIncludeDir.getAbsolutePath());
+            throw new RuntimeException("Missing mission-include directory Expected: " + missionIncludeDir.getAbsolutePath());
         }
 
-        if (missionIncludeDir.listFiles() == null) {
-            throw new RuntimeException("Missing mission-include files");
-        }
-
-        for (File file : Objects.requireNonNull(missionIncludeDir.listFiles())) {
+        for (File file : Objects.requireNonNull(missionIncludeDir.listFiles(), "Missing mission-include files")) {
             Utility.copyFile(file, new File(missionDir + File.separator + file.getName()));
         }
     }

@@ -18,6 +18,7 @@ public class UUVListener extends UUVBaseListener {
     private AbstractFactory<Sensor> sensorFactory = FactoryProvider.getSensorFactory();
     private int serverPortStart;
 
+
     @Override
     public void enterPortStart(UUVParser.PortStartContext ctx) {
         simulationProperties.setEnvironmentValue(SimulationProperties.EnvironmentValue.PORT_START,
@@ -42,6 +43,12 @@ public class UUVListener extends UUVBaseListener {
         simulationProperties.setEnvironmentValue(SimulationProperties.EnvironmentValue.TIME_WINDOW,
                 ctx.value.getText());
     }
+
+//    @Override
+//    public void enterMissionName(UUVParser.MissionNameContext ctx) {
+//        simulationProperties.setEnvironmentValue(SimulationProperties.EnvironmentValue.MISSION_NAME, ctx.value.getText());
+//    }
+
 
     @Override
     public void enterHost(UUVParser.HostContext ctx) {

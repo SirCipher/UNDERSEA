@@ -3,7 +3,7 @@ grammar UUV;
 import UUV_Terminals; // includes all rules from UUV_Terminals.g4
 
 @parser::header {
-package uuv.dsl.gen;
+package undersea.uuv.dsl.gen;
 import java.util.*;
 }
 

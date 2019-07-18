@@ -1,7 +1,7 @@
 lexer grammar UUV_Terminals; // note "lexer grammar"
 
 @lexer::header {
-  package uuv.dsl.gen;
+  package undersea.uuv.dsl.gen;
 } 
 
 ASSIGN: 

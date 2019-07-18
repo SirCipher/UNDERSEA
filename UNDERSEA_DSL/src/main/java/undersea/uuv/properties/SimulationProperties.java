@@ -74,6 +74,7 @@ public class SimulationProperties {
     }
 
     public enum EnvironmentValue {
+//        MISSION_NAME("(e.g., reconnaissance)"),
         SIMULATION_TIME("(e.g., simulation time = 10)"),
         SIMULATION_SPEED("(e.g., simulation speed = 2)"),
         HOST("(e.g., host = localhost)"),
