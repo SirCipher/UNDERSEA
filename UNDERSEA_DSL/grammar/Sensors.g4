@@ -1,5 +1,5 @@
 grammar Sensors;
-import UUV_Terminals;
+import Sensors_Terminals;
 
 @parser::header {
   package undersea.uuv.dsl.gen;

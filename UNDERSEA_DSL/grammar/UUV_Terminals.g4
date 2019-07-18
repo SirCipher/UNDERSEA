@@ -5,14 +5,23 @@ lexer grammar UUV_Terminals; // note "lexer grammar"
 } 
 
 ASSIGN: 
-	'=' ;
-
-SERVER_HOST: 
-	'host'
+	'='
 ;
 
-SENSORS:
-    'sensors'
+MISSION_NAME:
+    'mission name'
+;
+
+NAME:
+	'name'
+;
+
+TIME_WINDOW:
+	'time window'
+;
+
+SERVER_HOST:
+	'host'
 ;
 
 BEHAVIOUR_FILE:
@@ -23,52 +32,42 @@ BHV_FILE:
     ID '.bhv'
 ;
 
+SENSORS:
+    'sensors'
+;
+
+DOUBLE:
+	INT? '.' INT
+;
+
 PORT_START:
-    'serverPort start'
+    'server port start'
 ;
 
-SIMULATION_TIME: 
+SIMULATION_TIME:
 	'simulation time'
-;
-
-TIME_WINDOW: 
-	'time window'
 ;
 
 SIMULATION_SPEED:
 	'simulation speed'
 ;
 
-SPEED:
-	'speed'
+INT: 
+	[0-9]+
 ;
 
-SENSOR:
-    'sensor'
+IP:
+	OCTET '.' OCTET '.' OCTET '.' OCTET
 ;
 
-NAME:
-	'name'
+fragment DIGIT :
+	'0'..'9'
 ;
 
-RATE:
-	'rate'
-;
-
-CHANGE:
-	'change'
-;
-
-RELIABILITY:
-	'reliability'
-;
-
-SLCOMMENT: 
-	'//' .*? '\r'? '\n' -> skip // Match "//" stuff '\n'
-;
-
-ID: 
-	[a-zA-Z_][0-9a-zA-Z_]* 
+OCTET
+	 :  DIGIT DIGIT DIGIT
+	 |  DIGIT DIGIT
+     |  DIGIT
 ;
 
 BEGL:
@@ -83,32 +82,17 @@ SEP:
     ','
 ;
 
-INT: 
-	[0-9]+ 
-;  
-
-DOUBLE:
-	INT? '.' INT 
+SPEED:
+	'speed'
 ;
 
-IP: 
-	OCTET '.' OCTET '.' OCTET '.' OCTET
+ID:
+	[a-zA-Z_][0-9a-zA-Z_]+
 ;
 
-OCTET
-	 :  DIGIT DIGIT DIGIT
-	 |  DIGIT DIGIT
-     |  DIGIT
- ;
-
-STRING
-    :  '"' (~('\\'|'"') )* '"'
+WS  :
+	[ \t\r\n]+ -> skip
 ;
 
-WS  : 
-	[ \t\r\n]+ -> skip /*toss out whitespace*/
-;
 
-fragment DIGIT :  
-	'0'..'9'
-;
+ErrorCharacter : . ;

@@ -7,21 +7,18 @@ package undersea.uuv.dsl.gen;
 import java.util.*;
 }
 
-@parser::members {
-	Set<String> types = new HashSet<String>() {{add("T");}};
-	boolean istype() { return types.contains(getCurrentToken().getText()); }
-}
-
-/** The start rule; begin parsing here.
- * a model is assembled by a model type and a set of abstract elements*/
-
 model:
-		( portStart
-		| simulation
-		| invocation
-		| host
-	 	| uuv
-	 	| speed)+
+		(missionName
+		|portStart
+        |simulation
+        |invocation
+        |host
+        |speed
+        |uuv+)+
+;
+
+missionName:
+    MISSION_NAME ASSIGN value=ID
 ;
 
 portStart:
@@ -29,7 +26,11 @@ portStart:
 ;
 
 simulation:
-		SIMULATION_TIME ASSIGN value=INT
+    SIMULATION_TIME ASSIGN value=INT
+;
+
+speed:
+    SIMULATION_SPEED ASSIGN value=INT
 ;
 
 invocation:
@@ -38,10 +39,6 @@ invocation:
 
 host:
 		SERVER_HOST ASSIGN value=(IP | 'localhost')
-;
-
-speed:
-		SIMULATION_SPEED ASSIGN value=INT
 ;
 
 list:
@@ -59,11 +56,9 @@ elem:
 uuv:
 		'UUV'
 		'{'
-			(
-				NAME ASSIGN name=ID
-			|	SPEED ASSIGN min=(INT | DOUBLE) ':' max=(INT | DOUBLE) ':' steps=INT
-            |   BEHAVIOUR_FILE ASSIGN behaviourFile=BHV_FILE
-			|   SENSORS ASSIGN sensors=BEGL elems? ENDL
-			)+
+			NAME ASSIGN name=ID
+			SPEED ASSIGN min=(INT | DOUBLE) ':' max=(INT | DOUBLE) ':' steps=INT
+            BEHAVIOUR_FILE ASSIGN behaviourFile=BHV_FILE
+			SENSORS ASSIGN sensors=BEGL elems? ENDL
 		'}'
 ;

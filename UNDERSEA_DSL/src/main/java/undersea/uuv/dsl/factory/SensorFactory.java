@@ -8,6 +8,7 @@ import undersea.uuv.dsl.model.Sensor;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public class SensorFactory implements AbstractFactory<Sensor> {
 
@@ -22,8 +23,10 @@ public class SensorFactory implements AbstractFactory<Sensor> {
             throw new DSLException("Duplicate sensor defined: " + name);
         }
 
-        double reliability = Double.parseDouble(sensorContext.reliability.getText());
-        double rate = Double.parseDouble(sensorContext.rate.getText());
+        double reliability = Double.parseDouble(Objects.requireNonNull(sensorContext.reliability.getText(),
+                "Sensor reliability not provided"));
+        double rate = Double.parseDouble(Objects.requireNonNull(sensorContext.rate.getText(),
+                "Sensor rate not provided"));
 
         Sensor newSensor = new Sensor(name, rate, reliability);
 

@@ -33,6 +33,10 @@ public class SimulationProperties {
         this.agents.put(uuv.getName(), uuv);
     }
 
+    public Map<EnvironmentValue, String> getEnvironmentValues() {
+        return environmentValues;
+    }
+
     public Map<String, UUV> getAgents() {
         return agents.entrySet().stream()
                 .filter(a -> !a.getValue().getName().equals("shoreside"))
@@ -74,7 +78,7 @@ public class SimulationProperties {
     }
 
     public enum EnvironmentValue {
-//        MISSION_NAME("(e.g., reconnaissance)"),
+        MISSION_NAME("(e.g., mission name = reconnaissance"),
         SIMULATION_TIME("(e.g., simulation time = 10)"),
         SIMULATION_SPEED("(e.g., simulation speed = 2)"),
         HOST("(e.g., host = localhost)"),

@@ -20,6 +20,12 @@ public interface UUVVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitModel(UUVParser.ModelContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link UUVParser#missionName}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitMissionName(UUVParser.MissionNameContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link UUVParser#portStart}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
@@ -32,6 +38,12 @@ public interface UUVVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitSimulation(UUVParser.SimulationContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link UUVParser#speed}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitSpeed(UUVParser.SpeedContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link UUVParser#invocation}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
@@ -43,12 +55,6 @@ public interface UUVVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitHost(UUVParser.HostContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link UUVParser#speed}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitSpeed(UUVParser.SpeedContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link UUVParser#list}.
 	 * @param ctx the parse tree

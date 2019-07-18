@@ -44,11 +44,11 @@ public class UUVListener extends UUVBaseListener {
                 ctx.value.getText());
     }
 
-//    @Override
-//    public void enterMissionName(UUVParser.MissionNameContext ctx) {
-//        simulationProperties.setEnvironmentValue(SimulationProperties.EnvironmentValue.MISSION_NAME, ctx.value.getText());
-//    }
-
+    @Override
+    public void enterMissionName(UUVParser.MissionNameContext ctx) {
+        simulationProperties.setEnvironmentValue(SimulationProperties.EnvironmentValue.MISSION_NAME,
+                ctx.value.getText());
+    }
 
     @Override
     public void enterHost(UUVParser.HostContext ctx) {
@@ -72,7 +72,7 @@ public class UUVListener extends UUVBaseListener {
 
         List<Sensor> sensors = new ArrayList<>();
 
-        for (UUVParser.ElemContext context : ctx.elems(0).elem()) {
+        for (UUVParser.ElemContext context : ctx.elems().elem()) {
             Sensor sensor = sensorFactory.get(context.getText());
             sensors.add(sensor);
         }

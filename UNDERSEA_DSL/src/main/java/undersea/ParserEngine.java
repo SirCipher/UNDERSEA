@@ -6,6 +6,7 @@ import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import undersea.auxiliary.Utility;
 import undersea.uuv.dsl.SensorListener;
 import undersea.uuv.dsl.UUVListener;
+import undersea.uuv.dsl.factory.FactoryProvider;
 import undersea.uuv.dsl.gen.SensorsLexer;
 import undersea.uuv.dsl.gen.SensorsParser;
 import undersea.uuv.dsl.gen.UUVLexer;
@@ -98,6 +99,10 @@ public class ParserEngine {
 
         runSensorListener();
         runUUVListener();
+
+        System.out.println("Parsed: " + simulationProperties.getAgents().size() + " agents");
+        System.out.println("Parsed: " + FactoryProvider.getSensorFactory().getSensors().size() + " sensors");
+        System.out.println("Environment values: " + simulationProperties.getEnvironmentValues().toString() + "\n");
 
         simulationProperties.validateEnvironmentValues();
 

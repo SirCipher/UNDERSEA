@@ -218,8 +218,8 @@ class MoosConfigurationWriter {
         for (Map.Entry<String, UUV> entry : simulationProperties.getAgents().entrySet()) {
             UUV uuv = entry.getValue();
             String upper = uuv.getName().toUpperCase();
-            String route = simulationProperties.getEnvironmentValue(SimulationProperties.EnvironmentValue.HOST) +
-                    ":" + uuv.getpShareConfig().getpSharePort();
+            String route =
+                    simulationProperties.getEnvironmentValue(SimulationProperties.EnvironmentValue.HOST) + ":" + uuv.getpShareConfig().getpSharePort();
 
             shoreside.append(new PShareConfig.Output("DEPLOY_ALL", "DEPLOY", route));
             shoreside.append(new PShareConfig.Output("RETURN_ALL", "RETURN", route));
