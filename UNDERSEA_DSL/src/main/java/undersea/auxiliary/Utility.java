@@ -109,7 +109,7 @@ public class Utility {
             moosProperties.load(new FileInputStream("resources/moos.properties"));
             return moosProperties;
         } catch (IOException e) {
-            throw new RuntimeException("Unable to load or find moos.properties", e);
+            throw new RuntimeException("Unable to load or find moos.properties. Have you created it? (resources/moos.properties)", e);
         }
     }
 
