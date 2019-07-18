@@ -51,18 +51,18 @@ public class Sensor {
     public String toString() {
         StringBuilder str = new StringBuilder();
         str.append("//------------------------------------------\n");
-        str.append("// sSensor config block\n");
+        str.append("// " + name + " config block\n");
         str.append("//------------------------------------------\n");
         str.append("ProcessConfig = " + name + "\n");
         str.append("{\n");
-        str.append("\t AppTick = " + rate + "\n");
-        str.append("\t CommsTick = " + rate + "\n");
+        str.append("\t AppTick\t\t\t= " + rate + "\n");
+        str.append("\t CommsTick\t\t\t= " + rate + "\n");
         str.append("\t MAX_APPCAST_EVENTS = 25 \n");
-        str.append("\t NAME = " + name + "\n");
-        str.append("\t RELIABILITY = " + reliability + "\n");
+        str.append("\t NAME\t\t\t\t= " + name + "\n");
+        str.append("\t RELIABILITY\t\t= " + reliability + "\n");
 
         for (Range d : changesList) {
-            str.append("\t CHANGE = ").append(d.toString()).append("\n");
+            str.append("\t CHANGE\t\t\t\t= ").append(d.toString()).append("\n");
         }
 
         str.append("}\n");

@@ -12,17 +12,21 @@ import undersea.uuv.dsl.gen.UUVLexer;
 import undersea.uuv.dsl.gen.UUVParser;
 import undersea.uuv.properties.SimulationProperties;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
 public class ParserEngine {
 
     public static String propertiesFile;
+
     static String buildDir;
-    private static String controllerDir;
+    static String configFile;
     static String missionDir;
+    static File missionDirectory;
+
+    private static String controllerDir;
     private static SimulationProperties simulationProperties = SimulationProperties.getInstance();
-    private static String configFile;
     private static String sensorsFile;
     private static boolean errorsFound = false;
 
@@ -127,6 +131,7 @@ public class ParserEngine {
 
         if (Utility.fileExists(args[0])) {
             configFile = args[0];
+            missionDirectory = new File(configFile).getParentFile();
         }
 
         if (Utility.fileExists(args[1])) {

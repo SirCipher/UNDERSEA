@@ -16,19 +16,21 @@ public class Utility {
 
     }
 
-    public static void setProperties() {
-        try {
-            properties.load(new FileInputStream(ParserEngine.propertiesFile));
-        } catch (IOException e) {
-            System.out.println("Could not find config.properties file");
-        }
-    }
-
     public static void copyFile(File source, File dest) {
         try {
             Files.copy(source.toPath(), dest.toPath(), StandardCopyOption.REPLACE_EXISTING);
         } catch (IOException e) {
             throw new RuntimeException("Failed to copy " + source.getName() + " to " + dest.getPath(), e);
+        }
+    }
+
+    public static void createFile(File source) {
+        try {
+            if (!source.createNewFile()) {
+                throw new IOException();
+            }
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to create file: " + source.getAbsolutePath());
         }
     }
 
@@ -49,7 +51,7 @@ public class Utility {
 
             exportToFile(outputFileName, outputStr, false);
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new RuntimeException("Unable to write " + inputFileName, e);
         }
     }
 
@@ -60,7 +62,7 @@ public class Utility {
             writer.flush();
             writer.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new RuntimeException("Unable to write " + fileName, e);
         }
     }
 
@@ -82,6 +84,14 @@ public class Utility {
         if (result == null)
             throw new IllegalArgumentException(key.toUpperCase() + " name not found!");
         return result;
+    }
+
+    public static void setProperties() {
+        try {
+            properties.load(new FileInputStream(ParserEngine.propertiesFile));
+        } catch (IOException e) {
+            System.out.println("Could not find config.properties file");
+        }
     }
 
 }

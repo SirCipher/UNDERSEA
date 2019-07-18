@@ -47,6 +47,11 @@ class EnvironmentBuilder {
                     }
                 }
 
+                // Whitelist all behaviour files
+                if (missionFile.getName().endsWith(".bhv")) {
+                    continue;
+                }
+
                 if (!missionFile.getName().startsWith("meta")) {
                     if (!missionFile.isDirectory() && !missionFile.delete()) {
                         throw new RuntimeException("Cleaning up mission directory. Unable to delete file: " + missionFile.getName());
@@ -71,6 +76,7 @@ class EnvironmentBuilder {
                 }
             }
         }
+
         if (!missionIncludeDir.exists()) {
             missionIncludeDir = new File("mission-includes");
 

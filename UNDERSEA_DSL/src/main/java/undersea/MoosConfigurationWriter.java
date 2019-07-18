@@ -16,7 +16,7 @@ import java.util.Map;
 import java.util.Properties;
 
 @SuppressWarnings("StringConcatenationInsideStringBufferAppend")
-public class MoosConfigurationWriter {
+class MoosConfigurationWriter {
 
     private static SimulationProperties simulationProperties = SimulationProperties.getInstance();
     private static SensorFactory sensorFactory = FactoryProvider.getSensorFactory();
@@ -76,27 +76,35 @@ public class MoosConfigurationWriter {
     }
 
     private static void generateIvPHelmBlock(UUV uuv) {
-        StringBuilder str = new StringBuilder();
-        str.append("//------------------------------------------\n");
-        str.append("// Helm IvP configuration  block\n");
-        str.append("//------------------------------------------\n");
-        str.append("ProcessConfig = pHelmIvP\n");
-        str.append("{\n");
-        str.append("\t   AppTick        = 4\n");
-        str.append("\t   CommsTick      = 4\n");
-        str.append("\t   Behaviors      = " + uuv.getBehaviourFileName() + "\n");
-        str.append("\t   Verbose        = quiet\n");
-        str.append("\t   ok_skew        = any\n");
-        str.append("\t   active_start   = false\n");
-        str.append("\t   Domain         = course:0:359:360\n");
-        str.append("\t   Domain         = depth:0:100:101\n");
-        str.append("\t   Domain         = speed:" + uuv.getSpeedMin() + ":" + uuv.getSpeedMax() + ":" + uuv
+        StringBuilder ivpBloxk = new StringBuilder();
+        ivpBloxk.append("//------------------------------------------\n");
+        ivpBloxk.append("// Helm IvP configuration  block\n");
+        ivpBloxk.append("//------------------------------------------\n");
+        ivpBloxk.append("ProcessConfig = pHelmIvP\n");
+        ivpBloxk.append("{\n");
+        ivpBloxk.append("\t   AppTick        = 4\n");
+        ivpBloxk.append("\t   CommsTick      = 4\n");
+        ivpBloxk.append("\t   Behaviors      = " + uuv.getBehaviourFileName() + "\n");
+        ivpBloxk.append("\t   Verbose        = quiet\n");
+        ivpBloxk.append("\t   ok_skew        = any\n");
+        ivpBloxk.append("\t   active_start   = false\n");
+        ivpBloxk.append("\t   Domain         = course:0:359:360\n");
+        ivpBloxk.append("\t   Domain         = depth:0:100:101\n");
+        ivpBloxk.append("\t   Domain         = speed:" + uuv.getSpeedMin() + ":" + uuv.getSpeedMax() + ":" + uuv
                 .getSpeedSteps() + "\n");
 
-        str.append("}");
+        ivpBloxk.append("}");
+
+        File bhvInput = new File(ParserEngine.missionDirectory + File.separator + uuv.getBehaviourFileName());
+
+        File bhvCopied =
+                new File(ParserEngine.missionDir + File.separator + uuv.getBehaviourFileName());
+        Utility.createFile(bhvCopied);
+
+        Utility.copyFile(bhvInput, bhvCopied);
 
         //write
-        Utility.exportToFile(ParserEngine.missionDir + "/plug_pHelmIvP_" + uuv.getName() + ".moos", str.toString(),
+        Utility.exportToFile(ParserEngine.missionDir + "/plug_pHelmIvP_" + uuv.getName() + ".moos", ivpBloxk.toString(),
                 false);
     }
 
@@ -286,6 +294,8 @@ public class MoosConfigurationWriter {
             vehicleBlock.append("#include plug_" + sensor.getName() + ".moos\n");
         }
 
+        writeHostInfo(vehicleBlock);
+
         vehicleBlock.append(uuv.getpShareConfig().toString());
 
         String fileName = "meta_vehicle_" + uuv.getName() + ".moos";
@@ -317,6 +327,19 @@ public class MoosConfigurationWriter {
 
             //generate controller properties
         }
+    }
+
+    private static void writeHostInfo(StringBuilder vehicleBlock) {
+        vehicleBlock.append("//--------------------------------------------------\n");
+        vehicleBlock.append("// pHostInfo configuration block from plugin\n");
+        vehicleBlock.append("//--------------------------------------------------\n");
+        vehicleBlock.append("ProcessConfig = pHostInfo\n");
+        vehicleBlock.append("{\n");
+        vehicleBlock.append("\tAppTick\t\t= 1\n");
+        vehicleBlock.append("\tCommsTick\t= 1\n");
+        vehicleBlock.append("\n");
+        vehicleBlock.append("\tDEFAULT_HOSTIP_FORCE = localhost\n");
+        vehicleBlock.append("}\n");
     }
 
 }
