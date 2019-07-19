@@ -3,7 +3,6 @@ package undersea;
 import undersea.auxiliary.Utility;
 import undersea.uuv.dsl.factory.FactoryProvider;
 import undersea.uuv.dsl.factory.SensorFactory;
-import undersea.uuv.dsl.model.PShareConfig;
 import undersea.uuv.dsl.model.Sensor;
 import undersea.uuv.dsl.model.UUV;
 import undersea.uuv.properties.SimulationProperties;
@@ -121,14 +120,7 @@ class MoosConfigurationWriter {
         shoreside.append("//------------------------------------------\n");
         shoreside.append("// Shoreside config file\n");
         shoreside.append("//------------------------------------------\n");
-        shoreside.append("ServerHost   = " + simulationProperties.getEnvironmentValue(SimulationProperties.EnvironmentValue.HOST) + "\n");
-        shoreside.append("ServerPort   = " + simulationProperties.getEnvironmentValue(SimulationProperties.EnvironmentValue.PORT_START) + "\n");
-        shoreside.append("Community    = shoreside\n");
-        shoreside.append("MOOSTimeWarp = 1\n");
-        shoreside.append("\n");
-        shoreside.append("// Forest Lake\n");
-        shoreside.append("LatOrigin  = 43.825300 \n");
-        shoreside.append("LongOrigin = -70.330400 \n");
+        shoreside.append("#include plug_origin_info.moos\n");
         shoreside.append("\n");
         shoreside.append("//------------------------------------------\n");
         shoreside.append("// Antler configuration block\n");
@@ -137,102 +129,68 @@ class MoosConfigurationWriter {
         shoreside.append("{\n");
         shoreside.append("  MSBetweenLaunches = 200\n");
         shoreside.append("\n");
-        shoreside.append("  Run = MOOSDB        @ NewConsole = false\n");
-        shoreside.append("  Run = pMarineViewer @ NewConsole = false\n");
-        shoreside.append("  Run = pShare        @ NewConsole = false\n");
+        shoreside.append("\tRun = MOOSDB\t\t@ NewConsole = false\n");
+        shoreside.append("\tRun = pMarineViewer\t@ NewConsole = false\n");
+        shoreside.append("\tRun = pLogger\t@ NewConsole = false\n");
+        shoreside.append("\tRun = pShare\t\t@ NewConsole = false\n");
+        shoreside.append("\tRun = pHostInfo\t\t@ NewConsole = false\n");
+        shoreside.append("\tRun = uFldShoreBroker\t@ NewConsole = false\n");
         shoreside.append("}\n");
 
-        shoreside.append("\n//------------------------------------------\n");
-        shoreside.append("// pMarineViewer config block\n");
-        shoreside.append("//------------------------------------------\n");
+        shoreside.append("#include plug_pShare.moos\n");
+        shoreside.append("#include plug_pHostInfo.moos\n");
+        shoreside.append("#include plug_pLogger.moos\n");
+
+        shoreside.append("//--------------------------------------------------\n");
+        shoreside.append("// uFldShoreBroker Configuration Block\n");
+        shoreside.append("//--------------------------------------------------\n");
+        shoreside.append("ProcessConfig = uFldShoreBroker\n");
+        shoreside.append("{\n");
+        shoreside.append("  AppTick       = 1\n");
+        shoreside.append("  CommsTick     = 1\n");
+        shoreside.append("\n");
+        shoreside.append("  QBRIDGE  = DEPLOY, NODE_REPORT\n");
+        shoreside.append("  QBRIDGE  = STATION_KEEP, APPCAST_REQ\n");
+        shoreside.append("  QBRIDGE  = MOOS_MANUAL_OVERRIDE\n");
+        shoreside.append("\n");
+        shoreside.append("  BRIDGE   = src=RETURN_ALL, alias=RETURN\n");
+        shoreside.append("  BRIDGE   = src=RETURN_$V,  alias=RETURN\n");
+        shoreside.append("}\n");
+        shoreside.append("\n");
+
+        shoreside.append("//--------------------------------------------------\n");
+        shoreside.append("// pMarineViewer Configuration Block\n");
+        shoreside.append("//--------------------------------------------------\n");
         shoreside.append("ProcessConfig = pMarineViewer\n");
         shoreside.append("{\n");
-        shoreside.append("\tAppTick    = 4\n");
-        shoreside.append("\tCommsTick  = 4\n");
+        shoreside.append("  AppTick    = 4\n");
+        shoreside.append("  CommsTick  = 4\n");
         shoreside.append("\n");
-        shoreside.append("\ttiff_file            = forrest19.tif\n");
-        shoreside.append("\tset_pan_x            = -90\n");
-        shoreside.append("\tset_pan_y            = -280\n");
-        shoreside.append("\tzoom                 = 0.65\n");
-        shoreside.append("\tvehicle_shape_scale  = 1.5\n");
-        shoreside.append("\thash_delta           = 50\n");
-        shoreside.append("\thash_shade           = 0.22\n");
-        shoreside.append("\thash_viewable        = true\n");
-        shoreside.append("\ttrails_point_size    = 1\n");
+        shoreside.append("  TIFF_FILE            = forrest19.tif\n");
+        shoreside.append("  set_pan_x            = -90\n");
+        shoreside.append("  set_pan_y            = -280\n");
+        shoreside.append("  zoom                 = 0.65\n");
+        shoreside.append("  vehicles_shape_scale = 1.5\n");
+        shoreside.append("  vehicles_name_mode   = names+shortmode\n");
         shoreside.append("\n");
-        shoreside.append("\t// Appcast configuration\n");
-        shoreside.append("\tappcast_height       = 75\n");
-        shoreside.append("\tappcast_width        = 30\n");
-        shoreside.append("\tappcast_viewable     = true\n");
-        shoreside.append("\tappcast_color_scheme = indigo\n");
-        shoreside.append("\tnodes_font_size      = medium\n");
-        shoreside.append("\tprocs_font_size      = medium\n");
-        shoreside.append("\tappcast_font_size    = small\n");
+        shoreside.append("  point_viewable_labels   = false\n");
+        shoreside.append("  polygon_viewable_labels = false\n");
+        shoreside.append("  appcast_viewable     = true\n");
+        shoreside.append("  appcast_color_scheme = indigo\n");
+        shoreside.append("  hash_delta           = 50\n");
+        shoreside.append("  hash_viewable        = true\n");
+        shoreside.append("  hash_shade           = 0.35\n");
         shoreside.append("\n");
-        shoreside.append("\tright_context[return] = DEPLOY=true\n");
-        shoreside.append("\tright_context[return] = MOOS_MANUAL_OVERRIDE=false\n");
-        shoreside.append("\tright_context[return] = RETURN=false\n");
+        shoreside.append("  SCOPE = PHI_HOST_INFO\n");
         shoreside.append("\n");
-        shoreside.append("\tscope  = RETURN\n");
-        shoreside.append("\tscope  = WPT_STAT\n");
-        shoreside.append("\tscope  = VIEW_SEGLIST\n");
-        shoreside.append("\tscope  = VIEW_POINT\n");
-        shoreside.append("\tscope  = VIEW_POLYGON\n");
-        shoreside.append("\tscope  = MVIEWER_LCLICK\n");
-        shoreside.append("\tscope  = MVIEWER_RCLICK\n");
+        shoreside.append("  BUTTON_ONE   = DEPLOY  # DEPLOY_ALL=true \n");
+        shoreside.append("  BUTTON_ONE   = MOOS_MANUAL_OVERRIDE_ALL=false \n");
+        shoreside.append("  BUTTON_ONE   = RETURN_ALL=false # STATION_KEEP_ALL=false\n");
         shoreside.append("\n");
-        shoreside.append("\tbutton_one = DEPLOY # DEPLOY_ALL=true\n");
-        shoreside.append("\tbutton_one = MOOS_MANUAL_OVERRIDE_ALL=false # RETURN_ALL=false\n");
-        shoreside.append("\tbutton_two = RETURN # RETURN_ALL=true\n");
+        shoreside.append("  BUTTON_TWO   = RETURN  # RETURN_ALL=true\n");
+        shoreside.append("  BUTTON_TWO   = STATION_KEEP_ALL=false\n");
         shoreside.append("\n");
-        shoreside.append("\taction  = MENU_KEY=deploy # DEPLOY_ALL = true # RETURN_ALL = false\n");
-        shoreside.append("\taction+ = MENU_KEY=deploy # MOOS_MANUAL_OVERRIDE_ALL=false\n");
-        shoreside.append("\taction  = RETURN_ALL=true\n");
-        shoreside.append("\taction  = UPDATES_RETURN_ALL=speed=1.4\n");
-
-        for (Map.Entry<String, UUV> entry : simulationProperties.getAgents().entrySet()) {
-            UUV uuv = entry.getValue();
-            String lower = uuv.getName().toLowerCase();
-            String upper = uuv.getName().toUpperCase();
-
-            shoreside.append("\taction  = MENU_KEY=deploy-" + lower + " # DEPLOY_" + upper + " = true # RETURN_" + upper + " = false\n");
-            shoreside.append("\taction+ = MENU_KEY=deploy-" + lower + " # MOOS_MANUAL_OVERRIDE_" + upper + "=false" +
-                    "\n");
-            shoreside.append("\taction  = MENU_KEY = return-" + lower + " # RETURN_" + upper + "=true\n");
-            shoreside.append("\taction+ = UPDATES_RETURN_" + upper + "=speed=1.4\n");
-        }
-
-        shoreside.append("}\n");
-
-        shoreside.append("\n//------------------------------------------\n");
-        shoreside.append("// pShare configuration block\n");
-        shoreside.append("//------------------------------------------\n");
-        shoreside.append("ProcessConfig = pShare\n");
-        shoreside.append("{\n");
-        shoreside.append("\tAppTick    = 4\n");
-        shoreside.append("\tCommsTick  = 4\n");
-        shoreside.append("\n");
-        shoreside.append("\tinput  = route = localhost:9200\n");
-        shoreside.append("\n");
-
-        for (Map.Entry<String, UUV> entry : simulationProperties.getAgents().entrySet()) {
-            UUV uuv = entry.getValue();
-            String upper = uuv.getName().toUpperCase();
-            String route =
-                    simulationProperties.getEnvironmentValue(SimulationProperties.EnvironmentValue.HOST) + ":" + uuv.getpShareConfig().getpSharePort();
-
-            shoreside.append(new PShareConfig.Output("DEPLOY_ALL", "DEPLOY", route));
-            shoreside.append(new PShareConfig.Output("RETURN_ALL", "RETURN", route));
-            shoreside.append(new PShareConfig.Output("MOOS_MANUAL_OVERRIDE_ALL", "MOOS_MANUAL_OVERRIDE", route));
-            shoreside.append(new PShareConfig.Output("UPDATES_RETURN_ALL", "UPDATES_RETURN", route));
-            shoreside.append(new PShareConfig.Output("DEPLOY_" + upper, "DEPLOY", route));
-            shoreside.append(new PShareConfig.Output("RETURN_" + upper, "DEPLOY", route));
-            shoreside.append(new PShareConfig.Output("MOOS_MANUAL_OVERRIDE_" + upper, "MOOS_MANUAL_OVERRIDE", route));
-            shoreside.append(new PShareConfig.Output("UPDATES_RETURN_" + upper, "UPDATES_RETURN", route));
-
-            shoreside.append("\n");
-        }
-
+        shoreside.append("  BUTTON_THREE = STATION  # STATION_KEEP_ALL=true\n");
         shoreside.append("}\n");
 
         String fileName = "meta_shoreside.moos";
@@ -253,55 +211,55 @@ class MoosConfigurationWriter {
         vehicleBlock.append("//------------------------------------------\n");
         vehicleBlock.append("// Meta vehicle config file\n");
         vehicleBlock.append("//------------------------------------------\n");
-        vehicleBlock.append("ServerHost   = " + simulationProperties.getEnvironmentValue(SimulationProperties.EnvironmentValue.HOST) + "\n");
-        vehicleBlock.append("ServerPort   = " + uuv.getServerPort() + "\n");
-        vehicleBlock.append("Simulator    = true\n");
-        vehicleBlock.append("Community    = " + uuv.getName() + "\n");
-        vehicleBlock.append("LatOrigin    = 43.825300\n");
-        vehicleBlock.append("LongOrigin   = -70.330400\n");
-        vehicleBlock.append("MOOSTimeWarp = " + simulationProperties.getEnvironmentValue(SimulationProperties.EnvironmentValue.SIMULATION_SPEED) + "\n\n");
+        vehicleBlock.append("#include plug_origin_info.moos\n");
 
         vehicleBlock.append("//------------------------------------------\n");
         vehicleBlock.append("// Antler configuration  block\n");
         vehicleBlock.append("//------------------------------------------\n");
         vehicleBlock.append("ProcessConfig = ANTLER\n");
         vehicleBlock.append("{\n");
-        vehicleBlock.append("\t MSBetweenLaunches = 200\n");
-        vehicleBlock.append("\t Run = MOOSDB        @ NewConsole = false\n");
-        vehicleBlock.append("\t Run = uProcessWatch @ NewConsole = false\n");
-        vehicleBlock.append("\t Run = uSimMarine    @ NewConsole = false\n");
-        vehicleBlock.append("\t Run = pNodeReporter @ NewConsole = false\n");
-        vehicleBlock.append("\t Run = pMarinePID    @ NewConsole = false\n");
-        vehicleBlock.append("\t Run = uTimerScript  @ NewConsole = false\n");
-        vehicleBlock.append("\t Run = pHelmIvP      @ NewConsole = false\n");
-        vehicleBlock.append("\t Run = sUUV          @ NewConsole = false ~" + uuv.getName() + "\n");
+        vehicleBlock.append("\tMSBetweenLaunches = 200\n");
+        vehicleBlock.append("\tRun = MOOSDB         @ NewConsole = false\n");
+        vehicleBlock.append("\tRun = uSimMarine     @ NewConsole = false\n");
+        vehicleBlock.append("\tRun = pLogger        @ NewConsole = false\n");
+        vehicleBlock.append("\tRun = pNodeReporter  @ NewConsole = false\n");
+        vehicleBlock.append("\tRun = pMarinePID     @ NewConsole = false\n");
+        vehicleBlock.append("\tRun = pHelmIvP       @ NewConsole = false\n");
+        vehicleBlock.append("\tRun = uProcessWatch  @ NewConsole = false\n");
+        vehicleBlock.append("\tRun = pShare         @ NewConsole = false\n");
+        // TODO: Investigate
+//        vehicleBlock.append("\tRun = uTimerScript  @ NewConsole = false\n");
+        vehicleBlock.append("\tRun = pHostInfo\t\t  @ NewConsole = false\n");
+//        vehicleBlock.append("\tRun = sUUV          @ NewConsole = false\n");
+
+        vehicleBlock.append("\tRun = uFldNodeBroker @ NewConsole = false\n");
 
         for (Sensor sensor : uuv.getSensors()) {
-            vehicleBlock.append("\t Run = sSensor       @ NewConsole = false ~" + sensor.getName() + "\n");
+            vehicleBlock.append("\t Run = sSensor   @ NewConsole = false ~" + sensor.getName() + "\n");
         }
 
         vehicleBlock.append("}\n\n");
 
-        vehicleBlock.append("#include plug_uProcessWatch.moos\n");
         vehicleBlock.append("#include plug_uSimMarine.moos\n");
-        vehicleBlock.append("#include plug_uTimerScript.moos\n");
+        vehicleBlock.append("#include plug_pLogger.moos\n");
         vehicleBlock.append("#include plug_pNodeReporter.moos\n");
         vehicleBlock.append("#include plug_pMarinePID.moos\n");
         vehicleBlock.append("#include plug_pHelmIvP_" + uuv.getName() + ".moos\n");
-        vehicleBlock.append("#include plug_UUV_" + uuv.getName() + ".moos\n");
+        vehicleBlock.append("#include plug_uProcessWatch.moos\n");
+        vehicleBlock.append("#include plug_pShare.moos\n");
+        vehicleBlock.append("#include plug_pHostInfo.moos\n");
+        vehicleBlock.append("#include plug_uFldNodeBroker.moos\n");
+//        vehicleBlock.append("#include plug_uTimerScript.moos\n");
+//        vehicleBlock.append("#include plug_UUV_" + uuv.getName() + ".moos\n");
 
         for (Sensor sensor : uuv.getSensors()) {
             vehicleBlock.append("#include plug_" + sensor.getName() + ".moos\n");
         }
 
-        writeHostInfo(vehicleBlock);
-
-        vehicleBlock.append(uuv.getpShareConfig().toString());
-
         String fileName = "meta_vehicle_" + uuv.getName() + ".moos";
         uuv.setMetaFileName(fileName);
 
-        Utility.exportToFile(ParserEngine.missionDir + "/" + fileName,
+        Utility.exportToFile(ParserEngine.missionDir + File.separator + fileName,
                 vehicleBlock.toString(),
                 false);
     }
@@ -316,7 +274,7 @@ class MoosConfigurationWriter {
             UUV uuv = entry.getValue();
 
             //generate UUV moos block
-            Utility.exportToFile(ParserEngine.missionDir + "/plug_UUV_" + uuv.getName() + ".moos",
+            Utility.exportToFile(ParserEngine.missionDir + File.separator + "plug_UUV_" + uuv.getName() + ".moos",
                     uuv.toString(), false);
 
             //generate target vehicle block

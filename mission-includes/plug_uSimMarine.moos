@@ -1,15 +1,12 @@
-//------------------------------------------
-// uSimMarine config block
-//------------------------------------------
+//------------------------------------------------------
+// uSimMarine Configuration Block  (Created from plugin)
+
 ProcessConfig = uSimMarine
 {
-  AppTick	= 10
-  CommsTick	= 10
+  AppTick   = 10
+  CommsTick = 10
 
-  START_X       = 0
-  START_Y       = 0
-  START_SPEED   = 0
-  START_HEADING = 180
-
-  PREFIX        = NAV
+  START_POS = $(START_POS), 180, 0
+  PREFIX    = NAV
 }
+

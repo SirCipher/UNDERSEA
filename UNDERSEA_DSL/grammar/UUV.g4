@@ -8,13 +8,13 @@ import java.util.*;
 }
 
 model:
-		(missionName
-		|portStart
-        |simulation
-        |invocation
-        |host
-        |speed
-        |uuv+)+
+		( missionName
+		| portStart
+        | simulation
+        | invocation
+        | host
+        | speed
+        | uuv+)+
 ;
 
 missionName:

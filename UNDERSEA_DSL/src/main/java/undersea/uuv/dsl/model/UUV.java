@@ -15,6 +15,7 @@ public class UUV {
     private Range speedRange;
     private List<Sensor> sensors = new ArrayList<>();
     private PShareConfig pShareConfig;
+
     public UUV(String name, String serverPort, String behaviourFileName, double min, double max, int steps) {
         this.name = name;
         this.serverPort = serverPort;

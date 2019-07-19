@@ -1,18 +1,19 @@
-//------------------------------------------
-// uProcessWatch config block
-//------------------------------------------
+//--------------------------------------------------------
+// uProcessWatch Configuration Block (Created from Plugin)
+
 ProcessConfig = uProcessWatch
 {
-  AppTick   = 4
-  CommsTick = 4
+  AppTick   = 2
+  CommsTick = 2
+  
+  WATCH  = uSimMarine
+  WATCH  = pLogger
+  WATCH  = pNodeReporter
+  WATCH  = pMarinePID
+  WATCH  = pHelmIvP
 
-  WATCH_ALL = true      // default is true
-
-  SUMMARY_WAIT = 10
-
-  term_report_interval = 0.8
-
-  NOWATCH   = uXMS*
-  NOWATCH   = uPokeDB*
-  NOWATCH   = uTermCommand*
+  NOWATCH=uXMS*
+  NOWATCH=uMAC*
 }
+
+

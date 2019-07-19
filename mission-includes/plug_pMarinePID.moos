@@ -1,14 +1,15 @@
-//------------------------------------------
-// pMarinePID config block
-//------------------------------------------
+//-----------------------------------------------------
+// pMarinePID Configuration Block (created from plugin)
+
 ProcessConfig = pMarinePID
 {
-  AppTick    = 20
-  CommsTick  = 20
-
+  AppTick    = 10
+  CommsTick  = 10
+  
   VERBOSE       = true
-  DEPTH_CONTROL = true
-
+  DEPTH_CONTROL = false
+  ACTIVE_START  = true
+  
   // Yaw PID controller
   YAW_PID_KP             = 0.4
   YAW_PID_KD             = 0.1
@@ -28,21 +29,4 @@ ProcessConfig = pMarinePID
   // A non-zero SPEED_FACTOR overrides use of SPEED_PID
   // Will set DESIRED_THRUST = DESIRED_SPEED * SPEED_FACTOR
   SPEED_FACTOR = 20
-
-
-   //For depth
-   //Pitch PID controller
-   pitch_pid_kp                   = 1.5
-   pitch_pid_kd                   = 0.3
-   pitch_pid_ki                   = 0.004
-   pitch_pid_integral_limit       = 0
-
-   //ZPID controller
-   z_to_pitch_pid_kp              = 0.12
-   z_to_pitch_pid_kd              = 0.1
-   z_to_pitch_pid_ki              = 0.004
-   z_to_pitch_pid_integral_limit  = 0.05
-
-   maxpitch     = 15
-   maxelevator  = 13
 }

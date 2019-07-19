@@ -9,9 +9,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Properties;
+import java.util.*;
 
 class EnvironmentBuilder {
 
@@ -20,18 +18,50 @@ class EnvironmentBuilder {
     private static File buildDir;
     private static SimulationProperties simulationProperties = SimulationProperties.getInstance();
 
+    private static int vPort;
+    private static int shoreListen;
+    private static int shareListen;
+
+
     static void build() {
         UUV shoreside = simulationProperties.getShoreside();
 
         System.out.println("Using build directory: " + buildDir.getAbsolutePath());
-        System.out.println("Writing mission files to: " + missionDir.getPath());
+        System.out.println("Writing mission files to: " + missionDir.getPath() + "\n");
 
-        nsplug(shoreside.getMetaFileName());
+        System.out.println("-----------------------------------------");
+
+        vPort = Integer.parseInt(simulationProperties.getEnvironmentValue(SimulationProperties.EnvironmentValue.PORT_START));
+        shoreListen = vPort + 300;
+        shareListen = shoreListen + 1;
+
+        List<String> nsPlugArgs = new ArrayList<>();
+
+        nsPlugArgs.add("WARP=" +
+                simulationProperties.getEnvironmentValue(SimulationProperties.EnvironmentValue.TIME_WINDOW));
+        nsPlugArgs.add("VHOST=" + simulationProperties.getEnvironmentValue(SimulationProperties.EnvironmentValue.HOST));
+        nsPlugArgs.add("VNAME=shoreside");
+        nsPlugArgs.add("SHARE_LISTEN=" + String.valueOf(shoreListen));
+        nsPlugArgs.add("VPORT=" + String.valueOf(vPort));
+
+        nsplug(shoreside.getMetaFileName(), nsPlugArgs);
 
         for (Map.Entry<String, UUV> entry : simulationProperties.getAgents().entrySet()) {
             UUV uuv = entry.getValue();
-            nsplug(uuv.getMetaFileName());
-            nsplug(uuv.getBehaviourFileName());
+
+            nsPlugArgs.clear();
+            nsPlugArgs.add("WARP=" +
+                    simulationProperties.getEnvironmentValue(SimulationProperties.EnvironmentValue.TIME_WINDOW));
+            nsPlugArgs.add("VHOST=" +
+                    simulationProperties.getEnvironmentValue(SimulationProperties.EnvironmentValue.HOST));
+            nsPlugArgs.add("VNAME=" + uuv.getName());
+            nsPlugArgs.add("VPORT=" + String.valueOf(++vPort));
+            nsPlugArgs.add("SHARE_LISTEN=" + String.valueOf(++shareListen));
+            nsPlugArgs.add("SHORE_LISTEN=" + String.valueOf(shoreListen));
+
+            System.out.println("-----------------------------------------");
+            nsplug(uuv.getMetaFileName(), nsPlugArgs);
+//            nsplug(uuv.getBehaviourFileName());
         }
 
         cleanup();
@@ -96,7 +126,7 @@ class EnvironmentBuilder {
         }
     }
 
-    private static void nsplug(String fileName) {
+    private static void nsplug(String fileName, List<String> nsplugArgs) {
         try {
             Properties properties = Utility.getMoosProperties();
             String moosivpLocation = properties.getProperty("moosivp");
@@ -108,18 +138,23 @@ class EnvironmentBuilder {
             moosivpLocation = moosivpLocation.endsWith("/") ? moosivpLocation + "nsplug" :
                     moosivpLocation + File.separator + "nsplug";
 
-            String[] args = new String[]{moosivpLocation, fileName,
-                    buildDir.getCanonicalPath() + File.separator + fileName};
             System.out.println("Running nsplug on " + fileName);
 
-            ProcessBuilder proc = new ProcessBuilder(args);
+            // Existing elements will be right-shifted
+            nsplugArgs.add(0, "-f");
+            nsplugArgs.add(0, fileName);
+            nsplugArgs.add(0, fileName);
+            nsplugArgs.add(0, moosivpLocation);
+            nsplugArgs.add("START_POS=x=0,y=-75");
+
+            ProcessBuilder proc = new ProcessBuilder(nsplugArgs);
             proc.directory(missionDir);
             Process process = proc.start();
 
             // Overwrite files
             OutputStream os = process.getOutputStream();
             PrintWriter writer = new PrintWriter(os);
-            writer.write("y\n");
+            writer.write("y");
             writer.flush();
 
             String output = IOUtils.toString(process.getInputStream(), "UTF-8");

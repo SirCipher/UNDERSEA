@@ -1,103 +1,93 @@
 //------------------------------------------
 // Meta vehicle config file
 //------------------------------------------
-ServerHost   = localhost
-ServerPort   = 201
-Simulator    = true
-Community    = alpha
-LatOrigin    = 43.825300
-LongOrigin   = -70.330400
-MOOSTimeWarp = 100
+ServerHost = localhost
+ServerPort = 9002
+
+// Community name IS the vehicle name
+Community  = alpha
+MOOSTimeWarp = 5
+LatOrigin  = 43.825300 
+LongOrigin = -70.330400 
 
 //------------------------------------------
 // Antler configuration  block
 //------------------------------------------
 ProcessConfig = ANTLER
 {
-	 MSBetweenLaunches = 200
-	 Run = MOOSDB        @ NewConsole = false
-	 Run = uProcessWatch @ NewConsole = false
-	 Run = uSimMarine    @ NewConsole = false
-	 Run = pNodeReporter @ NewConsole = false
-	 Run = pMarinePID    @ NewConsole = false
-	 Run = uTimerScript  @ NewConsole = false
-	 Run = pHelmIvP      @ NewConsole = false
-	 Run = sUUV          @ NewConsole = false ~alpha
-	 Run = sSensor       @ NewConsole = false ~SENSOR1
-	 Run = sSensor       @ NewConsole = false ~SENSOR2
+	MSBetweenLaunches = 200
+	Run = MOOSDB         @ NewConsole = false
+	Run = uSimMarine     @ NewConsole = false
+	Run = pLogger        @ NewConsole = false
+	Run = pNodeReporter  @ NewConsole = false
+	Run = pMarinePID     @ NewConsole = false
+	Run = pHelmIvP       @ NewConsole = false
+	Run = uProcessWatch  @ NewConsole = false
+	Run = pShare         @ NewConsole = false
+	Run = pHostInfo		  @ NewConsole = false
+	Run = uFldNodeBroker @ NewConsole = false
+	 Run = sSensor   @ NewConsole = false ~SENSOR1
+	 Run = sSensor   @ NewConsole = false ~SENSOR2
 }
 
-//------------------------------------------
-// uProcessWatch config block
-//------------------------------------------
-ProcessConfig = uProcessWatch
-{
-  AppTick   = 4
-  CommsTick = 4
+//------------------------------------------------------
+// uSimMarine Configuration Block  (Created from plugin)
 
-  WATCH_ALL = true      // default is true
-
-  SUMMARY_WAIT = 10
-
-  term_report_interval = 0.8
-
-  NOWATCH   = uXMS*
-  NOWATCH   = uPokeDB*
-  NOWATCH   = uTermCommand*
-}
-
-//------------------------------------------
-// uSimMarine config block
-//------------------------------------------
 ProcessConfig = uSimMarine
 {
-  AppTick	= 10
-  CommsTick	= 10
+  AppTick   = 10
+  CommsTick = 10
 
-  START_X       = 0
-  START_Y       = 0
-  START_SPEED   = 0
-  START_HEADING = 180
-
-  PREFIX        = NAV
+  START_POS = x=0,y=-75, 180, 0
+  PREFIX    = NAV
 }
 
-//------------------------------------------
-// AutoStartScript config block
-//------------------------------------------
-ProcessConfig = uTimerScript
+
+//--------------------------------------------------
+// pLogger Configuration Block (Created from Plugin)
+
+ProcessConfig = pLogger
 {
-	AppTick 	= 2
-	CommsTick	= 2
+  AppTick 	= 10
+  CommsTick 	= 10
+  
+  File		= LOG_ALPHA
+  PATH		= ./
+  AsyncLog 	= true
+  FileTimeStamp = true
 
-	delay_start = 5
-	event = var=MOOS_MANUAL_OVERIDE, val=false
-	event = var=DEPLOY, val=true
-	event = quit, time=10:20
+  // Log it all!!!!!
+  LogAuxSrc       = true
+  WildCardLogging = true 
+
+  WildCardOmitPattern = *_STATUS
+
+  CompressAlogs = false
 }
 
-//------------------------------------------
-// pNodeReporter config block
-//------------------------------------------
+//--------------------------------------------------------
+// pNodeReporter Configuration Block (Created from Plugin)
+
 ProcessConfig = pNodeReporter
 {
-  AppTick	= 2
-  CommsTick	= 2
-
-  VESSEL_TYPE   = UUV
+  AppTick     = 2
+  CommsTick   = 2
+  
+  VESSEL_TYPE = KAYAK
 }
 
-//------------------------------------------
-// pMarinePID config block
-//------------------------------------------
+//-----------------------------------------------------
+// pMarinePID Configuration Block (created from plugin)
+
 ProcessConfig = pMarinePID
 {
-  AppTick    = 20
-  CommsTick  = 20
-
+  AppTick    = 10
+  CommsTick  = 10
+  
   VERBOSE       = true
-  DEPTH_CONTROL = true
-
+  DEPTH_CONTROL = false
+  ACTIVE_START  = true
+  
   // Yaw PID controller
   YAW_PID_KP             = 0.4
   YAW_PID_KD             = 0.1
@@ -117,23 +107,6 @@ ProcessConfig = pMarinePID
   // A non-zero SPEED_FACTOR overrides use of SPEED_PID
   // Will set DESIRED_THRUST = DESIRED_SPEED * SPEED_FACTOR
   SPEED_FACTOR = 20
-
-
-   //For depth
-   //Pitch PID controller
-   pitch_pid_kp                   = 1.5
-   pitch_pid_kd                   = 0.3
-   pitch_pid_ki                   = 0.004
-   pitch_pid_integral_limit       = 0
-
-   //ZPID controller
-   z_to_pitch_pid_kp              = 0.12
-   z_to_pitch_pid_kd              = 0.1
-   z_to_pitch_pid_ki              = 0.004
-   z_to_pitch_pid_integral_limit  = 0.05
-
-   maxpitch     = 15
-   maxelevator  = 13
 }
 
 //------------------------------------------
@@ -151,17 +124,66 @@ ProcessConfig = pHelmIvP
 	   Domain         = depth:0:100:101
 	   Domain         = speed:0.0:5.0:41
 }
-//------------------------------------------
-// sUUV config block
-//------------------------------------------
-ProcessConfig = alpha
+//--------------------------------------------------------
+// uProcessWatch Configuration Block (Created from Plugin)
+
+ProcessConfig = uProcessWatch
 {
-	 AppTick = 4
-	 CommsTick = 4
-	 MAX_APPCAST_EVENTS = 25 
-	 NAME = alpha
-	 PORT = 201
-	 SENSORS = SENSOR1,SENSOR2
+  AppTick   = 2
+  CommsTick = 2
+  
+  WATCH  = uSimMarine
+  WATCH  = pLogger
+  WATCH  = pNodeReporter
+  WATCH  = pMarinePID
+  WATCH  = pHelmIvP
+
+  NOWATCH=uXMS*
+  NOWATCH=uMAC*
+}
+
+
+
+//---------------------------------------------------------
+// pShare Config Block  (Created from Plugin)
+
+ProcessConfig = pShare
+{
+  AppTick    = 2
+  CommsTick  = 2
+
+  input = route =  localhost:9303
+}
+
+
+//--------------------------------------------------
+// pHostInfo configuration block from plugin
+
+ProcessConfig = pHostInfo
+{
+  AppTick 	= 1
+  CommsTick 	= 1
+
+  DEFAULT_HOSTIP_FORCE = localhost
+}
+
+
+//--------------------------------------------------
+// uFldNodeBroker configuration block from plugin
+
+ProcessConfig = uFldNodeBroker
+{
+  AppTick   = 1
+  CommsTick = 1
+
+  TRY_SHORE_HOST = pshare_route=localhost:9300
+
+  BRIDGE = src=VIEW_POLYGON
+  BRIDGE = src=VIEW_POINT
+  BRIDGE = src=VIEW_SEGLIST
+  BRIDGE = src=APPCAST
+  BRIDGE = src=NODE_REPORT_LOCAL,  alias=NODE_REPORT
+  BRIDGE = src=NODE_MESSAGE_LOCAL, alias=NODE_MESSAGE
 }
 
 //------------------------------------------
@@ -190,24 +212,4 @@ ProcessConfig = SENSOR2
 	 CHANGE				= 10.0:50.0:2.0
 }
 
-//--------------------------------------------------
-// pHostInfo configuration block from plugin
-//--------------------------------------------------
-ProcessConfig = pHostInfo
-{
-	AppTick		= 1
-	CommsTick	= 1
-
-	DEFAULT_HOSTIP_FORCE = localhost
-}
-
-ProcessConfig = pShare
-{
-	AppTick    = 4
-	CommsTick  = 4  
-	input = route = localhost:401
-	output = src_name=NODE_REPORT_LOCAL, dest_name=NODE_REPORT, route=localhost:200
-	output = src_name=VIEW_SEGLIST, dest_name=VIEW_SEGLIST, route=localhost:200
-	output = src_name=VIEW_POINT, dest_name=VIEW_POINT, route=localhost:200
-}
 
