@@ -18,11 +18,6 @@ class EnvironmentBuilder {
     private static File buildDir;
     private static SimulationProperties simulationProperties = SimulationProperties.getInstance();
 
-    private static int vPort;
-    private static int shoreListen;
-    private static int shareListen;
-
-
     static void build() {
         UUV shoreside = simulationProperties.getShoreside();
 
@@ -31,9 +26,10 @@ class EnvironmentBuilder {
 
         System.out.println("-----------------------------------------");
 
-        vPort = Integer.parseInt(simulationProperties.getEnvironmentValue(SimulationProperties.EnvironmentValue.PORT_START));
-        shoreListen = vPort + 300;
-        shareListen = shoreListen + 1;
+        int vPort =
+                Integer.parseInt(simulationProperties.getEnvironmentValue(SimulationProperties.EnvironmentValue.PORT_START));
+        int shoreListen = vPort + 300;
+        int shareListen = shoreListen + 1;
 
         List<String> nsPlugArgs = new ArrayList<>();
 

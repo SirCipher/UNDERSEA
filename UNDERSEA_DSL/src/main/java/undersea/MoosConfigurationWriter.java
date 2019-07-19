@@ -11,6 +11,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
 
@@ -20,7 +21,7 @@ class MoosConfigurationWriter {
     private static SimulationProperties simulationProperties = SimulationProperties.getInstance();
     private static SensorFactory sensorFactory = FactoryProvider.getSensorFactory();
 
-    private static void generateControllerProperties(UUV uuv) {
+    private static void generateControllerProperties() {
         try {
             String propertiesDirName = ParserEngine.buildDir;
             String propertiesFilename = propertiesDirName + File.separator + "resources" + File.separator + "config" +
@@ -53,17 +54,19 @@ class MoosConfigurationWriter {
 
             StringBuilder sensorsNames = new StringBuilder();
 
-            for (int i = 0; i < uuv.getSensors().size(); i++) {
-                Sensor sensor = uuv.getSensors().get(i);
-                sensorsNames.append(sensor.getName());
+            Iterator<Map.Entry<String, Sensor>> it = sensorFactory.getSensors().entrySet().iterator();
 
-                if (i + 1 == uuv.getSensors().size()) {
+            while (it.hasNext()) {
+                Map.Entry<String, Sensor> entry = it.next();
+
+                sensorsNames.append(entry.getKey());
+
+                if (it.hasNext()) {
                     sensorsNames.append(",");
                 }
             }
 
             properties.put("SENSORS", sensorsNames.toString());
-            properties.put("SPEED", uuv.getSpeedMin() + "," + uuv.getSpeedMax() + "," + uuv.getSpeedSteps());
 
             FileOutputStream out = new FileOutputStream(propertiesFile);
             properties.store(out, null);
@@ -191,7 +194,7 @@ class MoosConfigurationWriter {
         uuv.setMetaFileName(fileName);
 
         simulationProperties.addUUV(uuv);
-        generateControllerProperties(uuv);
+        generateControllerProperties();
 
         Utility.exportToFile(ParserEngine.missionDir + "/" + fileName,
                 shoreside.toString(),
