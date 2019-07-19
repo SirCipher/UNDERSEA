@@ -21,9 +21,9 @@ public class UUVParser extends Parser {
 		new PredictionContextCache();
 	public static final int
 		T__0=1, T__1=2, T__2=3, T__3=4, T__4=5, ASSIGN=6, MISSION_NAME=7, NAME=8, 
-		TIME_WINDOW=9, SERVER_HOST=10, BEHAVIOUR_FILE=11, BHV_FILE=12, SENSORS=13, 
-		DOUBLE=14, PORT_START=15, SIMULATION_TIME=16, SIMULATION_SPEED=17, INT=18, 
-		IP=19, OCTET=20, BEGL=21, ENDL=22, SEP=23, SPEED=24, ID=25, WS=26, ErrorCharacter=27;
+		TIME_WINDOW=9, SERVER_HOST=10, SENSORS=11, DOUBLE=12, PORT_START=13, SIMULATION_TIME=14, 
+		SIMULATION_SPEED=15, INT=16, IP=17, OCTET=18, BEGL=19, ENDL=20, SEP=21, 
+		SPEED=22, ID=23, WS=24, ErrorCharacter=25;
 	public static final int
 		RULE_model = 0, RULE_missionName = 1, RULE_portStart = 2, RULE_simulation = 3, 
 		RULE_speed = 4, RULE_invocation = 5, RULE_host = 6, RULE_list = 7, RULE_elems = 8, 
@@ -39,18 +39,18 @@ public class UUVParser extends Parser {
 	private static String[] makeLiteralNames() {
 		return new String[] {
 			null, "'localhost'", "'UUV'", "'{'", "':'", "'}'", "'='", "'mission name'", 
-			"'name'", "'time window'", "'host'", "'behaviour file'", null, "'sensors'", 
-			null, "'server port start'", "'simulation time'", "'simulation speed'", 
-			null, null, null, "'['", "']'", "','", "'speed'"
+			"'name'", "'time window'", "'host'", "'sensors'", null, "'server port start'", 
+			"'simulation time'", "'simulation speed'", null, null, null, "'['", "']'", 
+			"','", "'speed'"
 		};
 	}
 	private static final String[] _LITERAL_NAMES = makeLiteralNames();
 	private static String[] makeSymbolicNames() {
 		return new String[] {
 			null, null, null, null, null, null, "ASSIGN", "MISSION_NAME", "NAME", 
-			"TIME_WINDOW", "SERVER_HOST", "BEHAVIOUR_FILE", "BHV_FILE", "SENSORS", 
-			"DOUBLE", "PORT_START", "SIMULATION_TIME", "SIMULATION_SPEED", "INT", 
-			"IP", "OCTET", "BEGL", "ENDL", "SEP", "SPEED", "ID", "WS", "ErrorCharacter"
+			"TIME_WINDOW", "SERVER_HOST", "SENSORS", "DOUBLE", "PORT_START", "SIMULATION_TIME", 
+			"SIMULATION_SPEED", "INT", "IP", "OCTET", "BEGL", "ENDL", "SEP", "SPEED", 
+			"ID", "WS", "ErrorCharacter"
 		};
 	}
 	private static final String[] _SYMBOLIC_NAMES = makeSymbolicNames();
@@ -752,7 +752,6 @@ public class UUVParser extends Parser {
 		public Token min;
 		public Token max;
 		public Token steps;
-		public Token behaviourFile;
 		public Token sensors;
 		public TerminalNode NAME() { return getToken(UUVParser.NAME, 0); }
 		public List<TerminalNode> ASSIGN() { return getTokens(UUVParser.ASSIGN); }
@@ -760,7 +759,6 @@ public class UUVParser extends Parser {
 			return getToken(UUVParser.ASSIGN, i);
 		}
 		public TerminalNode SPEED() { return getToken(UUVParser.SPEED, 0); }
-		public TerminalNode BEHAVIOUR_FILE() { return getToken(UUVParser.BEHAVIOUR_FILE, 0); }
 		public TerminalNode SENSORS() { return getToken(UUVParser.SENSORS, 0); }
 		public TerminalNode ENDL() { return getToken(UUVParser.ENDL, 0); }
 		public TerminalNode ID() { return getToken(UUVParser.ID, 0); }
@@ -768,7 +766,6 @@ public class UUVParser extends Parser {
 		public TerminalNode INT(int i) {
 			return getToken(UUVParser.INT, i);
 		}
-		public TerminalNode BHV_FILE() { return getToken(UUVParser.BHV_FILE, 0); }
 		public TerminalNode BEGL() { return getToken(UUVParser.BEGL, 0); }
 		public List<TerminalNode> DOUBLE() { return getTokens(UUVParser.DOUBLE); }
 		public TerminalNode DOUBLE(int i) {
@@ -846,30 +843,24 @@ public class UUVParser extends Parser {
 			setState(88);
 			((UuvContext)_localctx).steps = match(INT);
 			setState(89);
-			match(BEHAVIOUR_FILE);
+			match(SENSORS);
 			setState(90);
 			match(ASSIGN);
 			setState(91);
-			((UuvContext)_localctx).behaviourFile = match(BHV_FILE);
-			setState(92);
-			match(SENSORS);
-			setState(93);
-			match(ASSIGN);
-			setState(94);
 			((UuvContext)_localctx).sensors = match(BEGL);
-			setState(96);
+			setState(93);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			if (_la==ID) {
 				{
-				setState(95);
+				setState(92);
 				elems();
 				}
 			}
 
-			setState(98);
+			setState(95);
 			match(ENDL);
-			setState(99);
+			setState(96);
 			match(T__4);
 			}
 		}
@@ -885,31 +876,30 @@ public class UUVParser extends Parser {
 	}
 
 	public static final String _serializedATN =
-		"\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3\35h\4\2\t\2\4\3\t"+
+		"\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3\33e\4\2\t\2\4\3\t"+
 		"\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7\4\b\t\b\4\t\t\t\4\n\t\n\4\13\t\13\4"+
 		"\f\t\f\3\2\3\2\3\2\3\2\3\2\3\2\3\2\6\2 \n\2\r\2\16\2!\6\2$\n\2\r\2\16"+
 		"\2%\3\3\3\3\3\3\3\3\3\4\3\4\3\4\3\4\3\5\3\5\3\5\3\5\3\6\3\6\3\6\3\6\3"+
 		"\7\3\7\3\7\3\7\3\b\3\b\3\b\3\b\3\t\3\t\5\tB\n\t\3\t\3\t\3\n\3\n\3\n\7"+
 		"\nI\n\n\f\n\16\nL\13\n\3\13\3\13\3\f\3\f\3\f\3\f\3\f\3\f\3\f\3\f\3\f\3"+
-		"\f\3\f\3\f\3\f\3\f\3\f\3\f\3\f\3\f\3\f\5\fc\n\f\3\f\3\f\3\f\3\f\2\2\r"+
-		"\2\4\6\b\n\f\16\20\22\24\26\2\4\4\2\20\20\24\24\4\2\3\3\25\25\2g\2#\3"+
-		"\2\2\2\4\'\3\2\2\2\6+\3\2\2\2\b/\3\2\2\2\n\63\3\2\2\2\f\67\3\2\2\2\16"+
-		";\3\2\2\2\20?\3\2\2\2\22E\3\2\2\2\24M\3\2\2\2\26O\3\2\2\2\30$\5\4\3\2"+
-		"\31$\5\6\4\2\32$\5\b\5\2\33$\5\f\7\2\34$\5\16\b\2\35$\5\n\6\2\36 \5\26"+
-		"\f\2\37\36\3\2\2\2 !\3\2\2\2!\37\3\2\2\2!\"\3\2\2\2\"$\3\2\2\2#\30\3\2"+
-		"\2\2#\31\3\2\2\2#\32\3\2\2\2#\33\3\2\2\2#\34\3\2\2\2#\35\3\2\2\2#\37\3"+
-		"\2\2\2$%\3\2\2\2%#\3\2\2\2%&\3\2\2\2&\3\3\2\2\2\'(\7\t\2\2()\7\b\2\2)"+
-		"*\7\33\2\2*\5\3\2\2\2+,\7\21\2\2,-\7\b\2\2-.\7\24\2\2.\7\3\2\2\2/\60\7"+
-		"\22\2\2\60\61\7\b\2\2\61\62\7\24\2\2\62\t\3\2\2\2\63\64\7\23\2\2\64\65"+
-		"\7\b\2\2\65\66\7\24\2\2\66\13\3\2\2\2\678\7\13\2\289\7\b\2\29:\t\2\2\2"+
-		":\r\3\2\2\2;<\7\f\2\2<=\7\b\2\2=>\t\3\2\2>\17\3\2\2\2?A\7\27\2\2@B\5\22"+
-		"\n\2A@\3\2\2\2AB\3\2\2\2BC\3\2\2\2CD\7\30\2\2D\21\3\2\2\2EJ\5\24\13\2"+
-		"FG\7\31\2\2GI\5\24\13\2HF\3\2\2\2IL\3\2\2\2JH\3\2\2\2JK\3\2\2\2K\23\3"+
-		"\2\2\2LJ\3\2\2\2MN\7\33\2\2N\25\3\2\2\2OP\7\4\2\2PQ\7\5\2\2QR\7\n\2\2"+
-		"RS\7\b\2\2ST\7\33\2\2TU\7\32\2\2UV\7\b\2\2VW\t\2\2\2WX\7\6\2\2XY\t\2\2"+
-		"\2YZ\7\6\2\2Z[\7\24\2\2[\\\7\r\2\2\\]\7\b\2\2]^\7\16\2\2^_\7\17\2\2_`"+
-		"\7\b\2\2`b\7\27\2\2ac\5\22\n\2ba\3\2\2\2bc\3\2\2\2cd\3\2\2\2de\7\30\2"+
-		"\2ef\7\7\2\2f\27\3\2\2\2\b!#%AJb";
+		"\f\3\f\3\f\3\f\3\f\3\f\3\f\5\f`\n\f\3\f\3\f\3\f\3\f\2\2\r\2\4\6\b\n\f"+
+		"\16\20\22\24\26\2\4\4\2\16\16\22\22\4\2\3\3\23\23\2d\2#\3\2\2\2\4\'\3"+
+		"\2\2\2\6+\3\2\2\2\b/\3\2\2\2\n\63\3\2\2\2\f\67\3\2\2\2\16;\3\2\2\2\20"+
+		"?\3\2\2\2\22E\3\2\2\2\24M\3\2\2\2\26O\3\2\2\2\30$\5\4\3\2\31$\5\6\4\2"+
+		"\32$\5\b\5\2\33$\5\f\7\2\34$\5\16\b\2\35$\5\n\6\2\36 \5\26\f\2\37\36\3"+
+		"\2\2\2 !\3\2\2\2!\37\3\2\2\2!\"\3\2\2\2\"$\3\2\2\2#\30\3\2\2\2#\31\3\2"+
+		"\2\2#\32\3\2\2\2#\33\3\2\2\2#\34\3\2\2\2#\35\3\2\2\2#\37\3\2\2\2$%\3\2"+
+		"\2\2%#\3\2\2\2%&\3\2\2\2&\3\3\2\2\2\'(\7\t\2\2()\7\b\2\2)*\7\31\2\2*\5"+
+		"\3\2\2\2+,\7\17\2\2,-\7\b\2\2-.\7\22\2\2.\7\3\2\2\2/\60\7\20\2\2\60\61"+
+		"\7\b\2\2\61\62\7\22\2\2\62\t\3\2\2\2\63\64\7\21\2\2\64\65\7\b\2\2\65\66"+
+		"\7\22\2\2\66\13\3\2\2\2\678\7\13\2\289\7\b\2\29:\t\2\2\2:\r\3\2\2\2;<"+
+		"\7\f\2\2<=\7\b\2\2=>\t\3\2\2>\17\3\2\2\2?A\7\25\2\2@B\5\22\n\2A@\3\2\2"+
+		"\2AB\3\2\2\2BC\3\2\2\2CD\7\26\2\2D\21\3\2\2\2EJ\5\24\13\2FG\7\27\2\2G"+
+		"I\5\24\13\2HF\3\2\2\2IL\3\2\2\2JH\3\2\2\2JK\3\2\2\2K\23\3\2\2\2LJ\3\2"+
+		"\2\2MN\7\31\2\2N\25\3\2\2\2OP\7\4\2\2PQ\7\5\2\2QR\7\n\2\2RS\7\b\2\2ST"+
+		"\7\31\2\2TU\7\30\2\2UV\7\b\2\2VW\t\2\2\2WX\7\6\2\2XY\t\2\2\2YZ\7\6\2\2"+
+		"Z[\7\22\2\2[\\\7\r\2\2\\]\7\b\2\2]_\7\25\2\2^`\5\22\n\2_^\3\2\2\2_`\3"+
+		"\2\2\2`a\3\2\2\2ab\7\26\2\2bc\7\7\2\2c\27\3\2\2\2\b!#%AJ_";
 	public static final ATN _ATN =
 		new ATNDeserializer().deserialize(_serializedATN.toCharArray());
 	static {

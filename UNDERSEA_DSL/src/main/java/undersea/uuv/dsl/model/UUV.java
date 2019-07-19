@@ -11,15 +11,13 @@ public class UUV {
     private String rate;
     private String serverPort;
     private String metaFileName;
-    private String behaviourFileName;
     private Range speedRange;
     private List<Sensor> sensors = new ArrayList<>();
     private PShareConfig pShareConfig;
 
-    public UUV(String name, String serverPort, String behaviourFileName, double min, double max, int steps) {
+    public UUV(String name, String serverPort, double min, double max, int steps) {
         this.name = name;
         this.serverPort = serverPort;
-        this.behaviourFileName = behaviourFileName;
         this.speedRange = new Range(min, max, steps + 1);
         this.rate = "4";
     }
@@ -38,10 +36,6 @@ public class UUV {
 
     public void setpShareConfig(PShareConfig pShareConfig) {
         this.pShareConfig = pShareConfig;
-    }
-
-    public String getBehaviourFileName() {
-        return behaviourFileName;
     }
 
     public String getName() {

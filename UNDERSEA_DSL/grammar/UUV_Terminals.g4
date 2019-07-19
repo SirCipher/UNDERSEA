@@ -24,14 +24,6 @@ SERVER_HOST:
 	'host'
 ;
 
-BEHAVIOUR_FILE:
-    'behaviour file'
-;
-
-BHV_FILE:
-    ID '.bhv'
-;
-
 SENSORS:
     'sensors'
 ;

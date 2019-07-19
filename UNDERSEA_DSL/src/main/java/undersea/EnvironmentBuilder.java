@@ -44,7 +44,7 @@ class EnvironmentBuilder {
         nsPlugArgs.add("SHARE_LISTEN=" + String.valueOf(shoreListen));
         nsPlugArgs.add("VPORT=" + String.valueOf(vPort));
 
-        nsplug(shoreside.getMetaFileName(), nsPlugArgs);
+        nsplug(shoreside.getMetaFileName(), shoreside.getMetaFileName(), nsPlugArgs);
 
         for (Map.Entry<String, UUV> entry : simulationProperties.getAgents().entrySet()) {
             UUV uuv = entry.getValue();
@@ -60,8 +60,8 @@ class EnvironmentBuilder {
             nsPlugArgs.add("SHORE_LISTEN=" + String.valueOf(shoreListen));
 
             System.out.println("-----------------------------------------");
-            nsplug(uuv.getMetaFileName(), nsPlugArgs);
-//            nsplug(uuv.getBehaviourFileName());
+            nsplug(uuv.getMetaFileName(), uuv.getMetaFileName(), nsPlugArgs);
+            nsplug("behaviour.bhv", "meta_" + uuv.getName() + ".bhv", nsPlugArgs);
         }
 
         cleanup();
@@ -126,7 +126,7 @@ class EnvironmentBuilder {
         }
     }
 
-    private static void nsplug(String fileName, List<String> nsplugArgs) {
+    private static void nsplug(String sourceName, String destName, List<String> nsplugArgs) {
         try {
             Properties properties = Utility.getMoosProperties();
             String moosivpLocation = properties.getProperty("moosivp");
@@ -138,12 +138,12 @@ class EnvironmentBuilder {
             moosivpLocation = moosivpLocation.endsWith("/") ? moosivpLocation + "nsplug" :
                     moosivpLocation + File.separator + "nsplug";
 
-            System.out.println("Running nsplug on " + fileName);
+            System.out.println("Running nsplug on " + destName);
 
             // Existing elements will be right-shifted
             nsplugArgs.add(0, "-f");
-            nsplugArgs.add(0, fileName);
-            nsplugArgs.add(0, fileName);
+            nsplugArgs.add(0, destName);
+            nsplugArgs.add(0, sourceName);
             nsplugArgs.add(0, moosivpLocation);
             nsplugArgs.add("START_POS=x=0,y=-75");
 

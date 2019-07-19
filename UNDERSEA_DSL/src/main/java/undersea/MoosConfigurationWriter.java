@@ -83,7 +83,7 @@ class MoosConfigurationWriter {
         ivpBloxk.append("{\n");
         ivpBloxk.append("\t   AppTick        = 4\n");
         ivpBloxk.append("\t   CommsTick      = 4\n");
-        ivpBloxk.append("\t   Behaviors      = " + uuv.getBehaviourFileName() + "\n");
+        ivpBloxk.append("\t   Behaviors      = meta_" + uuv.getName() + ".bhv\n");
         ivpBloxk.append("\t   Verbose        = quiet\n");
         ivpBloxk.append("\t   ok_skew        = any\n");
         ivpBloxk.append("\t   active_start   = false\n");
@@ -93,14 +93,6 @@ class MoosConfigurationWriter {
                 .getSpeedSteps() + "\n");
 
         ivpBloxk.append("}");
-
-        File bhvInput = new File(ParserEngine.missionDirectory + File.separator + uuv.getBehaviourFileName());
-
-        File bhvCopied =
-                new File(ParserEngine.missionDir + File.separator + uuv.getBehaviourFileName());
-        Utility.createFile(bhvCopied);
-
-        Utility.copyFile(bhvInput, bhvCopied);
 
         //write
         Utility.exportToFile(ParserEngine.missionDir + "/plug_pHelmIvP_" + uuv.getName() + ".moos", ivpBloxk.toString(),
@@ -195,7 +187,7 @@ class MoosConfigurationWriter {
 
         String fileName = "meta_shoreside.moos";
 
-        UUV uuv = new UUV("shoreside", null, null, 0.0, 0.0, 0);
+        UUV uuv = new UUV("shoreside", null, 0.0, 0.0, 0);
         uuv.setMetaFileName(fileName);
 
         simulationProperties.addUUV(uuv);
@@ -212,7 +204,6 @@ class MoosConfigurationWriter {
         vehicleBlock.append("// Meta vehicle config file\n");
         vehicleBlock.append("//------------------------------------------\n");
         vehicleBlock.append("#include plug_origin_info.moos\n");
-
         vehicleBlock.append("//------------------------------------------\n");
         vehicleBlock.append("// Antler configuration  block\n");
         vehicleBlock.append("//------------------------------------------\n");

@@ -65,7 +65,6 @@ public class UUVListener extends UUVBaseListener {
     public void enterUuv(UUVParser.UuvContext ctx) {
         String name = ctx.name.getText();
         String port = Integer.toString(serverPortStart++);
-        String behaviourFile = ctx.behaviourFile.getText();
         double min = Double.parseDouble(ctx.min.getText());
         double max = Double.parseDouble(ctx.max.getText());
         int steps = Integer.parseInt(ctx.steps.getText());
@@ -77,7 +76,7 @@ public class UUVListener extends UUVBaseListener {
             sensors.add(sensor);
         }
 
-        UUV uuv = new UUV(name, port, behaviourFile, min, max, steps);
+        UUV uuv = new UUV(name, port, min, max, steps);
         PShareConfig pShareConfig = new PShareConfig(uuv);
         uuv.setpShareConfig(pShareConfig);
         uuv.setSensors(sensors);
