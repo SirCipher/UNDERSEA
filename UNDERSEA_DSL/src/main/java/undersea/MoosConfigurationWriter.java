@@ -42,7 +42,6 @@ class MoosConfigurationWriter {
             }
 
             Properties properties = new Properties();
-            properties.load(new FileInputStream(propertiesFilename));
 
             for(SimulationProperties.EnvironmentValue value: SimulationProperties.EnvironmentValue.values()){
                 properties.put(value.name(), simulationProperties.getEnvironmentValue(value));
