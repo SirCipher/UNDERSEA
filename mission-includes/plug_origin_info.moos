@@ -5,4 +5,5 @@ ServerPort      = $(VPORT)
 Community       = $(VNAME)
 MOOSTimeWarp    = $(WARP)
 LatOrigin       = 43.825300 
-LongOrigin      = -70.330400 
+LongOrigin      = -70.330400
+

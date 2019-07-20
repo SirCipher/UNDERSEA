@@ -79,9 +79,9 @@ class MoosConfigurationWriter {
 
     private static void generateIvPHelmBlock(UUV uuv) {
         StringBuilder ivpBlock = new StringBuilder();
-        ivpBlock.append("//------------------------------------------\n");
+        ivpBlock.append("//-----------------------------\n");
         ivpBlock.append("// Helm IvP configuration block\n");
-        ivpBlock.append("//------------------------------------------\n");
+        ivpBlock.append("//-----------------------------\n");
         ivpBlock.append("ProcessConfig = pHelmIvP\n");
         ivpBlock.append("{\n");
         ivpBlock.append("\tAppTick\t\t\t= 4\n");
@@ -112,14 +112,14 @@ class MoosConfigurationWriter {
 
     private static void generateShoreside() {
         StringBuilder shoreside = new StringBuilder();
-        shoreside.append("//------------------------------------------\n");
+        shoreside.append("//----------------------\n");
         shoreside.append("// Shoreside config file\n");
-        shoreside.append("//------------------------------------------\n");
+        shoreside.append("//----------------------\n");
         shoreside.append("#include plug_origin_info.moos\n");
         shoreside.append("\n");
-        shoreside.append("//------------------------------------------\n");
+        shoreside.append("//---------------------------\n");
         shoreside.append("// Antler configuration block\n");
-        shoreside.append("//------------------------------------------\n");
+        shoreside.append("//---------------------------\n");
         shoreside.append("ProcessConfig = ANTLER\n");
         shoreside.append("{\n");
         shoreside.append("  MSBetweenLaunches = 200\n");
@@ -136,9 +136,9 @@ class MoosConfigurationWriter {
         shoreside.append("#include plug_pHostInfo.moos\n");
         shoreside.append("#include plug_pLogger.moos\n");
 
-        shoreside.append("//--------------------------------------------------\n");
+        shoreside.append("//------------------------------------\n");
         shoreside.append("// uFldShoreBroker Configuration Block\n");
-        shoreside.append("//--------------------------------------------------\n");
+        shoreside.append("//------------------------------------\n");
         shoreside.append("ProcessConfig = uFldShoreBroker\n");
         shoreside.append("{\n");
         shoreside.append("\tAppTick       = 1\n");
@@ -153,9 +153,9 @@ class MoosConfigurationWriter {
         shoreside.append("}\n");
         shoreside.append("\n");
 
-        shoreside.append("//--------------------------------------------------\n");
+        shoreside.append("//----------------------------------\n");
         shoreside.append("// pMarineViewer Configuration Block\n");
-        shoreside.append("//--------------------------------------------------\n");
+        shoreside.append("//----------------------------------\n");
         shoreside.append("ProcessConfig = pMarineViewer\n");
         shoreside.append("{\n");
         shoreside.append("\tAppTick    = 4\n");
@@ -199,13 +199,13 @@ class MoosConfigurationWriter {
 
     private static void generateTargetVehicleBlock(UUV uuv) {
         StringBuilder vehicleBlock = new StringBuilder();
-        vehicleBlock.append("//------------------------------------------\n");
+        vehicleBlock.append("//-------------------------\n");
         vehicleBlock.append("// Meta vehicle config file\n");
-        vehicleBlock.append("//------------------------------------------\n");
+        vehicleBlock.append("//-------------------------\n");
         vehicleBlock.append("#include plug_origin_info.moos\n");
-        vehicleBlock.append("//------------------------------------------\n");
-        vehicleBlock.append("// Antler configuration  block\n");
-        vehicleBlock.append("//------------------------------------------\n");
+        vehicleBlock.append("//---------------------------\n");
+        vehicleBlock.append("// Antler configuration block\n");
+        vehicleBlock.append("//---------------------------\n");
         vehicleBlock.append("ProcessConfig = ANTLER\n");
         vehicleBlock.append("{\n");
         vehicleBlock.append("\tMSBetweenLaunches = 200\n");
@@ -331,9 +331,9 @@ class MoosConfigurationWriter {
     }
 
     private static void writeHostInfo(StringBuilder vehicleBlock) {
-        vehicleBlock.append("//--------------------------------------------------\n");
-        vehicleBlock.append("// pHostInfo configuration block from plugin\n");
-        vehicleBlock.append("//--------------------------------------------------\n");
+        vehicleBlock.append("//------------------------------\n");
+        vehicleBlock.append("// pHostInfo configuration block\n");
+        vehicleBlock.append("//------------------------------\n");
         vehicleBlock.append("ProcessConfig = pHostInfo\n");
         vehicleBlock.append("{\n");
         vehicleBlock.append("\tAppTick\t\t= 1\n");

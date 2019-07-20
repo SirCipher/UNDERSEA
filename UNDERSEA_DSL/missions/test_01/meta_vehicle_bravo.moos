@@ -1,6 +1,6 @@
-//------------------------------------------
+//-------------------------
 // Meta vehicle config file
-//------------------------------------------
+//-------------------------
 ServerHost      = localhost
 ServerPort      = 9001
 
@@ -8,10 +8,12 @@ ServerPort      = 9001
 Community       = bravo
 MOOSTimeWarp    = 5
 LatOrigin       = 43.825300 
-LongOrigin      = -70.330400 
-//------------------------------------------
-// Antler configuration  block
-//------------------------------------------
+LongOrigin      = -70.330400
+
+
+//---------------------------
+// Antler configuration block
+//---------------------------
 ProcessConfig = ANTLER
 {
 	MSBetweenLaunches = 200
@@ -109,9 +111,9 @@ ProcessConfig = pMarinePID
   SPEED_FACTOR = 20
 }
 
-//------------------------------------------
+//-----------------------------
 // Helm IvP configuration block
-//------------------------------------------
+//-----------------------------
 ProcessConfig = pHelmIvP
 {
 	AppTick			= 4

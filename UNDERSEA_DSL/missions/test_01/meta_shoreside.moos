@@ -1,6 +1,6 @@
-//------------------------------------------
+//----------------------
 // Shoreside config file
-//------------------------------------------
+//----------------------
 ServerHost      = localhost
 ServerPort      = 9000
 
@@ -8,11 +8,13 @@ ServerPort      = 9000
 Community       = shoreside
 MOOSTimeWarp    = 5
 LatOrigin       = 43.825300 
-LongOrigin      = -70.330400 
+LongOrigin      = -70.330400
 
-//------------------------------------------
+
+
+//---------------------------
 // Antler configuration block
-//------------------------------------------
+//---------------------------
 ProcessConfig = ANTLER
 {
   MSBetweenLaunches = 200
@@ -67,9 +69,9 @@ ProcessConfig = pLogger
   CompressAlogs = false
 }
 
-//--------------------------------------------------
+//------------------------------------
 // uFldShoreBroker Configuration Block
-//--------------------------------------------------
+//------------------------------------
 ProcessConfig = uFldShoreBroker
 {
 	AppTick       = 1
@@ -83,9 +85,9 @@ ProcessConfig = uFldShoreBroker
 	BRIDGE   = src=RETURN_$V,  alias=RETURN
 }
 
-//--------------------------------------------------
+//----------------------------------
 // pMarineViewer Configuration Block
-//--------------------------------------------------
+//----------------------------------
 ProcessConfig = pMarineViewer
 {
 	AppTick    = 4
