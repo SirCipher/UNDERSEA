@@ -1,15 +1,14 @@
 //------------------------------------------
 // Meta vehicle config file
 //------------------------------------------
-ServerHost = localhost
-ServerPort = 9002
+ServerHost      = localhost
+ServerPort      = 9002
 
 // Community name IS the vehicle name
-Community  = alpha
-MOOSTimeWarp = 5
-LatOrigin  = 43.825300 
-LongOrigin = -70.330400 
-
+Community       = alpha
+MOOSTimeWarp    = 5
+LatOrigin       = 43.825300 
+LongOrigin      = -70.330400 
 //------------------------------------------
 // Antler configuration  block
 //------------------------------------------
@@ -30,9 +29,9 @@ ProcessConfig = ANTLER
 	 Run = sSensor   @ NewConsole = false ~SENSOR2
 }
 
-//------------------------------------------------------
-// uSimMarine Configuration Block  (Created from plugin)
-
+//-------------------------------
+// uSimMarine Configuration Block
+//-------------------------------
 ProcessConfig = uSimMarine
 {
   AppTick   = 10
@@ -43,20 +42,19 @@ ProcessConfig = uSimMarine
 }
 
 
-//--------------------------------------------------
-// pLogger Configuration Block (Created from Plugin)
-
+//----------------------------
+// pLogger Configuration Block
+//----------------------------
 ProcessConfig = pLogger
 {
-  AppTick 	= 10
-  CommsTick 	= 10
-  
-  File		= LOG_ALPHA
-  PATH		= ./
-  AsyncLog 	= true
+  AppTick 	    = 10
+  CommsTick 	  = 10
+
+  File		      = LOG_ALPHA
+  PATH		      = ./
+  AsyncLog 	    = true
   FileTimeStamp = true
 
-  // Log it all!!!!!
   LogAuxSrc       = true
   WildCardLogging = true 
 
@@ -65,9 +63,9 @@ ProcessConfig = pLogger
   CompressAlogs = false
 }
 
-//--------------------------------------------------------
-// pNodeReporter Configuration Block (Created from Plugin)
-
+//----------------------------------
+// pNodeReporter Configuration Block
+//----------------------------------
 ProcessConfig = pNodeReporter
 {
   AppTick     = 2
@@ -76,13 +74,13 @@ ProcessConfig = pNodeReporter
   VESSEL_TYPE = KAYAK
 }
 
-//-----------------------------------------------------
-// pMarinePID Configuration Block (created from plugin)
-
+//-------------------------------
+// pMarinePID Configuration Block
+//-------------------------------
 ProcessConfig = pMarinePID
 {
-  AppTick    = 10
-  CommsTick  = 10
+  AppTick       = 10
+  CommsTick     = 10
   
   VERBOSE       = true
   DEPTH_CONTROL = false
@@ -114,63 +112,58 @@ ProcessConfig = pMarinePID
 //------------------------------------------
 ProcessConfig = pHelmIvP
 {
-	   AppTick        = 4
-	   CommsTick      = 4
-	   Behaviors      = meta_alpha.bhv
-	   Verbose        = quiet
-	   ok_skew        = any
-	   active_start   = false
-	   Domain         = course:0:359:360
-	   Domain         = depth:0:100:101
-	   Domain         = speed:0.0:5.0:41
+	AppTick			= 4
+	CommsTick		= 4
+	Behaviors		= meta_alpha.bhv
+	Verbose			= quiet
+	ok_skew			= any
+	active_start	= false
+	Domain			= course:0:359:360
+	Domain			= depth:0:100:101
+	Domain			= speed:0.0:5.0:41
 }
-//--------------------------------------------------------
-// uProcessWatch Configuration Block (Created from Plugin)
-
+//----------------------------------
+// uProcessWatch Configuration Block
+//----------------------------------
 ProcessConfig = uProcessWatch
 {
   AppTick   = 2
   CommsTick = 2
   
-  WATCH  = uSimMarine
-  WATCH  = pLogger
-  WATCH  = pNodeReporter
-  WATCH  = pMarinePID
-  WATCH  = pHelmIvP
+  WATCH     = uSimMarine
+  WATCH     = pLogger
+  WATCH     = pNodeReporter
+  WATCH     = pMarinePID
+  WATCH     = pHelmIvP
 
   NOWATCH=uXMS*
   NOWATCH=uMAC*
 }
-
-
-
-//---------------------------------------------------------
-// pShare Config Block  (Created from Plugin)
-
+//---------------------------
+// pShare Configuration Block
+//---------------------------
 ProcessConfig = pShare
 {
-  AppTick    = 2
-  CommsTick  = 2
+  AppTick       = 2
+  CommsTick     = 2
 
   input = route =  localhost:9303
 }
 
-
-//--------------------------------------------------
-// pHostInfo configuration block from plugin
-
+//------------------------------
+// pHostInfo Configuration Block
+//------------------------------
 ProcessConfig = pHostInfo
 {
-  AppTick 	= 1
+  AppTick 	  = 1
   CommsTick 	= 1
 
   DEFAULT_HOSTIP_FORCE = localhost
 }
 
-
-//--------------------------------------------------
-// uFldNodeBroker configuration block from plugin
-
+//-----------------------------------
+// uFldNodeBroker Configuration Block
+//-----------------------------------
 ProcessConfig = uFldNodeBroker
 {
   AppTick   = 1
@@ -186,9 +179,9 @@ ProcessConfig = uFldNodeBroker
   BRIDGE = src=NODE_MESSAGE_LOCAL, alias=NODE_MESSAGE
 }
 
-//------------------------------------------
-// SENSOR1 config block
-//------------------------------------------
+//---------------------------------
+// SENSOR1 Configuration Block
+//---------------------------------
 ProcessConfig = SENSOR1
 {
 	 AppTick			= 3.0
@@ -199,9 +192,9 @@ ProcessConfig = SENSOR1
 	 CHANGE				= 10.0:50.0:2.0
 }
 
-//------------------------------------------
-// SENSOR2 config block
-//------------------------------------------
+//---------------------------------
+// SENSOR2 Configuration Block
+//---------------------------------
 ProcessConfig = SENSOR2
 {
 	 AppTick			= 3.0

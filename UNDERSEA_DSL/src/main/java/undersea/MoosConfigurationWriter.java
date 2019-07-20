@@ -78,27 +78,27 @@ class MoosConfigurationWriter {
     }
 
     private static void generateIvPHelmBlock(UUV uuv) {
-        StringBuilder ivpBloxk = new StringBuilder();
-        ivpBloxk.append("//------------------------------------------\n");
-        ivpBloxk.append("// Helm IvP configuration  block\n");
-        ivpBloxk.append("//------------------------------------------\n");
-        ivpBloxk.append("ProcessConfig = pHelmIvP\n");
-        ivpBloxk.append("{\n");
-        ivpBloxk.append("\t   AppTick        = 4\n");
-        ivpBloxk.append("\t   CommsTick      = 4\n");
-        ivpBloxk.append("\t   Behaviors      = meta_" + uuv.getName() + ".bhv\n");
-        ivpBloxk.append("\t   Verbose        = quiet\n");
-        ivpBloxk.append("\t   ok_skew        = any\n");
-        ivpBloxk.append("\t   active_start   = false\n");
-        ivpBloxk.append("\t   Domain         = course:0:359:360\n");
-        ivpBloxk.append("\t   Domain         = depth:0:100:101\n");
-        ivpBloxk.append("\t   Domain         = speed:" + uuv.getSpeedMin() + ":" + uuv.getSpeedMax() + ":" + uuv
+        StringBuilder ivpBlock = new StringBuilder();
+        ivpBlock.append("//------------------------------------------\n");
+        ivpBlock.append("// Helm IvP configuration  block\n");
+        ivpBlock.append("//------------------------------------------\n");
+        ivpBlock.append("ProcessConfig = pHelmIvP\n");
+        ivpBlock.append("{\n");
+        ivpBlock.append("\tAppTick\t\t\t= 4\n");
+        ivpBlock.append("\tCommsTick\t\t= 4\n");
+        ivpBlock.append("\tBehaviors\t\t= meta_" + uuv.getName() + ".bhv\n");
+        ivpBlock.append("\tVerbose\t\t\t= quiet\n");
+        ivpBlock.append("\tok_skew\t\t\t= any\n");
+        ivpBlock.append("\tactive_start\t= false\n");
+        ivpBlock.append("\tDomain\t\t\t= course:0:359:360\n");
+        ivpBlock.append("\tDomain\t\t\t= depth:0:100:101\n");
+        ivpBlock.append("\tDomain\t\t\t= speed:" + uuv.getSpeedMin() + ":" + uuv.getSpeedMax() + ":" + uuv
                 .getSpeedSteps() + "\n");
 
-        ivpBloxk.append("}");
+        ivpBlock.append("}");
 
         //write
-        Utility.exportToFile(ParserEngine.missionDir + "/plug_pHelmIvP_" + uuv.getName() + ".moos", ivpBloxk.toString(),
+        Utility.exportToFile(ParserEngine.missionDir + "/plug_pHelmIvP_" + uuv.getName() + ".moos", ivpBlock.toString(),
                 false);
     }
 
@@ -124,11 +124,11 @@ class MoosConfigurationWriter {
         shoreside.append("{\n");
         shoreside.append("  MSBetweenLaunches = 200\n");
         shoreside.append("\n");
-        shoreside.append("\tRun = MOOSDB\t\t@ NewConsole = false\n");
-        shoreside.append("\tRun = pMarineViewer\t@ NewConsole = false\n");
-        shoreside.append("\tRun = pLogger\t@ NewConsole = false\n");
-        shoreside.append("\tRun = pShare\t\t@ NewConsole = false\n");
-        shoreside.append("\tRun = pHostInfo\t\t@ NewConsole = false\n");
+        shoreside.append("\tRun = MOOSDB\t\t\t@ NewConsole = false\n");
+        shoreside.append("\tRun = pMarineViewer\t\t@ NewConsole = false\n");
+        shoreside.append("\tRun = pLogger\t\t\t@ NewConsole = false\n");
+        shoreside.append("\tRun = pShare\t\t\t@ NewConsole = false\n");
+        shoreside.append("\tRun = pHostInfo\t\t\t@ NewConsole = false\n");
         shoreside.append("\tRun = uFldShoreBroker\t@ NewConsole = false\n");
         shoreside.append("}\n");
 
@@ -141,15 +141,15 @@ class MoosConfigurationWriter {
         shoreside.append("//--------------------------------------------------\n");
         shoreside.append("ProcessConfig = uFldShoreBroker\n");
         shoreside.append("{\n");
-        shoreside.append("  AppTick       = 1\n");
-        shoreside.append("  CommsTick     = 1\n");
+        shoreside.append("\tAppTick       = 1\n");
+        shoreside.append("\tCommsTick     = 1\n");
         shoreside.append("\n");
-        shoreside.append("  QBRIDGE  = DEPLOY, NODE_REPORT\n");
-        shoreside.append("  QBRIDGE  = STATION_KEEP, APPCAST_REQ\n");
-        shoreside.append("  QBRIDGE  = MOOS_MANUAL_OVERRIDE\n");
+        shoreside.append("\tQBRIDGE  = DEPLOY, NODE_REPORT\n");
+        shoreside.append("\tQBRIDGE  = STATION_KEEP, APPCAST_REQ\n");
+        shoreside.append("\tQBRIDGE  = MOOS_MANUAL_OVERRIDE\n");
         shoreside.append("\n");
-        shoreside.append("  BRIDGE   = src=RETURN_ALL, alias=RETURN\n");
-        shoreside.append("  BRIDGE   = src=RETURN_$V,  alias=RETURN\n");
+        shoreside.append("\tBRIDGE   = src=RETURN_ALL, alias=RETURN\n");
+        shoreside.append("\tBRIDGE   = src=RETURN_$V,  alias=RETURN\n");
         shoreside.append("}\n");
         shoreside.append("\n");
 
@@ -158,34 +158,30 @@ class MoosConfigurationWriter {
         shoreside.append("//--------------------------------------------------\n");
         shoreside.append("ProcessConfig = pMarineViewer\n");
         shoreside.append("{\n");
-        shoreside.append("  AppTick    = 4\n");
-        shoreside.append("  CommsTick  = 4\n");
+        shoreside.append("\tAppTick    = 4\n");
+        shoreside.append("\tCommsTick  = 4\n");
         shoreside.append("\n");
-        shoreside.append("  TIFF_FILE            = forrest19.tif\n");
-        shoreside.append("  set_pan_x            = -90\n");
-        shoreside.append("  set_pan_y            = -280\n");
-        shoreside.append("  zoom                 = 0.65\n");
-        shoreside.append("  vehicles_shape_scale = 1.5\n");
-        shoreside.append("  vehicles_name_mode   = names+shortmode\n");
+        shoreside.append("\tTIFF_FILE            = forrest19.tif\n");
+        shoreside.append("\tset_pan_x            = -90\n");
+        shoreside.append("\tset_pan_y            = -280\n");
+        shoreside.append("\tzoom                 = 0.65\n");
+        shoreside.append("\tvehicles_shape_scale = 1.5\n");
+        shoreside.append("\tvehicles_name_mode   = names+shortmode\n");
         shoreside.append("\n");
-        shoreside.append("  point_viewable_labels   = false\n");
-        shoreside.append("  polygon_viewable_labels = false\n");
-        shoreside.append("  appcast_viewable     = true\n");
-        shoreside.append("  appcast_color_scheme = indigo\n");
-        shoreside.append("  hash_delta           = 50\n");
-        shoreside.append("  hash_viewable        = true\n");
-        shoreside.append("  hash_shade           = 0.35\n");
-        shoreside.append("\n");
-        shoreside.append("  SCOPE = PHI_HOST_INFO\n");
-        shoreside.append("\n");
-        shoreside.append("  BUTTON_ONE   = DEPLOY  # DEPLOY_ALL=true \n");
-        shoreside.append("  BUTTON_ONE   = MOOS_MANUAL_OVERRIDE_ALL=false \n");
-        shoreside.append("  BUTTON_ONE   = RETURN_ALL=false # STATION_KEEP_ALL=false\n");
-        shoreside.append("\n");
-        shoreside.append("  BUTTON_TWO   = RETURN  # RETURN_ALL=true\n");
-        shoreside.append("  BUTTON_TWO   = STATION_KEEP_ALL=false\n");
-        shoreside.append("\n");
-        shoreside.append("  BUTTON_THREE = STATION  # STATION_KEEP_ALL=true\n");
+        shoreside.append("\tpoint_viewable_labels   = false\n");
+        shoreside.append("\tpolygon_viewable_labels = false\n");
+        shoreside.append("\tappcast_viewable     = true\n");
+        shoreside.append("\tappcast_color_scheme = indigo\n");
+        shoreside.append("\thash_delta           = 50\n");
+        shoreside.append("\thash_viewable        = true\n");
+        shoreside.append("\thash_shade           = 0.35\n");
+        shoreside.append("\tSCOPE = PHI_HOST_INFO\n\n");
+        shoreside.append("\tBUTTON_ONE   = DEPLOY  # DEPLOY_ALL=true \n");
+        shoreside.append("\tBUTTON_ONE   = MOOS_MANUAL_OVERRIDE_ALL=false \n");
+        shoreside.append("\tBUTTON_ONE   = RETURN_ALL=false # STATION_KEEP_ALL=false\n");
+        shoreside.append("\tBUTTON_TWO   = RETURN  # RETURN_ALL=true\n");
+        shoreside.append("\tBUTTON_TWO   = STATION_KEEP_ALL=false\n");
+        shoreside.append("\tBUTTON_THREE = STATION  # STATION_KEEP_ALL=true\n");
         shoreside.append("}\n");
 
         String fileName = "meta_shoreside.moos";

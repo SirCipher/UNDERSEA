@@ -1,8 +1,8 @@
-ServerHost = $(VHOST)
-ServerPort = $(VPORT)
+ServerHost      = $(VHOST)
+ServerPort      = $(VPORT)
 
 // Community name IS the vehicle name
-Community  = $(VNAME)
-MOOSTimeWarp = $(WARP)
-LatOrigin  = 43.825300 
-LongOrigin = -70.330400 
+Community       = $(VNAME)
+MOOSTimeWarp    = $(WARP)
+LatOrigin       = 43.825300 
+LongOrigin      = -70.330400 

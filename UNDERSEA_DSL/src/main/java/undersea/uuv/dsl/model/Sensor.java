@@ -50,9 +50,9 @@ public class Sensor {
 
     public String toString() {
         StringBuilder str = new StringBuilder();
-        str.append("//------------------------------------------\n");
-        str.append("// " + name + " config block\n");
-        str.append("//------------------------------------------\n");
+        str.append("//---------------------------------\n");
+        str.append("// " + name + " Configuration Block\n");
+        str.append("//---------------------------------\n");
         str.append("ProcessConfig = " + name + "\n");
         str.append("{\n");
         str.append("\t AppTick\t\t\t= " + rate + "\n");

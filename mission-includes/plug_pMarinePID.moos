@@ -1,10 +1,10 @@
-//-----------------------------------------------------
-// pMarinePID Configuration Block (created from plugin)
-
+//-------------------------------
+// pMarinePID Configuration Block
+//-------------------------------
 ProcessConfig = pMarinePID
 {
-  AppTick    = 10
-  CommsTick  = 10
+  AppTick       = 10
+  CommsTick     = 10
   
   VERBOSE       = true
   DEPTH_CONTROL = false

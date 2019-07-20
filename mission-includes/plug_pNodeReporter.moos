@@ -1,6 +1,6 @@
-//--------------------------------------------------------
-// pNodeReporter Configuration Block (Created from Plugin)
-
+//----------------------------------
+// pNodeReporter Configuration Block
+//----------------------------------
 ProcessConfig = pNodeReporter
 {
   AppTick     = 2

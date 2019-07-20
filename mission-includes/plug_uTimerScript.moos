@@ -1,6 +1,6 @@
-//------------------------------------------
-// AutoStartScript config block
-//------------------------------------------
+//------------------------------------
+// AutoStartScript Configuration Block
+//------------------------------------
 ProcessConfig = uTimerScript
 {
 	AppTick 	= 2

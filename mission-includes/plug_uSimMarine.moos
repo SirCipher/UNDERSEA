@@ -1,6 +1,6 @@
-//------------------------------------------------------
-// uSimMarine Configuration Block  (Created from plugin)
-
+//-------------------------------
+// uSimMarine Configuration Block
+//-------------------------------
 ProcessConfig = uSimMarine
 {
   AppTick   = 10

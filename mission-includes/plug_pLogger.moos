@@ -1,17 +1,16 @@
-//--------------------------------------------------
-// pLogger Configuration Block (Created from Plugin)
-
+//----------------------------
+// pLogger Configuration Block
+//----------------------------
 ProcessConfig = pLogger
 {
-  AppTick 	= 10
-  CommsTick 	= 10
-  
-  File		= LOG_%(VNAME)
-  PATH		= ./
-  AsyncLog 	= true
+  AppTick 	    = 10
+  CommsTick 	  = 10
+
+  File		      = LOG_%(VNAME)
+  PATH		      = ./
+  AsyncLog 	    = true
   FileTimeStamp = true
 
-  // Log it all!!!!!
   LogAuxSrc       = true
   WildCardLogging = true 
 

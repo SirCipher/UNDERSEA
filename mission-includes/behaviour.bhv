@@ -1,4 +1,3 @@
-
 initialize   DEPLOY = false
 initialize   RETURN = false
 
@@ -11,7 +10,6 @@ set MODE = SURVEYING {
   RETURN != true
 } RETURNING
 
-//----------------------------------------------
 Behavior = BHV_Waypoint
 { 
   name      = waypt_survey
@@ -23,7 +21,6 @@ Behavior = BHV_Waypoint
   speed = 2.0
 }
 
-//----------------------------------------------
 Behavior = BHV_Waypoint
 {
   name       = waypt_return

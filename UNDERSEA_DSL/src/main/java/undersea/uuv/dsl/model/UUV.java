@@ -77,9 +77,9 @@ public class UUV {
     @Override
     public String toString() {
         StringBuilder str = new StringBuilder();
-        str.append("//------------------------------------------\n");
-        str.append("// sUUV config block\n");
-        str.append("//------------------------------------------\n");
+        str.append("//-------------------------\n");
+        str.append("// sUUV Configuration Block\n");
+        str.append("//-------------------------\n");
         str.append("ProcessConfig = " + name + "\n");
         str.append("{\n");
         str.append("\t AppTick = " + rate + "\n");
