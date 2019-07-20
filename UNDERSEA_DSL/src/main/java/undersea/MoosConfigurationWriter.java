@@ -43,14 +43,10 @@ class MoosConfigurationWriter {
 
             Properties properties = new Properties();
             properties.load(new FileInputStream(propertiesFilename));
-            properties.put("TIME_WINDOW",
-                    simulationProperties.getEnvironmentValue(SimulationProperties.EnvironmentValue.TIME_WINDOW));
-            properties.put("SIMULATION_TIME",
-                    simulationProperties.getEnvironmentValue(SimulationProperties.EnvironmentValue.SIMULATION_TIME));
-            properties.put("SIMULATION_SPEED",
-                    simulationProperties.getEnvironmentValue(SimulationProperties.EnvironmentValue.SIMULATION_SPEED));
-            properties.put("PORT",
-                    simulationProperties.getEnvironmentValue(SimulationProperties.EnvironmentValue.PORT_START));
+
+            for(SimulationProperties.EnvironmentValue value: SimulationProperties.EnvironmentValue.values()){
+                properties.put(value.name(), simulationProperties.getEnvironmentValue(value));
+            }
 
             StringBuilder sensorsNames = new StringBuilder();
 

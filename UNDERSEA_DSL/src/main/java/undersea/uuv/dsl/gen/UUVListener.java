@@ -21,6 +21,16 @@ public interface UUVListener extends ParseTreeListener {
 	 */
 	void exitModel(UUVParser.ModelContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link UUVParser#sensorPort}.
+	 * @param ctx the parse tree
+	 */
+	void enterSensorPort(UUVParser.SensorPortContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link UUVParser#sensorPort}.
+	 * @param ctx the parse tree
+	 */
+	void exitSensorPort(UUVParser.SensorPortContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link UUVParser#missionName}.
 	 * @param ctx the parse tree
 	 */

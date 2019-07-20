@@ -10,11 +10,16 @@ import java.util.*;
 model:
 		( missionName
 		| portStart
+		| sensorPort
         | simulation
         | invocation
         | host
         | speed
         | uuv+)+
+;
+
+sensorPort:
+    SENSOR_PORT ASSIGN value=INT
 ;
 
 missionName:

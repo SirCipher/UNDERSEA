@@ -18,6 +18,11 @@ public class UUVListener extends UUVBaseListener {
     private AbstractFactory<Sensor> sensorFactory = FactoryProvider.getSensorFactory();
     private int serverPortStart;
 
+    @Override
+    public void enterSensorPort(UUVParser.SensorPortContext ctx) {
+        simulationProperties.setEnvironmentValue(SimulationProperties.EnvironmentValue.SENSOR_PORT,
+                ctx.value.getText());
+    }
 
     @Override
     public void enterPortStart(UUVParser.PortStartContext ctx) {

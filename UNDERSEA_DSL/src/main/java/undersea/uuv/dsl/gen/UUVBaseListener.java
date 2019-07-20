@@ -31,6 +31,18 @@ public class UUVBaseListener implements UUVListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterSensorPort(UUVParser.SensorPortContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitSensorPort(UUVParser.SensorPortContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterMissionName(UUVParser.MissionNameContext ctx) { }
 	/**
 	 * {@inheritDoc}

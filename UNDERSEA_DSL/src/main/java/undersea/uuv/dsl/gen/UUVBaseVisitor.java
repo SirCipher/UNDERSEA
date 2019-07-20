@@ -27,6 +27,13 @@ public class UUVBaseVisitor<T> extends AbstractParseTreeVisitor<T> implements UU
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
+	@Override public T visitSensorPort(UUVParser.SensorPortContext ctx) { return visitChildren(ctx); }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
 	@Override public T visitMissionName(UUVParser.MissionNameContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}

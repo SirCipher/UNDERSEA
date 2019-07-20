@@ -36,6 +36,10 @@ PORT_START:
     'server port start'
 ;
 
+SENSOR_PORT:
+    'sensor port'
+;
+
 SIMULATION_TIME:
 	'simulation time'
 ;

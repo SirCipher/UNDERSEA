@@ -20,6 +20,12 @@ public interface UUVVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitModel(UUVParser.ModelContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link UUVParser#sensorPort}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitSensorPort(UUVParser.SensorPortContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link UUVParser#missionName}.
 	 * @param ctx the parse tree
 	 * @return the visitor result

@@ -83,6 +83,7 @@ public class SimulationProperties {
         SIMULATION_SPEED("(e.g., simulation speed = 2)"),
         HOST("(e.g., host = localhost)"),
         PORT_START("(e.g., port start = 9000)"),
+        SENSOR_PORT("(e.g., sensor port= 6000)"),
         TIME_WINDOW("(e.g., time window = 10)");
 
         private String errorMessage;
