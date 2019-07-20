@@ -80,7 +80,7 @@ public class UUV {
         str.append("//-------------------------\n");
         str.append("// sUUV Configuration Block\n");
         str.append("//-------------------------\n");
-        str.append("ProcessConfig = " + name + "\n");
+        str.append("ProcessConfig = sUUV\n");
         str.append("{\n");
         str.append("\t AppTick = " + rate + "\n");
         str.append("\t CommsTick = " + rate + "\n");

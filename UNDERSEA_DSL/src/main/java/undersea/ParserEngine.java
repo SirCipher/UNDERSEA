@@ -21,10 +21,10 @@ public class ParserEngine {
 
     public static String propertiesFile;
 
+    private static String configFile;
+    private static File missionDirectory;
     static String buildDir;
-    static String configFile;
     static String missionDir;
-    static File missionDirectory;
 
     private static String controllerDir;
     private static SimulationProperties simulationProperties = SimulationProperties.getInstance();
@@ -95,10 +95,16 @@ public class ParserEngine {
     public static void main(String[] args) throws IOException {
         parseCommandLineArguments(args);
 
-        EnvironmentBuilder.initDirectories(missionDir, buildDir);
-
         runSensorListener();
         runUUVListener();
+
+        String missionName =
+                simulationProperties.getEnvironmentValue(SimulationProperties.EnvironmentValue.MISSION_NAME);
+
+        missionDir += File.separator + missionName;
+        buildDir += File.separator + missionName;
+
+        EnvironmentBuilder.initDirectories(missionDir, buildDir);
 
         System.out.println("Parsed: " + simulationProperties.getAgents().size() + " agents");
         System.out.println("Parsed: " + FactoryProvider.getSensorFactory().getSensors().size() + " sensors");

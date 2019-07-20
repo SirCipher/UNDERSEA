@@ -80,7 +80,7 @@ class MoosConfigurationWriter {
     private static void generateIvPHelmBlock(UUV uuv) {
         StringBuilder ivpBlock = new StringBuilder();
         ivpBlock.append("//------------------------------------------\n");
-        ivpBlock.append("// Helm IvP configuration  block\n");
+        ivpBlock.append("// Helm IvP configuration block\n");
         ivpBlock.append("//------------------------------------------\n");
         ivpBlock.append("ProcessConfig = pHelmIvP\n");
         ivpBlock.append("{\n");
@@ -217,15 +217,14 @@ class MoosConfigurationWriter {
         vehicleBlock.append("\tRun = pHelmIvP       @ NewConsole = false\n");
         vehicleBlock.append("\tRun = uProcessWatch  @ NewConsole = false\n");
         vehicleBlock.append("\tRun = pShare         @ NewConsole = false\n");
-        // TODO: Investigate
-//        vehicleBlock.append("\tRun = uTimerScript  @ NewConsole = false\n");
-        vehicleBlock.append("\tRun = pHostInfo\t\t  @ NewConsole = false\n");
-//        vehicleBlock.append("\tRun = sUUV          @ NewConsole = false\n");
+        vehicleBlock.append("\tRun = uTimerScript   @ NewConsole = false\n");
+        vehicleBlock.append("\tRun = pHostInfo\t\t @ NewConsole = false\n");
+        vehicleBlock.append("\tRun = sUUV           @ NewConsole = false\n");
 
         vehicleBlock.append("\tRun = uFldNodeBroker @ NewConsole = false\n");
 
         for (Sensor sensor : uuv.getSensors()) {
-            vehicleBlock.append("\t Run = sSensor   @ NewConsole = false ~" + sensor.getName() + "\n");
+            vehicleBlock.append("\tRun = sSensor\t\t @ NewConsole = false ~" + sensor.getName() + "\n");
         }
 
         vehicleBlock.append("}\n\n");
@@ -239,8 +238,8 @@ class MoosConfigurationWriter {
         vehicleBlock.append("#include plug_pShare.moos\n");
         vehicleBlock.append("#include plug_pHostInfo.moos\n");
         vehicleBlock.append("#include plug_uFldNodeBroker.moos\n");
-//        vehicleBlock.append("#include plug_uTimerScript.moos\n");
-//        vehicleBlock.append("#include plug_UUV_" + uuv.getName() + ".moos\n");
+        vehicleBlock.append("#include plug_uTimerScript.moos\n");
+        vehicleBlock.append("#include plug_UUV_" + uuv.getName() + ".moos\n");
 
         for (Sensor sensor : uuv.getSensors()) {
             vehicleBlock.append("#include plug_" + sensor.getName() + ".moos\n");
@@ -275,6 +274,60 @@ class MoosConfigurationWriter {
 
             //generate controller properties
         }
+
+        generateLaunchAndCleanScripts();
+    }
+
+    private static void generateLaunchAndCleanScripts() {
+        StringBuilder cleanScript = new StringBuilder();
+        cleanScript.append("#!/bin/bash\n");
+        cleanScript.append("\n");
+        cleanScript.append("rm -rf\tMOOSLog_*\n");
+        cleanScript.append("rm -rf\tLOG_*\n");
+        cleanScript.append("rm -f\t*~\n");
+        cleanScript.append("rm -f\t*.moos++\n");
+        cleanScript.append("rm -f\t.LastOpenedMOOSLogDirectory\n");
+
+        Utility.exportToFile(ParserEngine.missionDir + File.separator + "clean.sh",
+                cleanScript.toString(),
+                false);
+
+        String timeWarp = simulationProperties.getEnvironmentValue(SimulationProperties.EnvironmentValue.TIME_WINDOW);
+        StringBuilder launchScript = new StringBuilder();
+
+        launchScript.append("#---------------------\n");
+        launchScript.append("# Launch the processes\n");
+        launchScript.append("#---------------------\n");
+
+        UUV shoreside = simulationProperties.getShoreside();
+
+        launchScript.append("printf \"Launching " + shoreside.getName() + " MOOS Community\"\n");
+        launchScript.append("pAntler " + shoreside.getMetaFileName() + " >& /dev/null &\n\n");
+
+        for (Map.Entry<String, UUV> e : simulationProperties.getAgents().entrySet()) {
+            UUV uuv = e.getValue();
+            launchScript.append("printf \"Launching " + uuv.getName() + " MOOS Community\"\n");
+            launchScript.append("pAntler " + uuv.getMetaFileName() + " >& /dev/null &\n\n");
+        }
+
+        launchScript.append("#--------------------------------------------------\n");
+        launchScript.append("# Launch uMAC and kill everything upon exiting uMAC\n");
+        launchScript.append("#--------------------------------------------------\n");
+
+        launchScript.append("uMAC " + simulationProperties.getShoreside().getMetaFileName() + "\n");
+        launchScript.append("printf \"Killing all processes...\\n\"\n");
+
+        launchScript.append("kill");
+
+        for (int i = 0; i < simulationProperties.getAgents().size(); i++) {
+            launchScript.append(" %").append(i + 1);
+        }
+
+        launchScript.append("\nprintf \"Done killing processes...\\n\"\n");
+
+        Utility.exportToFile(ParserEngine.missionDir + File.separator + "launch.sh",
+                launchScript.toString(),
+                false);
     }
 
     private static void writeHostInfo(StringBuilder vehicleBlock) {

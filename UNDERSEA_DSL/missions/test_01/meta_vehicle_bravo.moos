@@ -2,10 +2,10 @@
 // Meta vehicle config file
 //------------------------------------------
 ServerHost      = localhost
-ServerPort      = 9003
+ServerPort      = 9001
 
 // Community name IS the vehicle name
-Community       = charlie
+Community       = bravo
 MOOSTimeWarp    = 5
 LatOrigin       = 43.825300 
 LongOrigin      = -70.330400 
@@ -23,10 +23,12 @@ ProcessConfig = ANTLER
 	Run = pHelmIvP       @ NewConsole = false
 	Run = uProcessWatch  @ NewConsole = false
 	Run = pShare         @ NewConsole = false
-	Run = pHostInfo		  @ NewConsole = false
+	Run = uTimerScript   @ NewConsole = false
+	Run = pHostInfo		 @ NewConsole = false
+	Run = sUUV           @ NewConsole = false
 	Run = uFldNodeBroker @ NewConsole = false
-	 Run = sSensor   @ NewConsole = false ~SENSOR1
-	 Run = sSensor   @ NewConsole = false ~SENSOR4
+	Run = sSensor		 @ NewConsole = false ~SENSOR3
+	Run = sSensor		 @ NewConsole = false ~SENSOR4
 }
 
 //-------------------------------
@@ -50,7 +52,7 @@ ProcessConfig = pLogger
   AppTick 	    = 10
   CommsTick 	  = 10
 
-  File		      = LOG_CHARLIE
+  File		      = LOG_BRAVO
   PATH		      = ./
   AsyncLog 	    = true
   FileTimeStamp = true
@@ -108,13 +110,13 @@ ProcessConfig = pMarinePID
 }
 
 //------------------------------------------
-// Helm IvP configuration  block
+// Helm IvP configuration block
 //------------------------------------------
 ProcessConfig = pHelmIvP
 {
 	AppTick			= 4
 	CommsTick		= 4
-	Behaviors		= meta_charlie.bhv
+	Behaviors		= meta_bravo.bhv
 	Verbose			= quiet
 	ok_skew			= any
 	active_start	= false
@@ -147,7 +149,7 @@ ProcessConfig = pShare
   AppTick       = 2
   CommsTick     = 2
 
-  input = route =  localhost:9304
+  input = route =  localhost:9302
 }
 
 //------------------------------
@@ -179,15 +181,42 @@ ProcessConfig = uFldNodeBroker
   BRIDGE = src=NODE_MESSAGE_LOCAL, alias=NODE_MESSAGE
 }
 
+//------------------------------------
+// AutoStartScript Configuration Block
+//------------------------------------
+ProcessConfig = uTimerScript
+{
+	AppTick 	= 2
+	CommsTick	= 2
+
+	delay_start = 5
+	event = var=MOOS_MANUAL_OVERIDE, val=false
+	event = var=DEPLOY, val=true
+	event = quit, time=10:20
+}
+
+//-------------------------
+// sUUV Configuration Block
+//-------------------------
+ProcessConfig = sUUV
+{
+	 AppTick = 4
+	 CommsTick = 4
+	 MAX_APPCAST_EVENTS = 25 
+	 NAME = bravo
+	 PORT = 9002
+	 SENSORS = SENSOR3,SENSOR4
+}
+
 //---------------------------------
-// SENSOR1 Configuration Block
+// SENSOR3 Configuration Block
 //---------------------------------
-ProcessConfig = SENSOR1
+ProcessConfig = SENSOR3
 {
 	 AppTick			= 3.0
 	 CommsTick			= 3.0
 	 MAX_APPCAST_EVENTS = 25 
-	 NAME				= SENSOR1
+	 NAME				= SENSOR3
 	 RELIABILITY		= 0.9
 	 CHANGE				= 10.0:50.0:2.0
 }

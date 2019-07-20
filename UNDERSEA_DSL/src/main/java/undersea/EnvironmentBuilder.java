@@ -68,6 +68,8 @@ class EnvironmentBuilder {
      * Removing all mission include files required for the NSPLUG.
      */
     private static void cleanup() {
+        List<String> ignoreList = new ArrayList<>(Arrays.asList("clean.sh", "launch.sh"));
+
         for (File includeFile : Objects.requireNonNull(missionIncludeDir.listFiles())) {
             for (File missionFile :
                     Objects.requireNonNull(missionDir.listFiles(f -> !f.getName().equals(".DS_Store")))) {
@@ -79,8 +81,8 @@ class EnvironmentBuilder {
                     }
                 }
 
-                // Whitelist all behaviour files
-                if (missionFile.getName().endsWith(".bhv")) {
+                // Whitelist all behaviour and ignore list files
+                if (missionFile.getName().endsWith(".bhv") || ignoreList.stream().anyMatch(s -> s.equals(missionFile.getName()))) {
                     continue;
                 }
 
@@ -96,6 +98,10 @@ class EnvironmentBuilder {
     static void initDirectories(String missionDirPath, String buildDirPath) {
         missionDir = new File(missionDirPath);
         buildDir = new File(buildDirPath);
+
+        if (!missionDir.exists()) {
+            Utility.createFolder(missionDir);
+        }
 
         if (buildDir.mkdirs()) {
             System.out.println("Created build and resources directories: " + buildDir.getPath());
