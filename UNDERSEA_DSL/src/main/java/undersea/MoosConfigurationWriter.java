@@ -8,7 +8,6 @@ import undersea.uuv.dsl.model.UUV;
 import undersea.uuv.properties.SimulationProperties;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Iterator;
@@ -43,7 +42,7 @@ class MoosConfigurationWriter {
 
             Properties properties = new Properties();
 
-            for(SimulationProperties.EnvironmentValue value: SimulationProperties.EnvironmentValue.values()){
+            for (SimulationProperties.EnvironmentValue value : SimulationProperties.EnvironmentValue.values()) {
                 properties.put(value.name(), simulationProperties.getEnvironmentValue(value));
             }
 
