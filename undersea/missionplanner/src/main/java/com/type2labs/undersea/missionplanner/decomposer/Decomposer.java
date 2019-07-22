@@ -4,7 +4,6 @@
  * Arguments: 
  * "-B""macro_default""-W""java:Decomposer,Decomposer""-T""link:lib""-d""C:\\Users\\tklap\\Desktop\\PACS\\coverage-planning\\Decomposer\\decompose\\for_testing""class{Decomposer:C:\\Users\\tklap\\Desktop\\PACS\\UNDERSEA\\coverageplanner\\matlab\\decompose.m}""-a""C:\\Users\\tklap\\Desktop\\PACS\\UNDERSEA\\coverageplanner\\matlab\\decompose.m"
  */
-
 package com.type2labs.undersea.missionplanner.decomposer;
 
 import com.mathworks.toolbox.javabuilder.*;
