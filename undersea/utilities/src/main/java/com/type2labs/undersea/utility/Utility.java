@@ -15,39 +15,6 @@ public class Utility {
 
     }
 
-    public static void fileCreate(String fileName, boolean isDirectory) throws IOException{
-        File file = new File(fileName);
-        if (!file.exists()){
-            if (isDirectory)
-                Files.createDirectory(Paths.get(fileName));
-            else
-                Files.createFile(Paths.get(fileName));
-        }
-    }
-
-    public static String readFile(String fileName) throws FileNotFoundException {
-        File file = new File(fileName);
-        if (!file.exists())
-            throw new FileNotFoundException("File "+ fileName +" does not exist!. Please fix this error.\n");
-
-
-        StringBuilder model = new StringBuilder(100);
-        BufferedReader bfr = null;
-
-        try {
-            bfr = new BufferedReader(new FileReader(file));
-            String line = null;
-            while ((line = bfr.readLine()) != null) {
-                model.append(line + "\n");
-            }
-            return model.toString();
-        } catch (IOException e) {
-            e.printStackTrace();
-            System.exit(-1);
-        }
-        return null;
-    }
-
     public static void copyFile(File source, File dest) {
         try {
             Files.copy(source.toPath(), dest.toPath(), StandardCopyOption.REPLACE_EXISTING);
@@ -110,6 +77,16 @@ public class Utility {
         }
     }
 
+    public static void fileCreate(String fileName, boolean isDirectory) throws IOException {
+        File file = new File(fileName);
+        if (!file.exists()) {
+            if (isDirectory)
+                Files.createDirectory(Paths.get(fileName));
+            else
+                Files.createFile(Paths.get(fileName));
+        }
+    }
+
     public static boolean fileExists(String fileName, boolean isFolder, boolean create) throws FileNotFoundException {
         File f = new File(fileName);
         if (!f.exists()) {
@@ -153,6 +130,28 @@ public class Utility {
         if (result == null)
             throw new IllegalArgumentException(key.toUpperCase() + " name not found!");
         return result;
+    }
+
+    public static String readFile(String fileName) throws FileNotFoundException {
+        File file = new File(fileName);
+        if (!file.exists())
+            throw new FileNotFoundException("File " + fileName + " does not exist!. Please fix this error.\n");
+
+        StringBuilder model = new StringBuilder(100);
+        BufferedReader bfr = null;
+
+        try {
+            bfr = new BufferedReader(new FileReader(file));
+            String line = null;
+            while ((line = bfr.readLine()) != null) {
+                model.append(line + "\n");
+            }
+            return model.toString();
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.exit(-1);
+        }
+        return null;
     }
 
 }

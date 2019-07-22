@@ -8,10 +8,10 @@ public class PlanDataModel {
     private int agentCount;
     private int depot;
 
-    public PlanDataModel(double[][] data, int agentCount, int depot) {
+    public PlanDataModel(MissionParameters missionParameters, double[][] data) {
         this.data = data;
-        this.agentCount = agentCount;
-        this.depot = depot;
+        this.agentCount = missionParameters.getAgentCount();
+        this.depot = missionParameters.getDepot();
     }
 
     public int getAgentCount() {
