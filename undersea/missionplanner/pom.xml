@@ -13,7 +13,32 @@
 
     <name>missionplanner</name>
 
+    <repositories>
+        <repository>
+            <id>localRepository</id>
+            <url>file://${basedir}/repo</url>
+        </repository>
+    </repositories>
+
     <dependencies>
+        <dependency>
+            <groupId>com.mathworks</groupId>
+            <artifactId>toolbox</artifactId>
+            <version>2018b</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.google</groupId>
+            <artifactId>ortools</artifactId>
+            <version>7.2.6977</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.google</groupId>
+            <artifactId>protobuf</artifactId>
+            <version>7.2.6977</version>
+        </dependency>
+
         <dependency>
             <groupId>com.type2labs</groupId>
             <artifactId>utilities</artifactId>
@@ -24,4 +49,5 @@
     <build>
 
     </build>
+
 </project>

@@ -1,4 +1,4 @@
-package com.type2labs.undersea.controller;
+package com.type2labs.undersea.missionplanner;
 
 /**
  * Hello world!
