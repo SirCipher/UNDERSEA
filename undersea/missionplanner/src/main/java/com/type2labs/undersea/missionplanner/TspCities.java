@@ -4,7 +4,6 @@ import com.google.ortools.constraintsolver.*;
 
 import java.util.logging.Logger;
 
-
 /**
  * Minimal TSP using distance matrix.
  */
