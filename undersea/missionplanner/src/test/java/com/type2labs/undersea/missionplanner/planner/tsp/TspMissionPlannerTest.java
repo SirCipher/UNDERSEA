@@ -4,7 +4,6 @@ import com.type2labs.undersea.missionplanner.exception.PlannerException;
 import com.type2labs.undersea.missionplanner.model.Mission;
 import com.type2labs.undersea.missionplanner.model.MissionParameters;
 import com.type2labs.undersea.missionplanner.model.MissionPlanner;
-
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;

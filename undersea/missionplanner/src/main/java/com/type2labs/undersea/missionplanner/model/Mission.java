@@ -12,12 +12,12 @@ import java.util.List;
 public class Mission {
 
     private final PlanDataModel planDataModel;
-    private Assignment assignment;
-    private RoutingModel routingModel;
-    private RoutingIndexManager routingIndexManager;
+    private final Assignment assignment;
+    private final RoutingModel routingModel;
+    private final RoutingIndexManager routingIndexManager;
     // TODO: Add node type
     // Each node should have an assignee, coordinates, and state (visited, POI, etc)
-    private List<?> nodes;
+    private final List<?> nodes;
 
     public Mission(PlanDataModel planDataModel, Assignment assignment, RoutingModel routingModel,
                    RoutingIndexManager routingIndexManager,

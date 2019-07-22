@@ -8,7 +8,7 @@ import org.antlr.v4.runtime.tree.ParseTreeListener;
  * This interface defines a complete listener for a parse tree produced by
  * {@link SensorsParser}.
  */
-public interface SensorsListener extends ParseTreeListener {
+interface SensorsListener extends ParseTreeListener {
     /**
      * Enter a parse tree produced by {@link SensorsParser#change}.
      *

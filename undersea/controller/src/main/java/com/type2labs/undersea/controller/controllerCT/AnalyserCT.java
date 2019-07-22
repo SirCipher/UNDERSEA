@@ -44,7 +44,7 @@ public class AnalyserCT extends Analyser {
 //			sensors = Knowledge.getInstance().getSensors();
 
             for (int i = 0; i < sensorNum; i++) {
-                String sensName = "SENSOR" + Integer.toString(i + 1);
+                String sensName = "SENSOR" + (i + 1);
                 double rate = Knowledge.getInstance().getSensorRate(sensName);
 
                 simca.setSensorProperty(0, sensors.get(i).ID, rate * sensors.get(i).energry);
@@ -85,7 +85,7 @@ public class AnalyserCT extends Analyser {
         //set new sensor configurationsimca.getUUVspeed()
         for (UUVSensor uuvSensor : Knowledge.getInstance().sensorsMap.values())
             Knowledge.getInstance().setSensorState(uuvSensor.getName(), 0);
-        String chosenSens = "SENSOR" + Integer.toString(chosenSensor + 1);
+        String chosenSens = "SENSOR" + (chosenSensor + 1);
         Knowledge.getInstance().setSensorState(chosenSens, 1);
 
         //System.out.println("Chosen sensor = " + chosenSensor);

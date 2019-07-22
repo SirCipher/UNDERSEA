@@ -19,13 +19,13 @@ import java.io.IOException;
 
 public class ParserEngine {
 
-    public static String propertiesFile;
+    private static String propertiesFile;
     static String buildDir;
     static String missionDir;
     private static String configFile;
     private static File missionDirectory;
     private static String controllerDir;
-    private static SimulationProperties simulationProperties = SimulationProperties.getInstance();
+    private static final SimulationProperties simulationProperties = SimulationProperties.getInstance();
     private static String sensorsFile;
     private static boolean errorsFound = false;
 

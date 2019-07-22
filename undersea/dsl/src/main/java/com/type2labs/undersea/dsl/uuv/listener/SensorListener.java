@@ -9,7 +9,7 @@ import com.type2labs.undersea.dsl.uuv.model.Sensor;
 
 public class SensorListener extends SensorsBaseListener {
 
-    private AbstractFactory<Sensor> sensorFactory = FactoryProvider.getSensorFactory();
+    private final AbstractFactory<Sensor> sensorFactory = FactoryProvider.getSensorFactory();
 
     @Override
     public void enterSensor(SensorsParser.SensorContext ctx) {

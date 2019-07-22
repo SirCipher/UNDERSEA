@@ -21,7 +21,7 @@ import java.util.logging.Logger;
 public class TspMissionPlanner implements MissionPlanner {
 
     private static final Logger logger = Logger.getLogger(TspMissionPlanner.class.getName());
-    private static Decomposer decomposer = Decomposer.getInstance();
+    private static final Decomposer decomposer = Decomposer.getInstance();
 
     static {
         System.loadLibrary("jniortools");

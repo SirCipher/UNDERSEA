@@ -4,9 +4,9 @@ package com.type2labs.undersea.missionplanner.model;
  * Created by Thomas Klapwijk on 2019-07-22.
  */
 public class PlanDataModel {
-    private double[][] data;
-    private int agentCount;
-    private int depot;
+    private final double[][] data;
+    private final int agentCount;
+    private final int depot;
 
     public PlanDataModel(MissionParameters missionParameters, double[][] data) {
         this.data = data;

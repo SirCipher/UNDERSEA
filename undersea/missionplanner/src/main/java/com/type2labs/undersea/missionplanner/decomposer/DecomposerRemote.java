@@ -57,7 +57,7 @@ public interface DecomposerRemote extends Poolable {
      * @throws RemoteException An error has occurred during the function call or
      *                         in communication with the server.
      */
-    public Object[] decompose(int nargout, Object... rhs) throws RemoteException;
+    Object[] decompose(int nargout, Object... rhs) throws RemoteException;
 
     /**
      * Frees native resources associated with the remote server object

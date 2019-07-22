@@ -31,7 +31,6 @@ public class SimCAAdaptationEngine {
     ArrayList<Goal> goals;
     ArrayList<OptimGoal> optimGoals;
 
-    ;
     private int identifiedConcern = 0;
     private int adaptationPeriod = 100;//also known as controlPeriod
     private double UUVspeed = 0.5;
@@ -44,7 +43,7 @@ public class SimCAAdaptationEngine {
 
     }
 
-    public void adapt(double measured[])
+    public void adapt(double[] measured)
     //this method should be called (most likely by a probe) every X invocations of the UUV, where X = adaptationPeriod
     //array measured[] should contain the measured values of goals (speed, energy consumption) on average during
     // previous X invocations
@@ -348,7 +347,7 @@ public class SimCAAdaptationEngine {
         goals.get(goalN).sensorProperties.put(sensorID, val);
     }
 
-    public void simplexControl(double control[], int mode) {
+    public void simplexControl(double[] control, int mode) {
         int concerns;
 
         if (currentOperatingMode == OperatingPhase.IDENTIFICATION)
@@ -429,7 +428,7 @@ public class SimCAAdaptationEngine {
         PREIDENTIF("Preidentif"), IDENTIFICATION("Identification"), CONTROL("Control");
         private final String label;
 
-        private OperatingPhase(String label) {
+        OperatingPhase(String label) {
             this.label = label;
         }
 

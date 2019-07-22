@@ -13,17 +13,16 @@ import java.util.*;
 
 class EnvironmentBuilder {
 
-    private static File missionIncludeDir = new File(".." + File.separator + "mission-includes");
+    private static final File missionIncludeDir = new File(".." + File.separator + "mission-includes");
     private static File missionDir;
     private static File buildDir;
-    private static SimulationProperties simulationProperties = SimulationProperties.getInstance();
+    private static final SimulationProperties simulationProperties = SimulationProperties.getInstance();
 
     static void build() {
         UUV shoreside = simulationProperties.getShoreside();
 
         System.out.println("Using build directory: " + buildDir.getAbsolutePath());
         System.out.println("Writing mission files to: " + missionDir.getPath() + "\n");
-
         System.out.println("-----------------------------------------");
 
         int vPort =
@@ -37,8 +36,8 @@ class EnvironmentBuilder {
                 simulationProperties.getEnvironmentValue(SimulationProperties.EnvironmentValue.TIME_WINDOW));
         nsPlugArgs.add("VHOST=" + simulationProperties.getEnvironmentValue(SimulationProperties.EnvironmentValue.HOST));
         nsPlugArgs.add("VNAME=shoreside");
-        nsPlugArgs.add("SHARE_LISTEN=" + String.valueOf(shoreListen));
-        nsPlugArgs.add("VPORT=" + String.valueOf(vPort));
+        nsPlugArgs.add("SHARE_LISTEN=" + shoreListen);
+        nsPlugArgs.add("VPORT=" + vPort);
 
         nsplug(shoreside.getMetaFileName(), shoreside.getMetaFileName(), nsPlugArgs);
 
@@ -51,9 +50,9 @@ class EnvironmentBuilder {
             nsPlugArgs.add("VHOST=" +
                     simulationProperties.getEnvironmentValue(SimulationProperties.EnvironmentValue.HOST));
             nsPlugArgs.add("VNAME=" + uuv.getName());
-            nsPlugArgs.add("VPORT=" + String.valueOf(++vPort));
-            nsPlugArgs.add("SHARE_LISTEN=" + String.valueOf(++shareListen));
-            nsPlugArgs.add("SHORE_LISTEN=" + String.valueOf(shoreListen));
+            nsPlugArgs.add("VPORT=" + ++vPort);
+            nsPlugArgs.add("SHARE_LISTEN=" + ++shareListen);
+            nsPlugArgs.add("SHORE_LISTEN=" + shoreListen);
 
             System.out.println("-----------------------------------------");
             nsplug(uuv.getMetaFileName(), uuv.getMetaFileName(), nsPlugArgs);

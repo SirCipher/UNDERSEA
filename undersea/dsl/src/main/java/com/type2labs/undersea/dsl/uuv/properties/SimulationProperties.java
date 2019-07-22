@@ -11,8 +11,8 @@ import java.util.stream.Collectors;
 public class SimulationProperties {
 
     private static SimulationProperties instance = null;
-    private Map<EnvironmentValue, String> environmentValues = new HashMap<>();
-    private Map<String, UUV> agents = new HashMap<>();
+    private final Map<EnvironmentValue, String> environmentValues = new HashMap<>();
+    private final Map<String, UUV> agents = new HashMap<>();
 
     private SimulationProperties() {
 
@@ -87,7 +87,7 @@ public class SimulationProperties {
         SENSOR_PORT("(e.g., sensor port= 6000)"),
         TIME_WINDOW("(e.g., time window = 10)");
 
-        private String errorMessage;
+        private final String errorMessage;
 
         EnvironmentValue(String errorMessage) {
             this.errorMessage = errorMessage;

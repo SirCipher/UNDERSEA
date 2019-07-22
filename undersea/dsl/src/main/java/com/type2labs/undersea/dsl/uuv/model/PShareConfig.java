@@ -8,10 +8,10 @@ import java.util.List;
 
 public class PShareConfig {
 
-    private Input input;
-    private List<Output> outputs = new ArrayList<>();
-    private UUV parentUuv;
-    private int pSharePort;
+    private final Input input;
+    private final List<Output> outputs = new ArrayList<>();
+    private final UUV parentUuv;
+    private final int pSharePort;
 
     public PShareConfig(UUV parentUuv) {
         this.parentUuv = parentUuv;
@@ -64,12 +64,12 @@ public class PShareConfig {
         return config.toString();
     }
 
-    public static class Output {
-        private String src_name;
-        private String dest_name;
-        private String route;
+    static class Output {
+        private final String src_name;
+        private final String dest_name;
+        private final String route;
 
-        public Output(String src_name, String dest_name, String route) {
+        Output(String src_name, String dest_name, String route) {
             this.src_name = src_name;
 
             if (dest_name == null) {
@@ -87,8 +87,8 @@ public class PShareConfig {
         }
     }
 
-    public class Input {
-        private String input;
+    class Input {
+        private final String input;
 
         Input(UUV uuv) {
             SimulationProperties properties = SimulationProperties.getInstance();

@@ -6,8 +6,7 @@ import org.antlr.v4.runtime.ParserRuleContext;
 public class UUVFactory implements AbstractFactory<UUV> {
 
     @Override
-    public UUV create(ParserRuleContext context) {
-        return null;
+    public void create(ParserRuleContext context) {
     }
 
     @Override

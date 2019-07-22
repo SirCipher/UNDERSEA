@@ -15,7 +15,7 @@ public class SensorFactory implements AbstractFactory<Sensor> {
     private final Map<String, Sensor> sensors = new HashMap<>();
 
     @Override
-    public Sensor create(ParserRuleContext context) {
+    public void create(ParserRuleContext context) {
         SensorsParser.SensorContext sensorContext = (SensorsParser.SensorContext) context;
         String name = sensorContext.name.getText();
 
@@ -41,7 +41,6 @@ public class SensorFactory implements AbstractFactory<Sensor> {
 
         sensors.put(name, newSensor);
 
-        return newSensor;
     }
 
     @Override

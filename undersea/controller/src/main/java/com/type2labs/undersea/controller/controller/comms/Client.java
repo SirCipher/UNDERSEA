@@ -52,9 +52,7 @@ public class Client {
     public boolean shutDown() throws IOException {
         String inputStr = write(SHUT_DOWN_STR);
         System.out.println(inputStr);
-        if (inputStr.equals(SHUT_DOWN_STR))
-            return true;
-        return false;
+        return inputStr.equals(SHUT_DOWN_STR);
     }
 
     public String write(String outputStr) throws IOException {

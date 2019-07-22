@@ -4,16 +4,16 @@ public class Range {
     /**
      * begin
      */
-    private double min;
+    private final double min;
 
     /**
      * end
      */
-    private double max;
+    private final double max;
     /**
      * percentage
      */
-    private Number value;
+    private final Number value;
 
     public Range(double min, double max, Number value) {
         this.min = min;

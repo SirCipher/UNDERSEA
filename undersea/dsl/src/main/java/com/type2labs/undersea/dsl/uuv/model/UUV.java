@@ -7,11 +7,11 @@ import java.util.List;
 // TODO: Convert to builder pattern
 public class UUV {
 
-    private String name;
-    private String rate;
-    private String serverPort;
+    private final String name;
+    private final String rate;
+    private final String serverPort;
     private String metaFileName;
-    private Range speedRange;
+    private final Range speedRange;
     private List<Sensor> sensors = new ArrayList<>();
     private PShareConfig pShareConfig;
 

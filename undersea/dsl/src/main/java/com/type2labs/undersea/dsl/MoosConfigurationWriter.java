@@ -18,8 +18,8 @@ import java.util.Properties;
 @SuppressWarnings("StringConcatenationInsideStringBufferAppend")
 class MoosConfigurationWriter {
 
-    private static SimulationProperties simulationProperties = SimulationProperties.getInstance();
-    private static SensorFactory sensorFactory = FactoryProvider.getSensorFactory();
+    private static final SimulationProperties simulationProperties = SimulationProperties.getInstance();
+    private static final SensorFactory sensorFactory = FactoryProvider.getSensorFactory();
 
     private static void generateControllerProperties() {
         try {

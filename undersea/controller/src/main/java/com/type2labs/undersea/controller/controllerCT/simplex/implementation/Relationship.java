@@ -32,7 +32,7 @@ public enum Relationship {
 
     private String stringValue;
 
-    private Relationship(String stringValue) {
+    Relationship(String stringValue) {
         this.stringValue = stringValue;
     }
 

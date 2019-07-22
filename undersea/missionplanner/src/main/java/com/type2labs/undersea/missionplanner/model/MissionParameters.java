@@ -5,9 +5,9 @@ package com.type2labs.undersea.missionplanner.model;
  */
 public class MissionParameters {
 
-    private int agentCount;
+    private final int agentCount;
     // TODO: remove once second provider is implemented
-    private int depot;
+    private final int depot;
 
     public MissionParameters(int agentCount, int depot) {
         this.agentCount = agentCount;

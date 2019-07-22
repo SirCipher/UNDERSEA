@@ -52,9 +52,8 @@ public class Decomposer extends MWComponentInstance<Decomposer> {
     /**
      * Shared initialization implementation - private
      *
-     * @throws MWException An error has occurred during the function call.
      */
-    private Decomposer(final MWMCR mcr) throws MWException {
+    private Decomposer(final MWMCR mcr) {
         super(mcr);
         // add this to sInstances
         synchronized (Decomposer.class) {

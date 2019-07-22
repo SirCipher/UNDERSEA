@@ -9,22 +9,22 @@ public class Sensor {
     /**
      * name
      */
-    private String name;
+    private final String name;
 
     /**
      * rate
      */
-    private double rate;
+    private final double rate;
 
     /**
      * reliability
      */
-    private double reliability;
+    private final double reliability;
 
     /**
      * changes list
      */
-    private List<Range> changesList = new ArrayList<Range>();
+    private final List<Range> changesList = new ArrayList<Range>();
 
 
     public Sensor(String name, double rate, double reliability) {
