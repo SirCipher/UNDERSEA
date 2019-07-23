@@ -111,7 +111,8 @@ class MoosConfigurationWriter {
                 cleanScript.toString(),
                 false);
 
-        String timeWarp = ENVIRONMENT_PROPERTIES.getEnvironmentValue(EnvironmentProperties.EnvironmentValue.TIME_WINDOW);
+        String timeWarp =
+                ENVIRONMENT_PROPERTIES.getEnvironmentValue(EnvironmentProperties.EnvironmentValue.TIME_WINDOW);
         StringBuilder launchScript = new StringBuilder();
 
         launchScript.append("#---------------------\n");

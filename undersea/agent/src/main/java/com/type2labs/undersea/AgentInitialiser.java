@@ -17,7 +17,7 @@ public class AgentInitialiser {
         logger.info("Initialising...");
     }
 
-    public void createAgent(String name){
+    public void createAgent(String name) {
         agents.add(new Agent(name));
     }
 

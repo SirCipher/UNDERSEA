@@ -60,6 +60,9 @@ class EnvironmentBuilder {
         }
 
         cleanup();
+
+        System.out.println("Finished building environment");
+        System.out.println("-----------------------------------------");
     }
 
     /**
