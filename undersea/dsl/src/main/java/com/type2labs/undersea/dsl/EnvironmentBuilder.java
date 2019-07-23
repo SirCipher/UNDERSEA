@@ -4,6 +4,8 @@ import com.type2labs.undersea.dsl.uuv.model.UUV;
 import com.type2labs.undersea.dsl.uuv.properties.EnvironmentProperties;
 import com.type2labs.undersea.utility.Utility;
 import org.apache.commons.io.IOUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.File;
 import java.io.IOException;
@@ -13,6 +15,8 @@ import java.util.*;
 
 class EnvironmentBuilder {
 
+    private static final Logger logger = LogManager.getLogger(EnvironmentBuilder.class);
+
     private static final EnvironmentProperties ENVIRONMENT_PROPERTIES = EnvironmentProperties.getInstance();
     private static File missionIncludeDir;
     private static File missionDir;
@@ -21,9 +25,8 @@ class EnvironmentBuilder {
     static void build() {
         UUV shoreside = ENVIRONMENT_PROPERTIES.getShoreside();
 
-        System.out.println("Using build directory: " + buildDir.getAbsolutePath());
-        System.out.println("Writing mission files to: " + missionDir.getPath() + "\n");
-        System.out.println("-----------------------------------------");
+        logger.info("Using build directory: " + buildDir.getAbsolutePath());
+        logger.info("Writing mission files to: " + missionDir.getPath());
 
         int vPort =
                 Integer.parseInt(ENVIRONMENT_PROPERTIES.getEnvironmentValue(EnvironmentProperties.EnvironmentValue.PORT_START));
@@ -54,15 +57,15 @@ class EnvironmentBuilder {
             nsPlugArgs.add("SHARE_LISTEN=" + ++shareListen);
             nsPlugArgs.add("SHORE_LISTEN=" + shoreListen);
 
-            System.out.println("-----------------------------------------");
+            logger.info("-----------------------------------------");
             nsplug(uuv.getMetaFileName(), uuv.getMetaFileName(), nsPlugArgs);
             nsplug("behaviour.bhv", "meta_" + uuv.getName() + ".bhv", nsPlugArgs);
         }
 
         cleanup();
 
-        System.out.println("Finished building environment");
-        System.out.println("-----------------------------------------");
+        logger.info("Finished building environment");
+        logger.info("-----------------------------------------");
     }
 
     /**
@@ -107,7 +110,7 @@ class EnvironmentBuilder {
         }
 
         if (buildDir.mkdirs()) {
-            System.out.println("Created build and resources directories: " + buildDir.getPath());
+            logger.info("Created build and resources directories: " + buildDir.getPath());
         }
 
         if (missionDir.listFiles() != null) {
@@ -143,7 +146,7 @@ class EnvironmentBuilder {
             moosivpLocation = moosivpLocation.endsWith("/") ? moosivpLocation + "nsplug" :
                     moosivpLocation + File.separator + "nsplug";
 
-            System.out.println("Running nsplug on " + destName);
+            logger.info("Running nsplug on " + destName);
 
             // Existing elements will be right-shifted
             nsplugArgs.add(0, "-f");
@@ -163,7 +166,7 @@ class EnvironmentBuilder {
             writer.flush();
 
             String output = IOUtils.toString(process.getInputStream(), "UTF-8");
-            System.out.println(output);
+            logger.info(output);
             process.destroy();
         } catch (IOException e) {
             e.printStackTrace();

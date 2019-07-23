@@ -1,14 +1,15 @@
 package com.type2labs.undersea;
 
-import java.util.logging.Logger;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Created by Thomas Klapwijk on 2019-07-23.
  */
 public class Agent {
 
-    private static final Logger logger = Logger.getLogger(Agent.class.getName());
-
+    private static final Logger logger = LogManager.getLogger(Agent.class);
 
     public Agent(String name) {
         logger.info("Initialising agent: " + name);

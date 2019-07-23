@@ -12,12 +12,16 @@ import com.type2labs.undersea.utility.Utility;
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
 public class ParserEngine {
+
+    private static final Logger logger = LogManager.getLogger(ParserEngine.class);
 
     private static final EnvironmentProperties environmentProperties = EnvironmentProperties.getInstance();
     static String buildDir;
@@ -46,7 +50,7 @@ public class ParserEngine {
             public void syntaxError(Recognizer<?, ?> recognizer, Object offendingSymbol, int line,
                                     int charPositionInLine, String msg, RecognitionException e) {
                 //Print the syntax error
-                System.out.printf("\t%s at (%d, %d)%n", msg, line, charPositionInLine);
+                logger.error(String.format("\t%s at (%d, %d)%n", msg, line, charPositionInLine));
             }
         };
 
@@ -76,7 +80,7 @@ public class ParserEngine {
             public void syntaxError(Recognizer<?, ?> recognizer, Object offendingSymbol, int line,
                                     int charPositionInLine, String msg, RecognitionException e) {
                 //Print the syntax error
-                System.out.printf("\t%s at (%d, %d)%n", msg, line, charPositionInLine);
+                logger.error(String.format("\t%s at (%d, %d)%n", msg, line, charPositionInLine));
                 errorsFound = true;
             }
         };
@@ -105,16 +109,16 @@ public class ParserEngine {
 
         EnvironmentBuilder.initDirectories(missionDir, buildDir, missionIncludesDir);
 
-        System.out.println("Parsed: " + environmentProperties.getAgents().size() + " agents");
-        System.out.println("Parsed: " + FactoryProvider.getSensorFactory().getSensors().size() + " sensors");
-        System.out.println("Environment values: " + environmentProperties.getEnvironmentValues().toString() + "\n");
+        logger.info("Parsed: " + environmentProperties.getAgents().size() + " agents");
+        logger.info("Parsed: " + FactoryProvider.getSensorFactory().getSensors().size() + " sensors");
+        logger.info("Environment values: " + environmentProperties.getEnvironmentValues().toString() + "\n");
 
         environmentProperties.validateEnvironmentValues();
 
         if (errorsFound) {
             throw new DSLException("Errors found while parsing configuration files");
         } else {
-            System.out.println("Successfully parsed configuration files");
+            logger.info("Successfully parsed configuration files");
             MoosConfigurationWriter.run();
             EnvironmentBuilder.build();
             return environmentProperties;

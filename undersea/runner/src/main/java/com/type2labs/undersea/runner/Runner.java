@@ -4,6 +4,8 @@ import com.type2labs.undersea.AgentInitialiser;
 import com.type2labs.undersea.dsl.ParserEngine;
 import com.type2labs.undersea.dsl.uuv.model.UUV;
 import com.type2labs.undersea.dsl.uuv.properties.EnvironmentProperties;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.util.Map;
@@ -13,11 +15,14 @@ import java.util.Map;
  */
 public class Runner {
 
-    private final static AgentInitialiser agentInitialiser = new AgentInitialiser();
+    private static final Logger logger = LogManager.getLogger(Runner.class);
+    private static AgentInitialiser agentInitialiser;
 
     public static void main(String[] args) throws IOException {
         args = new String[]{"resources/mission.config", "resources/sensors.config", "../UNDERSEA_Controller",
                 "missions", "resources/config.properties", "missions", "mission-includes"};
+
+        logger.info("Initialised runner");
 
         EnvironmentProperties environmentProperties;
 
@@ -27,6 +32,8 @@ public class Runner {
             e.printStackTrace();
             throw e;
         }
+
+        agentInitialiser = new AgentInitialiser();
 
         for (Map.Entry<String, UUV> entry : environmentProperties.getAgents().entrySet()) {
             UUV uuv = entry.getValue();
