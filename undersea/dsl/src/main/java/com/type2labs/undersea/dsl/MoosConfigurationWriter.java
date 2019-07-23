@@ -5,7 +5,7 @@ import com.type2labs.undersea.dsl.uuv.factory.FactoryProvider;
 import com.type2labs.undersea.dsl.uuv.factory.SensorFactory;
 import com.type2labs.undersea.dsl.uuv.model.Sensor;
 import com.type2labs.undersea.dsl.uuv.model.UUV;
-import com.type2labs.undersea.dsl.uuv.properties.SimulationProperties;
+import com.type2labs.undersea.dsl.uuv.properties.EnvironmentProperties;
 import com.type2labs.undersea.utility.Utility;
 
 import java.io.File;
@@ -18,7 +18,7 @@ import java.util.Properties;
 @SuppressWarnings("StringConcatenationInsideStringBufferAppend")
 class MoosConfigurationWriter {
 
-    private static final SimulationProperties simulationProperties = SimulationProperties.getInstance();
+    private static final EnvironmentProperties ENVIRONMENT_PROPERTIES = EnvironmentProperties.getInstance();
     private static final SensorFactory sensorFactory = FactoryProvider.getSensorFactory();
 
     private static void generateControllerProperties() {
@@ -43,8 +43,8 @@ class MoosConfigurationWriter {
 
             Properties properties = new Properties();
 
-            for (SimulationProperties.EnvironmentValue value : SimulationProperties.EnvironmentValue.values()) {
-                properties.put(value.name(), simulationProperties.getEnvironmentValue(value));
+            for (EnvironmentProperties.EnvironmentValue value : EnvironmentProperties.EnvironmentValue.values()) {
+                properties.put(value.name(), ENVIRONMENT_PROPERTIES.getEnvironmentValue(value));
             }
 
             StringBuilder sensorsNames = new StringBuilder();
@@ -111,19 +111,19 @@ class MoosConfigurationWriter {
                 cleanScript.toString(),
                 false);
 
-        String timeWarp = simulationProperties.getEnvironmentValue(SimulationProperties.EnvironmentValue.TIME_WINDOW);
+        String timeWarp = ENVIRONMENT_PROPERTIES.getEnvironmentValue(EnvironmentProperties.EnvironmentValue.TIME_WINDOW);
         StringBuilder launchScript = new StringBuilder();
 
         launchScript.append("#---------------------\n");
         launchScript.append("# Launch the processes\n");
         launchScript.append("#---------------------\n");
 
-        UUV shoreside = simulationProperties.getShoreside();
+        UUV shoreside = ENVIRONMENT_PROPERTIES.getShoreside();
 
         launchScript.append("printf \"Launching " + shoreside.getName() + " MOOS Community\"\n");
         launchScript.append("pAntler " + shoreside.getMetaFileName() + " >& /dev/null &\n\n");
 
-        for (Map.Entry<String, UUV> e : simulationProperties.getAgents().entrySet()) {
+        for (Map.Entry<String, UUV> e : ENVIRONMENT_PROPERTIES.getAgents().entrySet()) {
             UUV uuv = e.getValue();
             launchScript.append("printf \"Launching " + uuv.getName() + " MOOS Community\"\n");
             launchScript.append("pAntler " + uuv.getMetaFileName() + " >& /dev/null &\n\n");
@@ -133,12 +133,12 @@ class MoosConfigurationWriter {
         launchScript.append("# Launch uMAC and kill everything upon exiting uMAC\n");
         launchScript.append("#--------------------------------------------------\n");
 
-        launchScript.append("uMAC " + simulationProperties.getShoreside().getMetaFileName() + "\n");
+        launchScript.append("uMAC " + ENVIRONMENT_PROPERTIES.getShoreside().getMetaFileName() + "\n");
         launchScript.append("printf \"Killing all processes...\\n\"\n");
 
         launchScript.append("kill");
 
-        for (int i = 0; i < simulationProperties.getAgents().size(); i++) {
+        for (int i = 0; i < ENVIRONMENT_PROPERTIES.getAgents().size(); i++) {
             launchScript.append(" %").append(i + 1);
         }
 
@@ -236,7 +236,7 @@ class MoosConfigurationWriter {
         UUV uuv = new UUV("shoreside", null, 0.0, 0.0, 0);
         uuv.setMetaFileName(fileName);
 
-        simulationProperties.addUUV(uuv);
+        ENVIRONMENT_PROPERTIES.addUUV(uuv);
         generateControllerProperties();
 
         Utility.exportToFile(ParserEngine.missionDir + "/" + fileName,
@@ -304,7 +304,7 @@ class MoosConfigurationWriter {
         generateShoreside();
         generateSensors();
 
-        Map<String, UUV> agents = simulationProperties.getAgents();
+        Map<String, UUV> agents = ENVIRONMENT_PROPERTIES.getAgents();
 
         for (Map.Entry<String, UUV> entry : agents.entrySet()) {
             UUV uuv = entry.getValue();

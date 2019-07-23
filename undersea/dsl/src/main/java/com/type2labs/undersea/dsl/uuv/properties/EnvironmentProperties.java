@@ -8,19 +8,19 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class SimulationProperties {
+public class EnvironmentProperties {
 
-    private static SimulationProperties instance = null;
+    private static EnvironmentProperties instance = null;
     private final Map<EnvironmentValue, String> environmentValues = new HashMap<>();
     private final Map<String, UUV> agents = new HashMap<>();
 
-    private SimulationProperties() {
+    private EnvironmentProperties() {
 
     }
 
-    public static SimulationProperties getInstance() {
+    public static EnvironmentProperties getInstance() {
         if (instance == null) {
-            instance = new SimulationProperties();
+            instance = new EnvironmentProperties();
         }
 
         return instance;

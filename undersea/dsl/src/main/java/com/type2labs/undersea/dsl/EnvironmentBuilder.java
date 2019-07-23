@@ -1,7 +1,7 @@
 package com.type2labs.undersea.dsl;
 
 import com.type2labs.undersea.dsl.uuv.model.UUV;
-import com.type2labs.undersea.dsl.uuv.properties.SimulationProperties;
+import com.type2labs.undersea.dsl.uuv.properties.EnvironmentProperties;
 import com.type2labs.undersea.utility.Utility;
 import org.apache.commons.io.IOUtils;
 
@@ -13,42 +13,42 @@ import java.util.*;
 
 class EnvironmentBuilder {
 
-    private static final SimulationProperties simulationProperties = SimulationProperties.getInstance();
+    private static final EnvironmentProperties ENVIRONMENT_PROPERTIES = EnvironmentProperties.getInstance();
     private static File missionIncludeDir;
     private static File missionDir;
     private static File buildDir;
 
     static void build() {
-        UUV shoreside = simulationProperties.getShoreside();
+        UUV shoreside = ENVIRONMENT_PROPERTIES.getShoreside();
 
         System.out.println("Using build directory: " + buildDir.getAbsolutePath());
         System.out.println("Writing mission files to: " + missionDir.getPath() + "\n");
         System.out.println("-----------------------------------------");
 
         int vPort =
-                Integer.parseInt(simulationProperties.getEnvironmentValue(SimulationProperties.EnvironmentValue.PORT_START));
+                Integer.parseInt(ENVIRONMENT_PROPERTIES.getEnvironmentValue(EnvironmentProperties.EnvironmentValue.PORT_START));
         int shoreListen = vPort + 300;
         int shareListen = shoreListen + 1;
 
         List<String> nsPlugArgs = new ArrayList<>();
 
         nsPlugArgs.add("WARP=" +
-                simulationProperties.getEnvironmentValue(SimulationProperties.EnvironmentValue.TIME_WINDOW));
-        nsPlugArgs.add("VHOST=" + simulationProperties.getEnvironmentValue(SimulationProperties.EnvironmentValue.HOST));
+                ENVIRONMENT_PROPERTIES.getEnvironmentValue(EnvironmentProperties.EnvironmentValue.TIME_WINDOW));
+        nsPlugArgs.add("VHOST=" + ENVIRONMENT_PROPERTIES.getEnvironmentValue(EnvironmentProperties.EnvironmentValue.HOST));
         nsPlugArgs.add("VNAME=shoreside");
         nsPlugArgs.add("SHARE_LISTEN=" + shoreListen);
         nsPlugArgs.add("VPORT=" + vPort);
 
         nsplug(shoreside.getMetaFileName(), shoreside.getMetaFileName(), nsPlugArgs);
 
-        for (Map.Entry<String, UUV> entry : simulationProperties.getAgents().entrySet()) {
+        for (Map.Entry<String, UUV> entry : ENVIRONMENT_PROPERTIES.getAgents().entrySet()) {
             UUV uuv = entry.getValue();
 
             nsPlugArgs.clear();
             nsPlugArgs.add("WARP=" +
-                    simulationProperties.getEnvironmentValue(SimulationProperties.EnvironmentValue.TIME_WINDOW));
+                    ENVIRONMENT_PROPERTIES.getEnvironmentValue(EnvironmentProperties.EnvironmentValue.TIME_WINDOW));
             nsPlugArgs.add("VHOST=" +
-                    simulationProperties.getEnvironmentValue(SimulationProperties.EnvironmentValue.HOST));
+                    ENVIRONMENT_PROPERTIES.getEnvironmentValue(EnvironmentProperties.EnvironmentValue.HOST));
             nsPlugArgs.add("VNAME=" + uuv.getName());
             nsPlugArgs.add("VPORT=" + ++vPort);
             nsPlugArgs.add("SHARE_LISTEN=" + ++shareListen);

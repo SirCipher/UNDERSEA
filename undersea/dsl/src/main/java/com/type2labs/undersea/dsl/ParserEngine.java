@@ -7,7 +7,7 @@ import com.type2labs.undersea.dsl.uuv.gen.UUVLexer;
 import com.type2labs.undersea.dsl.uuv.gen.UUVParser;
 import com.type2labs.undersea.dsl.uuv.listener.SensorListener;
 import com.type2labs.undersea.dsl.uuv.listener.UUVListener;
-import com.type2labs.undersea.dsl.uuv.properties.SimulationProperties;
+import com.type2labs.undersea.dsl.uuv.properties.EnvironmentProperties;
 import com.type2labs.undersea.utility.Utility;
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.ParseTree;
@@ -19,7 +19,7 @@ import java.io.IOException;
 
 public class ParserEngine {
 
-    private static final SimulationProperties simulationProperties = SimulationProperties.getInstance();
+    private static final EnvironmentProperties environmentProperties = EnvironmentProperties.getInstance();
     static String buildDir;
     static String missionIncludesDir;
     static String missionDir;
@@ -91,32 +91,33 @@ public class ParserEngine {
         return parser;
     }
 
-    public static void main(String[] args) throws IOException {
+    public static EnvironmentProperties main(String[] args) throws IOException {
         parseCommandLineArguments(args);
 
         runSensorListener();
         runUUVListener();
 
         String missionName =
-                simulationProperties.getEnvironmentValue(SimulationProperties.EnvironmentValue.MISSION_NAME);
+                environmentProperties.getEnvironmentValue(EnvironmentProperties.EnvironmentValue.MISSION_NAME);
 
         missionDir += File.separator + missionName;
         buildDir += File.separator + missionName;
 
         EnvironmentBuilder.initDirectories(missionDir, buildDir, missionIncludesDir);
 
-        System.out.println("Parsed: " + simulationProperties.getAgents().size() + " agents");
+        System.out.println("Parsed: " + environmentProperties.getAgents().size() + " agents");
         System.out.println("Parsed: " + FactoryProvider.getSensorFactory().getSensors().size() + " sensors");
-        System.out.println("Environment values: " + simulationProperties.getEnvironmentValues().toString() + "\n");
+        System.out.println("Environment values: " + environmentProperties.getEnvironmentValues().toString() + "\n");
 
-        simulationProperties.validateEnvironmentValues();
+        environmentProperties.validateEnvironmentValues();
 
         if (errorsFound) {
-            System.out.println("Errors found while parsing configuration files");
+            throw new DSLException("Errors found while parsing configuration files");
         } else {
             System.out.println("Successfully parsed configuration files");
             MoosConfigurationWriter.run();
             EnvironmentBuilder.build();
+            return environmentProperties;
         }
     }
 
@@ -195,7 +196,7 @@ public class ParserEngine {
 
         // Create a listener
         UUVListener listener = new UUVListener();
-        listener.setSimulationProperties(simulationProperties);
+        listener.setEnvironmentProperties(environmentProperties);
 
         // Walk the tree created during the parse, trigger callbacks
         walker.walk(listener, tree);

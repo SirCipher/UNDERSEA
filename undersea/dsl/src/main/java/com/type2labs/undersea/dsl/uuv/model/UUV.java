@@ -4,16 +4,15 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-// TODO: Convert to builder pattern
 public class UUV {
 
     private final String name;
     private final String rate;
+    // TODO: Convert to int
     private final String serverPort;
     private final Range speedRange;
     private String metaFileName;
     private List<Sensor> sensors = new ArrayList<>();
-    private PShareConfig pShareConfig;
 
     public UUV(String name, String serverPort, double min, double max, int steps) {
         this.name = name;
@@ -58,20 +57,9 @@ public class UUV {
         return speedRange.getMin();
     }
 
-    public Range getSpeedRange() {
-        return speedRange;
-    }
 
     public int getSpeedSteps() {
         return (int) speedRange.getValue();
-    }
-
-    public PShareConfig getpShareConfig() {
-        return pShareConfig;
-    }
-
-    public void setpShareConfig(PShareConfig pShareConfig) {
-        this.pShareConfig = pShareConfig;
     }
 
     @Override

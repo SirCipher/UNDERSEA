@@ -1,14 +1,12 @@
 package com.type2labs.undersea.dsl.uuv.listener;
 
-
 import com.type2labs.undersea.dsl.uuv.factory.AbstractFactory;
 import com.type2labs.undersea.dsl.uuv.factory.FactoryProvider;
 import com.type2labs.undersea.dsl.uuv.gen.UUVBaseListener;
 import com.type2labs.undersea.dsl.uuv.gen.UUVParser;
-import com.type2labs.undersea.dsl.uuv.model.PShareConfig;
 import com.type2labs.undersea.dsl.uuv.model.Sensor;
 import com.type2labs.undersea.dsl.uuv.model.UUV;
-import com.type2labs.undersea.dsl.uuv.properties.SimulationProperties;
+import com.type2labs.undersea.dsl.uuv.properties.EnvironmentProperties;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,29 +14,29 @@ import java.util.List;
 public class UUVListener extends UUVBaseListener {
 
     private final AbstractFactory<Sensor> sensorFactory = FactoryProvider.getSensorFactory();
-    private SimulationProperties simulationProperties;
+    private EnvironmentProperties environmentProperties;
     private int serverPortStart;
 
     @Override
     public void enterHost(UUVParser.HostContext ctx) {
-        simulationProperties.setEnvironmentValue(SimulationProperties.EnvironmentValue.HOST, ctx.value.getText());
+        environmentProperties.setEnvironmentValue(EnvironmentProperties.EnvironmentValue.HOST, ctx.value.getText());
     }
 
     @Override
     public void enterInvocation(UUVParser.InvocationContext ctx) {
-        simulationProperties.setEnvironmentValue(SimulationProperties.EnvironmentValue.TIME_WINDOW,
+        environmentProperties.setEnvironmentValue(EnvironmentProperties.EnvironmentValue.TIME_WINDOW,
                 ctx.value.getText());
     }
 
     @Override
     public void enterMissionName(UUVParser.MissionNameContext ctx) {
-        simulationProperties.setEnvironmentValue(SimulationProperties.EnvironmentValue.MISSION_NAME,
+        environmentProperties.setEnvironmentValue(EnvironmentProperties.EnvironmentValue.MISSION_NAME,
                 ctx.value.getText());
     }
 
     @Override
     public void enterPortStart(UUVParser.PortStartContext ctx) {
-        simulationProperties.setEnvironmentValue(SimulationProperties.EnvironmentValue.PORT_START,
+        environmentProperties.setEnvironmentValue(EnvironmentProperties.EnvironmentValue.PORT_START,
                 ctx.value.getText());
 
         try {
@@ -51,19 +49,19 @@ public class UUVListener extends UUVBaseListener {
 
     @Override
     public void enterSensorPort(UUVParser.SensorPortContext ctx) {
-        simulationProperties.setEnvironmentValue(SimulationProperties.EnvironmentValue.SENSOR_PORT,
+        environmentProperties.setEnvironmentValue(EnvironmentProperties.EnvironmentValue.SENSOR_PORT,
                 ctx.value.getText());
     }
 
     @Override
     public void enterSimulation(UUVParser.SimulationContext ctx) {
-        simulationProperties.setEnvironmentValue(SimulationProperties.EnvironmentValue.SIMULATION_TIME,
+        environmentProperties.setEnvironmentValue(EnvironmentProperties.EnvironmentValue.SIMULATION_TIME,
                 ctx.value.getText());
     }
 
     @Override
     public void enterSpeed(UUVParser.SpeedContext ctx) {
-        simulationProperties.setEnvironmentValue(SimulationProperties.EnvironmentValue.SIMULATION_SPEED,
+        environmentProperties.setEnvironmentValue(EnvironmentProperties.EnvironmentValue.SIMULATION_SPEED,
                 ctx.value.getText());
     }
 
@@ -83,14 +81,12 @@ public class UUVListener extends UUVBaseListener {
         }
 
         UUV uuv = new UUV(name, port, min, max, steps);
-        PShareConfig pShareConfig = new PShareConfig(uuv);
-        uuv.setpShareConfig(pShareConfig);
         uuv.setSensors(sensors);
 
-        simulationProperties.addUUV(uuv);
+        environmentProperties.addUUV(uuv);
     }
 
-    public void setSimulationProperties(SimulationProperties simulationProperties) {
-        this.simulationProperties = simulationProperties;
+    public void setEnvironmentProperties(EnvironmentProperties environmentProperties) {
+        this.environmentProperties = environmentProperties;
     }
 }

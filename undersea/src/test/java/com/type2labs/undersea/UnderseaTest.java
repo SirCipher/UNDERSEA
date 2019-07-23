@@ -1,13 +1,14 @@
-package com.type2labs.undersea.controller;
+package com.type2labs.undersea;
 
 import org.junit.Test;
 
 import static org.junit.Assert.assertTrue;
 
 /**
- * Unit test for simple App.
+ * Unit test for simple undersea.
  */
-public class AppTest {
+public class UnderseaTest {
+
     /**
      * Rigorous Test :-)
      */
@@ -15,4 +16,5 @@ public class AppTest {
     public void shouldAnswerWithTrue() {
         assertTrue(true);
     }
+
 }
