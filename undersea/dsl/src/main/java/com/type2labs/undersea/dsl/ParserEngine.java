@@ -19,13 +19,14 @@ import java.io.IOException;
 
 public class ParserEngine {
 
-    private static String propertiesFile;
+    private static final SimulationProperties simulationProperties = SimulationProperties.getInstance();
     static String buildDir;
+    static String missionIncludesDir;
     static String missionDir;
+    private static String propertiesFile;
     private static String configFile;
     private static File missionDirectory;
     private static String controllerDir;
-    private static final SimulationProperties simulationProperties = SimulationProperties.getInstance();
     private static String sensorsFile;
     private static boolean errorsFound = false;
 
@@ -102,7 +103,7 @@ public class ParserEngine {
         missionDir += File.separator + missionName;
         buildDir += File.separator + missionName;
 
-        EnvironmentBuilder.initDirectories(missionDir, buildDir);
+        EnvironmentBuilder.initDirectories(missionDir, buildDir, missionIncludesDir);
 
         System.out.println("Parsed: " + simulationProperties.getAgents().size() + " agents");
         System.out.println("Parsed: " + FactoryProvider.getSensorFactory().getSensors().size() + " sensors");
@@ -120,7 +121,7 @@ public class ParserEngine {
     }
 
     private static void parseCommandLineArguments(String[] args) throws FileNotFoundException {
-        if (args.length != 6) {
+        if (args.length != 7) {
             throw new DSLException(
                     "Incorrect number of arguments! Please fix this error!\n" +
                             "\tArg 1) Mission configuration file (e.g., mission.config)\n" +
@@ -128,7 +129,8 @@ public class ParserEngine {
                             "\tArg 3) Controller directory (e.g., UUV_Controller)\n" +
                             "\tArg 4) Mission directory (e.g., moos-ivp-extend/missions/uuvExemplar)\n" +
                             "\tArg 5) Config.properties file" +
-                            "\tArg 6) Output dir (e.g, build/resources)"
+                            "\tArg 6) Output dir (e.g., build/resources)" +
+                            "\tArg 7) Mission include dir (e.g. mission-includes/)"
 
             );
         }
@@ -157,6 +159,10 @@ public class ParserEngine {
 
         if (Utility.fileExists(args[5], true, true)) {
             buildDir = args[5];
+        }
+
+        if (Utility.fileExists(args[6], true, false)) {
+            missionIncludesDir = args[6];
         }
     }
 

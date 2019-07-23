@@ -51,7 +51,6 @@ public class Decomposer extends MWComponentInstance<Decomposer> {
 
     /**
      * Shared initialization implementation - private
-     *
      */
     private Decomposer(final MWMCR mcr) {
         super(mcr);

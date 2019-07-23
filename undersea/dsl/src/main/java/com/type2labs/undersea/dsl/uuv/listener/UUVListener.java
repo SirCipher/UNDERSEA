@@ -15,8 +15,8 @@ import java.util.List;
 
 public class UUVListener extends UUVBaseListener {
 
-    private SimulationProperties simulationProperties;
     private final AbstractFactory<Sensor> sensorFactory = FactoryProvider.getSensorFactory();
+    private SimulationProperties simulationProperties;
     private int serverPortStart;
 
     @Override

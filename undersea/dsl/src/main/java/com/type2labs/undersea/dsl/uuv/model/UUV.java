@@ -10,8 +10,8 @@ public class UUV {
     private final String name;
     private final String rate;
     private final String serverPort;
-    private String metaFileName;
     private final Range speedRange;
+    private String metaFileName;
     private List<Sensor> sensors = new ArrayList<>();
     private PShareConfig pShareConfig;
 

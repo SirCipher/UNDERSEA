@@ -13,10 +13,10 @@ import java.util.*;
 
 class EnvironmentBuilder {
 
-    private static final File missionIncludeDir = new File(".." + File.separator + "mission-includes");
+    private static final SimulationProperties simulationProperties = SimulationProperties.getInstance();
+    private static File missionIncludeDir;
     private static File missionDir;
     private static File buildDir;
-    private static final SimulationProperties simulationProperties = SimulationProperties.getInstance();
 
     static void build() {
         UUV shoreside = simulationProperties.getShoreside();
@@ -94,9 +94,10 @@ class EnvironmentBuilder {
         }
     }
 
-    static void initDirectories(String missionDirPath, String buildDirPath) {
+    static void initDirectories(String missionDirPath, String buildDirPath, String missionIncludeDirPath) {
         missionDir = new File(missionDirPath);
         buildDir = new File(buildDirPath);
+        missionIncludeDir = new File(missionIncludeDirPath);
 
         if (!missionDir.exists()) {
             Utility.createFolder(missionDir);
