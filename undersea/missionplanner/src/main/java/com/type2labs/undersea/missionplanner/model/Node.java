@@ -2,6 +2,8 @@ package com.type2labs.undersea.missionplanner.model;
 
 //import com.type2labs.undersea.Agent;
 
+import com.type2labs.undersea.Agent;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,7 +14,7 @@ public class Node {
 
     private Vector vector;
     private NodeStatus nodeStatus;
-//    private List<Agent> agentsAssigned = new ArrayList<>();
+    private List<Agent> agentsAssigned = new ArrayList<>();
 
     public enum NodeStatus {
         UNVISITED, VISITED, POINT_OF_INTEREST

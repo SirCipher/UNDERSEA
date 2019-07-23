@@ -98,7 +98,6 @@
         <module>consensus</module>
         <module>controller</module>
         <module>missionplanner</module>
-        <module>models</module>
         <module>seachain</module>
     </modules>
 </project>
