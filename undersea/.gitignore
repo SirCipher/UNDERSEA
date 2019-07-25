@@ -1,1 +1,6 @@
 moos.properties
+
+out/
+target/
+build/
+*.class
