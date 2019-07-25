@@ -13,15 +13,6 @@
 
     <name>controller</name>
 
-
-    <!-- Repositories -->
-    <repositories>
-        <repository>
-            <id>localRepository</id>
-            <url>file://${basedir}/repo</url>
-        </repository>
-    </repositories>
-
     <dependencies>
         <dependency>
             <groupId>com.type2labs.undersea</groupId>

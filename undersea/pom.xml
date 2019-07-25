@@ -20,6 +20,14 @@
         <jdk.version>1.8</jdk.version>
     </properties>
 
+    <!-- Repositories -->
+    <repositories>
+        <repository>
+            <id>localRepository</id>
+            <url>file://${basedir}/repo</url>
+        </repository>
+    </repositories>
+
     <dependencies>
         <dependency>
             <groupId>junit</groupId>
