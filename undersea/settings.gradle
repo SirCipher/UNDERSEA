@@ -9,6 +9,7 @@ include 'missionplanner'
 include 'runner'
 include 'seachain'
 include 'consensus'
+include 'controller'
 
 rootProject.children.each { project ->
     project.buildFileName = "${project.name}.gradle"
