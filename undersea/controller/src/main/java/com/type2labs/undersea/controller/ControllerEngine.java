@@ -5,23 +5,31 @@ import com.type2labs.undersea.controller.controller.Knowledge;
 import com.type2labs.undersea.utilities.Utility;
 
 import java.util.Date;
+import java.util.Properties;
 import java.util.Timer;
 
 
 public class ControllerEngine {
 
+    // TODO: Pass properties to controller
+    private static final Properties properties = Utility.getPropertiesByName("config.properties");
+
+
     /**
      * Time window for invoking the uuv
      */
-    private static long TIME_WINDOW = Math.round(Double.parseDouble(Utility.getProperty("TIME_WINDOW")) * 1000);
+    private static long TIME_WINDOW =
+            Math.round(Double.parseDouble(Utility.getProperty(properties, "TIME_WINDOW")) * 1000);
     /**
      * Simulation time
      */
-    private static long SIMULATION_TIME = Math.round(Double.parseDouble(Utility.getProperty("SIMULATION_TIME")) * 1000);
+    private static long SIMULATION_TIME = Math.round(Double.parseDouble(Utility.getProperty(properties,
+            "SIMULATION_TIME")) * 1000);
     /**
      * Simulation speed
      */
-    private static long SIMULATION_SPEED = Math.round(Double.parseDouble(Utility.getProperty("SIMULATION_SPEED")));
+    private static long SIMULATION_SPEED = Math.round(Double.parseDouble(Utility.getProperty(properties,
+            "SIMULATION_SPEED")));
 
     private ControllerEngine() {
     }

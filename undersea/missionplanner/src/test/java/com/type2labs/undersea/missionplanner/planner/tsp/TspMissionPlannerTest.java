@@ -25,12 +25,16 @@ public class TspMissionPlannerTest {
     @Test
     public void testRun() {
         MissionPlanner missionPlanner = new TspMissionPlanner();
-        MissionParameters missionParameters = new MissionParameters(1, 1);
-
-        int[][] polygon = {{0, 0}, {0, 20}, {10, 50}, {20, 20}, {20, 0}};
+        MissionParameters missionParameters = new MissionParameters(1, 1,
+                new int[][]{
+                        {0, 0},
+                        {0, 20},
+                        {10, 50},
+                        {20, 20},
+                        {20, 0}});
 
         try {
-            Mission mission = missionPlanner.generate(missionParameters, polygon);
+            Mission mission = missionPlanner.generate(missionParameters);
             missionPlanner.print(mission);
         } catch (PlannerException e) {
             e.printStackTrace();

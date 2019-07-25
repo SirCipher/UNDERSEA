@@ -1,6 +1,7 @@
-package com.type2labs.undersea.agent.model;
+package com.type2labs.undersea.dsl.uuv.model;
 
 import com.type2labs.consensus.Consensus;
+import com.type2labs.undersea.agent.model.Agent;
 import com.type2labs.undersea.controller.controller.Controller;
 import com.type2labs.undersea.missionplanner.model.MissionPlanner;
 import com.type2labs.undersea.seachain.BlockchainNetwork;

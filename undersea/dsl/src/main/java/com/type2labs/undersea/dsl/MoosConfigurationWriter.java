@@ -1,11 +1,10 @@
 package com.type2labs.undersea.dsl;
 
 
-import com.type2labs.undersea.agent.model.AgentProxy;
 import com.type2labs.undersea.agent.model.Sensor;
 import com.type2labs.undersea.dsl.uuv.factory.FactoryProvider;
 import com.type2labs.undersea.dsl.uuv.factory.SensorFactory;
-import com.type2labs.undersea.agent.model.EnvironmentProperties;
+import com.type2labs.undersea.dsl.uuv.model.AgentProxy;
 import com.type2labs.undersea.utilities.Utility;
 
 import java.io.File;
@@ -18,12 +17,20 @@ import java.util.Properties;
 @SuppressWarnings("StringConcatenationInsideStringBufferAppend")
 class MoosConfigurationWriter {
 
-    private static final EnvironmentProperties ENVIRONMENT_PROPERTIES = EnvironmentProperties.getInstance();
+    private static EnvironmentProperties environmentProperties;
     private static final SensorFactory sensorFactory = FactoryProvider.getSensorFactory();
+    private static String buildDir;
+
+
+    public static void init(EnvironmentProperties environmentProperties) {
+        MoosConfigurationWriter.environmentProperties = environmentProperties;
+
+        buildDir = Utility.getProperty(environmentProperties.getRunnerProperties(), "config.output");
+    }
 
     private static void generateControllerProperties() {
         try {
-            String propertiesDirName = ParserEngine.buildDir;
+            String propertiesDirName = MoosConfigurationWriter.buildDir;
             String propertiesFilename = propertiesDirName + File.separator + "resources" + File.separator + "config" +
                     ".properties";
             File propertiesDir = new File(propertiesDirName);
@@ -44,7 +51,7 @@ class MoosConfigurationWriter {
             Properties properties = new Properties();
 
             for (EnvironmentProperties.EnvironmentValue value : EnvironmentProperties.EnvironmentValue.values()) {
-                properties.put(value.name(), ENVIRONMENT_PROPERTIES.getEnvironmentValue(value));
+                properties.put(value.name(), environmentProperties.getEnvironmentValue(value));
             }
 
             StringBuilder sensorsNames = new StringBuilder();
@@ -93,7 +100,7 @@ class MoosConfigurationWriter {
         ivpBlock.append("}");
 
         //write
-        Utility.exportToFile(ParserEngine.missionDir + "/plug_pHelmIvP_" + agent.getName() + ".moos",
+        Utility.exportToFile(MoosConfigurationWriter.buildDir + "/plug_pHelmIvP_" + agent.getName() + ".moos",
                 ivpBlock.toString(),
                 false);
     }
@@ -108,24 +115,24 @@ class MoosConfigurationWriter {
         cleanScript.append("rm -f\t*.moos++\n");
         cleanScript.append("rm -f\t.LastOpenedMOOSLogDirectory\n");
 
-        Utility.exportToFile(ParserEngine.missionDir + File.separator + "clean.sh",
+        Utility.exportToFile(MoosConfigurationWriter.buildDir + File.separator + "clean.sh",
                 cleanScript.toString(),
                 false);
 
         String timeWarp =
-                ENVIRONMENT_PROPERTIES.getEnvironmentValue(EnvironmentProperties.EnvironmentValue.TIME_WINDOW);
+                environmentProperties.getEnvironmentValue(EnvironmentProperties.EnvironmentValue.TIME_WINDOW);
         StringBuilder launchScript = new StringBuilder();
 
         launchScript.append("#---------------------\n");
         launchScript.append("# Launch the processes\n");
         launchScript.append("#---------------------\n");
 
-        AgentProxy shoreside = ENVIRONMENT_PROPERTIES.getShoreside();
+        AgentProxy shoreside = environmentProperties.getShoreside();
 
         launchScript.append("printf \"Launching " + shoreside.getName() + " MOOS Community\"\n");
         launchScript.append("pAntler " + shoreside.getMetaFileName() + " >& /dev/null &\n\n");
 
-        for (Map.Entry<String, AgentProxy> e : ENVIRONMENT_PROPERTIES.getAgents().entrySet()) {
+        for (Map.Entry<String, AgentProxy> e : environmentProperties.getAgents().entrySet()) {
             AgentProxy agent = e.getValue();
             launchScript.append("printf \"Launching " + agent.getName() + " MOOS Community\"\n");
             launchScript.append("pAntler " + agent.getMetaFileName() + " >& /dev/null &\n\n");
@@ -135,18 +142,18 @@ class MoosConfigurationWriter {
         launchScript.append("# Launch uMAC and kill everything upon exiting uMAC\n");
         launchScript.append("#--------------------------------------------------\n");
 
-        launchScript.append("uMAC " + ENVIRONMENT_PROPERTIES.getShoreside().getMetaFileName() + "\n");
+        launchScript.append("uMAC " + environmentProperties.getShoreside().getMetaFileName() + "\n");
         launchScript.append("printf \"Killing all processes...\\n\"\n");
 
         launchScript.append("kill");
 
-        for (int i = 0; i < ENVIRONMENT_PROPERTIES.getAgents().size(); i++) {
+        for (int i = 0; i < environmentProperties.getAgents().size(); i++) {
             launchScript.append(" %").append(i + 1);
         }
 
         launchScript.append("\nprintf \"Done killing processes...\\n\"\n");
 
-        Utility.exportToFile(ParserEngine.missionDir + File.separator + "launch.sh",
+        Utility.exportToFile(MoosConfigurationWriter.buildDir + File.separator + "launch.sh",
                 launchScript.toString(),
                 false);
     }
@@ -154,7 +161,7 @@ class MoosConfigurationWriter {
     private static void generateSensors() {
         for (Map.Entry<String, Sensor> entry : sensorFactory.getSensors().entrySet()) {
             Sensor sensor = entry.getValue();
-            String filename = ParserEngine.missionDir + "/plug_" + sensor.getName() + ".moos";
+            String filename = MoosConfigurationWriter.buildDir + "/plug_" + sensor.getName() + ".moos";
             Utility.exportToFile(filename, sensor.toString(), false);
         }
     }
@@ -239,10 +246,10 @@ class MoosConfigurationWriter {
         agent.setName("shoreside");
         agent.setMetaFileName(fileName);
 
-        ENVIRONMENT_PROPERTIES.addAgent(agent);
+        environmentProperties.addAgent(agent);
         generateControllerProperties();
 
-        Utility.exportToFile(ParserEngine.missionDir + "/" + fileName,
+        Utility.exportToFile(MoosConfigurationWriter.buildDir + "/" + fileName,
                 shoreside.toString(),
                 false);
     }
@@ -298,7 +305,7 @@ class MoosConfigurationWriter {
         String fileName = "meta_vehicle_" + agent.getName() + ".moos";
         agent.setMetaFileName(fileName);
 
-        Utility.exportToFile(ParserEngine.missionDir + File.separator + fileName,
+        Utility.exportToFile(MoosConfigurationWriter.buildDir + File.separator + fileName,
                 vehicleBlock.toString(),
                 false);
     }
@@ -307,13 +314,13 @@ class MoosConfigurationWriter {
         generateShoreside();
         generateSensors();
 
-        Map<String, AgentProxy> agents = ENVIRONMENT_PROPERTIES.getAgents();
+        Map<String, AgentProxy> agents = environmentProperties.getAgents();
 
         for (Map.Entry<String, AgentProxy> entry : agents.entrySet()) {
             AgentProxy agent = entry.getValue();
 
             //generate AgentProxy moos block
-            Utility.exportToFile(ParserEngine.missionDir + File.separator + "plug_AgentProxy_" + agent.getName() +
+            Utility.exportToFile(MoosConfigurationWriter.buildDir + File.separator + "plug_AgentProxy_" + agent.getName() +
                             ".moos",
                     agent.toString(), false);
 

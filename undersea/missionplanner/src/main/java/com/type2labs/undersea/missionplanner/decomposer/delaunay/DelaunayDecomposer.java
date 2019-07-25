@@ -62,7 +62,8 @@ public class DelaunayDecomposer extends MWComponentInstance<DelaunayDecomposer> 
         super(mcr);
 
         if (!MWApplication.isMCRInitialized()) {
-            MWApplication.initialize(MWMCROption.NODISPLAY);
+            // Test options to see if segfaults stop happening
+            MWApplication.initialize(MWMCROption.NODISPLAY, MWMCROption.NOJVM);
         }
 
         // add this to sInstances

@@ -31,10 +31,6 @@ public class Agent {
     private Range speedRange;
     private List<Sensor> sensors = new ArrayList<>();
 
-    public static Logger getLogger() {
-        return logger;
-    }
-
     public List<Node> getAssignedNodes() {
         return assignedNodes;
     }

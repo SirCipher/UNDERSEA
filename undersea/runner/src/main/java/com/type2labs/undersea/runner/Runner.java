@@ -1,8 +1,7 @@
 package com.type2labs.undersea.runner;
 
-import com.type2labs.undersea.agent.AgentInitialiser;
+import com.type2labs.undersea.dsl.EnvironmentProperties;
 import com.type2labs.undersea.dsl.ParserEngine;
-import com.type2labs.undersea.agent.model.EnvironmentProperties;
 import com.type2labs.undersea.missionplanner.exception.PlannerException;
 import com.type2labs.undersea.missionplanner.model.Mission;
 import com.type2labs.undersea.missionplanner.model.MissionParameters;
@@ -13,6 +12,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
+import java.util.Properties;
 
 /**
  * Entry point of UNDERSEA application
@@ -20,19 +20,26 @@ import java.io.IOException;
 public class Runner {
 
     private static final Logger logger = LogManager.getLogger(Runner.class);
-    private static AgentInitialiser agentInitialiser;
+    private static AgentInitialiser agentInitialiser = AgentInitialiser.getInstance();
     private static EnvironmentProperties environmentProperties;
+    private static Properties properties;
 
-    public static void main(String[] args, String runnerPropertiesPath) throws IOException {
-        EnvironmentProperties.setRunnerProperties(Utility.getPropertiesByName(runnerPropertiesPath));
-        parseMission(args);
+    public static void main(String[] args) throws IOException {
+        if (args.length != 1) {
+            throw new IllegalArgumentException("runner.properties file location must be supplied");
+        }
+
+        properties = Utility.getPropertiesByName(args[0]);
+        logger.info("Initialised " + properties.size() + " properties");
+
+        parseMission();
         planMission();
     }
 
-    private static void parseMission(String[] args) throws IOException {
-        environmentProperties = ParserEngine.main(args);
+    private static void parseMission() throws IOException {
+        ParserEngine parserEngine = new ParserEngine(properties);
+        environmentProperties = parserEngine.parse();
 
-        agentInitialiser = new AgentInitialiser();
         agentInitialiser.initalise(environmentProperties.getAgents());
     }
 

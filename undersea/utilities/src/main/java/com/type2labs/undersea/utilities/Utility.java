@@ -9,8 +9,6 @@ import java.util.Properties;
 
 public class Utility {
 
-    private static Properties properties = new Properties();
-
     private Utility() {
 
     }
@@ -102,17 +100,6 @@ public class Utility {
         return true;
     }
 
-    public static Properties getProperties() {
-        return properties;
-    }
-
-    public static void setProperties(File file) {
-        try {
-            properties.load(new FileInputStream(file));
-        } catch (IOException e) {
-            System.out.println("Could not find config.properties file");
-        }
-    }
 
     public static Properties getPropertiesByName(String name) {
         try {
@@ -124,10 +111,11 @@ public class Utility {
         }
     }
 
-    public static String getProperty(String key) {
+    public static String getProperty(Properties properties, String key) {
         String result = properties.getProperty(key);
-        if (result == null)
-            throw new IllegalArgumentException(key.toUpperCase() + " name not found!");
+        if (result == null) {
+            throw new IllegalArgumentException(key + " name not found");
+        }
         return result;
     }
 

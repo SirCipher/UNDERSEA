@@ -1,5 +1,6 @@
-package com.type2labs.undersea.agent.model;
+package com.type2labs.undersea.dsl;
 
+import com.type2labs.undersea.dsl.uuv.model.AgentProxy;
 import com.type2labs.undersea.utilities.UnderseaException;
 
 import java.util.HashMap;
@@ -9,26 +10,18 @@ import java.util.stream.Collectors;
 
 public class EnvironmentProperties {
 
-    private static EnvironmentProperties instance = null;
     private static Properties runnerProperties;
-    private final Map<EnvironmentValue, String> environmentValues = new HashMap<>();
-    private final Map<String, AgentProxy> agents = new HashMap<>();
-
-    private EnvironmentProperties() {
-
-    }
 
     public static void setRunnerProperties(Properties runnerProperties) {
         EnvironmentProperties.runnerProperties = runnerProperties;
     }
 
-    public static EnvironmentProperties getInstance() {
-        if (instance == null) {
-            instance = new EnvironmentProperties();
-        }
-
-        return instance;
+    public Properties getRunnerProperties() {
+        return runnerProperties;
     }
+
+    private final Map<EnvironmentValue, String> environmentValues = new HashMap<>();
+    private final Map<String, AgentProxy> agents = new HashMap<>();
 
     public void addAgent(AgentProxy agent) {
         if (this.agents.containsKey(agent.getName())) {
@@ -61,6 +54,7 @@ public class EnvironmentProperties {
             throw new UnderseaException(name + " is already defined!");
         }
 
+        runnerProperties.put(name.toString(), value);
         environmentValues.put(name, value);
     }
 

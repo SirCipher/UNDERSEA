@@ -49,9 +49,12 @@ public class TspMissionPlanner implements MissionPlanner {
     @Override
     public Mission generate(MissionParameters missionParameters) throws PlannerException {
         logger.info("Decomposing polygon");
+
         double[][] centroids = decompose(missionParameters.getPolygon());
+
         logger.info("Decomposed polygon");
         logger.info("Calculating euclidian distance matrix");
+
         double[][] distanceMatrix = PlannerUtils.computeEuclideanDistanceMatrix(centroids);
 
         PlanDataModel model = new PlanDataModel(missionParameters, distanceMatrix);

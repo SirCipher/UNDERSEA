@@ -7,7 +7,6 @@ import com.type2labs.undersea.dsl.uuv.gen.UUVLexer;
 import com.type2labs.undersea.dsl.uuv.gen.UUVParser;
 import com.type2labs.undersea.dsl.uuv.listener.SensorListener;
 import com.type2labs.undersea.dsl.uuv.listener.UUVListener;
-import com.type2labs.undersea.agent.model.EnvironmentProperties;
 import com.type2labs.undersea.utilities.UnderseaException;
 import com.type2labs.undersea.utilities.Utility;
 import org.antlr.v4.runtime.*;
@@ -17,27 +16,22 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Properties;
 
 public class ParserEngine {
 
     private static final Logger logger = LogManager.getLogger(ParserEngine.class);
 
-    private static final EnvironmentProperties environmentProperties = EnvironmentProperties.getInstance();
-    public static String moosProperties;
-    static String buildDir;
-    static String missionIncludesDir;
-    static String missionDir;
-    private static String propertiesFile;
-    private static String configFile;
-    private static File missionDirectory;
-    private static String controllerDir;
-    private static String sensorsFile;
-    private static boolean errorsFound = false;
+    private final EnvironmentProperties environmentProperties = new EnvironmentProperties();
 
-    private static SensorsParser createSensorParser() throws IOException {
+    public static Properties properties;
+    private boolean errorsFound = false;
+
+    private SensorsParser createSensorParser() throws IOException {
         // create a CharStream that reads from standard input
+
+        String sensorsFile = Utility.getProperty(ParserEngine.properties, "config.sensors");
         CharStream codePointCharStream = CharStreams.fromFileName(sensorsFile);
 
         // create a lexer that feeds off of input CharStream
@@ -66,9 +60,10 @@ public class ParserEngine {
         return parser;
     }
 
-    private static UUVParser createUUVParser() throws IOException {
+    private UUVParser createUUVParser() throws IOException {
         // create a CharStream that reads from standard input
-        CharStream codePointCharStream = CharStreams.fromFileName(configFile);
+        String sensorsFile = Utility.getProperty(ParserEngine.properties, "config.mission");
+        CharStream codePointCharStream = CharStreams.fromFileName(sensorsFile);
 
         // create a lexer that feeds off of input CharStream
         UUVLexer lexer = new UUVLexer(codePointCharStream);
@@ -97,19 +92,21 @@ public class ParserEngine {
         return parser;
     }
 
-    public static EnvironmentProperties main(String[] args) throws IOException {
-        parseCommandLineArguments(args);
-
+    public EnvironmentProperties parse() throws IOException {
         runSensorListener();
         runUUVListener();
 
         String missionName =
                 environmentProperties.getEnvironmentValue(EnvironmentProperties.EnvironmentValue.MISSION_NAME);
 
-        missionDir += File.separator + missionName;
+        String buildDir = Utility.getProperty(ParserEngine.properties, "config.output");
         buildDir += File.separator + missionName;
+        ParserEngine.properties.setProperty("config.output", buildDir);
 
-        EnvironmentBuilder.initDirectories(missionDir, buildDir, missionIncludesDir);
+        String missionIncludesDir = Utility.getProperty(ParserEngine.properties, "config.includes");
+
+        EnvironmentBuilder.setEnvironmentProperties(environmentProperties);
+        EnvironmentBuilder.initDirectories(buildDir, missionIncludesDir);
 
         logger.info("Parsed: " + environmentProperties.getAgents().size() + " agents");
         logger.info("Parsed: " + FactoryProvider.getSensorFactory().getSensors().size() + " sensors");
@@ -121,64 +118,23 @@ public class ParserEngine {
             throw new UnderseaException("Errors found while parsing configuration files");
         } else {
             logger.info("Successfully parsed configuration files");
+
+            MoosConfigurationWriter.init(environmentProperties);
             MoosConfigurationWriter.run();
+
             EnvironmentBuilder.build();
+
             return environmentProperties;
         }
     }
 
-    private static void parseCommandLineArguments(String[] args) throws FileNotFoundException {
-        if (args.length != 8) {
-            throw new UnderseaException(
-                    "Incorrect number of arguments! Please fix this error!\n" +
-                            "\tArg 1) Mission configuration file (e.g., mission.config)\n" +
-                            "\tArg 2) Sensor configuration file (e.g., sensors.config\n" +
-                            "\tArg 3) Controller directory (e.g., UUV_Controller)\n" +
-                            "\tArg 4) Mission directory (e.g., moos-ivp-extend/missions/uuvExemplar)\n" +
-                            "\tArg 5) Config.properties file\n" +
-                            "\tArg 6) Output dir (e.g., build/resources)\n" +
-                            "\tArg 7) Mission include dir (e.g. mission-includes/)\n" +
-                            "\tArg 8) Moos properties file\n"
+    public ParserEngine(Properties runnerProperties) {
+        ParserEngine.properties = runnerProperties;
+        EnvironmentProperties.setRunnerProperties(runnerProperties);
 
-            );
-        }
-
-        if (Utility.fileExists(args[4], false, false)) {
-            propertiesFile = args[4];
-            Utility.setProperties(new File(ParserEngine.propertiesFile));
-        }
-
-        if (Utility.fileExists(args[0], false, false)) {
-            configFile = args[0];
-            missionDirectory = new File(configFile).getParentFile();
-        }
-
-        if (Utility.fileExists(args[1], false, false)) {
-            sensorsFile = args[1];
-        }
-
-        if (Utility.fileExists(args[2], true, true)) {
-            controllerDir = args[2];
-        }
-
-        if (Utility.fileExists(args[3], true, true)) {
-            missionDir = args[3];
-        }
-
-        if (Utility.fileExists(args[5], true, true)) {
-            buildDir = args[5];
-        }
-
-        if (Utility.fileExists(args[6], true, false)) {
-            missionIncludesDir = args[6];
-        }
-
-        if (Utility.fileExists(args[7], false, false)) {
-            moosProperties = args[7];
-        }
     }
 
-    private static void runSensorListener() throws IOException {
+    private void runSensorListener() throws IOException {
         //create parser
         SensorsParser parser = createSensorParser();
 
@@ -195,7 +151,7 @@ public class ParserEngine {
         walker.walk(listener, tree);
     }
 
-    private static void runUUVListener() throws IOException {
+    private void runUUVListener() throws IOException {
         //create parser
         UUVParser parser = createUUVParser();
 

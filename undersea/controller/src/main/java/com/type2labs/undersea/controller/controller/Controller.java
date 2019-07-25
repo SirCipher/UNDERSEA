@@ -4,10 +4,14 @@ import com.type2labs.undersea.controller.controller.comms.Client;
 import com.type2labs.undersea.utilities.Utility;
 
 import java.io.IOException;
+import java.util.Properties;
 import java.util.TimerTask;
 
 
 public class Controller extends TimerTask {
+
+    // TODO: Pass properties to controller
+    private static final Properties properties = Utility.getPropertiesByName("config.properties");
 
     /**
      * Simulation speed
@@ -56,7 +60,7 @@ public class Controller extends TimerTask {
         try {
             //init comms client
             host = "localhost";
-            port = Integer.parseInt(Utility.getProperty("PORT"));
+            port = Integer.parseInt(Utility.getProperty(properties,"PORT"));
             client = new Client(host, port);
 
             //init MAPE
@@ -69,7 +73,7 @@ public class Controller extends TimerTask {
             this.executor = executor;
 
             //init simulation speed
-            SIMULATION_SPEED = Math.round(Double.parseDouble(Utility.getProperty("SIMULATION_SPEED")));
+            SIMULATION_SPEED = Math.round(Double.parseDouble(Utility.getProperty(properties,"SIMULATION_SPEED")));
         } catch (Exception e) {
             e.printStackTrace();
         }
