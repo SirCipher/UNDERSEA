@@ -27,7 +27,7 @@ ProcessConfig = ANTLER
 	Run = pShare         @ NewConsole = false
 	Run = uTimerScript   @ NewConsole = false
 	Run = pHostInfo		 @ NewConsole = false
-	Run = sAgentProxy           @ NewConsole = false
+	Run = sUUV           @ NewConsole = false
 	Run = uFldNodeBroker @ NewConsole = false
 	Run = sSensor		 @ NewConsole = false ~SENSOR3
 	Run = sSensor		 @ NewConsole = false ~SENSOR4
@@ -197,7 +197,7 @@ ProcessConfig = uTimerScript
 	event = quit, time=10:20
 }
 
-com.type2labs.undersea.agent.AgentProxy@488eff7a
+com.type2labs.undersea.agent.model.AgentProxy@433d61fb
 //---------------------------------
 // SENSOR3 Configuration Block
 //---------------------------------

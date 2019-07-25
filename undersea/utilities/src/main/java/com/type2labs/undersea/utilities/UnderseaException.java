@@ -1,17 +1,14 @@
-package com.type2labs.undersea.dsl;
+package com.type2labs.undersea.utilities;
 
-public class DSLException extends RuntimeException {
+public class UnderseaException extends RuntimeException {
 
-    /**
-     *
-     */
     private static final long serialVersionUID = 3322424663356101425L;
 
-    public DSLException(String message) {
+    public UnderseaException(String message) {
         super(message);
     }
 
-    public DSLException(String message, Exception e) {
+    public UnderseaException(String message, Exception e) {
         super(message, e);
     }
 

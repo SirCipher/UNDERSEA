@@ -1,21 +1,25 @@
-package com.type2labs.undersea.dsl.uuv.properties;
+package com.type2labs.undersea.agent.model;
 
-
-import com.type2labs.undersea.agent.AgentProxy;
-import com.type2labs.undersea.dsl.DSLException;
+import com.type2labs.undersea.utilities.UnderseaException;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
 import java.util.stream.Collectors;
 
 public class EnvironmentProperties {
 
     private static EnvironmentProperties instance = null;
+    private static Properties runnerProperties;
     private final Map<EnvironmentValue, String> environmentValues = new HashMap<>();
     private final Map<String, AgentProxy> agents = new HashMap<>();
 
     private EnvironmentProperties() {
 
+    }
+
+    public static void setRunnerProperties(Properties runnerProperties) {
+        EnvironmentProperties.runnerProperties = runnerProperties;
     }
 
     public static EnvironmentProperties getInstance() {
@@ -28,7 +32,7 @@ public class EnvironmentProperties {
 
     public void addAgent(AgentProxy agent) {
         if (this.agents.containsKey(agent.getName())) {
-            throw new DSLException("Duplicate agent created: " + agent.getName());
+            throw new UnderseaException("Duplicate agent created: " + agent.getName());
         }
 
         this.agents.put(agent.getName(), agent);
@@ -54,7 +58,7 @@ public class EnvironmentProperties {
 
     public void setEnvironmentValue(EnvironmentValue name, String value) {
         if (environmentValues.containsKey(name)) {
-            throw new DSLException(name + " is already defined!");
+            throw new UnderseaException(name + " is already defined!");
         }
 
         environmentValues.put(name, value);
@@ -74,7 +78,7 @@ public class EnvironmentProperties {
         }
 
         if (errors.length() > 0) {
-            throw new DSLException("Incorrect configuration file!\n" + errors.toString());
+            throw new UnderseaException("Incorrect configuration file!\n" + errors.toString());
         }
     }
 

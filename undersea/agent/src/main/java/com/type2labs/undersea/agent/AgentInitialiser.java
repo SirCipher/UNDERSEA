@@ -1,5 +1,7 @@
 package com.type2labs.undersea.agent;
 
+import com.type2labs.undersea.agent.model.Agent;
+import com.type2labs.undersea.agent.model.AgentProxy;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -31,14 +33,15 @@ public class AgentInitialiser {
     public void initalise(Map<String, AgentProxy> agentProxyMap) {
         agentProxyMap.forEach((key, value) -> {
             if (!value.isParsed()) {
-                throw new RuntimeException("Agent: " + value.getName() + " is uninitialised");
+                throw new RuntimeException("Agent: " + value.getName() + " is uninitialised. Cannot proceed");
             }
             agents.add(value);
         });
+
         logger.info("Registered " + agentProxyMap.size() + " agents");
     }
 
-    public void setRunnerPropeties(Properties runnerProperties) {
+    public void setRunnerProperties(Properties runnerProperties) {
         this.properties = runnerProperties;
     }
 }

@@ -11,11 +11,10 @@ public interface MissionPlanner {
      * Generates a mission meeting the given criteria
      *
      * @param missionParameters that the mission must conform to
-     * @param polygon           the shape to cover
      * @return a generated mission
      * @throws PlannerException if the arguments do not match the expected MATLAB parameters
      */
-    Mission generate(MissionParameters missionParameters, int[][] polygon) throws PlannerException;
+    Mission generate(MissionParameters missionParameter) throws PlannerException;
 
     /**
      * Print a given mission

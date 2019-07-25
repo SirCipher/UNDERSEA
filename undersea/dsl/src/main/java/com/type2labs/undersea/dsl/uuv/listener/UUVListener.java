@@ -1,13 +1,13 @@
 package com.type2labs.undersea.dsl.uuv.listener;
 
-import com.type2labs.undersea.agent.AgentProxy;
-import com.type2labs.undersea.agent.Range;
-import com.type2labs.undersea.agent.Sensor;
+import com.type2labs.undersea.agent.model.AgentProxy;
+import com.type2labs.undersea.agent.model.Range;
+import com.type2labs.undersea.agent.model.Sensor;
 import com.type2labs.undersea.dsl.uuv.factory.AbstractFactory;
 import com.type2labs.undersea.dsl.uuv.factory.FactoryProvider;
 import com.type2labs.undersea.dsl.uuv.gen.UUVBaseListener;
 import com.type2labs.undersea.dsl.uuv.gen.UUVParser;
-import com.type2labs.undersea.dsl.uuv.properties.EnvironmentProperties;
+import com.type2labs.undersea.agent.model.EnvironmentProperties;
 
 import java.util.ArrayList;
 import java.util.List;

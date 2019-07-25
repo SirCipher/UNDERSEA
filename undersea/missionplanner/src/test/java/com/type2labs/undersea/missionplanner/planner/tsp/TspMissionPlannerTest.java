@@ -8,7 +8,6 @@ import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-
 /**
  * Created by Thomas Klapwijk on 2019-07-22.
  */

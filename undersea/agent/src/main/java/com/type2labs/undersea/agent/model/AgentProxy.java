@@ -1,4 +1,4 @@
-package com.type2labs.undersea.agent;
+package com.type2labs.undersea.agent.model;
 
 import com.type2labs.consensus.Consensus;
 import com.type2labs.undersea.controller.controller.Controller;

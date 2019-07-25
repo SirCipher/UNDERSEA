@@ -15,6 +15,8 @@ import com.mathworks.toolbox.javabuilder.*;
 import com.mathworks.toolbox.javabuilder.internal.MWComponentInstance;
 import com.mathworks.toolbox.javabuilder.internal.MWFunctionSignature;
 import com.mathworks.toolbox.javabuilder.internal.MWMCR;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -34,6 +36,8 @@ import java.util.Set;
  * @version 0.0
  */
 public class DelaunayDecomposer extends MWComponentInstance<DelaunayDecomposer> {
+
+    private static final Logger logger = LogManager.getLogger(DelaunayDecomposer.class);
 
     /**
      * Tracks all instances of this class to ensure their dispose method is
@@ -113,8 +117,11 @@ public class DelaunayDecomposer extends MWComponentInstance<DelaunayDecomposer> 
     public static DelaunayDecomposer getInstance() {
         if (instance == null) {
             try {
+                logger.info("Initialising delaunay decomposer");
                 instance = new DelaunayDecomposer();
+                logger.info("Initialised delaunay decomposer");
             } catch (MWException e) {
+                logger.error("Unable to initialise decomposer");
                 throw new RuntimeException("Unable to initialise decomposer", e);
             }
         }

@@ -197,7 +197,7 @@ ProcessConfig = uTimerScript
 	event = quit, time=10:20
 }
 
-com.type2labs.undersea.agent.AgentProxy@6f1d97e2
+com.type2labs.undersea.agent.model.AgentProxy@6f1d97e2
 //---------------------------------
 // SENSOR1 Configuration Block
 //---------------------------------

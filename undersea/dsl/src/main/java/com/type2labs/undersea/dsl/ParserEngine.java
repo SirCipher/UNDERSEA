@@ -7,7 +7,8 @@ import com.type2labs.undersea.dsl.uuv.gen.UUVLexer;
 import com.type2labs.undersea.dsl.uuv.gen.UUVParser;
 import com.type2labs.undersea.dsl.uuv.listener.SensorListener;
 import com.type2labs.undersea.dsl.uuv.listener.UUVListener;
-import com.type2labs.undersea.dsl.uuv.properties.EnvironmentProperties;
+import com.type2labs.undersea.agent.model.EnvironmentProperties;
+import com.type2labs.undersea.utilities.UnderseaException;
 import com.type2labs.undersea.utilities.Utility;
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.ParseTree;
@@ -117,7 +118,7 @@ public class ParserEngine {
         environmentProperties.validateEnvironmentValues();
 
         if (errorsFound) {
-            throw new DSLException("Errors found while parsing configuration files");
+            throw new UnderseaException("Errors found while parsing configuration files");
         } else {
             logger.info("Successfully parsed configuration files");
             MoosConfigurationWriter.run();
@@ -128,7 +129,7 @@ public class ParserEngine {
 
     private static void parseCommandLineArguments(String[] args) throws FileNotFoundException {
         if (args.length != 8) {
-            throw new DSLException(
+            throw new UnderseaException(
                     "Incorrect number of arguments! Please fix this error!\n" +
                             "\tArg 1) Mission configuration file (e.g., mission.config)\n" +
                             "\tArg 2) Sensor configuration file (e.g., sensors.config\n" +

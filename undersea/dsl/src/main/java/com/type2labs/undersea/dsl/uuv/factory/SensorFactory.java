@@ -1,8 +1,8 @@
 package com.type2labs.undersea.dsl.uuv.factory;
 
-import com.type2labs.undersea.agent.Range;
-import com.type2labs.undersea.agent.Sensor;
-import com.type2labs.undersea.dsl.DSLException;
+import com.type2labs.undersea.agent.model.Range;
+import com.type2labs.undersea.agent.model.Sensor;
+import com.type2labs.undersea.utilities.UnderseaException;
 import com.type2labs.undersea.dsl.uuv.gen.SensorsParser;
 import org.antlr.v4.runtime.ParserRuleContext;
 
@@ -20,7 +20,7 @@ public class SensorFactory implements AbstractFactory<Sensor> {
         String name = sensorContext.name.getText();
 
         if (sensors.containsKey(name)) {
-            throw new DSLException("Duplicate sensor defined: " + name);
+            throw new UnderseaException("Duplicate sensor defined: " + name);
         }
 
         double reliability = Double.parseDouble(Objects.requireNonNull(sensorContext.reliability.getText(),

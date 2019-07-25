@@ -1,16 +1,18 @@
 package com.type2labs.undersea.runner;
 
 import com.type2labs.undersea.agent.AgentInitialiser;
-import com.type2labs.undersea.agent.AgentProxy;
 import com.type2labs.undersea.dsl.ParserEngine;
-import com.type2labs.undersea.dsl.uuv.properties.EnvironmentProperties;
+import com.type2labs.undersea.agent.model.EnvironmentProperties;
+import com.type2labs.undersea.missionplanner.exception.PlannerException;
+import com.type2labs.undersea.missionplanner.model.Mission;
+import com.type2labs.undersea.missionplanner.model.MissionParameters;
+import com.type2labs.undersea.missionplanner.model.MissionPlanner;
+import com.type2labs.undersea.missionplanner.planner.tsp.TspMissionPlanner;
 import com.type2labs.undersea.utilities.Utility;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
-import java.util.Map;
-import java.util.Properties;
 
 /**
  * Entry point of UNDERSEA application
@@ -19,32 +21,40 @@ public class Runner {
 
     private static final Logger logger = LogManager.getLogger(Runner.class);
     private static AgentInitialiser agentInitialiser;
-    private static Properties runnerProperties;
     private static EnvironmentProperties environmentProperties;
 
     public static void main(String[] args, String runnerPropertiesPath) throws IOException {
-        runnerProperties = Utility.getPropertiesByName(runnerPropertiesPath);
-
+        EnvironmentProperties.setRunnerProperties(Utility.getPropertiesByName(runnerPropertiesPath));
         parseMission(args);
+        planMission();
     }
 
     private static void parseMission(String[] args) throws IOException {
-        try {
-            environmentProperties = ParserEngine.main(args);
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw e;
-        }
+        environmentProperties = ParserEngine.main(args);
 
         agentInitialiser = new AgentInitialiser();
-        agentInitialiser.setRunnerPropeties(runnerProperties);
         agentInitialiser.initalise(environmentProperties.getAgents());
+    }
 
-        for (Map.Entry<String, AgentProxy> entry : environmentProperties.getAgents().entrySet()) {
-            AgentProxy agent = entry.getValue();
-            agentInitialiser.createAgent(agent.getName());
+    private static void planMission() {
+        MissionPlanner missionPlanner = new TspMissionPlanner();
+        int agentCount = environmentProperties.getAgents().size();
+
+        MissionParameters missionParameters = new MissionParameters(agentCount, 1,
+                new int[][]{
+                        {0, 0},
+                        {0, 20},
+                        {10, 50},
+                        {20, 20},
+                        {20, 0}});
+
+        try {
+            Mission mission = missionPlanner.generate(missionParameters);
+            missionPlanner.print(mission);
+        } catch (PlannerException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Failed to plan mission", e);
         }
-
     }
 
 }

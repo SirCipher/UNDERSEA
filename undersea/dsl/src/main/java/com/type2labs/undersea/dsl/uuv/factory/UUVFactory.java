@@ -1,6 +1,6 @@
 package com.type2labs.undersea.dsl.uuv.factory;
 
-import com.type2labs.undersea.agent.AgentProxy;
+import com.type2labs.undersea.agent.model.AgentProxy;
 import org.antlr.v4.runtime.ParserRuleContext;
 
 public class UUVFactory implements AbstractFactory<AgentProxy> {

@@ -1,7 +1,8 @@
 package com.type2labs.undersea.dsl;
 
-import com.type2labs.undersea.agent.AgentProxy;
-import com.type2labs.undersea.dsl.uuv.properties.EnvironmentProperties;
+import com.type2labs.undersea.agent.model.AgentProxy;
+import com.type2labs.undersea.agent.model.EnvironmentProperties;
+import com.type2labs.undersea.utilities.UnderseaException;
 import com.type2labs.undersea.utilities.Utility;
 import org.apache.commons.io.IOUtils;
 import org.apache.logging.log4j.LogManager;
@@ -171,7 +172,7 @@ class EnvironmentBuilder {
             logger.info(output);
             process.destroy();
         } catch (IOException e) {
-            throw new DSLException("Unable to run nsplug on: " + sourceName + ". For mission directory: " + missionDir.getAbsolutePath() + ". With arguments: " + nsplugArgs, e);
+            throw new UnderseaException("Unable to run nsplug on: " + sourceName + ". For mission directory: " + missionDir.getAbsolutePath() + ". With arguments: " + nsplugArgs, e);
         }
     }
 

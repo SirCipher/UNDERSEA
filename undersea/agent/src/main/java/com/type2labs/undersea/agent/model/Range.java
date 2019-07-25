@@ -1,4 +1,4 @@
-package com.type2labs.undersea.agent;
+package com.type2labs.undersea.agent.model;
 
 public class Range {
     /**

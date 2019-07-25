@@ -1,11 +1,11 @@
 package com.type2labs.undersea.dsl;
 
 
-import com.type2labs.undersea.agent.AgentProxy;
-import com.type2labs.undersea.agent.Sensor;
+import com.type2labs.undersea.agent.model.AgentProxy;
+import com.type2labs.undersea.agent.model.Sensor;
 import com.type2labs.undersea.dsl.uuv.factory.FactoryProvider;
 import com.type2labs.undersea.dsl.uuv.factory.SensorFactory;
-import com.type2labs.undersea.dsl.uuv.properties.EnvironmentProperties;
+import com.type2labs.undersea.agent.model.EnvironmentProperties;
 import com.type2labs.undersea.utilities.Utility;
 
 import java.io.File;
@@ -269,7 +269,7 @@ class MoosConfigurationWriter {
         vehicleBlock.append("\tRun = pShare         @ NewConsole = false\n");
         vehicleBlock.append("\tRun = uTimerScript   @ NewConsole = false\n");
         vehicleBlock.append("\tRun = pHostInfo\t\t @ NewConsole = false\n");
-        vehicleBlock.append("\tRun = sAgentProxy           @ NewConsole = false\n");
+        vehicleBlock.append("\tRun = sUUV           @ NewConsole = false\n");
 
         vehicleBlock.append("\tRun = uFldNodeBroker @ NewConsole = false\n");
 
