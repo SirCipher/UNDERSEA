@@ -102,24 +102,6 @@ public class Utility {
         return true;
     }
 
-    public static boolean isEmpty(String s) {
-        return s == null || s.length() == 0;
-    }
-
-    public static Properties getPropertiesByName(String name) {
-        try {
-            Properties moosProperties = new Properties();
-            moosProperties.load(new FileInputStream(name));
-            return moosProperties;
-        } catch (IOException e) {
-            throw new RuntimeException("Unable to load or find " + name, e);
-        }
-    }
-
-    public static Properties getMoosProperties() {
-        return Utility.getPropertiesByName("resources/moos.properties");
-    }
-
     public static Properties getProperties() {
         return properties;
     }
@@ -132,11 +114,25 @@ public class Utility {
         }
     }
 
+    public static Properties getPropertiesByName(String name) {
+        try {
+            Properties moosProperties = new Properties();
+            moosProperties.load(new FileInputStream(name));
+            return moosProperties;
+        } catch (IOException e) {
+            throw new RuntimeException("Unable to load or find " + name, e);
+        }
+    }
+
     public static String getProperty(String key) {
         String result = properties.getProperty(key);
         if (result == null)
             throw new IllegalArgumentException(key.toUpperCase() + " name not found!");
         return result;
+    }
+
+    public static boolean isEmpty(String s) {
+        return s == null || s.length() == 0;
     }
 
     public static String readFile(String fileName) throws FileNotFoundException {

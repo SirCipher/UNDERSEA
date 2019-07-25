@@ -28,10 +28,6 @@ public class AgentInitialiser {
 //        agents.add(new Agent(name));
     }
 
-    public void setRunnerPropeties(Properties runnerProperties) {
-        this.properties = runnerProperties;
-    }
-
     public void initalise(Map<String, AgentProxy> agentProxyMap) {
         agentProxyMap.forEach((key, value) -> {
             if (!value.isParsed()) {
@@ -40,5 +36,9 @@ public class AgentInitialiser {
             agents.add(value);
         });
         logger.info("Registered " + agentProxyMap.size() + " agents");
+    }
+
+    public void setRunnerPropeties(Properties runnerProperties) {
+        this.properties = runnerProperties;
     }
 }

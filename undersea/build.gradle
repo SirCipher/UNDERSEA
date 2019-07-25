@@ -19,6 +19,9 @@ repositories {
 allprojects {
     apply plugin: 'java-library'
 
+    sourceCompatibility = 1.8
+    targetCompatibility = 1.8
+
     repositories {
         jcenter()
     }
@@ -47,22 +50,13 @@ allprojects {
 
         // https://mvnrepository.com/artifact/commons-io/commons-io
         compile group: 'commons-io', name: 'commons-io', version: '2.6'
-        
+
         // This dependency is used internally, and not exposed to consumers on their own compile classpath.
         implementation 'com.google.guava:guava:27.1-jre'
     }
 
-    test {
-        // Use junit platform for unit tests
-        useJUnitPlatform()
-    }
 }
 
 dependencies {
 
-}
-
-test {
-    // Use junit platform for unit tests
-    useJUnitPlatform()
 }

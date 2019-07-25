@@ -19,13 +19,16 @@ public class Runner {
 
     private static final Logger logger = LogManager.getLogger(Runner.class);
     private static AgentInitialiser agentInitialiser;
-    private static Properties runnerProperties = Utility.getPropertiesByName("resources/runner.properties");
+    private static Properties runnerProperties;
     private static EnvironmentProperties environmentProperties;
-    private static final String[] args = new String[]{"resources/mission.config", "resources/sensors.config", "." +
-            "./UNDERSEA_Controller",
-            "missions", "resources/config.properties", "missions", "mission-includes"};
 
-    private static void parseMission() throws IOException {
+    public static void main(String[] args, String runnerPropertiesPath) throws IOException {
+        runnerProperties = Utility.getPropertiesByName(runnerPropertiesPath);
+
+        parseMission(args);
+    }
+
+    private static void parseMission(String[] args) throws IOException {
         try {
             environmentProperties = ParserEngine.main(args);
         } catch (Exception e) {
@@ -42,10 +45,6 @@ public class Runner {
             agentInitialiser.createAgent(agent.getName());
         }
 
-    }
-
-    public static void main(String[] args) throws IOException {
-        parseMission();
     }
 
 }

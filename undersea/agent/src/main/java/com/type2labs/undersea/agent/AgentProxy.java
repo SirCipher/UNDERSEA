@@ -11,8 +11,10 @@ public class AgentProxy extends Agent {
 
     private String metaFileName;
 
-    public boolean isParsed() {
-        return parsed;
+    public void checkParsed(String access) {
+        if (!parsed) {
+            throw new RuntimeException("Cannot set " + access + " before agent has been parsed");
+        }
     }
 
     public String getMetaFileName() {
@@ -23,26 +25,18 @@ public class AgentProxy extends Agent {
         this.metaFileName = metaFileName;
     }
 
-    public void setParsed(boolean parsed) {
-        this.parsed = parsed;
+    public boolean isParsed() {
+        return parsed;
     }
 
-    public void checkParsed(String access) {
-        if (!parsed) {
-            throw new RuntimeException("Cannot set " + access + " before agent has been parsed");
-        }
+    public void setParsed(boolean parsed) {
+        this.parsed = parsed;
     }
 
     @Override
     public void setBlockchainNetwork(BlockchainNetwork blockchainNetwork) {
         checkParsed("blockchain network");
         super.setBlockchainNetwork(blockchainNetwork);
-    }
-
-    @Override
-    public void setMissionPlanner(MissionPlanner missionPlanner) {
-        checkParsed("mission planner");
-        super.setMissionPlanner(missionPlanner);
     }
 
     @Override
@@ -55,6 +49,12 @@ public class AgentProxy extends Agent {
     public void setController(Controller controller) {
         checkParsed("controller");
         super.setController(controller);
+    }
+
+    @Override
+    public void setMissionPlanner(MissionPlanner missionPlanner) {
+        checkParsed("mission planner");
+        super.setMissionPlanner(missionPlanner);
     }
 
 

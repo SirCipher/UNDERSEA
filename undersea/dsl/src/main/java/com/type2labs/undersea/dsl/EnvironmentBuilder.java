@@ -138,7 +138,7 @@ class EnvironmentBuilder {
 
     private static void nsplug(String sourceName, String destName, List<String> nsplugArgs) {
         try {
-            Properties properties = Utility.getMoosProperties();
+            Properties properties = Utility.getPropertiesByName(ParserEngine.moosProperties);
             String moosivpLocation = properties.getProperty("moosivp");
 
             if (moosivpLocation == null) {

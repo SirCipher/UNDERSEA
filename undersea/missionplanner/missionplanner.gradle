@@ -8,7 +8,7 @@
 String matlabroot = System.getenv("matlabroot")
 
 if (matlabroot == null) {
-    throw new GradleException("Environment variable matlabroot must be set")
+    throw new Exception("Environment variable matlabroot must be set")
 } else {
     print "Found matlabroot: " + matlabroot
 }

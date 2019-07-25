@@ -1,34 +1,26 @@
 package com.type2labs.undersea.runner;
 
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
+import org.junit.Test;
 
-/**
- * Unit test for simple Runner.
- */
-public class RunnerTest
-        extends TestCase {
-    /**
-     * Create the test case
-     *
-     * @param testName name of the test case
-     */
-    public RunnerTest(String testName) {
-        super(testName);
+import java.io.IOException;
+
+public class RunnerTest {
+
+    @Test
+    public void testRunner() throws IOException {
+        String[] args = new String[]{
+                "../resources/mission.config",
+                "../resources/sensors.config",
+                "../UNDERSEA_Controller",
+                "../missions",
+                "../resources/config.properties",
+                "../missions",
+                "../mission-includes",
+                "../resources/moos.properties"
+        };
+
+        Runner.main(args, "../resources/runner.properties");
     }
 
-    /**
-     * @return the suite of tests being tested
-     */
-    public static Test suite() {
-        return new TestSuite(RunnerTest.class);
-    }
 
-    /**
-     * Rigourous Test :-)
-     */
-    public void testApp() {
-        assertTrue(true);
-    }
 }

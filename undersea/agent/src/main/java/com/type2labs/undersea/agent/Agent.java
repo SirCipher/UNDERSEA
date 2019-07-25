@@ -31,88 +31,88 @@ public class Agent {
     private Range speedRange;
     private List<Sensor> sensors = new ArrayList<>();
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setAssignedNodes(List<Node> assignedNodes) {
-        this.assignedNodes = assignedNodes;
-    }
-
-    public void setMissionPlanner(MissionPlanner missionPlanner) {
-        this.missionPlanner = missionPlanner;
-    }
-
-    public void setBlockchainNetwork(BlockchainNetwork blockchainNetwork) {
-        this.blockchainNetwork = blockchainNetwork;
-    }
-
     public static Logger getLogger() {
         return logger;
-    }
-
-    public String getName() {
-        return name;
     }
 
     public List<Node> getAssignedNodes() {
         return assignedNodes;
     }
 
-    public MissionPlanner getMissionPlanner() {
-        return missionPlanner;
+    public void setAssignedNodes(List<Node> assignedNodes) {
+        this.assignedNodes = assignedNodes;
     }
 
     public BlockchainNetwork getBlockchainNetwork() {
         return blockchainNetwork;
     }
 
+    public void setBlockchainNetwork(BlockchainNetwork blockchainNetwork) {
+        this.blockchainNetwork = blockchainNetwork;
+    }
+
     public Consensus getConsensus() {
         return consensus;
-    }
-
-    public Controller getController() {
-        return controller;
-    }
-
-    public String getRate() {
-        return rate;
-    }
-
-    public String getServerPort() {
-        return serverPort;
-    }
-
-    public Range getSpeedRange() {
-        return speedRange;
-    }
-
-    public List<Sensor> getSensors() {
-        return sensors;
     }
 
     public void setConsensus(Consensus consensus) {
         this.consensus = consensus;
     }
 
+    public Controller getController() {
+        return controller;
+    }
+
     public void setController(Controller controller) {
         this.controller = controller;
+    }
+
+    public MissionPlanner getMissionPlanner() {
+        return missionPlanner;
+    }
+
+    public void setMissionPlanner(MissionPlanner missionPlanner) {
+        this.missionPlanner = missionPlanner;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getRate() {
+        return rate;
     }
 
     public void setRate(String rate) {
         this.rate = rate;
     }
 
-    public void setServerPort(String serverPort) {
-        this.serverPort = serverPort;
-    }
-
-    public void setSpeedRange(Range speedRange) {
-        this.speedRange = speedRange;
+    public List<Sensor> getSensors() {
+        return sensors;
     }
 
     public void setSensors(List<Sensor> sensors) {
         this.sensors = sensors;
+    }
+
+    public String getServerPort() {
+        return serverPort;
+    }
+
+    public void setServerPort(String serverPort) {
+        this.serverPort = serverPort;
+    }
+
+    public Range getSpeedRange() {
+        return speedRange;
+    }
+
+    public void setSpeedRange(Range speedRange) {
+        this.speedRange = speedRange;
     }
 }
 

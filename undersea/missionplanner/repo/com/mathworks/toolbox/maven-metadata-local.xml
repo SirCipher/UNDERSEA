@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata>
+    <groupId>com.mathworks</groupId>
+    <artifactId>toolbox</artifactId>
+    <versioning>
+        <release>2018b</release>
+        <versions>
+            <version>2019b</version>
+            <version>2018b</version>
+        </versions>
+        <lastUpdated>20190722092236</lastUpdated>
+    </versioning>
+</metadata>

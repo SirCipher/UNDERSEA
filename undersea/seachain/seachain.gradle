@@ -9,8 +9,3 @@
 dependencies {
     compile project(":utilities")
 }
-
-test {
-    // Use junit platform for unit tests
-    useJUnitPlatform()
-}
