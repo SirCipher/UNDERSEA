@@ -2,7 +2,7 @@ package com.type2labs.undersea.controller;
 
 import com.type2labs.undersea.controller.controller.Controller;
 import com.type2labs.undersea.controller.controller.Knowledge;
-import com.type2labs.undersea.utility.Utility;
+import com.type2labs.undersea.utilities.Utility;
 
 import java.util.Date;
 import java.util.Timer;

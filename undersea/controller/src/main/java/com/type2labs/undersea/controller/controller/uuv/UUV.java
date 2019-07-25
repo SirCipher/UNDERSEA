@@ -3,6 +3,7 @@ package com.type2labs.undersea.controller.controller.uuv;
 import java.util.ArrayList;
 import java.util.List;
 
+// TODO: Refactor to agent
 public class UUV {
     /**
      * speed history as decided by the controller

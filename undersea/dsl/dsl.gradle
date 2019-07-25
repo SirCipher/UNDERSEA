@@ -6,6 +6,7 @@
  * User Manual available at https://docs.gradle.org/5.5.1/userguide/java_library_plugin.html
  */
 dependencies {
+    compile project(":agent")
     compile project(":utilities")
 
     // https://mvnrepository.com/artifact/org.antlr/antlr4

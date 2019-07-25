@@ -8,11 +8,7 @@
 
 dependencies {
     compile project(":missionplanner")
-    compile project(":utilities")
-
-}
-
-test {
-    // Use junit platform for unit tests
-    useJUnitPlatform()
+    compile project(":consensus")
+    compile project(":controller")
+    compile project(":seachain")
 }

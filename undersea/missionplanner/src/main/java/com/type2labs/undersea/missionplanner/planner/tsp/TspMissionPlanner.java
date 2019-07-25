@@ -4,7 +4,7 @@ import com.google.ortools.constraintsolver.*;
 import com.mathworks.toolbox.javabuilder.MWClassID;
 import com.mathworks.toolbox.javabuilder.MWException;
 import com.mathworks.toolbox.javabuilder.MWNumericArray;
-import com.type2labs.undersea.missionplanner.decomposer.Decomposer;
+import com.type2labs.undersea.missionplanner.decomposer.delaunay.DelaunayDecomposer;
 import com.type2labs.undersea.missionplanner.exception.PlannerException;
 import com.type2labs.undersea.missionplanner.model.Mission;
 import com.type2labs.undersea.missionplanner.model.MissionParameters;
@@ -22,7 +22,7 @@ import java.util.ArrayList;
 public class TspMissionPlanner implements MissionPlanner {
 
     private static final Logger logger = LogManager.getLogger(TspMissionPlanner.class);
-    private static final Decomposer decomposer = Decomposer.getInstance();
+    private static final DelaunayDecomposer decomposer = DelaunayDecomposer.getInstance();
 
     static {
         try {

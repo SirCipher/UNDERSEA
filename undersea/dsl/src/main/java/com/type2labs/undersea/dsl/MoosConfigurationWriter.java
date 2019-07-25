@@ -1,12 +1,12 @@
 package com.type2labs.undersea.dsl;
 
 
+import com.type2labs.undersea.agent.AgentProxy;
+import com.type2labs.undersea.agent.Sensor;
 import com.type2labs.undersea.dsl.uuv.factory.FactoryProvider;
 import com.type2labs.undersea.dsl.uuv.factory.SensorFactory;
-import com.type2labs.undersea.dsl.uuv.model.Sensor;
-import com.type2labs.undersea.dsl.uuv.model.UUV;
 import com.type2labs.undersea.dsl.uuv.properties.EnvironmentProperties;
-import com.type2labs.undersea.utility.Utility;
+import com.type2labs.undersea.utilities.Utility;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -72,7 +72,7 @@ class MoosConfigurationWriter {
         }
     }
 
-    private static void generateIvPHelmBlock(UUV uuv) {
+    private static void generateIvPHelmBlock(AgentProxy agent) {
         StringBuilder ivpBlock = new StringBuilder();
         ivpBlock.append("//-----------------------------\n");
         ivpBlock.append("// Helm IvP configuration block\n");
@@ -81,19 +81,20 @@ class MoosConfigurationWriter {
         ivpBlock.append("{\n");
         ivpBlock.append("\tAppTick\t\t\t= 4\n");
         ivpBlock.append("\tCommsTick\t\t= 4\n");
-        ivpBlock.append("\tBehaviors\t\t= meta_" + uuv.getName() + ".bhv\n");
+        ivpBlock.append("\tBehaviors\t\t= meta_" + agent.getName() + ".bhv\n");
         ivpBlock.append("\tVerbose\t\t\t= quiet\n");
         ivpBlock.append("\tok_skew\t\t\t= any\n");
         ivpBlock.append("\tactive_start\t= false\n");
         ivpBlock.append("\tDomain\t\t\t= course:0:359:360\n");
         ivpBlock.append("\tDomain\t\t\t= depth:0:100:101\n");
-        ivpBlock.append("\tDomain\t\t\t= speed:" + uuv.getSpeedMin() + ":" + uuv.getSpeedMax() + ":" + uuv
-                .getSpeedSteps() + "\n");
+        ivpBlock.append("\tDomain\t\t\t= speed:" + agent.getSpeedRange().getMin() + ":" + agent.getSpeedRange().getMax() + ":" + agent
+                .getSpeedRange().getValue() + "\n");
 
         ivpBlock.append("}");
 
         //write
-        Utility.exportToFile(ParserEngine.missionDir + "/plug_pHelmIvP_" + uuv.getName() + ".moos", ivpBlock.toString(),
+        Utility.exportToFile(ParserEngine.missionDir + "/plug_pHelmIvP_" + agent.getName() + ".moos",
+                ivpBlock.toString(),
                 false);
     }
 
@@ -119,15 +120,15 @@ class MoosConfigurationWriter {
         launchScript.append("# Launch the processes\n");
         launchScript.append("#---------------------\n");
 
-        UUV shoreside = ENVIRONMENT_PROPERTIES.getShoreside();
+        AgentProxy shoreside = ENVIRONMENT_PROPERTIES.getShoreside();
 
         launchScript.append("printf \"Launching " + shoreside.getName() + " MOOS Community\"\n");
         launchScript.append("pAntler " + shoreside.getMetaFileName() + " >& /dev/null &\n\n");
 
-        for (Map.Entry<String, UUV> e : ENVIRONMENT_PROPERTIES.getAgents().entrySet()) {
-            UUV uuv = e.getValue();
-            launchScript.append("printf \"Launching " + uuv.getName() + " MOOS Community\"\n");
-            launchScript.append("pAntler " + uuv.getMetaFileName() + " >& /dev/null &\n\n");
+        for (Map.Entry<String, AgentProxy> e : ENVIRONMENT_PROPERTIES.getAgents().entrySet()) {
+            AgentProxy agent = e.getValue();
+            launchScript.append("printf \"Launching " + agent.getName() + " MOOS Community\"\n");
+            launchScript.append("pAntler " + agent.getMetaFileName() + " >& /dev/null &\n\n");
         }
 
         launchScript.append("#--------------------------------------------------\n");
@@ -234,10 +235,11 @@ class MoosConfigurationWriter {
 
         String fileName = "meta_shoreside.moos";
 
-        UUV uuv = new UUV("shoreside", null, 0.0, 0.0, 0);
-        uuv.setMetaFileName(fileName);
+        AgentProxy agent = new AgentProxy();
+        agent.setName("shoreside");
+        agent.setMetaFileName(fileName);
 
-        ENVIRONMENT_PROPERTIES.addUUV(uuv);
+        ENVIRONMENT_PROPERTIES.addAgent(agent);
         generateControllerProperties();
 
         Utility.exportToFile(ParserEngine.missionDir + "/" + fileName,
@@ -245,7 +247,7 @@ class MoosConfigurationWriter {
                 false);
     }
 
-    private static void generateTargetVehicleBlock(UUV uuv) {
+    private static void generateTargetVehicleBlock(AgentProxy agent) {
         StringBuilder vehicleBlock = new StringBuilder();
         vehicleBlock.append("//-------------------------\n");
         vehicleBlock.append("// Meta vehicle config file\n");
@@ -267,11 +269,11 @@ class MoosConfigurationWriter {
         vehicleBlock.append("\tRun = pShare         @ NewConsole = false\n");
         vehicleBlock.append("\tRun = uTimerScript   @ NewConsole = false\n");
         vehicleBlock.append("\tRun = pHostInfo\t\t @ NewConsole = false\n");
-        vehicleBlock.append("\tRun = sUUV           @ NewConsole = false\n");
+        vehicleBlock.append("\tRun = sAgentProxy           @ NewConsole = false\n");
 
         vehicleBlock.append("\tRun = uFldNodeBroker @ NewConsole = false\n");
 
-        for (Sensor sensor : uuv.getSensors()) {
+        for (Sensor sensor : agent.getSensors()) {
             vehicleBlock.append("\tRun = sSensor\t\t @ NewConsole = false ~" + sensor.getName() + "\n");
         }
 
@@ -281,20 +283,20 @@ class MoosConfigurationWriter {
         vehicleBlock.append("#include plug_pLogger.moos\n");
         vehicleBlock.append("#include plug_pNodeReporter.moos\n");
         vehicleBlock.append("#include plug_pMarinePID.moos\n");
-        vehicleBlock.append("#include plug_pHelmIvP_" + uuv.getName() + ".moos\n");
+        vehicleBlock.append("#include plug_pHelmIvP_" + agent.getName() + ".moos\n");
         vehicleBlock.append("#include plug_uProcessWatch.moos\n");
         vehicleBlock.append("#include plug_pShare.moos\n");
         vehicleBlock.append("#include plug_pHostInfo.moos\n");
         vehicleBlock.append("#include plug_uFldNodeBroker.moos\n");
         vehicleBlock.append("#include plug_uTimerScript.moos\n");
-        vehicleBlock.append("#include plug_UUV_" + uuv.getName() + ".moos\n");
+        vehicleBlock.append("#include plug_AgentProxy_" + agent.getName() + ".moos\n");
 
-        for (Sensor sensor : uuv.getSensors()) {
+        for (Sensor sensor : agent.getSensors()) {
             vehicleBlock.append("#include plug_" + sensor.getName() + ".moos\n");
         }
 
-        String fileName = "meta_vehicle_" + uuv.getName() + ".moos";
-        uuv.setMetaFileName(fileName);
+        String fileName = "meta_vehicle_" + agent.getName() + ".moos";
+        agent.setMetaFileName(fileName);
 
         Utility.exportToFile(ParserEngine.missionDir + File.separator + fileName,
                 vehicleBlock.toString(),
@@ -305,20 +307,21 @@ class MoosConfigurationWriter {
         generateShoreside();
         generateSensors();
 
-        Map<String, UUV> agents = ENVIRONMENT_PROPERTIES.getAgents();
+        Map<String, AgentProxy> agents = ENVIRONMENT_PROPERTIES.getAgents();
 
-        for (Map.Entry<String, UUV> entry : agents.entrySet()) {
-            UUV uuv = entry.getValue();
+        for (Map.Entry<String, AgentProxy> entry : agents.entrySet()) {
+            AgentProxy agent = entry.getValue();
 
-            //generate UUV moos block
-            Utility.exportToFile(ParserEngine.missionDir + File.separator + "plug_UUV_" + uuv.getName() + ".moos",
-                    uuv.toString(), false);
+            //generate AgentProxy moos block
+            Utility.exportToFile(ParserEngine.missionDir + File.separator + "plug_AgentProxy_" + agent.getName() +
+                            ".moos",
+                    agent.toString(), false);
 
             //generate target vehicle block
-            generateTargetVehicleBlock(uuv);
+            generateTargetVehicleBlock(agent);
 
             //generate IvPHelm vehicle block
-            generateIvPHelmBlock(uuv);
+            generateIvPHelmBlock(agent);
 
             //generate controller properties
         }

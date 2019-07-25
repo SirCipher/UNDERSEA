@@ -3,7 +3,7 @@ package com.type2labs.undersea.controller.controller;
 import com.type2labs.undersea.controller.controller.uuv.UUV;
 import com.type2labs.undersea.controller.controller.uuv.UUVSensor;
 import com.type2labs.undersea.controller.controllerPMC.prism.PMCResult;
-import com.type2labs.undersea.utility.Utility;
+import com.type2labs.undersea.utilities.Utility;
 
 import java.io.File;
 import java.io.IOException;

@@ -8,7 +8,7 @@ import com.type2labs.undersea.dsl.uuv.gen.UUVParser;
 import com.type2labs.undersea.dsl.uuv.listener.SensorListener;
 import com.type2labs.undersea.dsl.uuv.listener.UUVListener;
 import com.type2labs.undersea.dsl.uuv.properties.EnvironmentProperties;
-import com.type2labs.undersea.utility.Utility;
+import com.type2labs.undersea.utilities.Utility;
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;

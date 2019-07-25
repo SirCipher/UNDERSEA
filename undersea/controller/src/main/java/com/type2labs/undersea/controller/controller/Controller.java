@@ -1,7 +1,7 @@
 package com.type2labs.undersea.controller.controller;
 
 import com.type2labs.undersea.controller.controller.comms.Client;
-import com.type2labs.undersea.utility.Utility;
+import com.type2labs.undersea.utilities.Utility;
 
 import java.io.IOException;
 import java.util.TimerTask;

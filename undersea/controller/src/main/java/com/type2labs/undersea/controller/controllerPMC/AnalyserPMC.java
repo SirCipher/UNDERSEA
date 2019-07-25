@@ -4,7 +4,7 @@ import com.type2labs.undersea.controller.controller.Analyser;
 import com.type2labs.undersea.controller.controller.Knowledge;
 import com.type2labs.undersea.controller.controllerPMC.prism.PMCResult;
 import com.type2labs.undersea.controller.controllerPMC.prism.PrismAPI;
-import com.type2labs.undersea.utility.Utility;
+import com.type2labs.undersea.utilities.Utility;
 
 import java.util.List;
 

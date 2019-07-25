@@ -1,8 +1,8 @@
 package com.type2labs.undersea.dsl;
 
-import com.type2labs.undersea.dsl.uuv.model.UUV;
+import com.type2labs.undersea.agent.AgentProxy;
 import com.type2labs.undersea.dsl.uuv.properties.EnvironmentProperties;
-import com.type2labs.undersea.utility.Utility;
+import com.type2labs.undersea.utilities.Utility;
 import org.apache.commons.io.IOUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -23,7 +23,7 @@ class EnvironmentBuilder {
     private static File buildDir;
 
     static void build() {
-        UUV shoreside = ENVIRONMENT_PROPERTIES.getShoreside();
+        AgentProxy shoreside = ENVIRONMENT_PROPERTIES.getShoreside();
 
         logger.info("Using build directory: " + buildDir.getAbsolutePath());
         logger.info("Writing mission files to: " + missionDir.getPath());
@@ -44,22 +44,24 @@ class EnvironmentBuilder {
 
         nsplug(shoreside.getMetaFileName(), shoreside.getMetaFileName(), nsPlugArgs);
 
-        for (Map.Entry<String, UUV> entry : ENVIRONMENT_PROPERTIES.getAgents().entrySet()) {
-            UUV uuv = entry.getValue();
+        for (Map.Entry<String, AgentProxy> entry : ENVIRONMENT_PROPERTIES.getAgents().entrySet()) {
+            AgentProxy agent = entry.getValue();
 
             nsPlugArgs.clear();
             nsPlugArgs.add("WARP=" +
                     ENVIRONMENT_PROPERTIES.getEnvironmentValue(EnvironmentProperties.EnvironmentValue.TIME_WINDOW));
             nsPlugArgs.add("VHOST=" +
                     ENVIRONMENT_PROPERTIES.getEnvironmentValue(EnvironmentProperties.EnvironmentValue.HOST));
-            nsPlugArgs.add("VNAME=" + uuv.getName());
+            nsPlugArgs.add("VNAME=" + agent.getName());
             nsPlugArgs.add("VPORT=" + ++vPort);
             nsPlugArgs.add("SHARE_LISTEN=" + ++shareListen);
             nsPlugArgs.add("SHORE_LISTEN=" + shoreListen);
 
             logger.info("-----------------------------------------");
-            nsplug(uuv.getMetaFileName(), uuv.getMetaFileName(), nsPlugArgs);
-            nsplug("behaviour.bhv", "meta_" + uuv.getName() + ".bhv", nsPlugArgs);
+            nsplug(agent.getMetaFileName(), agent.getMetaFileName(), nsPlugArgs);
+            nsplug("behaviour.bhv", "meta_" + agent.getName() + ".bhv", nsPlugArgs);
+
+            agent.setParsed(true);
         }
 
         cleanup();

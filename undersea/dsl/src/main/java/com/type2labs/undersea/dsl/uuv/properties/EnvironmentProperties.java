@@ -1,8 +1,8 @@
 package com.type2labs.undersea.dsl.uuv.properties;
 
 
+import com.type2labs.undersea.agent.AgentProxy;
 import com.type2labs.undersea.dsl.DSLException;
-import com.type2labs.undersea.dsl.uuv.model.UUV;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -12,7 +12,7 @@ public class EnvironmentProperties {
 
     private static EnvironmentProperties instance = null;
     private final Map<EnvironmentValue, String> environmentValues = new HashMap<>();
-    private final Map<String, UUV> agents = new HashMap<>();
+    private final Map<String, AgentProxy> agents = new HashMap<>();
 
     private EnvironmentProperties() {
 
@@ -26,15 +26,15 @@ public class EnvironmentProperties {
         return instance;
     }
 
-    public void addUUV(UUV uuv) {
-        if (this.agents.containsKey(uuv.getName())) {
-            throw new DSLException("Duplicate UUV created: " + uuv.getName());
+    public void addAgent(AgentProxy agent) {
+        if (this.agents.containsKey(agent.getName())) {
+            throw new DSLException("Duplicate agent created: " + agent.getName());
         }
 
-        this.agents.put(uuv.getName(), uuv);
+        this.agents.put(agent.getName(), agent);
     }
 
-    public Map<String, UUV> getAgents() {
+    public Map<String, AgentProxy> getAgents() {
         return agents.entrySet().stream()
                 .filter(a -> !a.getValue().getName().equals("shoreside"))
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
@@ -48,7 +48,7 @@ public class EnvironmentProperties {
         return environmentValues;
     }
 
-    public UUV getShoreside() {
+    public AgentProxy getShoreside() {
         return agents.get("shoreside");
     }
 
