@@ -1,0 +1,18 @@
+if ( !JavaVersion.current().java8Compatible ) {
+    throw new GradleException( "Gradle must be run with Java 8" )
+}
+
+include 'dsl'
+include 'utilities'
+include 'agent'
+include 'missionplanner'
+include 'runner'
+include 'seachain'
+include 'consensus'
+
+rootProject.children.each { project ->
+    project.buildFileName = "${project.name}.gradle"
+    assert project.projectDir.isDirectory()
+    assert project.buildFile.exists()
+    assert project.buildFile.isFile()
+}

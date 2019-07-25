@@ -11,6 +11,10 @@ public class DSLException extends RuntimeException {
         super(message);
     }
 
+    public DSLException(String message, Exception e) {
+        super(message, e);
+    }
+
     public String toString() {
         return "Error: \t" + getMessage();
     }

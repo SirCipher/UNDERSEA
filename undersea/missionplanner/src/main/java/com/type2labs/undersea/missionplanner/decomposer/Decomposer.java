@@ -54,6 +54,11 @@ public class Decomposer extends MWComponentInstance<Decomposer> {
      */
     private Decomposer(final MWMCR mcr) {
         super(mcr);
+
+        if (!MWApplication.isMCRInitialized()) {
+            MWApplication.initialize(MWMCROption.NODISPLAY);
+        }
+
         // add this to sInstances
         synchronized (Decomposer.class) {
             sInstances.add(this);
@@ -76,6 +81,7 @@ public class Decomposer extends MWComponentInstance<Decomposer> {
      * The <code>com.mathworks.toolbox.javabuilder.MWComponentOptions</code> class provides an API to set the
      * path to the component.
      */
+    @Deprecated
     public Decomposer(String pathToComponent) throws MWException {
         this(DecomposerMCRFactory.newInstance(getPathToComponentOptions(pathToComponent)));
     }

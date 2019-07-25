@@ -1,0 +1,10 @@
+//------------------------------
+// pHostInfo Configuration Block
+//------------------------------
+ProcessConfig = pHostInfo
+{
+  AppTick 	  = 1
+  CommsTick 	= 1
+
+  DEFAULT_HOSTIP_FORCE = localhost
+}

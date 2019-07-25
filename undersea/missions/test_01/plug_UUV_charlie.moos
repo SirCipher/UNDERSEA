@@ -1,0 +1,12 @@
+//-------------------------
+// sUUV Configuration Block
+//-------------------------
+ProcessConfig = sUUV
+{
+	 AppTick = 4
+	 CommsTick = 4
+	 MAX_APPCAST_EVENTS = 25 
+	 NAME = charlie
+	 PORT = 9003
+	 SENSORS = SENSOR1,SENSOR4
+}

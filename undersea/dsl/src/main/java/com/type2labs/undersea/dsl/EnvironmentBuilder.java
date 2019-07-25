@@ -169,7 +169,7 @@ class EnvironmentBuilder {
             logger.info(output);
             process.destroy();
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new DSLException("Unable to run nsplug on: " + sourceName + ". For mission directory: " + missionDir.getAbsolutePath() + ". With arguments: " + nsplugArgs, e);
         }
     }
 

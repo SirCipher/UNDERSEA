@@ -6,7 +6,7 @@ import com.type2labs.undersea.missionplanner.model.MissionParameters;
 import com.type2labs.undersea.missionplanner.model.MissionPlanner;
 import org.junit.Assert;
 import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Created by Thomas Klapwijk on 2019-07-22.

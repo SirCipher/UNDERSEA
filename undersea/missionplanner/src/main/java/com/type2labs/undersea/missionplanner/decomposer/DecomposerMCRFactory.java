@@ -10,10 +10,7 @@
 
 package com.type2labs.undersea.missionplanner.decomposer;
 
-import com.mathworks.toolbox.javabuilder.MWComponentOptions;
-import com.mathworks.toolbox.javabuilder.MWCtfClassLoaderSource;
-import com.mathworks.toolbox.javabuilder.MWCtfExtractLocation;
-import com.mathworks.toolbox.javabuilder.MWException;
+import com.mathworks.toolbox.javabuilder.*;
 import com.mathworks.toolbox.javabuilder.internal.MWMCR;
 
 /**
@@ -52,6 +49,7 @@ public class DecomposerMCRFactory {
             componentOptions = new MWComponentOptions(componentOptions);
             componentOptions.setCtfSource(sDefaultComponentOptions.getCtfSource());
         }
+
         return MWMCR.newInstance(
                 componentOptions,
                 DecomposerMCRFactory.class,
