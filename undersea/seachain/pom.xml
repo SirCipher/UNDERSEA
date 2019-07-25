@@ -16,7 +16,7 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.type2labs</groupId>
+            <groupId>com.type2labs.undersea</groupId>
             <artifactId>utilities</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
