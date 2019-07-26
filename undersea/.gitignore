@@ -1,8 +1,7 @@
 moos.properties
 
-!repo/*
 repo/ortools/
-
+!repo/prism
 
 out/
 target/
