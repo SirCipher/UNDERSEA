@@ -1,5 +1,10 @@
 moos.properties
 
+# Package Files #
+*.jar
+*.war
+*.ear
+
 repo/ortools/
 !repo/prism/
 
@@ -7,11 +12,6 @@ out/
 target/
 build/
 *.class
-
-# Package Files #
-*.jar
-*.war
-*.ear
 
 # Ignore Gradle GUI config
 gradle-app.setting
