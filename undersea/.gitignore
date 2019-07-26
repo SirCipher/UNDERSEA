@@ -1,7 +1,6 @@
 moos.properties
 
 repo/ortools/
-!repo
 
 out/
 target/
