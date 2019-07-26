@@ -18,7 +18,7 @@ else
 fi
 
 echo "Fetching " $REMOTE
-wget $REMOTE
+wget $REMOTE --no-check-certificate
 echo $ZIP
 echo "Unzipping " $ZIP
 tar -xvzf $ZIP
@@ -26,7 +26,7 @@ tar -xvzf $ZIP
 echo "Removing " $ZIP
 rm $ZIP
 
-mkdir --parents repo/ortools/
+mkdir -p repo/ortools/
 echo "Moving files to repo/ortools/"
 mv $FOLDER/lib/* repo/ortools/
 

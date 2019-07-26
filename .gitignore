@@ -1,6 +1,7 @@
 .svn
 .DS_Store
 build/
+out/
 target/
 .class
 moos-ivp

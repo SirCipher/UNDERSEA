@@ -23,8 +23,6 @@ task fetchOrtools {
     def ortoolsDir = new File("${rootProject.projectDir}/repo/ortools/")
 
     if (!ortoolsDir.exists()) {
-        print "OR Tools not found, fetching"
-
         exec {
 //            TODO: Add support for OSX and check for other operating systems
             if (Os.isFamily(Os.FAMILY_UNIX) || Os.isFamily(Os.FAMILY_MAC)) {
@@ -33,6 +31,8 @@ task fetchOrtools {
                 throw new GradleException("Unsupported OS type")
             }
         }
+
+        print "OR Tools not found, fetched"
     } else {
         print "OR Tools found at path: " + ortoolsDir.getAbsolutePath()
     }
