@@ -6,7 +6,7 @@ moos.properties
 *.ear
 
 repo/ortools/
-!repo/*.jar
+!repo/**/*.jar
 
 out/
 target/
