@@ -1,7 +1,7 @@
 moos.properties
 
-repo/ortools/
 !repo/*
+repo/ortools/
 
 
 out/
