@@ -18,9 +18,8 @@ if (!matlabroot.endsWith("/")) {
 }
 
 dependencies {
-    compile files("../repo/protobuf-7.2.6977.jar")
     compile files(matlabroot + "toolbox/javabuilder/jar/javabuilder.jar")
-    compile files("../repo/ortools-7.2.6977.jar")
+    compile fileTree(dir: "${rootProject.projectDir}/repo/ortools/", include: ['*.jar'])
 }
 
 task printMatlabroot {

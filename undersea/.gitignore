@@ -1,5 +1,7 @@
 moos.properties
 
+repo/ortools/
+
 out/
 target/
 build/

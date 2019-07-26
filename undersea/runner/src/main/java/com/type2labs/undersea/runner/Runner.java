@@ -50,7 +50,6 @@ public class Runner {
 
         long index = routingModel.start(0);
 
-        StringBuilder route = new StringBuilder();
         Agent agent = environmentProperties.getShoreside();
 
         while (!routingModel.isEnd(index)) {

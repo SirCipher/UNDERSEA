@@ -5,6 +5,9 @@
  * For more details take a look at the Java Libraries chapter in the Gradle
  * User Manual available at https://docs.gradle.org/5.5.1/userguide/java_library_plugin.html
  */
+
+import org.apache.tools.ant.taskdefs.condition.Os
+
 plugins {
     // Apply the java-library plugin to add support for Java Library
     id 'java-library'
@@ -15,6 +18,27 @@ repositories {
     // You can declare any Maven/Ivy/file repository here.
     jcenter()
 }
+
+task fetchOrtools {
+    def ortoolsDir = new File("${rootProject.projectDir}/repo/ortools/")
+
+    if (!ortoolsDir.exists()) {
+        print "OR Tools not found, fetching"
+
+        exec {
+//            TODO: Add support for OSX and check for other operating systems
+            if (Os.isFamily(Os.FAMILY_UNIX) || Os.isFamily(Os.FAMILY_MAC)) {
+                commandLine "./ortools.sh"
+            } else {
+                throw new GradleException("Unsupported OS type")
+            }
+        }
+    } else {
+        print "OR Tools found at path: " + ortoolsDir.getAbsolutePath()
+    }
+}
+
+build.dependsOn fetchOrtools
 
 allprojects {
     apply plugin: 'java-library'
@@ -53,6 +77,10 @@ allprojects {
 
         // This dependency is used internally, and not exposed to consumers on their own compile classpath.
         implementation 'com.google.guava:guava:27.1-jre'
+    }
+
+    tasks.withType(Test) {
+        systemProperty "java.library.path", "${rootProject.projectDir}/repo/ortools/"
     }
 
 }

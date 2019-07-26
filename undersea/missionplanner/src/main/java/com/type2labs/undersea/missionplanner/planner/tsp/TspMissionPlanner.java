@@ -24,12 +24,14 @@ public class TspMissionPlanner implements MissionPlanner {
     private static final Logger logger = LogManager.getLogger(TspMissionPlanner.class);
     private static final DelaunayDecomposer decomposer = DelaunayDecomposer.getInstance();
 
+
     static {
         try {
             System.loadLibrary("jniortools");
         } catch (Error e) {
             logger.error("Failed to load native library jniortools. Expected to be on environment variable " +
                     "LD_LIBRARY_PATH or DYLD_LIBRARY_PATH");
+            e.printStackTrace();
         }
     }
 
