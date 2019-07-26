@@ -19,7 +19,7 @@ fi
 
 echo "Fetching " $REMOTE
 wget $REMOTE --no-check-certificate
-echo $ZIP
+
 echo "Unzipping " $ZIP
 tar -xvzf $ZIP
 
