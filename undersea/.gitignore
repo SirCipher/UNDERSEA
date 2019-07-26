@@ -6,7 +6,7 @@ moos.properties
 *.ear
 
 repo/ortools/
-!repo/prism/
+!repo/**.jar
 
 out/
 target/
