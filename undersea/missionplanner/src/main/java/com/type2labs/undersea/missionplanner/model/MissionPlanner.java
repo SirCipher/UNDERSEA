@@ -14,7 +14,7 @@ public interface MissionPlanner {
      * @return a generated mission
      * @throws PlannerException if the arguments do not match the expected MATLAB parameters
      */
-    Mission generate(MissionParameters missionParameter) throws PlannerException;
+    Mission generate(MissionParameters missionParameters) throws PlannerException;
 
     /**
      * Print a given mission

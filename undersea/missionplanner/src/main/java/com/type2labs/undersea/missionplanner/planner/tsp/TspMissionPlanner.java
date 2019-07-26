@@ -27,7 +27,6 @@ public class TspMissionPlanner implements MissionPlanner {
     static {
         try {
             System.loadLibrary("jniortools");
-            logger.info("Initialised " + TspMissionPlanner.class.getSimpleName());
         } catch (Error e) {
             logger.error("Failed to load native library jniortools. Expected to be on environment variable " +
                     "LD_LIBRARY_PATH or DYLD_LIBRARY_PATH");
@@ -48,18 +47,14 @@ public class TspMissionPlanner implements MissionPlanner {
 
     @Override
     public Mission generate(MissionParameters missionParameters) throws PlannerException {
-        logger.info("Decomposing polygon");
-
         double[][] centroids = decompose(missionParameters.getPolygon());
-
-        logger.info("Decomposed polygon");
-        logger.info("Calculating euclidian distance matrix");
+        missionParameters.setCentroids(centroids);
 
         double[][] distanceMatrix = PlannerUtils.computeEuclideanDistanceMatrix(centroids);
 
         PlanDataModel model = new PlanDataModel(missionParameters, distanceMatrix);
 
-        return solve(model);
+        return solve(model, missionParameters);
     }
 
     @Override
@@ -74,7 +69,7 @@ public class TspMissionPlanner implements MissionPlanner {
         logger.info("Route:");
 
         long routeDistance = 0;
-        long index = mission.getRoutingModel().start(0);
+        long index = routingModel.start(0);
 
         StringBuilder route = new StringBuilder();
 
@@ -92,12 +87,10 @@ public class TspMissionPlanner implements MissionPlanner {
 
     }
 
-    private Mission solve(PlanDataModel model) {
-        logger.info("Running TSP on input polygon");
-
+    private Mission solve(PlanDataModel model, MissionParameters missionParameters) {
         // Create Routing Index Manager
         RoutingIndexManager manager =
-                new RoutingIndexManager(model.getData().length, model.getAgentCount(), model.getDepot());
+                new RoutingIndexManager(model.getDistanceMatrix().length, model.getAgentCount(), model.getDepot());
 
         // Create Routing Model.
         RoutingModel routing = new RoutingModel(manager);
@@ -108,7 +101,7 @@ public class TspMissionPlanner implements MissionPlanner {
                     // Convert from routing variable Index to user NodeIndex.
                     int fromNode = manager.indexToNode(fromIndex);
                     int toNode = manager.indexToNode(toIndex);
-                    return (long) model.getData()[fromNode][toNode];
+                    return (long) model.getDistanceMatrix()[fromNode][toNode];
                 });
 
         // Define cost of each arc.
@@ -124,9 +117,7 @@ public class TspMissionPlanner implements MissionPlanner {
         // Solve the problem.
         Assignment solution = routing.solveWithParameters(searchParameters);
 
-        logger.info("Solved");
-
-        return new Mission(model, solution, routing, manager, new ArrayList<>());
+        return new Mission(model, solution, routing, manager, new ArrayList<>(), missionParameters);
     }
 
 }

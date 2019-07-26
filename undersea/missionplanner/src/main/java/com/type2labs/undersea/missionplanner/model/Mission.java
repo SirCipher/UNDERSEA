@@ -18,15 +18,20 @@ public class Mission {
     // TODO: Add node type
     // Each node should have an assignee, coordinates, and state (visited, POI, etc)
     private final List<?> nodes;
+    private final MissionParameters missionParameters;
+
+    public MissionParameters getMissionParameters() {
+        return missionParameters;
+    }
 
     public Mission(PlanDataModel planDataModel, Assignment assignment, RoutingModel routingModel,
-                   RoutingIndexManager routingIndexManager,
-                   List<?> nodes) {
+                   RoutingIndexManager routingIndexManager, List<?> nodes, MissionParameters missionParameters) {
         this.planDataModel = planDataModel;
         this.assignment = assignment;
         this.routingModel = routingModel;
         this.routingIndexManager = routingIndexManager;
         this.nodes = nodes;
+        this.missionParameters = missionParameters;
     }
 
     public Assignment getAssignment() {

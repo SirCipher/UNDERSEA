@@ -31,6 +31,10 @@ public class Agent {
     private Range speedRange;
     private List<Sensor> sensors = new ArrayList<>();
 
+    public void assignNode(Node node){
+        assignedNodes.add(node);
+    }
+
     public List<Node> getAssignedNodes() {
         return assignedNodes;
     }

@@ -16,7 +16,7 @@ class ParserEngineTest {
         try {
             Properties properties = Utility.getPropertiesByName("../resources/runner.properties");
             ParserEngine parserEngine = new ParserEngine(properties);
-            parserEngine.parse();
+            parserEngine.parseMission();
         } catch (Exception e) {
             e.printStackTrace();
             Assert.fail();

@@ -16,7 +16,7 @@ public class Node {
      * @param x coordinate
      * @param y coordinate
      */
-    public void Node(double x, double y) {
+    public Node(double x, double y) {
         this.vector = new Vector(x, y);
         this.nodeStatus = NodeStatus.UNVISITED;
     }

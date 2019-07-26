@@ -197,7 +197,7 @@ ProcessConfig = uTimerScript
 	event = quit, time=10:20
 }
 
-com.type2labs.undersea.dsl.uuv.model.AgentProxy@cecbd06
+com.type2labs.undersea.dsl.uuv.model.AgentProxy@f68f0dc
 //---------------------------------
 // SENSOR3 Configuration Block
 //---------------------------------

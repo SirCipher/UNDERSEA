@@ -4,12 +4,12 @@ package com.type2labs.undersea.missionplanner.model;
  * Created by Thomas Klapwijk on 2019-07-22.
  */
 public class PlanDataModel {
-    private final double[][] data;
+    private final double[][] distanceMatrix;
     private final int agentCount;
     private final int depot;
 
-    public PlanDataModel(MissionParameters missionParameters, double[][] data) {
-        this.data = data;
+    public PlanDataModel(MissionParameters missionParameters, double[][] distanceMatrix) {
+        this.distanceMatrix = distanceMatrix;
         this.agentCount = missionParameters.getAgentCount();
         this.depot = missionParameters.getDepot();
     }
@@ -18,8 +18,8 @@ public class PlanDataModel {
         return agentCount;
     }
 
-    public double[][] getData() {
-        return data;
+    public double[][] getDistanceMatrix() {
+        return distanceMatrix;
     }
 
     public int getDepot() {

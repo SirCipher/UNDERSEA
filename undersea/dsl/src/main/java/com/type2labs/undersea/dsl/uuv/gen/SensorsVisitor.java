@@ -5,7 +5,7 @@ package com.type2labs.undersea.dsl.uuv.gen;
 import org.antlr.v4.runtime.tree.ParseTreeVisitor;
 
 /**
- * This interface defines a complete generic visitor for a parse tree produced
+ * This interface defines a complete generic visitor for a parseMission tree produced
  * by {@link SensorsParser}.
  *
  * @param <T> The return type of the visit operation. Use {@link Void} for
@@ -13,25 +13,25 @@ import org.antlr.v4.runtime.tree.ParseTreeVisitor;
  */
 interface SensorsVisitor<T> extends ParseTreeVisitor<T> {
     /**
-     * Visit a parse tree produced by {@link SensorsParser#change}.
+     * Visit a parseMission tree produced by {@link SensorsParser#change}.
      *
-     * @param ctx the parse tree
+     * @param ctx the parseMission tree
      * @return the visitor result
      */
     T visitChange(SensorsParser.ChangeContext ctx);
 
     /**
-     * Visit a parse tree produced by {@link SensorsParser#model}.
+     * Visit a parseMission tree produced by {@link SensorsParser#model}.
      *
-     * @param ctx the parse tree
+     * @param ctx the parseMission tree
      * @return the visitor result
      */
     T visitModel(SensorsParser.ModelContext ctx);
 
     /**
-     * Visit a parse tree produced by {@link SensorsParser#sensor}.
+     * Visit a parseMission tree produced by {@link SensorsParser#sensor}.
      *
-     * @param ctx the parse tree
+     * @param ctx the parseMission tree
      * @return the visitor result
      */
     T visitSensor(SensorsParser.SensorContext ctx);

@@ -10,6 +10,8 @@ public class MissionParameters {
     private final int depot;
     private final int[][] polygon;
 
+    private double[][] centroids;
+
     public int[][] getPolygon() {
         return polygon;
     }
@@ -26,5 +28,17 @@ public class MissionParameters {
 
     public int getDepot() {
         return depot;
+    }
+
+    public double[][] getCentroids() {
+        return centroids;
+    }
+
+    public double[] getCentroid(int index){
+        return centroids[index];
+    }
+
+    public void setCentroids(double[][] centroids) {
+        this.centroids=centroids;
     }
 }

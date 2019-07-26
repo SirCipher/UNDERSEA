@@ -5,49 +5,49 @@ package com.type2labs.undersea.dsl.uuv.gen;
 import org.antlr.v4.runtime.tree.ParseTreeListener;
 
 /**
- * This interface defines a complete listener for a parse tree produced by
+ * This interface defines a complete listener for a parseMission tree produced by
  * {@link SensorsParser}.
  */
 interface SensorsListener extends ParseTreeListener {
     /**
-     * Enter a parse tree produced by {@link SensorsParser#change}.
+     * Enter a parseMission tree produced by {@link SensorsParser#change}.
      *
-     * @param ctx the parse tree
+     * @param ctx the parseMission tree
      */
     void enterChange(SensorsParser.ChangeContext ctx);
 
     /**
-     * Enter a parse tree produced by {@link SensorsParser#model}.
+     * Enter a parseMission tree produced by {@link SensorsParser#model}.
      *
-     * @param ctx the parse tree
+     * @param ctx the parseMission tree
      */
     void enterModel(SensorsParser.ModelContext ctx);
 
     /**
-     * Enter a parse tree produced by {@link SensorsParser#sensor}.
+     * Enter a parseMission tree produced by {@link SensorsParser#sensor}.
      *
-     * @param ctx the parse tree
+     * @param ctx the parseMission tree
      */
     void enterSensor(SensorsParser.SensorContext ctx);
 
     /**
-     * Exit a parse tree produced by {@link SensorsParser#change}.
+     * Exit a parseMission tree produced by {@link SensorsParser#change}.
      *
-     * @param ctx the parse tree
+     * @param ctx the parseMission tree
      */
     void exitChange(SensorsParser.ChangeContext ctx);
 
     /**
-     * Exit a parse tree produced by {@link SensorsParser#model}.
+     * Exit a parseMission tree produced by {@link SensorsParser#model}.
      *
-     * @param ctx the parse tree
+     * @param ctx the parseMission tree
      */
     void exitModel(SensorsParser.ModelContext ctx);
 
     /**
-     * Exit a parse tree produced by {@link SensorsParser#sensor}.
+     * Exit a parseMission tree produced by {@link SensorsParser#sensor}.
      *
-     * @param ctx the parse tree
+     * @param ctx the parseMission tree
      */
     void exitSensor(SensorsParser.SensorContext ctx);
 }

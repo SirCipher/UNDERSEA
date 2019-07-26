@@ -8,11 +8,7 @@ import com.type2labs.undersea.dsl.uuv.model.AgentProxy;
 import com.type2labs.undersea.utilities.Utility;
 
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.Iterator;
 import java.util.Map;
-import java.util.Properties;
 
 @SuppressWarnings("StringConcatenationInsideStringBufferAppend")
 class MoosConfigurationWriter {
@@ -26,57 +22,6 @@ class MoosConfigurationWriter {
         MoosConfigurationWriter.environmentProperties = environmentProperties;
 
         buildDir = Utility.getProperty(environmentProperties.getRunnerProperties(), "config.output");
-    }
-
-    private static void generateControllerProperties() {
-        try {
-            String propertiesDirName = MoosConfigurationWriter.buildDir;
-            String propertiesFilename = propertiesDirName + File.separator + "resources" + File.separator + "config" +
-                    ".properties";
-            File propertiesDir = new File(propertiesDirName);
-            File propertiesFile = new File(propertiesFilename);
-
-            if (!propertiesDir.exists()) {
-                if (propertiesDir.mkdirs()) {
-                    throw new IOException("Unable to create properties directory: " + propertiesDir.getAbsolutePath());
-                }
-            }
-
-            if (!propertiesFile.exists()) {
-                if (!propertiesFile.getParentFile().mkdirs() || !propertiesFile.createNewFile()) {
-                    throw new IOException("Unable to create properties file in directory: " + propertiesFile.getAbsolutePath());
-                }
-            }
-
-            Properties properties = new Properties();
-
-            for (EnvironmentProperties.EnvironmentValue value : EnvironmentProperties.EnvironmentValue.values()) {
-                properties.put(value.name(), environmentProperties.getEnvironmentValue(value));
-            }
-
-            StringBuilder sensorsNames = new StringBuilder();
-
-            Iterator<Map.Entry<String, Sensor>> it = sensorFactory.getSensors().entrySet().iterator();
-
-            while (it.hasNext()) {
-                Map.Entry<String, Sensor> entry = it.next();
-
-                sensorsNames.append(entry.getKey());
-
-                if (it.hasNext()) {
-                    sensorsNames.append(",");
-                }
-            }
-
-            properties.put("SENSORS", sensorsNames.toString());
-
-            FileOutputStream out = new FileOutputStream(propertiesFile);
-            properties.store(out, null);
-            out.close();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     private static void generateIvPHelmBlock(AgentProxy agent) {
@@ -247,7 +192,6 @@ class MoosConfigurationWriter {
         agent.setMetaFileName(fileName);
 
         environmentProperties.addAgent(agent);
-        generateControllerProperties();
 
         Utility.exportToFile(MoosConfigurationWriter.buildDir + "/" + fileName,
                 shoreside.toString(),
@@ -329,8 +273,6 @@ class MoosConfigurationWriter {
 
             //generate IvPHelm vehicle block
             generateIvPHelmBlock(agent);
-
-            //generate controller properties
         }
 
         generateLaunchAndCleanScripts();
