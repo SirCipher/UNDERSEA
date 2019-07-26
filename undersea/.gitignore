@@ -1,5 +1,6 @@
 moos.properties
 
+!repo
 repo/ortools/
 
 out/
