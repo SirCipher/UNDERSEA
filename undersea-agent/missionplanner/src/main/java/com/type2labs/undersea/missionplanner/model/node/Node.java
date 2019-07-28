@@ -52,6 +52,14 @@ public class Node {
         public double getY() {
             return y;
         }
+
+        @Override
+        public String toString() {
+            return "Vector{" +
+                    "x=" + x +
+                    ", y=" + y +
+                    '}';
+        }
     }
 
 }

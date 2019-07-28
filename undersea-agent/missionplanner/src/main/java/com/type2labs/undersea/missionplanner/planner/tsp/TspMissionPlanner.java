@@ -33,7 +33,7 @@ public class TspMissionPlanner implements MissionPlanner {
         }
     }
 
-    private double[][] decompose(int[][] polygon) throws PlannerException {
+    private double[][] decompose(double[][] polygon) throws PlannerException {
         MWNumericArray numericArray = new MWNumericArray(polygon, MWClassID.DOUBLE);
 
         try {

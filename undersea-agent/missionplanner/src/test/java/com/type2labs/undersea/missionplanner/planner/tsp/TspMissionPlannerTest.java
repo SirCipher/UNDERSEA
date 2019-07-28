@@ -26,7 +26,7 @@ public class TspMissionPlannerTest {
     public void testRun() {
         MissionPlanner missionPlanner = new TspMissionPlanner();
         MissionParameters missionParameters = new MissionParameters(1, 1,
-                new int[][]{
+                new double[][]{
                         {0, 0},
                         {0, 20},
                         {10, 50},

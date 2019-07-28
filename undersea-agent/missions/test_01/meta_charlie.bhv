@@ -19,6 +19,7 @@ Behavior = BHV_Waypoint
   updates   = WAYPOINT_charlie_UPDATES
   perpetual = true
   speed = 2.0
+  points = 
 }
 
 Behavior = BHV_Waypoint
@@ -34,6 +35,6 @@ Behavior = BHV_Waypoint
        speed = 2.0
       radius = 2.0
    nm_radius = 8.0
-       point = 0,0
+       //points = 60,-40:60,-160:150,-160:180,-100:150,-40
 }
 

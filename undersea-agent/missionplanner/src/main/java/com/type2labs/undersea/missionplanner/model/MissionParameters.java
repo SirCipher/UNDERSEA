@@ -8,15 +8,15 @@ public class MissionParameters {
     private final int agentCount;
     // TODO: remove once second provider is implemented
     private final int depot;
-    private final int[][] polygon;
+    private final double[][] polygon;
 
     private double[][] centroids;
 
-    public int[][] getPolygon() {
+    public double[][] getPolygon() {
         return polygon;
     }
 
-    public MissionParameters(int agentCount, int depot, int[][] polygon) {
+    public MissionParameters(int agentCount, int depot, double[][] polygon) {
         this.agentCount = agentCount;
         this.depot = depot;
         this.polygon = polygon;

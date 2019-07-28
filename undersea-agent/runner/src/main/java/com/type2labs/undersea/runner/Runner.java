@@ -3,8 +3,6 @@ package com.type2labs.undersea.runner;
 import com.google.ortools.constraintsolver.Assignment;
 import com.google.ortools.constraintsolver.RoutingIndexManager;
 import com.google.ortools.constraintsolver.RoutingModel;
-import com.mathworks.toolbox.javabuilder.MWApplication;
-import com.mathworks.toolbox.javabuilder.MWMCROption;
 import com.type2labs.undersea.agent.model.Agent;
 import com.type2labs.undersea.dsl.EnvironmentProperties;
 import com.type2labs.undersea.dsl.ParserEngine;
@@ -52,7 +50,7 @@ public class Runner {
 
         long index = routingModel.start(0);
 
-        Agent agent = environmentProperties.getShoreside();
+        Agent agent = environmentProperties.getAgents().get("alpha");
 
         while (!routingModel.isEnd(index)) {
             manager.indexToNode(index);
@@ -66,6 +64,9 @@ public class Runner {
         }
 
         logger.info("Assigned " + agent.getAssignedNodes().size() + " nodes to agent: " + agent.getName());
+        final String[] s = {" "};
+        agent.getAssignedNodes().forEach(n -> s[0] += n.getVector().toString() + " ");
+        logger.info("Assigned centroids: " + s[0]);
 
         for (Map.Entry<String, AgentProxy> entry : environmentProperties.getAgents().entrySet()) {
 //            AgentProxy agent = entry.getValue();
@@ -82,13 +83,9 @@ public class Runner {
         MissionPlanner missionPlanner = new TspMissionPlanner();
         int agentCount = environmentProperties.getAgents().size();
 
-        MissionParameters missionParameters = new MissionParameters(1, 1,
-                new int[][]{
-                        {0, 0},
-                        {0, 20},
-                        {10, 50},
-                        {20, 20},
-                        {20, 0}});
+        double[][] area = Utility.propertyKeyTo2dDoubleArray(properties, "environment.area");
+
+        MissionParameters missionParameters = new MissionParameters(1, 1, area);
 
         try {
             Mission mission = missionPlanner.generate(missionParameters);

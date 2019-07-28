@@ -1,0 +1,244 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% LOG FILE:       ./LOG_ALPHA_28_7_2019_____23_29_17/LOG_ALPHA_28_7_2019_____23_29_17._moos
+%% FILE OPENED ON  Thu Jan  1 01:00:00 1970
+%% LOGSTART               7821764787.36
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+//-------------------------
+// Meta vehicle config file
+//-------------------------
+ServerHost      = localhost
+ServerPort      = 9002
+
+// Community name IS the vehicle name
+Community       = alpha
+MOOSTimeWarp    = 5
+LatOrigin       = 43.825300 
+LongOrigin      = -70.330400
+
+
+//---------------------------
+// Antler configuration block
+//---------------------------
+ProcessConfig = ANTLER
+{
+	MSBetweenLaunches = 200
+	Run = MOOSDB         @ NewConsole = false
+	Run = uSimMarine     @ NewConsole = false
+	Run = pLogger        @ NewConsole = false
+	Run = pNodeReporter  @ NewConsole = false
+	Run = pMarinePID     @ NewConsole = false
+	Run = pHelmIvP       @ NewConsole = false
+	Run = uProcessWatch  @ NewConsole = false
+	Run = pShare         @ NewConsole = false
+	Run = uTimerScript   @ NewConsole = false
+	Run = pHostInfo		 @ NewConsole = false
+	Run = sUUV           @ NewConsole = false
+	Run = uFldNodeBroker @ NewConsole = false
+	Run = sSensor		 @ NewConsole = false ~SENSOR1
+	Run = sSensor		 @ NewConsole = false ~SENSOR2
+}
+
+//-------------------------------
+// uSimMarine Configuration Block
+//-------------------------------
+ProcessConfig = uSimMarine
+{
+  AppTick   = 10
+  CommsTick = 10
+
+  START_POS = x=0,y=-75, 180, 0
+  PREFIX    = NAV
+}
+
+
+//----------------------------
+// pLogger Configuration Block
+//----------------------------
+ProcessConfig = pLogger
+{
+  AppTick 	    = 10
+  CommsTick 	  = 10
+
+  File		      = LOG_ALPHA
+  PATH		      = ./
+  AsyncLog 	    = true
+  FileTimeStamp = true
+
+  LogAuxSrc       = true
+  WildCardLogging = true 
+
+  WildCardOmitPattern = *_STATUS
+
+  CompressAlogs = false
+}
+
+//----------------------------------
+// pNodeReporter Configuration Block
+//----------------------------------
+ProcessConfig = pNodeReporter
+{
+  AppTick     = 2
+  CommsTick   = 2
+  
+  VESSEL_TYPE = KAYAK
+}
+
+//-------------------------------
+// pMarinePID Configuration Block
+//-------------------------------
+ProcessConfig = pMarinePID
+{
+  AppTick       = 10
+  CommsTick     = 10
+  
+  VERBOSE       = true
+  DEPTH_CONTROL = false
+  ACTIVE_START  = true
+  
+  // Yaw PID controller
+  YAW_PID_KP             = 0.4
+  YAW_PID_KD             = 0.1
+  YAW_PID_KI             = 0.0
+  YAW_PID_INTEGRAL_LIMIT = 0.07
+  
+  // Speed PID controller
+  SPEED_PID_KP           = 1.0
+  SPEED_PID_KD           = 0.0
+  SPEED_PID_KI           = 0.0
+  SPEED_PID_INTEGRAL_LIMIT = 0.07
+  
+  // Maximums
+  MAXRUDDER  = 100
+  MAXTHRUST  = 100
+  
+  // A non-zero SPEED_FACTOR overrides use of SPEED_PID
+  // Will set DESIRED_THRUST = DESIRED_SPEED * SPEED_FACTOR
+  SPEED_FACTOR = 20
+}
+
+//-----------------------------
+// Helm IvP configuration block
+//-----------------------------
+ProcessConfig = pHelmIvP
+{
+	AppTick			= 4
+	CommsTick		= 4
+	Behaviors		= meta_alpha.bhv
+	Verbose			= quiet
+	ok_skew			= any
+	active_start	= false
+	Domain			= course:0:359:360
+	Domain			= speed:0.0:5.0:40
+}
+//----------------------------------
+// uProcessWatch Configuration Block
+//----------------------------------
+ProcessConfig = uProcessWatch
+{
+  AppTick   = 2
+  CommsTick = 2
+  
+  WATCH     = uSimMarine
+  WATCH     = pLogger
+  WATCH     = pNodeReporter
+  WATCH     = pMarinePID
+  WATCH     = pHelmIvP
+
+  NOWATCH=uXMS*
+  NOWATCH=uMAC*
+}
+//---------------------------
+// pShare Configuration Block
+//---------------------------
+ProcessConfig = pShare
+{
+  AppTick       = 2
+  CommsTick     = 2
+
+  input = route =  localhost:9303
+}
+
+//------------------------------
+// pHostInfo Configuration Block
+//------------------------------
+ProcessConfig = pHostInfo
+{
+  AppTick 	  = 1
+  CommsTick 	= 1
+
+  DEFAULT_HOSTIP_FORCE = localhost
+}
+
+//-----------------------------------
+// uFldNodeBroker Configuration Block
+//-----------------------------------
+ProcessConfig = uFldNodeBroker
+{
+  AppTick   = 1
+  CommsTick = 1
+
+  TRY_SHORE_HOST = pshare_route=localhost:9300
+
+  BRIDGE = src=VIEW_POLYGON
+  BRIDGE = src=VIEW_POINT
+  BRIDGE = src=VIEW_SEGLIST
+  BRIDGE = src=APPCAST
+  BRIDGE = src=NODE_REPORT_LOCAL,  alias=NODE_REPORT
+  BRIDGE = src=NODE_MESSAGE_LOCAL, alias=NODE_MESSAGE
+}
+
+//------------------------------------
+// AutoStartScript Configuration Block
+//------------------------------------
+ProcessConfig = uTimerScript
+{
+	AppTick 	= 2
+	CommsTick	= 2
+
+	delay_start = 5
+	event = var=MOOS_MANUAL_OVERIDE, val=false
+	event = var=DEPLOY, val=true
+	event = quit, time=10:20
+}
+
+//-------------------------
+// sUUV Configuration Block
+//-------------------------
+ProcessConfig = sUUV
+{
+	 AppTick = null
+	 CommsTick = null
+	 MAX_APPCAST_EVENTS = 25 
+	 NAME = alpha
+	 PORT = 9001
+	 SENSORS = SENSOR1,SENSOR2
+}
+
+//---------------------------------
+// SENSOR1 Configuration Block
+//---------------------------------
+ProcessConfig = SENSOR1
+{
+	 AppTick			= 3.0
+	 CommsTick			= 3.0
+	 MAX_APPCAST_EVENTS = 25 
+	 NAME				= SENSOR1
+	 RELIABILITY		= 0.9
+	 CHANGE				= 10.0:50.0:2.0
+}
+
+//---------------------------------
+// SENSOR2 Configuration Block
+//---------------------------------
+ProcessConfig = SENSOR2
+{
+	 AppTick			= 3.0
+	 CommsTick			= 3.0
+	 MAX_APPCAST_EVENTS = 25 
+	 NAME				= SENSOR2
+	 RELIABILITY		= 0.9
+	 CHANGE				= 10.0:50.0:2.0
+}
+
+
+

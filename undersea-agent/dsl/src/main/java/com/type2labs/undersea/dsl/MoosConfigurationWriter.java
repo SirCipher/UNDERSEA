@@ -38,7 +38,7 @@ class MoosConfigurationWriter {
         ivpBlock.append("\tok_skew\t\t\t= any\n");
         ivpBlock.append("\tactive_start\t= false\n");
         ivpBlock.append("\tDomain\t\t\t= course:0:359:360\n");
-        ivpBlock.append("\tDomain\t\t\t= depth:0:100:101\n");
+//        ivpBlock.append("\tDomain\t\t\t= depth:0:100:101\n");
         ivpBlock.append("\tDomain\t\t\t= speed:" + agent.getSpeedRange().getMin() + ":" + agent.getSpeedRange().getMax() + ":" + agent
                 .getSpeedRange().getValue() + "\n");
 

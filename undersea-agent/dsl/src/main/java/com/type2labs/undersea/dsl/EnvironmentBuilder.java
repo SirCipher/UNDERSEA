@@ -61,6 +61,8 @@ class EnvironmentBuilder {
 
             logger.info("-----------------------------------------");
             nsplug(agent.getMetaFileName(), agent.getMetaFileName(), nsPlugArgs);
+
+            nsPlugArgs.add("POINTS=" + agent.getBehaviour());
             nsplug("behaviour.bhv", "meta_" + agent.getName() + ".bhv", nsPlugArgs);
 
             agent.setParsed(true);

@@ -10,6 +10,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -113,6 +114,22 @@ public class Agent {
 
     public void setSpeedRange(Range speedRange) {
         this.speedRange = speedRange;
+    }
+
+    public String getBehaviour() {
+        StringBuilder result = new StringBuilder();
+        Iterator<Node> it = assignedNodes.iterator();
+
+        while (it.hasNext()) {
+            Node n = it.next();
+            result.append(n.getVector().getX()).append(",").append(n.getVector().getY());
+
+            if (it.hasNext()) {
+                result.append(":");
+            }
+        }
+
+        return result.toString();
     }
 }
 

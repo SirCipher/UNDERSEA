@@ -123,7 +123,6 @@ ProcessConfig = pHelmIvP
 	ok_skew			= any
 	active_start	= false
 	Domain			= course:0:359:360
-	Domain			= depth:0:100:101
 	Domain			= speed:0.0:5.0:40
 }
 //----------------------------------
