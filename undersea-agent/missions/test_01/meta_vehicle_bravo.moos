@@ -197,7 +197,19 @@ ProcessConfig = uTimerScript
 	event = quit, time=10:20
 }
 
-com.type2labs.undersea.dsl.uuv.model.AgentProxy@1792f7b1
+//-------------------------
+// sUUV Configuration Block
+//-------------------------
+ProcessConfig = sUUV
+{
+	 AppTick = null
+	 CommsTick = null
+	 MAX_APPCAST_EVENTS = 25 
+	 NAME = bravo
+	 PORT = 9002
+	 SENSORS = SENSOR3,SENSOR4
+}
+
 //---------------------------------
 // SENSOR3 Configuration Block
 //---------------------------------

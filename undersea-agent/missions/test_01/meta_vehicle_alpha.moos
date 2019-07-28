@@ -197,7 +197,19 @@ ProcessConfig = uTimerScript
 	event = quit, time=10:20
 }
 
-com.type2labs.undersea.dsl.uuv.model.AgentProxy@21e40317
+//-------------------------
+// sUUV Configuration Block
+//-------------------------
+ProcessConfig = sUUV
+{
+	 AppTick = null
+	 CommsTick = null
+	 MAX_APPCAST_EVENTS = 25 
+	 NAME = alpha
+	 PORT = 9001
+	 SENSORS = SENSOR1,SENSOR2
+}
+
 //---------------------------------
 // SENSOR1 Configuration Block
 //---------------------------------

@@ -79,8 +79,6 @@ public class Runner {
     }
 
     private static Mission planMission() {
-        MWApplication.initialize(MWMCROption.NODISPLAY, MWMCROption.NOJVM);
-
         MissionPlanner missionPlanner = new TspMissionPlanner();
         int agentCount = environmentProperties.getAgents().size();
 

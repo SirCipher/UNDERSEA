@@ -61,11 +61,6 @@ public class DelaunayDecomposer extends MWComponentInstance<DelaunayDecomposer> 
     private DelaunayDecomposer(final MWMCR mcr) {
         super(mcr);
 
-        if (!MWApplication.isMCRInitialized()) {
-            // Test options to see if segfaults stop happening
-            MWApplication.initialize(MWMCROption.NODISPLAY, MWMCROption.NOJVM);
-        }
-
         // add this to sInstances
         synchronized (DelaunayDecomposer.class) {
             sInstances.add(this);
@@ -117,6 +112,10 @@ public class DelaunayDecomposer extends MWComponentInstance<DelaunayDecomposer> 
 
     public static DelaunayDecomposer getInstance() {
         if (instance == null) {
+            logger.debug("Initising MW Application with arguments NODISPLAY and NOJVM");
+
+            MWApplication.initialize(MWMCROption.NODISPLAY, MWMCROption.NOJVM);
+
             try {
                 logger.info("Initialising delaunay decomposer");
                 instance = new DelaunayDecomposer();

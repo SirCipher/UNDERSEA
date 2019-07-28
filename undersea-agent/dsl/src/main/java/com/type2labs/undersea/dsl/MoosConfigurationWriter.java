@@ -221,7 +221,6 @@ class MoosConfigurationWriter {
         vehicleBlock.append("\tRun = uTimerScript   @ NewConsole = false\n");
         vehicleBlock.append("\tRun = pHostInfo\t\t @ NewConsole = false\n");
         vehicleBlock.append("\tRun = sUUV           @ NewConsole = false\n");
-
         vehicleBlock.append("\tRun = uFldNodeBroker @ NewConsole = false\n");
 
         for (Sensor sensor : agent.getSensors()) {
@@ -240,7 +239,7 @@ class MoosConfigurationWriter {
         vehicleBlock.append("#include plug_pHostInfo.moos\n");
         vehicleBlock.append("#include plug_uFldNodeBroker.moos\n");
         vehicleBlock.append("#include plug_uTimerScript.moos\n");
-        vehicleBlock.append("#include plug_AgentProxy_" + agent.getName() + ".moos\n");
+        vehicleBlock.append("#include plug_agent_" + agent.getName() + ".moos\n");
 
         for (Sensor sensor : agent.getSensors()) {
             vehicleBlock.append("#include plug_" + sensor.getName() + ".moos\n");
@@ -263,8 +262,8 @@ class MoosConfigurationWriter {
         for (Map.Entry<String, AgentProxy> entry : agents.entrySet()) {
             AgentProxy agent = entry.getValue();
 
-            //generate AgentProxy moos block
-            Utility.exportToFile(MoosConfigurationWriter.buildDir + File.separator + "plug_AgentProxy_" + agent.getName() +
+            //generate agent moos block
+            Utility.exportToFile(MoosConfigurationWriter.buildDir + File.separator + "plug_agent_" + agent.getName() +
                             ".moos",
                     agent.toString(), false);
 
