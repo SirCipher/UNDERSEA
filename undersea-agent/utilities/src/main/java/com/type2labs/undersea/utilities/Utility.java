@@ -9,8 +9,24 @@ import java.util.Properties;
 
 public class Utility {
 
+    public static final String ARRAY_KEY = ";";
+
     private Utility() {
 
+    }
+
+    public static double[][] propertyKeyTo2dDoubleArray(Properties properties, String key) {
+        String prop = getProperty(properties, key);
+        String[] values = prop.split(Utility.ARRAY_KEY);
+        double[][] result = new double[values.length][2];
+
+        for (int i = 0; i < values.length; i++) {
+            String[] dubs = values[i].trim().split(" ");
+            result[i][0] = Double.parseDouble(dubs[0]);
+            result[i][1] = Double.parseDouble(dubs[1]);
+        }
+
+        return result;
     }
 
     public static void copyFile(File source, File dest) {
@@ -103,9 +119,9 @@ public class Utility {
 
     public static Properties getPropertiesByName(String name) {
         try {
-            Properties moosProperties = new Properties();
-            moosProperties.load(new FileInputStream(name));
-            return moosProperties;
+            Properties result = new Properties();
+            result.load(new FileInputStream(name));
+            return result;
         } catch (IOException e) {
             throw new RuntimeException("Unable to load or find " + name, e);
         }
