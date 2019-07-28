@@ -1,7 +1,7 @@
 package com.type2labs.undersea.agent.model;
 
 
-import com.type2labs.consensus.Consensus;
+import com.type2labs.undersea.consensus.Consensus;
 import com.type2labs.undersea.controller.controller.Controller;
 import com.type2labs.undersea.missionplanner.model.MissionPlanner;
 import com.type2labs.undersea.missionplanner.model.node.Node;
@@ -31,7 +31,7 @@ public class Agent {
     private Range speedRange;
     private List<Sensor> sensors = new ArrayList<>();
 
-    public void assignNode(Node node){
+    public void assignNode(Node node) {
         assignedNodes.add(node);
     }
 

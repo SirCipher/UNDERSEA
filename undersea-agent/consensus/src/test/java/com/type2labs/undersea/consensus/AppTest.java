@@ -1,4 +1,4 @@
-package com.type2labs;
+package com.type2labs.undersea.consensus;
 
 import org.junit.Test;
 
