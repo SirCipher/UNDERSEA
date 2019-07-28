@@ -1,0 +1,13 @@
+//------------------------------------------
+// AutoStartScript config block
+//------------------------------------------
+ProcessConfig = uTimerScript
+{
+	AppTick 	= 2
+	CommsTick	= 2
+
+	delay_start = 5
+	event = var=MOOS_MANUAL_OVERIDE, val=false
+	event = var=DEPLOY, val=true
+	event = quit, time=10:20
+}

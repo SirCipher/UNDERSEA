@@ -1,38 +1,78 @@
-# Starter pipeline
-# Start with a minimal pipeline that you can customize to build and deploy your code.
-# Add steps that build, run tests, deploy, and more:
-# https://aka.ms/yaml
-
 trigger:
 - master
 
-pool:
-  vmImage: 'ubuntu-latest'
+jobs:
+  - job: Linux
+    pool: Hosted Ubuntu 1604
 
-steps:
-# Gradle
-# Build using a Gradle wrapper script
-- task: Gradle@2
-  inputs:
-    #gradleWrapperFile: 'gradlew' 
-    #workingDirectory: # Optional
-    #options: # Optional
-    tasks: 'build test' # A list of tasks separated by spaces, such as 'build test'
-    #publishJUnitResults: true 
-    #testResultsFiles: '**/TEST-*.xml' # Required when publishJUnitResults == True
-    #testRunTitle: # Optional
-    #codeCoverageToolOption: 'None' # Optional. Options: none, cobertura, jaCoCo
-    #codeCoverageClassFilesDirectories: 'build/classes/main/' # Required when codeCoverageToolOption == False
-    #codeCoverageClassFilter: # Optional. Comma-separated list of filters to include or exclude classes from collecting code coverage. For example: +:com.*,+:org.*,-:my.app*.*
-    #codeCoverageFailIfEmpty: false # Optional
-    #javaHomeOption: 'JDKVersion' # Options: jDKVersion, path
-    #jdkVersionOption: 'default' # Optional. Options: default, 1.11, 1.10, 1.9, 1.8, 1.7, 1.6
-    #jdkDirectory: # Required when javaHomeOption == Path
-    #jdkArchitectureOption: 'x64' # Optional. Options: x86, x64
-    #gradleOptions: '-Xmx1024m' # Optional
-    #sonarQubeRunAnalysis: false 
-    #sqGradlePluginVersionChoice: 'specify' # Required when sonarQubeRunAnalysis == True# Options: specify, build
-    #sonarQubeGradlePluginVersion: '2.6.1' # Required when sonarQubeRunAnalysis == True && SqGradlePluginVersionChoice == Specify
-    #checkStyleRunAnalysis: false # Optional
-    #findBugsRunAnalysis: false # Optional
-    #pmdRunAnalysis: false # Optional
+    steps:
+    - task: ShellScript@2
+      inputs:
+        scriptPath: 'setup.sh'
+        args: '--all'
+      displayName: 'Initialise toolchain'
+    - script: |
+        export PATH="libraries/moos-ivp/bin:$PATH"
+        export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:libraries/MATLAB/v95/sys/os/glnxa64:libraries/MATLAB/v95/bin/glnxa64:libraries/MATLAB/v95/runtime/glnxa64
+        source ~/.bashrc
+        echo $PATH
+        cd libraries/moos-ivp/bin
+        IVP="$(pwd)"
+        cd ../../..
+        echo 'moosivp='"$IVP"'' >undersea-agent/resources/moos.properties
+        cd libraries/MATLAB/v95/bin/glnxa64
+        find -L . -name . -o -type d -prune -o -type l -exec rm {} +
+      displayName: 'Setup environment parameters'
+    - task: Gradle@2
+      inputs:
+        gradleWrapperFile: 'undersea-agent/gradlew'
+        workingDirectory: 'undersea-agent'
+        tasks: 'clean build test --info'
+        javaHomeOption: 'JDKVersion'
+        codeCoverageToolOption: 'None'
+      displayName: 'Gradle build and test'
+    - task: PublishTestResults@2
+      inputs:
+        testResultsFormat: 'JUnit'
+        testResultsFiles: '**/TEST-*.xml'
+        searchFolder: 'undersea-agent'
+        mergeTestResults: true
+        testRunTitle: 'Ubuntu 16.04 Tests'
+      displayName: "Publish test results"
+
+  - job: Mac
+    pool: Hosted macOS
+
+    steps:
+    - task: ShellScript@2
+      inputs:
+        scriptPath: 'setup.sh'
+        args: '--all'
+      displayName: 'Initialise toolchain'
+    - script: |
+        export PATH="/libraries/moos-ivp/bin:$PATH"
+        export DYLD_LIBRARY_PATH=$DYLD_LIBRARY_PATH:libraries/MATLAB/v95/sys/os/maci64:libraries/MATLAB/v95/bin/maci64:libraries/MATLAB/v95/runtime/maci64
+        echo $PATH
+        cd libraries/moos-ivp/bin
+        IVP="$(pwd)"
+        cd ../../..
+        echo 'moosivp='"$IVP"'' >undersea-agent/resources/moos.properties
+        cd libraries/MATLAB/v95/bin/maci64
+        find -L . -name . -o -type d -prune -o -type l -exec rm {} +
+      displayName: 'Setup environment parameters'
+    - task: Gradle@2
+      inputs:
+        gradleWrapperFile: 'undersea-agent/gradlew'
+        workingDirectory: 'undersea-agent'
+        tasks: 'clean build test --info'
+        javaHomeOption: 'JDKVersion'
+        codeCoverageToolOption: 'None'
+      displayName: 'Gradle build and test'
+    - task: PublishTestResults@2
+      inputs:
+        testResultsFormat: 'JUnit'
+        testResultsFiles: '**/TEST-*.xml'
+        searchFolder: 'undersea-agent'
+        mergeTestResults: true
+        testRunTitle: 'OSX Tests'
+      displayName: "Publish test results"
