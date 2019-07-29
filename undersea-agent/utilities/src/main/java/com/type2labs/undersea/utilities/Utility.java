@@ -25,9 +25,8 @@ public class Utility {
 
     }
 
-    public static double[][] propertyKeyTo2dDoubleArray(Properties properties, String key) {
-        String prop = getProperty(properties, key);
-        String[] values = prop.split(Utility.ARRAY_KEY);
+    public static double[][] stringTo2dDoubleArray(String s) {
+        String[] values = s.split(Utility.ARRAY_KEY);
         double[][] result = new double[values.length][2];
 
         for (int i = 0; i < values.length; i++) {
@@ -43,6 +42,11 @@ public class Utility {
         }
 
         return result;
+    }
+
+    public static double[][] propertyKeyTo2dDoubleArray(Properties properties, String key) {
+        String prop = getProperty(properties, key);
+        return stringTo2dDoubleArray(prop);
     }
 
     public static void copyFile(File source, File dest) {

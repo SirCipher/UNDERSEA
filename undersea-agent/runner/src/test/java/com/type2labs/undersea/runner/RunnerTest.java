@@ -1,14 +1,19 @@
 package com.type2labs.undersea.runner;
 
+import org.junit.Assert;
 import org.junit.Test;
 
+import java.io.File;
 import java.io.IOException;
 
 public class RunnerTest {
 
     @Test
     public void testRunner() throws IOException {
-        Runner.main(new String[]{"../resources/runner.properties"});
+        String testProperties = "src/test/resources/test.properties";
+
+        Assert.assertTrue(new File(testProperties).exists());
+        Runner.main(new String[]{testProperties});
     }
 
 }

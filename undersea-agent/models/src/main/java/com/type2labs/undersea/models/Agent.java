@@ -23,14 +23,21 @@ public class Agent {
     private String serverPort;
     private Range speedRange;
     private List<Sensor> sensors = new ArrayList<>();
+    // TEST
+    // Assume 1 per metre travelled
+    private double batteryRange = ThreadLocalRandom.current().nextDouble(100);
+
+    public Agent() {
+
+    }
+
+    public Agent(String name) {
+        this.name = name;
+    }
 
     public double getBatteryRange() {
         return batteryRange;
     }
-
-    // TEST
-    // Assume 1 per metre travelled
-    private double batteryRange = ThreadLocalRandom.current().nextDouble(100);
 
     public void assignNode(Node node) {
         assignedNodes.add(node);

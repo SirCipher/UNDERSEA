@@ -32,7 +32,7 @@ public class MultiVehicleRoutingOptimiserTest {
         Properties properties = Utility.getPropertiesByName("../resources/runner.properties");
         double[][] area = Utility.propertyKeyTo2dDoubleArray(properties, "environment.area");
 
-        List<Agent> agents = new ArrayList<>(Collections.singletonList(new Agent()));
+        List<Agent> agents = new ArrayList<>(Collections.singletonList(new Agent("test")));
 
         MissionParameters missionParameters = new MissionParameters(agents, 1, area, 50);
 

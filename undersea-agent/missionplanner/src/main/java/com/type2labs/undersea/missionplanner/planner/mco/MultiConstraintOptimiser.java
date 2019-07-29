@@ -10,6 +10,7 @@ import com.type2labs.undersea.missionplanner.model.Mission;
 import com.type2labs.undersea.missionplanner.model.MissionParameters;
 import com.type2labs.undersea.missionplanner.model.MissionPlanner;
 import com.type2labs.undersea.missionplanner.model.PlanDataModel;
+import com.type2labs.undersea.missionplanner.planner.MatlabFactory;
 import com.type2labs.undersea.models.Agent;
 import com.type2labs.undersea.utilities.PlannerUtils;
 import org.apache.logging.log4j.LogManager;
@@ -20,7 +21,7 @@ import java.util.ArrayList;
 public class MultiConstraintOptimiser implements MissionPlanner {
 
     private static final Logger logger = LogManager.getLogger(MultiConstraintOptimiser.class);
-    private static final DelaunayDecomposer decomposer = DelaunayDecomposer.getInstance();
+    private static final DelaunayDecomposer decomposer = MatlabFactory.getDelaunayDecomposer();
 
     static {
         try {
@@ -66,8 +67,6 @@ public class MultiConstraintOptimiser implements MissionPlanner {
 
         PlanDataModel model = new PlanDataModel(missionParameters, distanceMatrix);
 
-        decomposer.dispose();
-
         return solve(model, missionParameters);
     }
 
@@ -91,27 +90,8 @@ public class MultiConstraintOptimiser implements MissionPlanner {
                         return (long) (agent.getBatteryRange() - model.getDistanceMatrix()[fromNode][toNode]);
                     });
 
-            routing.setArcCostEvaluatorOfVehicle(i, agentTransitCallback);
+            routing.setArcCostEvaluatorOfVehicle(agentTransitCallback, i);
         }
-
-        // Create and register a transit callback.
-        final int transitCallbackIndex =
-                routing.registerTransitCallback((long fromIndex, long toIndex) -> {
-                    // Convert from routing variable Index to user NodeIndex.
-                    int fromNode = manager.indexToNode(fromIndex);
-                    int toNode = manager.indexToNode(toIndex);
-                    return (long) model.getDistanceMatrix()[fromNode][toNode];
-                });
-
-        // Define cost of each arc.
-        routing.setArcCostEvaluatorOfAllVehicles(transitCallbackIndex);
-
-        // Add Distance constraint.
-        routing.addDimension(transitCallbackIndex, 0, 3000,
-                true, // start cumul to zero
-                "Distance");
-        RoutingDimension distanceDimension = routing.getMutableDimension("Distance");
-        distanceDimension.setGlobalSpanCostCoefficient(100);
 
         // Setting first solution heuristic.
         RoutingSearchParameters searchParameters =

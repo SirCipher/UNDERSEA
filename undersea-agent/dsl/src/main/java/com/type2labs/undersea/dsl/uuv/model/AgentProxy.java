@@ -12,6 +12,14 @@ public class AgentProxy extends Agent {
 
     private String metaFileName;
 
+    public AgentProxy() {
+
+    }
+
+    public AgentProxy(String name) {
+        super(name);
+    }
+
     public void checkParsed(String access) {
         if (!parsed) {
             throw new RuntimeException("Cannot set " + access + " before agent has been parsed");

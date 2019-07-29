@@ -7,33 +7,48 @@ import com.type2labs.undersea.missionplanner.exception.PlannerException;
 import com.type2labs.undersea.missionplanner.model.Mission;
 import com.type2labs.undersea.missionplanner.model.MissionParameters;
 import com.type2labs.undersea.missionplanner.model.MissionPlanner;
-import com.type2labs.undersea.missionplanner.planner.vrp.MultiVehicleRoutingOptimiser;
 import com.type2labs.undersea.models.Agent;
-import com.type2labs.undersea.models.EnvironmentProperties;
 import com.type2labs.undersea.models.Node;
 import com.type2labs.undersea.utilities.Utility;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.junit.Test;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Properties;
 
 public class MultiConstraintOptimiserTest {
 
     private static final Logger logger = LogManager.getLogger(MultiConstraintOptimiserTest.class);
-    private static Properties properties;
+    private static List<Agent> agents = new ArrayList<>(5);
 
-    public static void main(String[] args) throws IOException {
-        if (args.length != 1) {
-            throw new IllegalArgumentException("runner.properties file location must be supplied");
+    static {
+        for (int i = 0; i < 3; i++) {
+            agents.add(new Agent(Integer.toString(i)));
+        }
+    }
+
+    @Test
+    public void init() {
+        new MultiConstraintOptimiser();
+    }
+
+    @Test
+    public void test() {
+        MissionPlanner missionPlanner = new MultiConstraintOptimiser();
+        double[][] area = Utility.stringTo2dDoubleArray("0 0; 150 0; 150 -140; 0 -140;");
+
+        MissionParameters missionParameters = new MissionParameters(agents, 0, area, 30);
+        Mission mission;
+
+        try {
+            mission = missionPlanner.generate(missionParameters);
+            missionPlanner.print(mission);
+        } catch (PlannerException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Failed to plan mission", e);
         }
 
-        properties = Utility.getPropertiesByName(args[0]);
-        logger.info("Initialised " + properties.size() + " properties");
-
-        Mission mission = planMission();
         RoutingModel routingModel = mission.getRoutingModel();
         Assignment assignment = mission.getAssignment();
         RoutingIndexManager manager = mission.getRoutingIndexManager();
@@ -59,22 +74,5 @@ public class MultiConstraintOptimiserTest {
         }
     }
 
-    private static Mission planMission() {
-        MissionPlanner missionPlanner = new MultiVehicleRoutingOptimiser();
-
-        double[][] area = Utility.propertyKeyTo2dDoubleArray(properties, "environment.area");
-
-        MissionParameters missionParameters = new MissionParameters(agents, 0, area, 30);
-
-        try {
-            Mission mission = missionPlanner.generate(missionParameters);
-            missionPlanner.print(mission);
-
-            return mission;
-        } catch (PlannerException e) {
-            e.printStackTrace();
-            throw new RuntimeException("Failed to plan mission", e);
-        }
-    }
 
 }

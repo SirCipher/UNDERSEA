@@ -110,25 +110,6 @@ public class DelaunayDecomposer extends MWComponentInstance<DelaunayDecomposer> 
         }
     }
 
-    public static DelaunayDecomposer getInstance() {
-        if (instance == null) {
-            logger.debug("Initising MW Application with arguments NODISPLAY and NOJVM");
-
-            MWApplication.initialize(MWMCROption.NODISPLAY, MWMCROption.NOJVM);
-
-            try {
-                logger.info("Initialising delaunay decomposer");
-                instance = new DelaunayDecomposer();
-                logger.info("Initialised delaunay decomposer");
-            } catch (MWException e) {
-                logger.error("Unable to initialise decomposer");
-                throw new RuntimeException("Unable to initialise decomposer", e);
-            }
-        }
-
-        return instance;
-    }
-
     private static MWComponentOptions getPathToComponentOptions(String path) {
         MWComponentOptions options = new MWComponentOptions(new MWCtfExtractLocation(path),
                 new MWCtfDirectorySource(path));

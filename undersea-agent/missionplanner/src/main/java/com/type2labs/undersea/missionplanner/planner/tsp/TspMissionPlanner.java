@@ -10,6 +10,7 @@ import com.type2labs.undersea.missionplanner.model.Mission;
 import com.type2labs.undersea.missionplanner.model.MissionParameters;
 import com.type2labs.undersea.missionplanner.model.MissionPlanner;
 import com.type2labs.undersea.missionplanner.model.PlanDataModel;
+import com.type2labs.undersea.missionplanner.planner.MatlabFactory;
 import com.type2labs.undersea.utilities.PlannerUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -22,7 +23,7 @@ import java.util.ArrayList;
 public class TspMissionPlanner implements MissionPlanner {
 
     private static final Logger logger = LogManager.getLogger(TspMissionPlanner.class);
-    private static final DelaunayDecomposer decomposer = DelaunayDecomposer.getInstance();
+    private static final DelaunayDecomposer decomposer = MatlabFactory.getDelaunayDecomposer();
 
     static {
         try {

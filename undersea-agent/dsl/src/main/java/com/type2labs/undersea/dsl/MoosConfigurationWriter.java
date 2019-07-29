@@ -15,8 +15,8 @@ import java.util.Map;
 @SuppressWarnings("StringConcatenationInsideStringBufferAppend")
 class MoosConfigurationWriter {
 
-    private static EnvironmentProperties environmentProperties;
     private static final SensorFactory sensorFactory = FactoryProvider.getSensorFactory();
+    private static EnvironmentProperties environmentProperties;
     private static String buildDir;
 
 
