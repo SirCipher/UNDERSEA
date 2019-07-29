@@ -6,19 +6,19 @@ import com.google.ortools.constraintsolver.RoutingModel;
 import com.type2labs.undersea.agent.model.Agent;
 import com.type2labs.undersea.dsl.EnvironmentProperties;
 import com.type2labs.undersea.dsl.ParserEngine;
-import com.type2labs.undersea.dsl.uuv.model.AgentProxy;
 import com.type2labs.undersea.missionplanner.exception.PlannerException;
 import com.type2labs.undersea.missionplanner.model.Mission;
 import com.type2labs.undersea.missionplanner.model.MissionParameters;
 import com.type2labs.undersea.missionplanner.model.MissionPlanner;
 import com.type2labs.undersea.missionplanner.model.node.Node;
-import com.type2labs.undersea.missionplanner.planner.tsp.TspMissionPlanner;
+import com.type2labs.undersea.missionplanner.planner.vrp.MultiVehicleRoutingOptimiser;
 import com.type2labs.undersea.utilities.Utility;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 
 /**
@@ -48,29 +48,26 @@ public class Runner {
         Assignment assignment = mission.getAssignment();
         RoutingIndexManager manager = mission.getRoutingIndexManager();
 
-        long index = routingModel.start(0);
 
-        Agent agent = environmentProperties.getAgents().get("alpha");
+        List<Agent> agents = new ArrayList<>(environmentProperties.getAgents().values());
 
-        while (!routingModel.isEnd(index)) {
-            manager.indexToNode(index);
+        for (int i = 0; i < manager.getNumberOfVehicles(); ++i) {
+            long index = routingModel.start(i);
+            Agent agent = agents.get(i);
 
-            double[] centroid = mission.getMissionParameters().getCentroid((int) index);
+            while (!routingModel.isEnd(index)) {
+                int centroidIndex = manager.indexToNode(index);
+                index = assignment.value(routingModel.nextVar(index));
 
-            Node node = new Node(centroid[0], centroid[1]);
-            agent.assignNode(node);
+                double[] centroid = mission.getMissionParameters().getCentroid(centroidIndex);
 
-            index = assignment.value(routingModel.nextVar(index));
+                Node node = new Node(centroid[0], centroid[1]);
+                agent.assignNode(node);
+            }
         }
 
-        logger.info("Assigned " + agent.getAssignedNodes().size() + " nodes to agent: " + agent.getName());
-        final String[] s = {" "};
-        agent.getAssignedNodes().forEach(n -> s[0] += n.getVector().toString() + " ");
-        logger.info("Assigned centroids: " + s[0]);
-
-        for (Map.Entry<String, AgentProxy> entry : environmentProperties.getAgents().entrySet()) {
-//            AgentProxy agent = entry.getValue();
-            // TODO: Set agent's behaviour parameter based on mission output
+        for (Agent a : agents) {
+            System.out.println("Agent: " + a.getName() + " assigned nodes: " + a.getAssignedNodes());
         }
 
         parserEngine.generateFiles();
@@ -80,12 +77,12 @@ public class Runner {
     }
 
     private static Mission planMission() {
-        MissionPlanner missionPlanner = new TspMissionPlanner();
+        MissionPlanner missionPlanner = new MultiVehicleRoutingOptimiser();
         int agentCount = environmentProperties.getAgents().size();
 
         double[][] area = Utility.propertyKeyTo2dDoubleArray(properties, "environment.area");
 
-        MissionParameters missionParameters = new MissionParameters(1, 1, area, 50);
+        MissionParameters missionParameters = new MissionParameters(agentCount, 0, area, 30);
 
         try {
             Mission mission = missionPlanner.generate(missionParameters);

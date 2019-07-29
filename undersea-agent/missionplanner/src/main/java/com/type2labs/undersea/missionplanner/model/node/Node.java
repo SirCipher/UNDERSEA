@@ -36,6 +36,14 @@ public class Node {
         this.nodeStatus = nodeStatus;
     }
 
+    @Override
+    public String toString() {
+        return "Node{" +
+                "vector=" + vector +
+                ", nodeStatus=" + nodeStatus +
+                '}';
+    }
+
     public enum NodeStatus {
         UNVISITED, VISITED, POINT_OF_INTEREST
     }
