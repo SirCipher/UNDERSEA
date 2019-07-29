@@ -34,7 +34,7 @@ repo/ortools/
 out/
 target/
 build/
-.gradle
+.gradle/
 *.class
 
 # Ignore Gradle GUI config
