@@ -1,4 +1,4 @@
-package com.type2labs.undersea.missionplanner.utils;
+package com.type2labs.undersea.utilities;
 
 import org.junit.Assert;
 import org.junit.Test;

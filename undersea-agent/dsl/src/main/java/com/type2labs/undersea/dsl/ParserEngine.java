@@ -26,6 +26,11 @@ public class ParserEngine {
     private final EnvironmentProperties environmentProperties = new EnvironmentProperties();
 
     public static Properties properties;
+
+    public EnvironmentProperties getEnvironmentProperties() {
+        return environmentProperties;
+    }
+
     private boolean errorsFound = false;
 
     private SensorsParser createSensorParser() throws IOException {
@@ -133,7 +138,6 @@ public class ParserEngine {
     public ParserEngine(Properties runnerProperties) {
         ParserEngine.properties = runnerProperties;
         EnvironmentProperties.setRunnerProperties(runnerProperties);
-
     }
 
     private void runSensorListener() throws IOException {

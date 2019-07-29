@@ -31,6 +31,10 @@ public class EnvironmentProperties {
         this.agents.put(agent.getName(), agent);
     }
 
+    public Map<String, AgentProxy> getAllAgents(){
+        return agents;
+    }
+
     public Map<String, AgentProxy> getAgents() {
         return agents.entrySet().stream()
                 .filter(a -> !a.getValue().getName().equals("shoreside"))

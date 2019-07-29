@@ -1,4 +1,4 @@
-package com.type2labs.undersea.missionplanner.utils;
+package com.type2labs.undersea.utilities;
 
 /**
  * Created by Thomas Klapwijk on 2019-07-22.
