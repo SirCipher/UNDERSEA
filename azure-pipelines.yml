@@ -12,10 +12,9 @@ jobs:
         args: '--all'
       displayName: 'Initialise toolchain'
     - script: |
-        export PATH="libraries/moos-ivp/bin:$PATH"
-        export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:libraries/MATLAB/v95/sys/os/glnxa64:libraries/MATLAB/v95/bin/glnxa64:libraries/MATLAB/v95/runtime/glnxa64
-        source ~/.bashrc
-        echo $PATH
+        echo '##vso[task.setvariable variable=moos]$(PATH):/libraries/moos-ivp/bin'
+      displayName: 'Set PATH'
+    - script: |
         cd libraries/MATLAB/v95/bin/glnxa64
         find -L . -name . -o -type d -prune -o -type l -exec rm {} +
       displayName: 'Setup environment parameters'
@@ -46,9 +45,9 @@ jobs:
         args: '--all'
       displayName: 'Initialise toolchain'
     - script: |
-        export PATH="/libraries/moos-ivp/bin:$PATH"
-        export DYLD_LIBRARY_PATH=$DYLD_LIBRARY_PATH:libraries/MATLAB/v95/sys/os/maci64:libraries/MATLAB/v95/bin/maci64:libraries/MATLAB/v95/runtime/maci64
-        echo $PATH
+        echo '##vso[task.setvariable variable=moos]$(PATH):/libraries/moos-ivp/bin'
+      displayName: 'Set PATH'
+    - script: |
         cd libraries/MATLAB/v95/bin/maci64
         find -L . -name . -o -type d -prune -o -type l -exec rm {} +
       displayName: 'Setup environment parameters'
