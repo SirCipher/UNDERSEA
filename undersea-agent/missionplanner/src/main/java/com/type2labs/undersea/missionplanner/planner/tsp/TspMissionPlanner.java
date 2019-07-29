@@ -24,7 +24,6 @@ public class TspMissionPlanner implements MissionPlanner {
     private static final Logger logger = LogManager.getLogger(TspMissionPlanner.class);
     private static final DelaunayDecomposer decomposer = DelaunayDecomposer.getInstance();
 
-
     static {
         try {
             System.loadLibrary("jniortools");

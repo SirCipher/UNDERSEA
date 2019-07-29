@@ -15,8 +15,8 @@ import java.util.Map;
 @SuppressWarnings("StringConcatenationInsideStringBufferAppend")
 class MoosConfigurationWriter {
 
-    private static final SensorFactory sensorFactory = FactoryProvider.getSensorFactory();
     private static EnvironmentProperties environmentProperties;
+    private static final SensorFactory sensorFactory = FactoryProvider.getSensorFactory();
     private static String buildDir;
 
 
@@ -100,7 +100,7 @@ class MoosConfigurationWriter {
 
         launchScript.append("\nprintf \"Done killing processes...\\n\"\n");
 
-        Utility.exportToFileWithPermissions(MoosConfigurationWriter.buildDir + File.separator + "launch.sh",
+        Utility.exportToFileWithPermissions(MoosConfigurationWriter.buildDir + File.separator + "pAntler-launch.sh",
                 launchScript.toString(),
                 false, Collections.singletonList(PosixFilePermission.OWNER_EXECUTE));
     }
