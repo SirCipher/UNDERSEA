@@ -14,7 +14,7 @@ Behavior = BHV_Waypoint
 { 
   name      = waypt_survey
   pwt       = 100
-  lead      = 2
+  lead      = 1
   lead_damper = 1
   capture_line = true
   condition = MODE == SURVEYING

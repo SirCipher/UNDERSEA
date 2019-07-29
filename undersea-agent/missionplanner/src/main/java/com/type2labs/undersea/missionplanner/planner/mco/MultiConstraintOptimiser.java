@@ -12,6 +12,7 @@ import com.type2labs.undersea.missionplanner.model.MissionPlanner;
 import com.type2labs.undersea.missionplanner.model.PlanDataModel;
 import com.type2labs.undersea.missionplanner.planner.MatlabFactory;
 import com.type2labs.undersea.models.Agent;
+import com.type2labs.undersea.models.Sensor;
 import com.type2labs.undersea.utilities.PlannerUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -87,7 +88,12 @@ public class MultiConstraintOptimiser implements MissionPlanner {
                         int fromNode = manager.indexToNode(fromIndex);
                         int toNode = manager.indexToNode(toIndex);
 
-                        return (long) (agent.getBatteryRange() - model.getDistanceMatrix()[fromNode][toNode]);
+                        double speed = agent.getSpeedRange().getMax();
+                        double distance = model.getDistanceMatrix()[fromNode][toNode];
+                        double sensorAccuracy = agent.getSensors().stream().mapToDouble(Sensor::getReliability).sum();
+                        double totalRate = agent.getSensors().stream().mapToDouble(Sensor::getRate).sum();
+
+                        return (long) ((sensorAccuracy + totalRate) / speed / distance);
                     });
 
             routing.setArcCostEvaluatorOfVehicle(agentTransitCallback, i);

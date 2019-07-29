@@ -78,7 +78,7 @@ public class Runner {
     }
 
     private static Mission planMission() {
-        MissionPlanner missionPlanner = new MultiConstraintOptimiser();
+        MissionPlanner missionPlanner = new MultiVehicleRoutingOptimiser();
         int agentCount = environmentProperties.getAgents().size();
 
         double[][] area = Utility.propertyKeyTo2dDoubleArray(properties, "environment.area");

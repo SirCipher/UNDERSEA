@@ -101,7 +101,7 @@ public class MultiVehicleRoutingOptimiser implements MissionPlanner {
         RoutingSearchParameters searchParameters =
                 main.defaultRoutingSearchParameters()
                         .toBuilder()
-                        .setFirstSolutionStrategy(FirstSolutionStrategy.Value.PATH_CHEAPEST_ARC)
+                        .setFirstSolutionStrategy(FirstSolutionStrategy.Value.AUTOMATIC)
                         .build();
 
         // Solve the problem.
