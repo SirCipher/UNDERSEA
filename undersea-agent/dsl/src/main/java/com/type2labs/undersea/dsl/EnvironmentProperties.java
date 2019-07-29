@@ -37,6 +37,10 @@ public class EnvironmentProperties {
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
 
+    public int getTotalNumberOfAgents(){
+        return agents.size();
+    }
+
     public String getEnvironmentValue(EnvironmentValue environmentValue) {
         return environmentValues.get(environmentValue);
     }

@@ -95,7 +95,7 @@ class MoosConfigurationWriter {
 
         launchScript.append("kill");
 
-        for (int i = 0; i < environmentProperties.getAgents().size(); i++) {
+        for (int i = 0; i < environmentProperties.getTotalNumberOfAgents(); i++) {
             launchScript.append(" %").append(i + 1);
         }
 
