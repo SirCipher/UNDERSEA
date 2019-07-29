@@ -21,9 +21,6 @@ dependency-reduced-pom.xml
 
 hs_err_pid*
 
-
-moos.properties
-
 # Package Files #
 *.jar
 *.war
@@ -47,3 +44,7 @@ gradle-app.setting
 
 # Cache of project
 .gradletasknamecache
+
+# MOOS files
+missions/
+moos.properties
