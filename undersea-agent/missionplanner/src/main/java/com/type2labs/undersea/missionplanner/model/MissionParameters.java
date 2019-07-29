@@ -16,6 +16,10 @@ public class MissionParameters {
     private double minimumSensorRange;
     private double[][] centroids;
 
+    public List<Agent> getAgents() {
+        return agents;
+    }
+
     public MissionParameters(List<Agent> agents, int depot, double[][] polygon, int minimumSensorRange) {
         this.agents = agents;
         this.depot = depot;

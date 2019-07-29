@@ -7,6 +7,7 @@ import org.apache.logging.log4j.Logger;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * Created by Thomas Klapwijk on 2019-07-23.
@@ -22,6 +23,14 @@ public class Agent {
     private String serverPort;
     private Range speedRange;
     private List<Sensor> sensors = new ArrayList<>();
+
+    public double getBatteryRange() {
+        return batteryRange;
+    }
+
+    // TEST
+    // Assume 1 per metre travelled
+    private double batteryRange = ThreadLocalRandom.current().nextDouble(100);
 
     public void assignNode(Node node) {
         assignedNodes.add(node);

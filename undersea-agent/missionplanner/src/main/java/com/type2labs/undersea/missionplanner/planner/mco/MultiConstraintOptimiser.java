@@ -10,6 +10,7 @@ import com.type2labs.undersea.missionplanner.model.Mission;
 import com.type2labs.undersea.missionplanner.model.MissionParameters;
 import com.type2labs.undersea.missionplanner.model.MissionPlanner;
 import com.type2labs.undersea.missionplanner.model.PlanDataModel;
+import com.type2labs.undersea.models.Agent;
 import com.type2labs.undersea.utilities.PlannerUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -80,14 +81,17 @@ public class MultiConstraintOptimiser implements MissionPlanner {
         RoutingModel routing = new RoutingModel(manager);
 
         for (int i = 0; i < manager.getNumberOfVehicles(); i++) {
+            Agent agent = missionParameters.getAgents().get(i);
 
+            final int agentTransitCallback =
+                    routing.registerTransitCallback((long fromIndex, long toIndex) -> {
+                        int fromNode = manager.indexToNode(fromIndex);
+                        int toNode = manager.indexToNode(toIndex);
 
-//            final int agentTransitCallback =
-//                    routing.registerTransitCallback((long fromIndex, long toIndex) -> {
-//
-//                    });
+                        return (long) (agent.getBatteryRange() - model.getDistanceMatrix()[fromNode][toNode]);
+                    });
 
-//            routing.setArcCostEvaluatorOfVehicle(i, agentTransitCallback);
+            routing.setArcCostEvaluatorOfVehicle(i, agentTransitCallback);
         }
 
         // Create and register a transit callback.

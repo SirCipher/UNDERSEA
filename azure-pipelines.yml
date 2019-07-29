@@ -18,6 +18,9 @@ jobs:
         cd libraries/MATLAB/v95/bin/glnxa64
         find -L . -name . -o -type d -prune -o -type l -exec rm {} +
       displayName: 'Setup environment parameters'
+    - script: |
+        echo PATH is $PATH
+      displayName: 'Echo PATH'
     - task: Gradle@2
       inputs:
         gradleWrapperFile: 'undersea-agent/gradlew'
