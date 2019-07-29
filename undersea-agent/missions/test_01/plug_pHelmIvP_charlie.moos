@@ -1,0 +1,14 @@
+//-----------------------------
+// Helm IvP configuration block
+//-----------------------------
+ProcessConfig = pHelmIvP
+{
+	AppTick			= 4
+	CommsTick		= 4
+	Behaviors		= meta_charlie.bhv
+	Verbose			= quiet
+	ok_skew			= any
+	active_start	= false
+	Domain			= course:0:359:360
+	Domain			= speed:0.0:5.0:40
+}

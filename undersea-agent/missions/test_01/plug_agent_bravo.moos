@@ -1,0 +1,12 @@
+//-------------------------
+// sUUV Configuration Block
+//-------------------------
+ProcessConfig = sUUV
+{
+	 AppTick = null
+	 CommsTick = null
+	 MAX_APPCAST_EVENTS = 25 
+	 NAME = bravo
+	 PORT = 9002
+	 SENSORS = SENSOR3,SENSOR4
+}

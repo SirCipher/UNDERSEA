@@ -1,6 +1,8 @@
 package com.type2labs.undersea.utilities;
 
 import org.apache.commons.lang3.SystemUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.*;
 import java.nio.channels.FileChannel;
@@ -9,9 +11,14 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.nio.file.attribute.PosixFilePermission;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Properties;
+import java.util.Set;
 
 public class Utility {
+
+    private static final Logger logger = LogManager.getLogger(Utility.class);
 
     public static final String ARRAY_KEY = ";";
 
@@ -26,8 +33,14 @@ public class Utility {
 
         for (int i = 0; i < values.length; i++) {
             String[] dubs = values[i].trim().split(" ");
-            result[i][0] = Double.parseDouble(dubs[0]);
-            result[i][1] = Double.parseDouble(dubs[1]);
+            try {
+                result[i][0] = Double.parseDouble(dubs[0]);
+                result[i][1] = Double.parseDouble(dubs[1]);
+            } catch (NumberFormatException e) {
+                logger.error("Failed to parse value: " + Arrays.toString(dubs) + ". Property file arrays should be in" +
+                        " the format: environment.area=0 0; 10 10; ....");
+                e.printStackTrace();
+            }
         }
 
         return result;
