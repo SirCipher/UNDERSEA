@@ -40,7 +40,7 @@ public class Node {
         UNVISITED, VISITED, POINT_OF_INTEREST
     }
 
-    public static Node randomLocalNode(double latLowerBound, double latUpperBound, double longLowerBound, double longUpperBound){
+    public static Node randomNode(double latLowerBound, double latUpperBound, double longLowerBound, double longUpperBound){
         double destLat = ThreadLocalRandom.current().nextDouble(latLowerBound, latUpperBound);
         double destLong = ThreadLocalRandom.current().nextDouble(longLowerBound, longUpperBound);
 

@@ -5,6 +5,7 @@ import com.type2labs.undersea.agent.model.Sensor;
 import com.type2labs.undersea.consensus.Consensus;
 import com.type2labs.undersea.controller.controller.Controller;
 import com.type2labs.undersea.missionplanner.model.MissionPlanner;
+import com.type2labs.undersea.missionplanner.model.node.Node;
 import com.type2labs.undersea.seachain.BlockchainNetwork;
 
 import java.util.Iterator;
@@ -35,6 +36,12 @@ public class AgentProxy extends Agent {
 
     public void setParsed(boolean parsed) {
         this.parsed = parsed;
+    }
+
+    public void assignRandomNodes(int n, double latLowerBound, double latUpperBound, double longLowerBound, double longUpperBound){
+        for (int i = 0; i < n; i++) {
+            this.assignNode(Node.randomNode(0.0,150.0, -140.0,0.0));
+        }
     }
 
     @Override
