@@ -9,6 +9,7 @@ import com.type2labs.undersea.missionplanner.exception.PlannerException;
 import com.type2labs.undersea.missionplanner.model.Mission;
 import com.type2labs.undersea.missionplanner.model.MissionParameters;
 import com.type2labs.undersea.missionplanner.model.MissionPlanner;
+import com.type2labs.undersea.missionplanner.planner.mco.MultiConstraintOptimiser;
 import com.type2labs.undersea.missionplanner.planner.vrp.MultiVehicleRoutingOptimiser;
 import com.type2labs.undersea.models.Agent;
 import com.type2labs.undersea.models.Node;
@@ -77,7 +78,7 @@ public class Runner {
     }
 
     private static Mission planMission() {
-        MissionPlanner missionPlanner = new MultiVehicleRoutingOptimiser();
+        MissionPlanner missionPlanner = new MultiConstraintOptimiser();
         int agentCount = environmentProperties.getAgents().size();
 
         double[][] area = Utility.propertyKeyTo2dDoubleArray(properties, "environment.area");
