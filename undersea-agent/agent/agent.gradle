@@ -11,4 +11,5 @@ dependencies {
     compile project(":consensus")
     compile project(":controller")
     compile project(":seachain")
+    compile project(":utilities")
 }
