@@ -8,6 +8,9 @@ import com.type2labs.undersea.dsl.uuv.model.AgentProxy;
 import com.type2labs.undersea.utilities.Utility;
 
 import java.io.File;
+import java.nio.file.attribute.PosixFilePermission;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Map;
 
 @SuppressWarnings("StringConcatenationInsideStringBufferAppend")
@@ -60,9 +63,9 @@ class MoosConfigurationWriter {
         cleanScript.append("rm -f\t*.moos++\n");
         cleanScript.append("rm -f\t.LastOpenedMOOSLogDirectory\n");
 
-        Utility.exportToFile(MoosConfigurationWriter.buildDir + File.separator + "clean.sh",
+        Utility.exportToFileWithPermissions(MoosConfigurationWriter.buildDir + File.separator + "clean.sh",
                 cleanScript.toString(),
-                false);
+                false, Collections.singletonList(PosixFilePermission.OWNER_EXECUTE));
 
         String timeWarp =
                 environmentProperties.getEnvironmentValue(EnvironmentProperties.EnvironmentValue.TIME_WINDOW);
@@ -98,9 +101,9 @@ class MoosConfigurationWriter {
 
         launchScript.append("\nprintf \"Done killing processes...\\n\"\n");
 
-        Utility.exportToFile(MoosConfigurationWriter.buildDir + File.separator + "launch.sh",
+        Utility.exportToFileWithPermissions(MoosConfigurationWriter.buildDir + File.separator + "launch.sh",
                 launchScript.toString(),
-                false);
+                false, Collections.singletonList(PosixFilePermission.OWNER_EXECUTE));
     }
 
     private static void generateSensors() {

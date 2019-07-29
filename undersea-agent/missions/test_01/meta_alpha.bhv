@@ -19,7 +19,7 @@ Behavior = BHV_Waypoint
   updates   = WAYPOINT_alpha_UPDATES
   perpetual = true
   speed = 2.0
-  points = 43.824706666666664,-70.33018166666666:43.82455866666667,-70.32997733333333
+  points = 
 }
 
 Behavior = BHV_Waypoint

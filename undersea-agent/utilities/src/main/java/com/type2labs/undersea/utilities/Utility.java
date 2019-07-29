@@ -1,11 +1,15 @@
 package com.type2labs.undersea.utilities;
 
+import org.apache.commons.lang3.SystemUtils;
+
 import java.io.*;
 import java.nio.channels.FileChannel;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.util.Properties;
+import java.nio.file.attribute.PosixFilePermission;
+import java.util.*;
 
 public class Utility {
 
@@ -88,6 +92,23 @@ public class Utility {
             writer.close();
         } catch (IOException e) {
             throw new RuntimeException("Unable to write " + fileName, e);
+        }
+    }
+
+    public static void exportToFileWithPermissions(String fileName, String output, boolean append,
+                                                   Collection<PosixFilePermission> permissions) {
+        Utility.exportToFile(fileName, output, append);
+
+        if (SystemUtils.IS_OS_LINUX || SystemUtils.IS_OS_MAC) {
+            try {
+                Path path = new File(fileName).toPath();
+                final Set<PosixFilePermission> posixFilePermissions = Files.getPosixFilePermissions(path);
+                posixFilePermissions.addAll(permissions);
+                Files.setPosixFilePermissions(path, posixFilePermissions);
+            } catch (IOException e) {
+                throw new UnderseaException("Failed to set executable permissions " + Arrays.toString(permissions.toArray()) +
+                        " for file " + fileName);
+            }
         }
     }
 

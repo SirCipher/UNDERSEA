@@ -6,7 +6,8 @@
  * User Manual available at https://docs.gradle.org/5.5.1/userguide/java_library_plugin.html
  */
 dependencies {
-
+    // https://mvnrepository.com/artifact/org.apache.commons/commons-lang3
+    compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.9'
 }
 
 
