@@ -4,9 +4,12 @@ import com.type2labs.undersea.missionplanner.exception.PlannerException;
 import com.type2labs.undersea.missionplanner.model.Mission;
 import com.type2labs.undersea.missionplanner.model.MissionParameters;
 import com.type2labs.undersea.missionplanner.model.MissionPlanner;
+import com.type2labs.undersea.utilities.Utility;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import java.util.Properties;
 
 /**
  * Created by Thomas Klapwijk on 2019-07-22.
@@ -25,13 +28,10 @@ public class TspMissionPlannerTest {
     @Test
     public void testRun() {
         MissionPlanner missionPlanner = new TspMissionPlanner();
-        MissionParameters missionParameters = new MissionParameters(1, 1,
-                new double[][]{
-                        {0, 0},
-                        {0, 20},
-                        {10, 50},
-                        {20, 20},
-                        {20, 0}});
+        Properties properties = Utility.getPropertiesByName("../resources/runner.properties");
+        double[][] area = Utility.propertyKeyTo2dDoubleArray(properties, "environment.area");
+
+        MissionParameters missionParameters = new MissionParameters(1, 1, area, 50);
 
         try {
             Mission mission = missionPlanner.generate(missionParameters);
