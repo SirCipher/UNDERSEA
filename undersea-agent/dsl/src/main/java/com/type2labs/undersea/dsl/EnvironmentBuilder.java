@@ -137,24 +137,13 @@ class EnvironmentBuilder {
 
     private static void nsplug(String sourceName, String destName, List<String> nsplugArgs) {
         try {
-            String moosPropertiesKey = Utility.getProperty(environmentProperties.getRunnerProperties(), "config.moos");
-            Properties properties = Utility.getPropertiesByName(moosPropertiesKey);
-            String moosivpLocation = properties.getProperty("moosivp");
-
-            if (moosivpLocation == null) {
-                throw new IllegalArgumentException("MOOS-IVP bin location not specified in resources/moos.properties");
-            }
-
-            moosivpLocation = moosivpLocation.endsWith("/") ? moosivpLocation + "nsplug" :
-                    moosivpLocation + File.separator + "nsplug";
-
             logger.info("Running nsplug on " + destName);
 
             // Existing elements will be right-shifted
             nsplugArgs.add(0, "-f");
             nsplugArgs.add(0, destName);
             nsplugArgs.add(0, sourceName);
-            nsplugArgs.add(0, moosivpLocation);
+            nsplugArgs.add(0, "nsplug");
             nsplugArgs.add("START_POS=x=0,y=-75");
 
             ProcessBuilder proc = new ProcessBuilder(nsplugArgs);

@@ -16,10 +16,6 @@ jobs:
         export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:libraries/MATLAB/v95/sys/os/glnxa64:libraries/MATLAB/v95/bin/glnxa64:libraries/MATLAB/v95/runtime/glnxa64
         source ~/.bashrc
         echo $PATH
-        cd libraries/moos-ivp/bin
-        IVP="$(pwd)"
-        cd ../../..
-        echo 'moosivp='"$IVP"'' >undersea-agent/resources/moos.properties
         cd libraries/MATLAB/v95/bin/glnxa64
         find -L . -name . -o -type d -prune -o -type l -exec rm {} +
       displayName: 'Setup environment parameters'
@@ -53,10 +49,6 @@ jobs:
         export PATH="/libraries/moos-ivp/bin:$PATH"
         export DYLD_LIBRARY_PATH=$DYLD_LIBRARY_PATH:libraries/MATLAB/v95/sys/os/maci64:libraries/MATLAB/v95/bin/maci64:libraries/MATLAB/v95/runtime/maci64
         echo $PATH
-        cd libraries/moos-ivp/bin
-        IVP="$(pwd)"
-        cd ../../..
-        echo 'moosivp='"$IVP"'' >undersea-agent/resources/moos.properties
         cd libraries/MATLAB/v95/bin/maci64
         find -L . -name . -o -type d -prune -o -type l -exec rm {} +
       displayName: 'Setup environment parameters'
