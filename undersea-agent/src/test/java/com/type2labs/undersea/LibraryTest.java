@@ -3,14 +3,13 @@
  */
 package com.type2labs.undersea;
 
-import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import org.junit.Test;
 
-class LibraryTest {
+public class LibraryTest {
+
     @Test
-    void testSomeLibraryMethod() {
-        Library classUnderTest = new Library();
-        assertTrue(classUnderTest.someLibraryMethod(), "someLibraryMethod should return 'true'");
+    public void echoPath() {
+        System.out.println(System.getenv("PATH"));
     }
 }

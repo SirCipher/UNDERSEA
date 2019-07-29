@@ -63,10 +63,11 @@ public class Runner {
                 Node node = new Node(centroid[0], centroid[1]);
                 agent.assignNode(node);
             }
-        }
 
-        for (Agent a : agents) {
-            System.out.println("Agent: " + a.getName() + " assigned nodes: " + a.getAssignedNodes());
+            if (agent.getAssignedNodes().size() == 1) {
+                logger.warn("More agents than required have been assigned to the mission. Removing nodes for agent: " + agent.getName());
+                agent.setAssignedNodes(new ArrayList<>());
+            }
         }
 
         parserEngine.generateFiles();
