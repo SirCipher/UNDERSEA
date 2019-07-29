@@ -18,7 +18,7 @@ public class AnalyserPMC extends Analyser {
     /**
      * System characteristics
      */
-    private final int NUM_OF_SENSORS = Utility.getProperty(properties,"SENSORS").split(",").length;
+    private final int NUM_OF_SENSORS = Utility.getProperty(properties, "SENSORS").split(",").length;
     private final int NUM_OF_SENSOR_CONFIGS = (int) (Math.pow(2, NUM_OF_SENSORS)); //possible sensor configurations
     /**
      * PRISM instance

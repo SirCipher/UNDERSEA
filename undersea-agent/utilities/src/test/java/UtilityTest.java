@@ -2,7 +2,6 @@ import com.type2labs.undersea.utilities.Utility;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.util.Arrays;
 import java.util.Properties;
 
 public class UtilityTest {

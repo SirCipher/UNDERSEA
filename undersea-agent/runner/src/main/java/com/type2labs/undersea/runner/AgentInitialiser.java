@@ -1,7 +1,7 @@
 package com.type2labs.undersea.runner;
 
-import com.type2labs.undersea.agent.model.Agent;
 import com.type2labs.undersea.dsl.uuv.model.AgentProxy;
+import com.type2labs.undersea.models.Agent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -15,11 +15,14 @@ import java.util.Properties;
  */
 public class AgentInitialiser {
 
-    private static AgentInitialiser instance;
-
     private static final Logger logger = LogManager.getLogger(AgentInitialiser.class);
+    private static AgentInitialiser instance;
     private Properties properties;
     private List<Agent> agents = new LinkedList<>();
+
+    private AgentInitialiser() {
+        logger.info("Initialised");
+    }
 
     public static AgentInitialiser getInstance() {
         if (instance == null) {
@@ -27,10 +30,6 @@ public class AgentInitialiser {
         }
 
         return instance;
-    }
-
-    private AgentInitialiser() {
-        logger.info("Initialised");
     }
 
     public void initalise(Map<String, AgentProxy> agentProxyMap) {

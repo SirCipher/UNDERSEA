@@ -67,8 +67,6 @@ public class TspMissionPlanner implements MissionPlanner {
 
         PlanDataModel model = new PlanDataModel(missionParameters, distanceMatrix);
 
-        decomposer.dispose();
-
         return solve(model, missionParameters);
     }
 

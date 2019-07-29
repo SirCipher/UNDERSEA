@@ -3,15 +3,15 @@ package com.type2labs.undersea.runner;
 import com.google.ortools.constraintsolver.Assignment;
 import com.google.ortools.constraintsolver.RoutingIndexManager;
 import com.google.ortools.constraintsolver.RoutingModel;
-import com.type2labs.undersea.agent.model.Agent;
 import com.type2labs.undersea.dsl.EnvironmentProperties;
 import com.type2labs.undersea.dsl.ParserEngine;
 import com.type2labs.undersea.missionplanner.exception.PlannerException;
 import com.type2labs.undersea.missionplanner.model.Mission;
 import com.type2labs.undersea.missionplanner.model.MissionParameters;
 import com.type2labs.undersea.missionplanner.model.MissionPlanner;
-import com.type2labs.undersea.missionplanner.model.node.Node;
 import com.type2labs.undersea.missionplanner.planner.vrp.MultiVehicleRoutingOptimiser;
+import com.type2labs.undersea.models.Agent;
+import com.type2labs.undersea.models.Node;
 import com.type2labs.undersea.utilities.Utility;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -48,7 +48,6 @@ public class Runner {
         Assignment assignment = mission.getAssignment();
         RoutingIndexManager manager = mission.getRoutingIndexManager();
 
-
         List<Agent> agents = new ArrayList<>(environmentProperties.getAgents().values());
 
         for (int i = 0; i < manager.getNumberOfVehicles(); ++i) {
@@ -82,7 +81,8 @@ public class Runner {
 
         double[][] area = Utility.propertyKeyTo2dDoubleArray(properties, "environment.area");
 
-        MissionParameters missionParameters = new MissionParameters(agentCount, 0, area, 30);
+        List<Agent> agents = new ArrayList<>(environmentProperties.getAgents().values());
+        MissionParameters missionParameters = new MissionParameters(agents, 0, area, 30);
 
         try {
             Mission mission = missionPlanner.generate(missionParameters);

@@ -1,4 +1,4 @@
-package com.type2labs.undersea.missionplanner.planner.vrp;
+package com.type2labs.undersea.missionplanner.planner.mco;
 
 import com.google.ortools.constraintsolver.*;
 import com.mathworks.toolbox.javabuilder.MWClassID;
@@ -16,9 +16,9 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
 
-public class MultiVehicleRoutingOptimiser implements MissionPlanner {
+public class MultiConstraintOptimiser implements MissionPlanner {
 
-    private static final Logger logger = LogManager.getLogger(MultiVehicleRoutingOptimiser.class);
+    private static final Logger logger = LogManager.getLogger(MultiConstraintOptimiser.class);
     private static final DelaunayDecomposer decomposer = DelaunayDecomposer.getInstance();
 
     static {
@@ -65,6 +65,8 @@ public class MultiVehicleRoutingOptimiser implements MissionPlanner {
 
         PlanDataModel model = new PlanDataModel(missionParameters, distanceMatrix);
 
+        decomposer.dispose();
+
         return solve(model, missionParameters);
     }
 
@@ -76,6 +78,17 @@ public class MultiVehicleRoutingOptimiser implements MissionPlanner {
 
         // Create Routing Model.
         RoutingModel routing = new RoutingModel(manager);
+
+        for (int i = 0; i < manager.getNumberOfVehicles(); i++) {
+
+
+//            final int agentTransitCallback =
+//                    routing.registerTransitCallback((long fromIndex, long toIndex) -> {
+//
+//                    });
+
+//            routing.setArcCostEvaluatorOfVehicle(i, agentTransitCallback);
+        }
 
         // Create and register a transit callback.
         final int transitCallbackIndex =

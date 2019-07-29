@@ -1,11 +1,6 @@
-package com.type2labs.undersea.agent.model;
+package com.type2labs.undersea.models;
 
 
-import com.type2labs.undersea.consensus.Consensus;
-import com.type2labs.undersea.controller.controller.Controller;
-import com.type2labs.undersea.missionplanner.model.MissionPlanner;
-import com.type2labs.undersea.missionplanner.model.node.Node;
-import com.type2labs.undersea.seachain.BlockchainNetwork;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -22,10 +17,6 @@ public class Agent {
 
     private String name;
     private List<Node> assignedNodes = new ArrayList<>();
-    private MissionPlanner missionPlanner;
-    private BlockchainNetwork blockchainNetwork;
-    private Consensus consensus;
-    private Controller controller;
 
     private String rate;
     private String serverPort;
@@ -42,38 +33,6 @@ public class Agent {
 
     public void setAssignedNodes(List<Node> assignedNodes) {
         this.assignedNodes = assignedNodes;
-    }
-
-    public BlockchainNetwork getBlockchainNetwork() {
-        return blockchainNetwork;
-    }
-
-    public void setBlockchainNetwork(BlockchainNetwork blockchainNetwork) {
-        this.blockchainNetwork = blockchainNetwork;
-    }
-
-    public Consensus getConsensus() {
-        return consensus;
-    }
-
-    public void setConsensus(Consensus consensus) {
-        this.consensus = consensus;
-    }
-
-    public Controller getController() {
-        return controller;
-    }
-
-    public void setController(Controller controller) {
-        this.controller = controller;
-    }
-
-    public MissionPlanner getMissionPlanner() {
-        return missionPlanner;
-    }
-
-    public void setMissionPlanner(MissionPlanner missionPlanner) {
-        this.missionPlanner = missionPlanner;
     }
 
     public String getName() {

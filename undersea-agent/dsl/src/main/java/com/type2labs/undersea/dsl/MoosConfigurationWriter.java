@@ -1,23 +1,22 @@
 package com.type2labs.undersea.dsl;
 
 
-import com.type2labs.undersea.agent.model.Sensor;
 import com.type2labs.undersea.dsl.uuv.factory.FactoryProvider;
 import com.type2labs.undersea.dsl.uuv.factory.SensorFactory;
 import com.type2labs.undersea.dsl.uuv.model.AgentProxy;
+import com.type2labs.undersea.models.Sensor;
 import com.type2labs.undersea.utilities.Utility;
 
 import java.io.File;
 import java.nio.file.attribute.PosixFilePermission;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Map;
 
 @SuppressWarnings("StringConcatenationInsideStringBufferAppend")
 class MoosConfigurationWriter {
 
-    private static EnvironmentProperties environmentProperties;
     private static final SensorFactory sensorFactory = FactoryProvider.getSensorFactory();
+    private static EnvironmentProperties environmentProperties;
     private static String buildDir;
 
 

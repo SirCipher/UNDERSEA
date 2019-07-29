@@ -20,10 +20,6 @@ public class Mission {
     private final List<?> nodes;
     private final MissionParameters missionParameters;
 
-    public MissionParameters getMissionParameters() {
-        return missionParameters;
-    }
-
     public Mission(PlanDataModel planDataModel, Assignment assignment, RoutingModel routingModel,
                    RoutingIndexManager routingIndexManager, List<?> nodes, MissionParameters missionParameters) {
         this.planDataModel = planDataModel;
@@ -32,6 +28,10 @@ public class Mission {
         this.routingIndexManager = routingIndexManager;
         this.nodes = nodes;
         this.missionParameters = missionParameters;
+    }
+
+    public MissionParameters getMissionParameters() {
+        return missionParameters;
     }
 
     public Assignment getAssignment() {

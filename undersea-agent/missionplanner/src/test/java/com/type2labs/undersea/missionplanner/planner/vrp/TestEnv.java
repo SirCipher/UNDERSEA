@@ -1,6 +1,5 @@
 package com.type2labs.undersea.missionplanner.planner.vrp;
 
-import com.type2labs.undersea.missionplanner.planner.tsp.TspMissionPlanner;
 import org.junit.Assert;
 import org.junit.Test;
 

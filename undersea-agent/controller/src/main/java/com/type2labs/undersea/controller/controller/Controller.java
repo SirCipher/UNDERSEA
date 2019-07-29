@@ -60,7 +60,7 @@ public class Controller extends TimerTask {
         try {
             //init comms client
             host = "localhost";
-            port = Integer.parseInt(Utility.getProperty(properties,"PORT"));
+            port = Integer.parseInt(Utility.getProperty(properties, "PORT"));
             client = new Client(host, port);
 
             //init MAPE
@@ -73,7 +73,7 @@ public class Controller extends TimerTask {
             this.executor = executor;
 
             //init simulation speed
-            SIMULATION_SPEED = Math.round(Double.parseDouble(Utility.getProperty(properties,"SIMULATION_SPEED")));
+            SIMULATION_SPEED = Math.round(Double.parseDouble(Utility.getProperty(properties, "SIMULATION_SPEED")));
         } catch (Exception e) {
             e.printStackTrace();
         }

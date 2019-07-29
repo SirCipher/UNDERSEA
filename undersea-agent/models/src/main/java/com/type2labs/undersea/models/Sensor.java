@@ -1,4 +1,4 @@
-package com.type2labs.undersea.agent.model;
+package com.type2labs.undersea.models;
 
 
 import java.util.ArrayList;

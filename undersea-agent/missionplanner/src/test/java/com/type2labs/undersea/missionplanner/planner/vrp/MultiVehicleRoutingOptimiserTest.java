@@ -4,11 +4,15 @@ import com.type2labs.undersea.missionplanner.exception.PlannerException;
 import com.type2labs.undersea.missionplanner.model.Mission;
 import com.type2labs.undersea.missionplanner.model.MissionParameters;
 import com.type2labs.undersea.missionplanner.model.MissionPlanner;
+import com.type2labs.undersea.models.Agent;
 import com.type2labs.undersea.utilities.Utility;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Properties;
 
 public class MultiVehicleRoutingOptimiserTest {
@@ -28,7 +32,9 @@ public class MultiVehicleRoutingOptimiserTest {
         Properties properties = Utility.getPropertiesByName("../resources/runner.properties");
         double[][] area = Utility.propertyKeyTo2dDoubleArray(properties, "environment.area");
 
-        MissionParameters missionParameters = new MissionParameters(4, 1, area, 50);
+        List<Agent> agents = new ArrayList<>(Collections.singletonList(new Agent()));
+
+        MissionParameters missionParameters = new MissionParameters(agents, 1, area, 50);
 
         try {
             Mission mission = missionPlanner.generate(missionParameters);

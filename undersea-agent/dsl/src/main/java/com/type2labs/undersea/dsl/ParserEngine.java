@@ -22,16 +22,18 @@ import java.util.Properties;
 public class ParserEngine {
 
     private static final Logger logger = LogManager.getLogger(ParserEngine.class);
-
-    private final EnvironmentProperties environmentProperties = new EnvironmentProperties();
-
     public static Properties properties;
+    private final EnvironmentProperties environmentProperties = new EnvironmentProperties();
+    private boolean errorsFound = false;
+
+    public ParserEngine(Properties runnerProperties) {
+        ParserEngine.properties = runnerProperties;
+        EnvironmentProperties.setRunnerProperties(runnerProperties);
+    }
 
     public EnvironmentProperties getEnvironmentProperties() {
         return environmentProperties;
     }
-
-    private boolean errorsFound = false;
 
     private SensorsParser createSensorParser() throws IOException {
         // create a CharStream that reads from standard input
@@ -131,13 +133,8 @@ public class ParserEngine {
         }
     }
 
-    public void generateFiles(){
+    public void generateFiles() {
         EnvironmentBuilder.build();
-    }
-
-    public ParserEngine(Properties runnerProperties) {
-        ParserEngine.properties = runnerProperties;
-        EnvironmentProperties.setRunnerProperties(runnerProperties);
     }
 
     private void runSensorListener() throws IOException {

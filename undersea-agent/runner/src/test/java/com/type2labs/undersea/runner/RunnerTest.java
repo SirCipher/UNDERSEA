@@ -10,5 +10,5 @@ public class RunnerTest {
     public void testRunner() throws IOException {
         Runner.main(new String[]{"../resources/runner.properties"});
     }
-    
+
 }

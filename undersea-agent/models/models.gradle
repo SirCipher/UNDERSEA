@@ -5,11 +5,12 @@
  * For more details take a look at the Java Libraries chapter in the Gradle
  * User Manual available at https://docs.gradle.org/5.5.1/userguide/java_library_plugin.html
  */
-dependencies {
-    compile project(":agent")
-    compile project(":models")
-    compile project(":utilities")
 
-    // https://mvnrepository.com/artifact/org.antlr/antlr4
-    compile group: 'org.antlr', name: 'antlr4', version: '4.7.2'
+plugins {
+    // Apply the java-library plugin to add support for Java Library
+    id 'java-library'
+}
+
+dependencies {
+    compile project(":utilities")
 }

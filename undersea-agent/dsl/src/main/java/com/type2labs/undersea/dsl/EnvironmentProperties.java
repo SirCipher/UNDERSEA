@@ -11,17 +11,16 @@ import java.util.stream.Collectors;
 public class EnvironmentProperties {
 
     private static Properties runnerProperties;
-
-    public static void setRunnerProperties(Properties runnerProperties) {
-        EnvironmentProperties.runnerProperties = runnerProperties;
-    }
+    private final Map<EnvironmentValue, String> environmentValues = new HashMap<>();
+    private final Map<String, AgentProxy> agents = new HashMap<>();
 
     public Properties getRunnerProperties() {
         return runnerProperties;
     }
 
-    private final Map<EnvironmentValue, String> environmentValues = new HashMap<>();
-    private final Map<String, AgentProxy> agents = new HashMap<>();
+    public static void setRunnerProperties(Properties runnerProperties) {
+        EnvironmentProperties.runnerProperties = runnerProperties;
+    }
 
     public void addAgent(AgentProxy agent) {
         if (this.agents.containsKey(agent.getName())) {
@@ -31,7 +30,7 @@ public class EnvironmentProperties {
         this.agents.put(agent.getName(), agent);
     }
 
-    public Map<String, AgentProxy> getAllAgents(){
+    public Map<String, AgentProxy> getAllAgents() {
         return agents;
     }
 
@@ -41,7 +40,7 @@ public class EnvironmentProperties {
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
 
-    public int getTotalNumberOfAgents(){
+    public int getTotalNumberOfAgents() {
         return agents.size();
     }
 

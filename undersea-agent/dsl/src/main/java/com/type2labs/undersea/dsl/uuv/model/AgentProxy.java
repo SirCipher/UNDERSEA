@@ -1,12 +1,8 @@
 package com.type2labs.undersea.dsl.uuv.model;
 
-import com.type2labs.undersea.agent.model.Agent;
-import com.type2labs.undersea.agent.model.Sensor;
-import com.type2labs.undersea.consensus.Consensus;
-import com.type2labs.undersea.controller.controller.Controller;
-import com.type2labs.undersea.missionplanner.model.MissionPlanner;
-import com.type2labs.undersea.missionplanner.model.node.Node;
-import com.type2labs.undersea.seachain.BlockchainNetwork;
+import com.type2labs.undersea.models.Agent;
+import com.type2labs.undersea.models.Node;
+import com.type2labs.undersea.models.Sensor;
 
 import java.util.Iterator;
 
@@ -38,34 +34,11 @@ public class AgentProxy extends Agent {
         this.parsed = parsed;
     }
 
-    public void assignRandomNodes(int n, double latLowerBound, double latUpperBound, double longLowerBound, double longUpperBound){
+    public void assignRandomNodes(int n, double latLowerBound, double latUpperBound, double longLowerBound,
+                                  double longUpperBound) {
         for (int i = 0; i < n; i++) {
-            this.assignNode(Node.randomNode(0.0,150.0, -140.0,0.0));
+            this.assignNode(Node.randomNode(0.0, 150.0, -140.0, 0.0));
         }
-    }
-
-    @Override
-    public void setBlockchainNetwork(BlockchainNetwork blockchainNetwork) {
-        checkParsed("blockchain network");
-        super.setBlockchainNetwork(blockchainNetwork);
-    }
-
-    @Override
-    public void setConsensus(Consensus consensus) {
-        checkParsed("consensus");
-        super.setConsensus(consensus);
-    }
-
-    @Override
-    public void setController(Controller controller) {
-        checkParsed("controller");
-        super.setController(controller);
-    }
-
-    @Override
-    public void setMissionPlanner(MissionPlanner missionPlanner) {
-        checkParsed("mission planner");
-        super.setMissionPlanner(missionPlanner);
     }
 
     @Override

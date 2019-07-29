@@ -1,8 +1,5 @@
-package com.type2labs.undersea.missionplanner.model.node;
+package com.type2labs.undersea.models;
 
-import com.type2labs.undersea.utilities.PlannerUtils;
-
-import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
@@ -22,6 +19,14 @@ public class Node {
     public Node(double x, double y) {
         this.vector = new Vector(x, y);
         this.nodeStatus = NodeStatus.UNVISITED;
+    }
+
+    public static Node randomNode(double latLowerBound, double latUpperBound, double longLowerBound,
+                                  double longUpperBound) {
+        double destLat = ThreadLocalRandom.current().nextDouble(latLowerBound, latUpperBound);
+        double destLong = ThreadLocalRandom.current().nextDouble(longLowerBound, longUpperBound);
+
+        return new Node(destLat, destLong);
     }
 
     public Vector getVector() {
@@ -46,13 +51,6 @@ public class Node {
 
     public enum NodeStatus {
         UNVISITED, VISITED, POINT_OF_INTEREST
-    }
-
-    public static Node randomNode(double latLowerBound, double latUpperBound, double longLowerBound, double longUpperBound){
-        double destLat = ThreadLocalRandom.current().nextDouble(latLowerBound, latUpperBound);
-        double destLong = ThreadLocalRandom.current().nextDouble(longLowerBound, longUpperBound);
-
-        return new Node(destLat, destLong);
     }
 
     public class Vector {
