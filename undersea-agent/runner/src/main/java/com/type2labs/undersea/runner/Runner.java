@@ -85,7 +85,7 @@ public class Runner {
 
         double[][] area = Utility.propertyKeyTo2dDoubleArray(properties, "environment.area");
 
-        MissionParameters missionParameters = new MissionParameters(1, 1, area);
+        MissionParameters missionParameters = new MissionParameters(1, 1, area, 50);
 
         try {
             Mission mission = missionPlanner.generate(missionParameters);

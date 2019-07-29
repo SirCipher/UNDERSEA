@@ -8,6 +8,7 @@ public class MissionParameters {
     private final int agentCount;
     // TODO: remove once second provider is implemented
     private final int depot;
+    private double minimumSensorRange;
     private final double[][] polygon;
 
     private double[][] centroids;
@@ -16,10 +17,15 @@ public class MissionParameters {
         return polygon;
     }
 
-    public MissionParameters(int agentCount, int depot, double[][] polygon) {
+    public double getMinimumSensorRange() {
+        return minimumSensorRange;
+    }
+
+    public MissionParameters(int agentCount, int depot, double[][] polygon, int minimumSensorRange) {
         this.agentCount = agentCount;
         this.depot = depot;
         this.polygon = polygon;
+        this.minimumSensorRange = minimumSensorRange;
     }
 
     public int getAgentCount() {
@@ -34,11 +40,11 @@ public class MissionParameters {
         return centroids;
     }
 
-    public double[] getCentroid(int index){
+    public double[] getCentroid(int index) {
         return centroids[index];
     }
 
     public void setCentroids(double[][] centroids) {
-        this.centroids=centroids;
+        this.centroids = centroids;
     }
 }

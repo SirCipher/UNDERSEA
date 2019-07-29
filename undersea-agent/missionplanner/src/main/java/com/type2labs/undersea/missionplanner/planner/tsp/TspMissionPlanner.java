@@ -1,7 +1,9 @@
 package com.type2labs.undersea.missionplanner.planner.tsp;
 
 import com.google.ortools.constraintsolver.*;
-import com.mathworks.toolbox.javabuilder.*;
+import com.mathworks.toolbox.javabuilder.MWClassID;
+import com.mathworks.toolbox.javabuilder.MWException;
+import com.mathworks.toolbox.javabuilder.MWNumericArray;
 import com.type2labs.undersea.missionplanner.decomposer.delaunay.DelaunayDecomposer;
 import com.type2labs.undersea.missionplanner.exception.PlannerException;
 import com.type2labs.undersea.missionplanner.model.Mission;
@@ -33,21 +35,32 @@ public class TspMissionPlanner implements MissionPlanner {
         }
     }
 
-    private double[][] decompose(double[][] polygon) throws PlannerException {
-        MWNumericArray numericArray = new MWNumericArray(polygon, MWClassID.DOUBLE);
+    private double[][] decompose(double[] x, double[] y, double sensorRange) throws PlannerException {
+        MWNumericArray xArray = new MWNumericArray(x, MWClassID.DOUBLE);
+        MWNumericArray yArray = new MWNumericArray(y, MWClassID.DOUBLE);
+        MWNumericArray results;
 
         try {
-            numericArray = (MWNumericArray) decomposer.decompose(1, numericArray)[0];
+            results = (MWNumericArray) decomposer.decompose(1, xArray, yArray, sensorRange)[0];
         } catch (MWException e) {
             throw new PlannerException(e);
         }
 
-        return (double[][]) numericArray.toDoubleArray();
+        return (double[][]) results.toDoubleArray();
     }
 
     @Override
     public Mission generate(MissionParameters missionParameters) throws PlannerException {
-        double[][] centroids = decompose(missionParameters.getPolygon());
+        double[][] polygon = missionParameters.getPolygon();
+        double[] x = new double[polygon.length];
+        double[] y = new double[polygon.length];
+
+        for (int i = 0; i < polygon.length; i++) {
+            x[i] = polygon[i][0];
+            y[i] = polygon[i][1];
+        }
+
+        double[][] centroids = decompose(x, y, missionParameters.getMinimumSensorRange());
         missionParameters.setCentroids(centroids);
 
         double[][] distanceMatrix = PlannerUtils.computeEuclideanDistanceMatrix(centroids);
