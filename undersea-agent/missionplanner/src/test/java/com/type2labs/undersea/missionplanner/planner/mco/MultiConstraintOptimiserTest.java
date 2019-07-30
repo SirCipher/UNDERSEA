@@ -33,7 +33,7 @@ public class MultiConstraintOptimiserTest {
         new MultiConstraintOptimiser();
     }
 
-    @Test
+//    @Test
     public void test() {
         MissionPlanner missionPlanner = new MultiConstraintOptimiser();
         double[][] area = Utility.stringTo2dDoubleArray("0 0; 150 0; 150 -140; 0 -140;");
