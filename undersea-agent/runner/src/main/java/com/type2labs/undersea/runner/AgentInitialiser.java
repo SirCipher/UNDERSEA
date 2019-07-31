@@ -1,7 +1,7 @@
 package com.type2labs.undersea.runner;
 
 import com.type2labs.undersea.dsl.uuv.model.AgentProxy;
-import com.type2labs.undersea.models.Agent;
+import com.type2labs.undersea.models.model.Agent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

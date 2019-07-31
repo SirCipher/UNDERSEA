@@ -3,6 +3,7 @@ package com.type2labs.undersea.missionplanner.model;
 /**
  * Created by Thomas Klapwijk on 2019-07-22.
  */
+// TODO: Remove
 public class PlanDataModel {
     private final double[][] distanceMatrix;
     private final int agentCount;

@@ -4,7 +4,7 @@ package com.type2labs.undersea.dsl;
 import com.type2labs.undersea.dsl.uuv.factory.FactoryProvider;
 import com.type2labs.undersea.dsl.uuv.factory.SensorFactory;
 import com.type2labs.undersea.dsl.uuv.model.AgentProxy;
-import com.type2labs.undersea.models.Sensor;
+import com.type2labs.undersea.models.model.Sensor;
 import com.type2labs.undersea.utilities.Utility;
 
 import java.io.File;

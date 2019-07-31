@@ -1,4 +1,4 @@
-package com.type2labs.undersea.models;
+package com.type2labs.undersea.models.model;
 
 
 import java.util.ArrayList;
@@ -6,31 +6,30 @@ import java.util.List;
 
 public class Sensor {
 
-    /**
-     * name
-     */
     private final String name;
-
-    /**
-     * rate
-     */
     private final double rate;
-
-    /**
-     * reliability
-     */
     private final double reliability;
+    private final SensorType sensorType;
+    private final List<Range> changesList = new ArrayList<>();
 
-    /**
-     * changes list
-     */
-    private final List<Range> changesList = new ArrayList<Range>();
+    public SensorType getSensorType() {
+        return sensorType;
+    }
 
+    public enum SensorType {
+        SIDESCAN_SONAR, CONDUCTIVITY, TEMPERATURE, DEPTH;
+    }
 
     public Sensor(String name, double rate, double reliability) {
+        // TODO: Set from DSl
+        this(name, rate, reliability, SensorType.DEPTH);
+    }
+
+    public Sensor(String name, double rate, double reliability, SensorType sensorType) {
         this.name = name;
         this.rate = rate;
         this.reliability = reliability;
+        this.sensorType = sensorType;
     }
 
     public void addChange(Range change) {

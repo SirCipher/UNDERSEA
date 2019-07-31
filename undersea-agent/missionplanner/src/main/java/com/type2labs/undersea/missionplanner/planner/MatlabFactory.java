@@ -4,13 +4,12 @@ import com.mathworks.toolbox.javabuilder.MWApplication;
 import com.mathworks.toolbox.javabuilder.MWException;
 import com.mathworks.toolbox.javabuilder.MWMCROption;
 import com.type2labs.undersea.missionplanner.decomposer.delaunay.DelaunayDecomposer;
-import com.type2labs.undersea.missionplanner.planner.tsp.TspMissionPlanner;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 public class MatlabFactory {
 
-    private static final Logger logger = LogManager.getLogger(TspMissionPlanner.class);
+    private static final Logger logger = LogManager.getLogger(MatlabFactory.class);
 
     private static DelaunayDecomposer delaunayDecomposer;
 

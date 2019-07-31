@@ -1,4 +1,4 @@
-package com.type2labs.undersea.models;
+package com.type2labs.undersea.models.model;
 
 public class Range {
     /**

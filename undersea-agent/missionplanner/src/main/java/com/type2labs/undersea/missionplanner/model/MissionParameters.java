@@ -1,6 +1,6 @@
 package com.type2labs.undersea.missionplanner.model;
 
-import com.type2labs.undersea.models.Agent;
+import com.type2labs.undersea.models.model.Agent;
 
 import java.util.List;
 

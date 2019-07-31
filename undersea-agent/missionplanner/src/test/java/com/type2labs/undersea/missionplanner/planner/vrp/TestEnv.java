@@ -8,7 +8,7 @@ public class TestEnv {
     @Test
     public void test() {
         try {
-            new MultiVehicleRoutingOptimiser();
+            new VehicleRoutingOptimiser();
         } catch (Exception e) {
             Assert.fail("Unable to initialise mission planner");
         }

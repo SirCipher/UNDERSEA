@@ -1,4 +1,4 @@
-package com.type2labs.undersea.models;
+package com.type2labs.undersea.models.model;
 
 
 import org.apache.logging.log4j.LogManager;
@@ -49,6 +49,10 @@ public class Agent {
 
     public void setAssignedNodes(List<Node> assignedNodes) {
         this.assignedNodes = assignedNodes;
+    }
+
+    public boolean hasSensorType(Sensor.SensorType sensorType) {
+        return sensors.stream().anyMatch(s -> s.getSensorType().equals(sensorType));
     }
 
     public String getName() {

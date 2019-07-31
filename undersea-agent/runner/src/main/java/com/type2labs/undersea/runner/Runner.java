@@ -9,10 +9,9 @@ import com.type2labs.undersea.missionplanner.exception.PlannerException;
 import com.type2labs.undersea.missionplanner.model.Mission;
 import com.type2labs.undersea.missionplanner.model.MissionParameters;
 import com.type2labs.undersea.missionplanner.model.MissionPlanner;
-import com.type2labs.undersea.missionplanner.planner.mco.MultiConstraintOptimiser;
-import com.type2labs.undersea.missionplanner.planner.vrp.MultiVehicleRoutingOptimiser;
-import com.type2labs.undersea.models.Agent;
-import com.type2labs.undersea.models.Node;
+import com.type2labs.undersea.missionplanner.planner.vrp.VehicleRoutingOptimiser;
+import com.type2labs.undersea.models.model.Agent;
+import com.type2labs.undersea.models.model.Node;
 import com.type2labs.undersea.utilities.Utility;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -78,13 +77,11 @@ public class Runner {
     }
 
     private static Mission planMission() {
-        MissionPlanner missionPlanner = new MultiVehicleRoutingOptimiser();
-        int agentCount = environmentProperties.getAgents().size();
-
+        MissionPlanner missionPlanner = new VehicleRoutingOptimiser();
         double[][] area = Utility.propertyKeyTo2dDoubleArray(properties, "environment.area");
 
         List<Agent> agents = new ArrayList<>(environmentProperties.getAgents().values());
-        MissionParameters missionParameters = new MissionParameters(agents, 0, area, 30);
+        MissionParameters missionParameters = new MissionParameters(agents, 0, area, 50);
 
         try {
             Mission mission = missionPlanner.generate(missionParameters);

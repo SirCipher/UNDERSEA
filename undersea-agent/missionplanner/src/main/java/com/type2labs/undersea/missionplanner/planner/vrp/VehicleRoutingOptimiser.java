@@ -11,16 +11,18 @@ import com.type2labs.undersea.missionplanner.model.MissionParameters;
 import com.type2labs.undersea.missionplanner.model.MissionPlanner;
 import com.type2labs.undersea.missionplanner.model.PlanDataModel;
 import com.type2labs.undersea.missionplanner.planner.MatlabFactory;
+import com.type2labs.undersea.models.model.Agent;
 import com.type2labs.undersea.utilities.PlannerUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
 
-public class MultiVehicleRoutingOptimiser implements MissionPlanner {
+public class VehicleRoutingOptimiser implements MissionPlanner {
 
-    private static final Logger logger = LogManager.getLogger(MultiVehicleRoutingOptimiser.class);
+    private static final Logger logger = LogManager.getLogger(VehicleRoutingOptimiser.class);
     private static final DelaunayDecomposer decomposer = MatlabFactory.getDelaunayDecomposer();
+    private static final int SPEED_SCALAR = 100;
 
     static {
         try {
@@ -70,6 +72,7 @@ public class MultiVehicleRoutingOptimiser implements MissionPlanner {
     }
 
     private Mission solve(PlanDataModel model, MissionParameters missionParameters) {
+        logger.info("Generating solution");
         // Create Routing Index Manager
         RoutingIndexManager manager =
                 new RoutingIndexManager(model.getDistanceMatrix().length, missionParameters.getAgentCount(),
@@ -88,7 +91,27 @@ public class MultiVehicleRoutingOptimiser implements MissionPlanner {
                 });
 
         // Define cost of each arc.
-        routing.setArcCostEvaluatorOfAllVehicles(transitCallbackIndex);
+        final int bigNumber = 100000;
+        routing.addDimension(transitCallbackIndex, bigNumber, bigNumber, false, "Time");
+
+//        final Random randomGenerator = new Random(0xBEEF);
+//        final int costCoefficientMax = 3;
+
+//        final int[] speeds = {1, 2, 3, 4, 5, 500};
+
+        for (int vehicle = 0; vehicle < manager.getNumberOfVehicles(); ++vehicle) {
+            final Agent agent = missionParameters.getAgents().get(vehicle);
+
+            final int manhattanCostCallback = routing.registerTransitCallback((long fromIndex, long toIndex) -> {
+                // Convert from routing variable Index to user NodeIndex.
+                int fromNode = manager.indexToNode(fromIndex);
+                int toNode = manager.indexToNode(toIndex);
+
+                return (long) (model.getDistanceMatrix()[fromNode][toNode] / agent.getSpeedRange().getMax()) * VehicleRoutingOptimiser.SPEED_SCALAR;
+            });
+
+            routing.setArcCostEvaluatorOfVehicle(manhattanCostCallback, vehicle);
+        }
 
         // Add Distance constraint.
         routing.addDimension(transitCallbackIndex, 0, 3000,
@@ -101,7 +124,7 @@ public class MultiVehicleRoutingOptimiser implements MissionPlanner {
         RoutingSearchParameters searchParameters =
                 main.defaultRoutingSearchParameters()
                         .toBuilder()
-                        .setFirstSolutionStrategy(FirstSolutionStrategy.Value.AUTOMATIC)
+                        .setFirstSolutionStrategy(FirstSolutionStrategy.Value.LOCAL_CHEAPEST_ARC)
                         .build();
 
         // Solve the problem.
@@ -130,7 +153,7 @@ public class MultiVehicleRoutingOptimiser implements MissionPlanner {
                 route += manager.indexToNode(index) + " -> ";
                 long previousIndex = index;
                 index = assignment.value(routing.nextVar(index));
-                routeDistance += routing.getArcCostForVehicle(previousIndex, index, i);
+                routeDistance += routing.getArcCostForVehicle(previousIndex, index, i) / VehicleRoutingOptimiser.SPEED_SCALAR;
             }
 
             logger.info(route + manager.indexToNode(index));

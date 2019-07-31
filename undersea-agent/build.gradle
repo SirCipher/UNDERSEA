@@ -54,6 +54,8 @@ allprojects {
 
         testLogging {
             exceptionFormat = 'full'
+            testLogging.showStandardStreams = true
+
         }
     }
 
@@ -88,7 +90,7 @@ allprojects {
             environment "LD_LIBRARY_PATH", "${rootProject.projectDir}/../libraries/MATLAB/sys/os/glnxa64/:${rootProject.projectDir}/../libraries/MATLAB/bin/glnxa64/:${rootProject.projectDir}/../libraries/MATLAB/v95/runtime/glnxa64/"
         } else if (Os.isFamily(Os.FAMILY_MAC)) {
             // TODO
-//            environment "LD_LIBRARY_PATH", "${rootProject.projectDir}/../libraries/MATLAB/sys/os/glnxa64/:${rootProject.projectDir}/../libraries/MATLAB/bin/glnxa64/:${rootProject.projectDir}/../libraries/MATLAB/v95/runtime/glnxa64/"
+//            environment "DYLD_LIBRARY_PATH", "${rootProject.projectDir}/../libraries/MATLAB/sys/os/glnxa64/:${rootProject.projectDir}/../libraries/MATLAB/bin/glnxa64/:${rootProject.projectDir}/../libraries/MATLAB/v95/runtime/glnxa64/"
         } else {
             throw new GradleException("Unsupported operating system")
         }
