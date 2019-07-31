@@ -5,7 +5,7 @@ import com.mathworks.toolbox.javabuilder.MWApplication;
 import com.mathworks.toolbox.javabuilder.MWClassID;
 import com.mathworks.toolbox.javabuilder.MWException;
 import com.mathworks.toolbox.javabuilder.MWNumericArray;
-import com.type2labs.undersea.missionplanner.MatlabInitialiser;
+import com.type2labs.undersea.missionplanner.MatlabUtils;
 import com.type2labs.undersea.missionplanner.decomposer.delaunay.DelaunayDecomposer;
 import com.type2labs.undersea.missionplanner.exception.PlannerException;
 import com.type2labs.undersea.missionplanner.model.Mission;
@@ -44,7 +44,7 @@ public class VehicleRoutingOptimiser implements MissionPlanner {
 
         try {
             if (decomposer == null) {
-                MatlabInitialiser.initalise();
+                MatlabUtils.initialise();
                 logger.info("Initialising delaunay decomposer");
                 decomposer = new DelaunayDecomposer();
                 logger.info("Initialised delaunay decomposer");
@@ -55,6 +55,8 @@ public class VehicleRoutingOptimiser implements MissionPlanner {
 
             decomposer.dispose();
             MWApplication.terminate();
+
+            MatlabUtils.dispose(xArray, yArray, numericArray);
         } catch (MWException e) {
             throw new PlannerException(e);
         }

@@ -27,6 +27,7 @@ jobs:
         workingDirectory: 'undersea-agent'
         tasks: 'clean build test --info'
         javaHomeOption: 'JDKVersion'
+        jdkVersionOption: 1.8
         codeCoverageToolOption: 'None'
       displayName: 'Gradle build and test'
     - task: PublishTestResults@2
@@ -60,6 +61,7 @@ jobs:
         workingDirectory: 'undersea-agent'
         tasks: 'clean build test --info'
         javaHomeOption: 'JDKVersion'
+        jdkVersionOption: 1.8
         codeCoverageToolOption: 'None'
       displayName: 'Gradle build and test'
     - task: PublishTestResults@2
