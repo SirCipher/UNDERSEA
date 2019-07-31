@@ -39,37 +39,37 @@ jobs:
         testRunTitle: 'Ubuntu 16.04 Tests'
       displayName: "Publish test results"
 
-  - job: Mac
-    pool:
-      vmImage: 'macOS-10.13'
+  # - job: Mac
+  #   pool:
+  #     vmImage: 'macOS-10.13'
 
-    steps:
-    - task: ShellScript@2
-      inputs:
-        scriptPath: 'setup.sh'
-        args: '--all'
-      displayName: 'Initialise toolchain'
-    - script: |
-        echo '##vso[task.setvariable variable=path]$(PATH):/Users/vsts/agent/2.154.3/work/1/s/libraries/moos-ivp/bin'
-      displayName: 'Set PATH'
-    - script: |
-        cd libraries/MATLAB/v95/bin/maci64
-        find -L . -name . -o -type d -prune -o -type l -exec rm {} +
-      displayName: 'Setup environment parameters'
-    - task: Gradle@2
-      inputs:
-        gradleWrapperFile: 'undersea-agent/gradlew'
-        workingDirectory: 'undersea-agent'
-        tasks: 'clean build test --scan'
-        javaHomeOption: 'JDKVersion'
-        jdkVersionOption: 1.8
-        codeCoverageToolOption: 'None'
-      displayName: 'Gradle build and test'
-    - task: PublishTestResults@2
-      inputs:
-        testResultsFormat: 'JUnit'
-        testResultsFiles: '**/TEST-*.xml'
-        searchFolder: 'undersea-agent'
-        mergeTestResults: true
-        testRunTitle: 'OSX Tests'
-      displayName: "Publish test results"
+  #   steps:
+  #   - task: ShellScript@2
+  #     inputs:
+  #       scriptPath: 'setup.sh'
+  #       args: '--all'
+  #     displayName: 'Initialise toolchain'
+  #   - script: |
+  #       echo '##vso[task.setvariable variable=path]$(PATH):/Users/vsts/agent/2.154.3/work/1/s/libraries/moos-ivp/bin'
+  #     displayName: 'Set PATH'
+  #   - script: |
+  #       cd libraries/MATLAB/v95/bin/maci64
+  #       find -L . -name . -o -type d -prune -o -type l -exec rm {} +
+  #     displayName: 'Setup environment parameters'
+  #   - task: Gradle@2
+  #     inputs:
+  #       gradleWrapperFile: 'undersea-agent/gradlew'
+  #       workingDirectory: 'undersea-agent'
+  #       tasks: 'clean build test --scan'
+  #       javaHomeOption: 'JDKVersion'
+  #       jdkVersionOption: 1.8
+  #       codeCoverageToolOption: 'None'
+  #     displayName: 'Gradle build and test'
+  #   - task: PublishTestResults@2
+  #     inputs:
+  #       testResultsFormat: 'JUnit'
+  #       testResultsFiles: '**/TEST-*.xml'
+  #       searchFolder: 'undersea-agent'
+  #       mergeTestResults: true
+  #       testRunTitle: 'OSX Tests'
+  #     displayName: "Publish test results"
