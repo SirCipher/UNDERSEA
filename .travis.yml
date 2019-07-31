@@ -10,8 +10,8 @@ jdk: oraclejdk8
 #   - PACKAGE_VERSION="1.0.*"
 
 install: |
+  - ls -a -l
   - setup.sh --all
-  - echo '##vso[task.setvariable variable=path]$(PATH):/Users/vsts/agent/2.154.3/work/1/s/libraries/moos-ivp/bin'
   - cd libraries/MATLAB/v95/bin/maci64
   - find -L . -name . -o -type d -prune -o -type l -exec rm {} +
   - ./gradlew build test --scan
