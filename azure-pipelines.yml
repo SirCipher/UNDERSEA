@@ -74,6 +74,7 @@ jobs:
       displayName: "Publish test results"
     - task: CopyFiles@2
       inputs:
+        sourceFolder: '/Users/vsts/'
         Contents: 'matlab_crash_dump*.'
         TargetFolder: '$(Build.ArtifactStagingDirectory)'
       displayName: 'Copy matlab crash'
