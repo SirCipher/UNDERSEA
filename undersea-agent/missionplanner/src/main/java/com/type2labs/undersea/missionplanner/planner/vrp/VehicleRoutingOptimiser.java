@@ -1,16 +1,17 @@
 package com.type2labs.undersea.missionplanner.planner.vrp;
 
 import com.google.ortools.constraintsolver.*;
+import com.mathworks.toolbox.javabuilder.MWApplication;
 import com.mathworks.toolbox.javabuilder.MWClassID;
 import com.mathworks.toolbox.javabuilder.MWException;
 import com.mathworks.toolbox.javabuilder.MWNumericArray;
+import com.type2labs.undersea.missionplanner.MatlabInitialiser;
 import com.type2labs.undersea.missionplanner.decomposer.delaunay.DelaunayDecomposer;
 import com.type2labs.undersea.missionplanner.exception.PlannerException;
 import com.type2labs.undersea.missionplanner.model.Mission;
 import com.type2labs.undersea.missionplanner.model.MissionParameters;
 import com.type2labs.undersea.missionplanner.model.MissionPlanner;
 import com.type2labs.undersea.missionplanner.model.PlanDataModel;
-import com.type2labs.undersea.missionplanner.planner.MatlabFactory;
 import com.type2labs.undersea.models.model.Agent;
 import com.type2labs.undersea.utilities.PlannerUtils;
 import org.apache.logging.log4j.LogManager;
@@ -21,7 +22,7 @@ import java.util.ArrayList;
 public class VehicleRoutingOptimiser implements MissionPlanner {
 
     private static final Logger logger = LogManager.getLogger(VehicleRoutingOptimiser.class);
-    private static final DelaunayDecomposer decomposer = MatlabFactory.getDelaunayDecomposer();
+    private static DelaunayDecomposer decomposer;
     private static final int SPEED_SCALAR = 100;
 
     static {
@@ -39,15 +40,26 @@ public class VehicleRoutingOptimiser implements MissionPlanner {
     private double[][] decompose(double[] x, double[] y, double sensorRange) throws PlannerException {
         MWNumericArray xArray = new MWNumericArray(x, MWClassID.DOUBLE);
         MWNumericArray yArray = new MWNumericArray(y, MWClassID.DOUBLE);
-        MWNumericArray results;
+        double[][] results;
 
         try {
-            results = (MWNumericArray) decomposer.decompose(1, xArray, yArray, sensorRange)[0];
+            if (decomposer == null) {
+                MatlabInitialiser.initalise();
+                logger.info("Initialising delaunay decomposer");
+                decomposer = new DelaunayDecomposer();
+                logger.info("Initialised delaunay decomposer");
+            }
+
+            MWNumericArray numericArray = (MWNumericArray) decomposer.decompose(1, xArray, yArray, sensorRange)[0];
+            results = (double[][]) numericArray.toDoubleArray();
+
+            decomposer.dispose();
+            MWApplication.terminate();
         } catch (MWException e) {
             throw new PlannerException(e);
         }
 
-        return (double[][]) results.toDoubleArray();
+        return results;
     }
 
     @Override
