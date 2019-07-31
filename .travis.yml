@@ -15,6 +15,8 @@ install: |
   cd libraries/MATLAB/v95/bin/maci64
   find -L . -name . -o -type d -prune -o -type l -exec rm {} +
   echo "export PATH=$PATH:/Users/travis/build/SirCipher/UNDERSEA/libraries/moos-ivp/bin/"
-./gradlew build test --scan
+  cd undersea-agent
 
+script: 
+  - ./gradlew build test --scan -s
 
