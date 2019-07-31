@@ -14,13 +14,12 @@ public class MatlabFactory {
     private static DelaunayDecomposer delaunayDecomposer;
 
     static {
-        logger.debug("Initising MW Application with arguments NODISPLAY and NOJVM");
+        logger.debug("Initialising MW Application with arguments NODISPLAY and NOJVM");
 
         if (!MWApplication.isMCRInitialized()) {
             MWApplication.initialize(MWMCROption.NODISPLAY, MWMCROption.NOJVM);
         }
     }
-
 
     public static DelaunayDecomposer getDelaunayDecomposer() {
         if (delaunayDecomposer == null) {

@@ -1,6 +1,5 @@
 package com.type2labs.undersea;
 
-import org.junit.Assert;
 import org.junit.Test;
 
 public class TestEnv {

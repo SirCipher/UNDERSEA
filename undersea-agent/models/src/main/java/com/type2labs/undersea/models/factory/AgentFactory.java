@@ -30,7 +30,8 @@ public class AgentFactory implements AbstractFactory<Agent> {
             int rate = random.nextInt(3);
             double reliability = random.nextDouble(1);
 
-            agent.setSensors(Collections.singletonList(new Sensor("SENSOR" + i, rate, reliability, Sensor.SensorType.CONDUCTIVITY)));
+            agent.setSensors(Collections.singletonList(new Sensor("SENSOR" + i, rate, reliability,
+                    Sensor.SensorType.CONDUCTIVITY)));
             agent.setServerPort(String.valueOf(ThreadLocalRandom.current().nextInt()));
 
             int min = random.nextInt(5);

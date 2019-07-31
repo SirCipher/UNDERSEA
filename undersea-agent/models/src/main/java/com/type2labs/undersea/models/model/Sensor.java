@@ -12,14 +12,6 @@ public class Sensor {
     private final SensorType sensorType;
     private final List<Range> changesList = new ArrayList<>();
 
-    public SensorType getSensorType() {
-        return sensorType;
-    }
-
-    public enum SensorType {
-        SIDESCAN_SONAR, CONDUCTIVITY, TEMPERATURE, DEPTH;
-    }
-
     public Sensor(String name, double rate, double reliability) {
         // TODO: Set from DSl
         this(name, rate, reliability, SensorType.DEPTH);
@@ -30,6 +22,10 @@ public class Sensor {
         this.rate = rate;
         this.reliability = reliability;
         this.sensorType = sensorType;
+    }
+
+    public SensorType getSensorType() {
+        return sensorType;
     }
 
     public void addChange(Range change) {
@@ -68,6 +64,10 @@ public class Sensor {
         str.append("}\n");
 
         return str.toString();
+    }
+
+    public enum SensorType {
+        SIDESCAN_SONAR, CONDUCTIVITY, TEMPERATURE, DEPTH;
     }
 
 }
