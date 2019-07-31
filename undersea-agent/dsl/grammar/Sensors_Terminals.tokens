@@ -1,0 +1,17 @@
+NAME=1
+ASSIGN=2
+CHANGE=3
+RELIABILITY=4
+RATE=5
+SENSORS=6
+DOUBLE=7
+INT=8
+ID=9
+WS=10
+ErrorCharacter=11
+'name'=1
+'='=2
+'change'=3
+'reliability'=4
+'rate'=5
+'sensors'=6

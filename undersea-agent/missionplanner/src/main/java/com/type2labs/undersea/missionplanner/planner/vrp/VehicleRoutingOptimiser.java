@@ -18,12 +18,13 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class VehicleRoutingOptimiser implements MissionPlanner {
 
     private static final Logger logger = LogManager.getLogger(VehicleRoutingOptimiser.class);
-    private static DelaunayDecomposer decomposer;
     private static final int SPEED_SCALAR = 100;
+    private static DelaunayDecomposer decomposer;
 
     static {
         try {
@@ -85,70 +86,6 @@ public class VehicleRoutingOptimiser implements MissionPlanner {
         return solve(model, missionParameters);
     }
 
-    private Mission solve(PlanDataModel model, MissionParameters missionParameters) {
-        logger.info("Generating solution");
-        // Create Routing Index Manager
-        RoutingIndexManager manager =
-                new RoutingIndexManager(model.getDistanceMatrix().length, missionParameters.getAgentCount(),
-                        missionParameters.getDepot());
-
-        // Create Routing Model.
-        RoutingModel routing = new RoutingModel(manager);
-
-        // Create and register a transit callback.
-        final int transitCallbackIndex =
-                routing.registerTransitCallback((long fromIndex, long toIndex) -> {
-                    // Convert from routing variable Index to user NodeIndex.
-                    int fromNode = manager.indexToNode(fromIndex);
-                    int toNode = manager.indexToNode(toIndex);
-                    return (long) model.getDistanceMatrix()[fromNode][toNode];
-                });
-
-        // Define cost of each arc.
-        final int bigNumber = 100000;
-        routing.addDimension(transitCallbackIndex, bigNumber, bigNumber, false, "Time");
-
-//        final Random randomGenerator = new Random(0xBEEF);
-//        final int costCoefficientMax = 3;
-
-//        final int[] speeds = {1, 2, 3, 4, 5, 500};
-
-        for (int vehicle = 0; vehicle < manager.getNumberOfVehicles(); ++vehicle) {
-            final Agent agent = missionParameters.getAgents().get(vehicle);
-
-            final int manhattanCostCallback = routing.registerTransitCallback((long fromIndex, long toIndex) -> {
-                // Convert from routing variable Index to user NodeIndex.
-                int fromNode = manager.indexToNode(fromIndex);
-                int toNode = manager.indexToNode(toIndex);
-
-                return (long) (model.getDistanceMatrix()[fromNode][toNode] / agent.getSpeedRange().getMax()) * VehicleRoutingOptimiser.SPEED_SCALAR;
-            });
-
-            routing.setArcCostEvaluatorOfVehicle(manhattanCostCallback, vehicle);
-        }
-
-        // Add Distance constraint.
-        routing.addDimension(transitCallbackIndex, 0, 3000,
-                true, // start cumul to zero
-                "Distance");
-        RoutingDimension distanceDimension = routing.getMutableDimension("Distance");
-        distanceDimension.setGlobalSpanCostCoefficient(100);
-
-        // Setting first solution heuristic.
-        RoutingSearchParameters searchParameters =
-                main.defaultRoutingSearchParameters()
-                        .toBuilder()
-                        .setFirstSolutionStrategy(FirstSolutionStrategy.Value.LOCAL_CHEAPEST_ARC)
-                        .build();
-
-        // Solve the problem.
-        Assignment solution = routing.solveWithParameters(searchParameters);
-
-        generatedMission = new Mission(model, solution, routing, manager, new ArrayList<>(), missionParameters);
-
-        return generatedMission;
-    }
-
     @Override
     public void print(Mission mission) {
         Assignment assignment = mission.getAssignment();
@@ -176,6 +113,75 @@ public class VehicleRoutingOptimiser implements MissionPlanner {
         }
         logger.info("Maximum of the route distances: " + maxRouteDistance + "m");
 
+    }
+
+    private Mission solve(PlanDataModel model, MissionParameters missionParameters) {
+        logger.info("Generating solution");
+        // Create Routing Index Manager
+        RoutingIndexManager manager =
+                new RoutingIndexManager(model.getDistanceMatrix().length, missionParameters.getAgentCount(),
+                        missionParameters.getDepot());
+
+        // Create Routing Model.
+        RoutingModel routing = new RoutingModel(manager);
+
+        List<Integer> callbacks = new ArrayList<>();
+
+        // Create and register a transit callback.
+        final int transitCallbackIndex =
+                routing.registerTransitCallback((long fromIndex, long toIndex) -> {
+                    // Convert from routing variable Index to user NodeIndex.
+                    int fromNode = manager.indexToNode(fromIndex);
+                    int toNode = manager.indexToNode(toIndex);
+                    return (long) model.getDistanceMatrix()[fromNode][toNode];
+                });
+
+        // Define cost of each arc.
+        final int bigNumber = 100000;
+        routing.addDimension(transitCallbackIndex, bigNumber, bigNumber, false, "Time");
+
+        callbacks.add(transitCallbackIndex);
+
+//        final Random randomGenerator = new Random(0xBEEF);
+//        final int costCoefficientMax = 3;
+
+//        final int[] speeds = {1, 2, 3, 4, 5, 500};
+
+        for (int vehicle = 0; vehicle < manager.getNumberOfVehicles(); ++vehicle) {
+            final Agent agent = missionParameters.getAgents().get(vehicle);
+
+            final int callback = routing.registerTransitCallback((long fromIndex, long toIndex) -> {
+                // Convert from routing variable Index to user NodeIndex.
+                int fromNode = manager.indexToNode(fromIndex);
+                int toNode = manager.indexToNode(toIndex);
+
+                return (long) (model.getDistanceMatrix()[fromNode][toNode] / agent.getSpeedRange().getMax()) * VehicleRoutingOptimiser.SPEED_SCALAR;
+            });
+
+            routing.setArcCostEvaluatorOfVehicle(callback, vehicle);
+            callbacks.add(callback);
+        }
+
+        // Add Distance constraint.
+        routing.addDimension(transitCallbackIndex, 0, 3000,
+                true, // start cumul to zero
+                "Distance");
+        RoutingDimension distanceDimension = routing.getMutableDimension("Distance");
+        distanceDimension.setGlobalSpanCostCoefficient(100);
+
+        // Setting first solution heuristic.
+        RoutingSearchParameters searchParameters =
+                main.defaultRoutingSearchParameters()
+                        .toBuilder()
+                        .setFirstSolutionStrategy(FirstSolutionStrategy.Value.LOCAL_CHEAPEST_ARC)
+                        .build();
+
+        // Solve the problem.
+        Assignment solution = routing.solveWithParameters(searchParameters);
+
+        generatedMission = new Mission(model, solution, routing, manager, new ArrayList<>(), missionParameters);
+
+        return generatedMission;
     }
 
 
