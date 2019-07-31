@@ -10,10 +10,10 @@ jdk: oraclejdk8
 #   - PACKAGE_VERSION="1.0.*"
 
 install: |
-  - ls -a -l
-  - setup.sh --all
-  - cd libraries/MATLAB/v95/bin/maci64
-  - find -L . -name . -o -type d -prune -o -type l -exec rm {} +
-  - ./gradlew build test --scan
+  ls -a -l
+  setup.sh --all
+  cd libraries/MATLAB/v95/bin/maci64
+  find -L . -name . -o -type d -prune -o -type l -exec rm {} +
+  ./gradlew build test --scan
 
 
