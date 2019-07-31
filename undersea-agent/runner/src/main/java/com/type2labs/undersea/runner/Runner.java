@@ -74,6 +74,7 @@ public class Runner {
 
         agentInitialiser.initalise(environmentProperties.getAgents());
 
+        logger.info("Exiting runner...");
     }
 
     private static Mission planMission() {
