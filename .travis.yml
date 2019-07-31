@@ -9,6 +9,7 @@ install: |
   ./setup.sh --all
   cd UNDERSEA/libraries/MATLAB/v95/bin/maci64
   find -L . -name . -o -type d -prune -o -type l -exec rm {} +
+  cd ../../../../..
   echo "export PATH=$PATH:/Users/travis/build/SirCipher/UNDERSEA/libraries/moos-ivp/bin/"
   cd undersea-agent
 
