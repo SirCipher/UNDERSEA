@@ -4,16 +4,16 @@ os: osx
 osx_image: xcode9.3
 jdk: oraclejdk8
 
-env:
-  - DB=postgres
-  - SH=bash
-  - PACKAGE_VERSION="1.0.*"
+# env:
+#   - DB=postgres
+#   - SH=bash
+#   - PACKAGE_VERSION="1.0.*"
 
 install: |
-  setup.sh --all
-  echo '##vso[task.setvariable variable=path]$(PATH):/Users/vsts/agent/2.154.3/work/1/s/libraries/moos-ivp/bin'
-  cd libraries/MATLAB/v95/bin/maci64
-  find -L . -name . -o -type d -prune -o -type l -exec rm {} +
-  ./gradlew build test --scan
+  - setup.sh --all
+  - echo '##vso[task.setvariable variable=path]$(PATH):/Users/vsts/agent/2.154.3/work/1/s/libraries/moos-ivp/bin'
+  - cd libraries/MATLAB/v95/bin/maci64
+  - find -L . -name . -o -type d -prune -o -type l -exec rm {} +
+  - ./gradlew build test --scan
 
 
