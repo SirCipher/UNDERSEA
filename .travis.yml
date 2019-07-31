@@ -11,7 +11,7 @@ jdk: oraclejdk8
 
 install: |
   ls -a -l
-  setup.sh --all
+  ./setup.sh --all
   cd libraries/MATLAB/v95/bin/maci64
   find -L . -name . -o -type d -prune -o -type l -exec rm {} +
   ./gradlew build test --scan
