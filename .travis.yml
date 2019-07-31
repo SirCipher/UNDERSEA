@@ -13,11 +13,11 @@ script:
   - bash: setup.sh --all
 
 script: |
-  echo '##vso[task.setvariable variable=path]$(PATH):/Users/vsts/agent/2.154.3/work/1/s/libraries/moos-ivp/bin'
+  - echo '##vso[task.setvariable variable=path]$(PATH):/Users/vsts/agent/2.154.3/work/1/s/libraries/moos-ivp/bin'
 
 script: |
-  cd libraries/MATLAB/v95/bin/maci64
-  find -L . -name . -o -type d -prune -o -type l -exec rm {} +
+  - cd libraries/MATLAB/v95/bin/maci64
+  - find -L . -name . -o -type d -prune -o -type l -exec rm {} +
 
 
 script: |
