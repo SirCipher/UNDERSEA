@@ -72,3 +72,13 @@ jobs:
         mergeTestResults: true
         testRunTitle: 'OSX Tests'
       displayName: "Publish test results"
+    - task: CopyFiles@2
+      inputs:
+        Contents: 'matlab_crash_dump*.'
+        TargetFolder: '$(Build.ArtifactStagingDirectory)'
+      displayName: 'Copy matlab crash'
+    - task: PublishBuildArtifacts@1
+      inputs:
+        pathToPublish: $(Build.ArtifactStagingDirectory)
+        artifactName: MatlabCrash
+      displayName: 'Publish matlab crash'
