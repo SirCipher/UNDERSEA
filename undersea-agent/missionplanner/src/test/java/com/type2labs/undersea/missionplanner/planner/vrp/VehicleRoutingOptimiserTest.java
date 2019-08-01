@@ -19,13 +19,13 @@ public class VehicleRoutingOptimiserTest {
     @BeforeClass
     public static void testInit() {
         try {
-//            new VehicleRoutingOptimiser();
+            new VehicleRoutingOptimiser();
         } catch (Exception e) {
             Assert.fail("Unable to initialise mission planner");
         }
     }
 
-//    @Test
+    @Test
     public void testRun() {
         MissionPlanner missionPlanner = new VehicleRoutingOptimiser();
         Properties properties = Utility.getPropertiesByName("../resources/runner.properties");

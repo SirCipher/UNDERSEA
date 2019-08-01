@@ -6,7 +6,8 @@ public class TestEnv {
 
     @Test
     public void test() {
-        System.out.println(System.getProperty("java.library.path"));
+        System.out.println("Library path: " + System.getProperty("java.library.path"));
+        System.out.println("PATH: " + System.getenv("PATH"));
     }
 
 }
