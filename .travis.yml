@@ -6,13 +6,21 @@ jdk: oraclejdk8
 
 install: |
   #./setup.sh --all
+  pwd
+  echo "---------------"
+  la -a -l
+  echo "---------------"
   cd UNDERSEA/libraries/MATLAB/v95/bin/maci64
   find -L . -name . -o -type d -prune -o -type l -exec rm {} +
   cd ../../../../..
   echo "export PATH=$PATH:/Users/travis/build/SirCipher/UNDERSEA/libraries/moos-ivp/bin/" >>~/.bash_profile
   source ~/.bash_profile
   echo Path is $PATH
+  echo "---------------"
   pwd
+  echo "---------------"
+  ls -a -l
+  echo "---------------"
   cd undersea-agent
 
 script: 
