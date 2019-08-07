@@ -1,0 +1,20 @@
+sudo: required
+language: java
+os: osx
+osx_image: xcode9.3
+jdk: oraclejdk8
+
+install: |
+  ./setup.sh --all
+  ROOT="$(pwd)"
+  cd libraries/MATLAB/v95/bin/maci64
+  find -L . -name . -o -type d -prune -o -type l -exec rm {} +
+  cd $ROOT
+  echo "export PATH=$PATH:/Users/travis/build/SirCipher/UNDERSEA/libraries/moos-ivp/bin/" >>~/.bash_profile
+  source ~/.bash_profile
+  echo Path is $PATH
+  cd undersea-agent
+
+script: 
+  - ./gradlew build test
+

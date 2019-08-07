@@ -68,6 +68,8 @@ elif [[ "$OSTYPE" == "darwin"* ]]; then
     else
         echo "Installed MATLAB Runtime"
     fi
+    
+    cd $ROOT
 
     hdiutil detach /Volumes/MCR_R2018b_maci64_installer/
 fi

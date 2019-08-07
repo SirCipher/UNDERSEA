@@ -11,3 +11,5 @@ svn up -r8525
 
 ./build-moos.sh
 ./build-ivp.sh
+
+echo "Built MOOS"
