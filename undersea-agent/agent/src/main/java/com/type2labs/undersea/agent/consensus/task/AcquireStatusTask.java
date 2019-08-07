@@ -31,6 +31,7 @@ public class AcquireStatusTask implements Runnable {
                 AcquireStatusServiceGrpc.AcquireStatusServiceBlockingStub blockingStub =
                         AcquireStatusServiceGrpc.newBlockingStub(localNode.getLocalEndpoint().channel());
 
+                // TODO
                 RaftProtos.AcquireStatusResponse status = blockingStub.getStatus(request);
                 ThreadLocalRandom random = ThreadLocalRandom.current();
                 PoolInfo.AgentInfo agentInfo = new PoolInfo.AgentInfo(random.nextInt(100), random.nextDouble(100),

@@ -4,17 +4,15 @@ import com.type2labs.undersea.agent.consensus.model.Endpoint;
 import com.type2labs.undersea.agent.consensus.model.GroupId;
 import com.type2labs.undersea.agent.consensus.model.RaftIntegration;
 import com.type2labs.undersea.agent.consensus.model.RaftNode;
-import com.type2labs.undersea.agent.consensus.service.AcquireStatusImpl;
 import com.type2labs.undersea.agent.consensus.task.AcquireStatusTask;
 import com.type2labs.undersea.agent.consensus.task.RequireRoleTask;
+import com.type2labs.undersea.agent.consensus.ConsensusUtil;
 import com.type2labs.undersea.models.Agent;
 import io.grpc.Server;
-import io.grpc.ServerBuilder;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
-import java.net.InetSocketAddress;
 import java.util.concurrent.Executors;
 import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.ScheduledExecutorService;
@@ -55,12 +53,7 @@ public class RaftNodeImpl implements RaftNode {
         this.endpoint = endpoint;
         this.groupId = groupId;
         this.integration = integration;
-
-        InetSocketAddress address = endpoint.socketAddress();
-
-        server = ServerBuilder.forPort(address.getPort())
-                .addService(new AcquireStatusImpl(RaftNodeImpl.this))
-                .build();
+        this.server = ConsensusUtil.buildServer(endpoint.socketAddress(), this);
     }
 
     @Override
@@ -78,6 +71,17 @@ public class RaftNodeImpl implements RaftNode {
         logger.info(name + " is now the leader");
         scheduleHeartbeat();
     }
+
+    public void toCandidate() {
+        role = RaftRole.CANDIDATE;
+        logger.info(name + " is now a candidate");
+    }
+
+    public void toFollower() {
+        role = RaftRole.FOLLOWER;
+        logger.info(name + " is now a follower");
+    }
+
 
     @Override
     public PoolInfo poolInfo() {
