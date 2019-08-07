@@ -16,3 +16,16 @@ message AcquireStatusRequest {
 message AcquireStatusResponse {
     string status = 1;
 }
+
+message Object {
+
+}
+
+enum ObjectType {
+    string
+    number
+}
+
+message Status {
+    repeated
+}

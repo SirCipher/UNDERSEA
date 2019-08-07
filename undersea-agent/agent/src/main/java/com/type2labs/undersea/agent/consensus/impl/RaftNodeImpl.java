@@ -1,12 +1,12 @@
 package com.type2labs.undersea.agent.consensus.impl;
 
+import com.type2labs.undersea.agent.consensus.ConsensusUtil;
 import com.type2labs.undersea.agent.consensus.model.Endpoint;
 import com.type2labs.undersea.agent.consensus.model.GroupId;
 import com.type2labs.undersea.agent.consensus.model.RaftIntegration;
 import com.type2labs.undersea.agent.consensus.model.RaftNode;
 import com.type2labs.undersea.agent.consensus.task.AcquireStatusTask;
 import com.type2labs.undersea.agent.consensus.task.RequireRoleTask;
-import com.type2labs.undersea.agent.consensus.ConsensusUtil;
 import com.type2labs.undersea.models.Agent;
 import io.grpc.Server;
 import org.apache.logging.log4j.LogManager;
@@ -32,6 +32,8 @@ public class RaftNodeImpl implements RaftNode {
     private GroupId groupId;
     private RaftRole role = RaftRole.CANDIDATE;
     private PoolInfo poolInfo = new PoolInfo();
+
+    private boolean started = false;
 
     public void shutdown() {
         scheduledExecutor.shutdown();
@@ -130,7 +132,6 @@ public class RaftNodeImpl implements RaftNode {
         integration.schedule(task, delayInMillis, MILLISECONDS);
     }
 
-
     @Override
     public void start() {
         try {
@@ -138,6 +139,7 @@ public class RaftNodeImpl implements RaftNode {
             logger.trace("Started node: " + name);
 
             execute(new AcquireStatusTask(RaftNodeImpl.this));
+            started = true;
         } catch (IOException e) {
             throw new RuntimeException("Failed to start server: " + name, e);
         }
@@ -145,7 +147,7 @@ public class RaftNodeImpl implements RaftNode {
 
     @Override
     public boolean isAvailable() {
-        return !(server.isShutdown() || server.isTerminated());
+        return !(server.isShutdown() || server.isTerminated()) && started;
     }
 
     @Override
