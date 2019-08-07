@@ -10,7 +10,7 @@ import com.type2labs.undersea.missionplanner.model.Mission;
 import com.type2labs.undersea.missionplanner.model.MissionParameters;
 import com.type2labs.undersea.missionplanner.model.MissionPlanner;
 import com.type2labs.undersea.missionplanner.planner.vrp.VehicleRoutingOptimiser;
-import com.type2labs.undersea.models.impl.AgentImpl;
+import com.type2labs.undersea.models.impl.DslAgent;
 import com.type2labs.undersea.models.impl.Node;
 import com.type2labs.undersea.utilities.Utility;
 import org.apache.logging.log4j.LogManager;
@@ -48,11 +48,11 @@ public class Runner {
         Assignment assignment = mission.getAssignment();
         RoutingIndexManager manager = mission.getRoutingIndexManager();
 
-        List<AgentImpl> agentImpls = new ArrayList<>(environmentProperties.getAgents().values());
+        List<DslAgent> dslAgents = new ArrayList<>(environmentProperties.getAgents().values());
 
         for (int i = 0; i < manager.getNumberOfVehicles(); ++i) {
             long index = routingModel.start(i);
-            AgentImpl agentImpl = agentImpls.get(i);
+            DslAgent dslAgent = dslAgents.get(i);
 
             while (!routingModel.isEnd(index)) {
                 int centroidIndex = manager.indexToNode(index);
@@ -61,12 +61,12 @@ public class Runner {
                 double[] centroid = mission.getMissionParameters().getCentroid(centroidIndex);
 
                 Node node = new Node(centroid[0], centroid[1]);
-                agentImpl.assignNode(node);
+                dslAgent.assignNode(node);
             }
 
-            if (agentImpl.getAssignedNodes().size() == 1) {
-                logger.warn("More agents than required have been assigned to the mission. Removing nodes for agent: " + agentImpl.getName());
-                agentImpl.setAssignedNodes(new ArrayList<>());
+            if (dslAgent.getAssignedNodes().size() == 1) {
+                logger.warn("More agents than required have been assigned to the mission. Removing nodes for agent: " + dslAgent.getName());
+                dslAgent.setAssignedNodes(new ArrayList<>());
             }
         }
 
@@ -81,8 +81,8 @@ public class Runner {
         MissionPlanner missionPlanner = new VehicleRoutingOptimiser();
         double[][] area = Utility.propertyKeyTo2dDoubleArray(properties, "environment.area");
 
-        List<AgentImpl> agentImpls = new ArrayList<>(environmentProperties.getAgents().values());
-        MissionParameters missionParameters = new MissionParameters(agentImpls, 0, area, 50);
+        List<DslAgent> dslAgents = new ArrayList<>(environmentProperties.getAgents().values());
+        MissionParameters missionParameters = new MissionParameters(dslAgents, 0, area, 50);
 
         try {
             Mission mission = missionPlanner.generate(missionParameters);

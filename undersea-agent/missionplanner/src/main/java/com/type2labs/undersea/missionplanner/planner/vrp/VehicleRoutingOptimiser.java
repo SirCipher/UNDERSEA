@@ -12,7 +12,7 @@ import com.type2labs.undersea.missionplanner.model.Mission;
 import com.type2labs.undersea.missionplanner.model.MissionParameters;
 import com.type2labs.undersea.missionplanner.model.MissionPlanner;
 import com.type2labs.undersea.missionplanner.model.PlanDataModel;
-import com.type2labs.undersea.models.impl.AgentImpl;
+import com.type2labs.undersea.models.impl.DslAgent;
 import com.type2labs.undersea.utilities.PlannerUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -148,14 +148,14 @@ public class VehicleRoutingOptimiser implements MissionPlanner {
 //        final int[] speeds = {1, 2, 3, 4, 5, 500};
 
         for (int vehicle = 0; vehicle < manager.getNumberOfVehicles(); ++vehicle) {
-            final AgentImpl agentImpl = missionParameters.getAgentImpls().get(vehicle);
+            final DslAgent dslAgent = missionParameters.getDslAgents().get(vehicle);
 
             final int callback = routing.registerTransitCallback((long fromIndex, long toIndex) -> {
                 // Convert from routing variable Index to user NodeIndex.
                 int fromNode = manager.indexToNode(fromIndex);
                 int toNode = manager.indexToNode(toIndex);
 
-                return (long) (model.getDistanceMatrix()[fromNode][toNode] / agentImpl.getSpeedRange().getMax()) * VehicleRoutingOptimiser.SPEED_SCALAR;
+                return (long) (model.getDistanceMatrix()[fromNode][toNode] / dslAgent.getSpeedRange().getMax()) * VehicleRoutingOptimiser.SPEED_SCALAR;
             });
 
             routing.setArcCostEvaluatorOfVehicle(callback, vehicle);

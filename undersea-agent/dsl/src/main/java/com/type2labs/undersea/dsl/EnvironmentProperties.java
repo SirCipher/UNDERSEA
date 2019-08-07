@@ -1,6 +1,6 @@
 package com.type2labs.undersea.dsl;
 
-import com.type2labs.undersea.dsl.uuv.model.AgentImplProxy;
+import com.type2labs.undersea.dsl.uuv.model.DslAgentProxy;
 import com.type2labs.undersea.utilities.UnderseaException;
 
 import java.util.HashMap;
@@ -12,7 +12,7 @@ public class EnvironmentProperties {
 
     private static Properties runnerProperties;
     private final Map<EnvironmentValue, String> environmentValues = new HashMap<>();
-    private final Map<String, AgentImplProxy> agents = new HashMap<>();
+    private final Map<String, DslAgentProxy> agents = new HashMap<>();
 
     public Properties getRunnerProperties() {
         return runnerProperties;
@@ -22,7 +22,7 @@ public class EnvironmentProperties {
         EnvironmentProperties.runnerProperties = runnerProperties;
     }
 
-    public void addAgent(AgentImplProxy agent) {
+    public void addAgent(DslAgentProxy agent) {
         if (this.agents.containsKey(agent.getName())) {
             throw new UnderseaException("Duplicate agent created: " + agent.getName());
         }
@@ -30,11 +30,11 @@ public class EnvironmentProperties {
         this.agents.put(agent.getName(), agent);
     }
 
-    public Map<String, AgentImplProxy> getAllAgents() {
+    public Map<String, DslAgentProxy> getAllAgents() {
         return agents;
     }
 
-    public Map<String, AgentImplProxy> getAgents() {
+    public Map<String, DslAgentProxy> getAgents() {
         return agents.entrySet().stream()
                 .filter(a -> !a.getValue().getName().equals("shoreside"))
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
@@ -52,7 +52,7 @@ public class EnvironmentProperties {
         return environmentValues;
     }
 
-    public AgentImplProxy getShoreside() {
+    public DslAgentProxy getShoreside() {
         return agents.get("shoreside");
     }
 

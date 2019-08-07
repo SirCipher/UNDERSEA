@@ -5,7 +5,7 @@ import com.type2labs.undersea.missionplanner.model.Mission;
 import com.type2labs.undersea.missionplanner.model.MissionParameters;
 import com.type2labs.undersea.missionplanner.model.MissionPlanner;
 import com.type2labs.undersea.models.factory.AgentFactory;
-import com.type2labs.undersea.models.impl.AgentImpl;
+import com.type2labs.undersea.models.impl.DslAgent;
 import com.type2labs.undersea.utilities.Utility;
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -31,8 +31,8 @@ public class VehicleRoutingOptimiserTest {
         Properties properties = Utility.getPropertiesByName("../resources/runner.properties");
         double[][] area = Utility.propertyKeyTo2dDoubleArray(properties, "environment.area");
 
-        List<AgentImpl> agentImpls = new AgentFactory().createN(5);
-        MissionParameters missionParameters = new MissionParameters(agentImpls, 1, area, 50);
+        List<DslAgent> dslAgents = new AgentFactory().createN(5);
+        MissionParameters missionParameters = new MissionParameters(dslAgents, 1, area, 50);
 
         try {
             Mission mission = missionPlanner.generate(missionParameters);

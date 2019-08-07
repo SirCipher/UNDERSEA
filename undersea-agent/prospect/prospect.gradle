@@ -16,10 +16,6 @@ repositories {
 
 dependencies {
     compile project(":models")
-    compile project(":prospect")
-    compile project(":missionplanner")
-    compile project(":controller")
-    compile project(":seachain")
     compile project(":utilities")
 
     compile("javax.annotation:javax.annotation-api:1.3.2")

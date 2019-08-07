@@ -1,6 +1,6 @@
 package com.type2labs.undersea.missionplanner.model;
 
-import com.type2labs.undersea.models.impl.AgentImpl;
+import com.type2labs.undersea.models.impl.DslAgent;
 
 import java.util.List;
 
@@ -11,20 +11,20 @@ public class MissionParameters {
 
     // TODO: remove once second provider is implemented
     private final int depot;
-    private final List<AgentImpl> agentImpls;
+    private final List<DslAgent> dslAgents;
     private final double[][] polygon;
     private double minimumSensorRange;
     private double[][] centroids;
 
-    public MissionParameters(List<AgentImpl> agentImpls, int depot, double[][] polygon, int minimumSensorRange) {
-        this.agentImpls = agentImpls;
+    public MissionParameters(List<DslAgent> dslAgents, int depot, double[][] polygon, int minimumSensorRange) {
+        this.dslAgents = dslAgents;
         this.depot = depot;
         this.polygon = polygon;
         this.minimumSensorRange = minimumSensorRange;
     }
 
-    public List<AgentImpl> getAgentImpls() {
-        return agentImpls;
+    public List<DslAgent> getDslAgents() {
+        return dslAgents;
     }
 
     public double[][] getPolygon() {
@@ -36,7 +36,7 @@ public class MissionParameters {
     }
 
     public int getAgentCount() {
-        return agentImpls.size();
+        return dslAgents.size();
     }
 
     public int getDepot() {
