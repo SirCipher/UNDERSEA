@@ -18,21 +18,6 @@ class LocalAgentGroup {
     private final Endpoint[] endpoints;
     private final RaftIntegrationImpl[] integrations;
 
-    public RaftNodeImpl[] getRaftNodes() {
-        return raftNodes;
-    }
-
-    private RaftClusterConfig defaultConfig() {
-        RaftClusterConfig config = new RaftClusterConfig();
-
-        CostConfigurationImpl costConfiguration = new CostConfigurationImpl();
-        costConfiguration.withAccuracyWeighting(30);
-        costConfiguration.withSpeedWeighting(5);
-        config.setCostConfiguration(costConfiguration);
-
-        return config;
-    }
-
     LocalAgentGroup(int size) {
         groupId = new GroupIdImpl("test", "testuuid");
         raftNodes = new RaftNodeImpl[size];
@@ -48,6 +33,21 @@ class LocalAgentGroup {
             integrations[i] = integration;
             raftNodes[i] = new RaftNodeImpl(config, new AgentImpl(), "agent:" + i, endpoint, groupId, integration);
         }
+    }
+
+    public RaftNodeImpl[] getRaftNodes() {
+        return raftNodes;
+    }
+
+    private RaftClusterConfig defaultConfig() {
+        RaftClusterConfig config = new RaftClusterConfig();
+
+        CostConfigurationImpl costConfiguration = new CostConfigurationImpl();
+        costConfiguration.withAccuracyWeighting(30);
+        costConfiguration.withSpeedWeighting(5);
+        config.setCostConfiguration(costConfiguration);
+
+        return config;
     }
 
     void shutdown() {

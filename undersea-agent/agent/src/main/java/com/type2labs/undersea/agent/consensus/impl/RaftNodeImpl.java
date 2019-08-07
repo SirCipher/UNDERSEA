@@ -37,20 +37,6 @@ public class RaftNodeImpl implements RaftNode {
 
     private boolean started = false;
 
-    public void shutdown() {
-        scheduledExecutor.shutdown();
-        endpoint.shutdown();
-        server.shutdownNow();
-    }
-
-    public enum RaftRole {
-        LEADER, FOLLOWER, CANDIDATE
-    }
-
-    public RaftRole getRole() {
-        return role;
-    }
-
     public RaftNodeImpl(RaftClusterConfig config, Agent agent, String name, Endpoint endpoint, GroupId groupId,
                         RaftIntegration integration) {
         this.config = config;
@@ -60,6 +46,16 @@ public class RaftNodeImpl implements RaftNode {
         this.groupId = groupId;
         this.integration = integration;
         this.server = ConsensusUtil.buildServer(endpoint.socketAddress(), this);
+    }
+
+    public void shutdown() {
+        scheduledExecutor.shutdown();
+        endpoint.shutdown();
+        server.shutdownNow();
+    }
+
+    public RaftRole getRole() {
+        return role;
     }
 
     @Override
@@ -88,7 +84,6 @@ public class RaftNodeImpl implements RaftNode {
         logger.info(name + " is now a follower");
     }
 
-
     @Override
     public PoolInfo poolInfo() {
         return poolInfo;
@@ -107,24 +102,6 @@ public class RaftNodeImpl implements RaftNode {
     private void scheduleHeartbeat() {
 //        broadcastAppendRequest();
         schedule(new HeartbeatTask(), 500);
-    }
-
-
-    private class HeartbeatTask extends RequireRoleTask {
-        HeartbeatTask() {
-            super(RaftNodeImpl.this, RaftRole.LEADER);
-        }
-
-        @Override
-        protected void innerRun() {
-            if (role == RaftRole.LEADER) {
-//                if (lastAppendEntriesTimestamp < Clock.currentTimeMillis() - heartbeatPeriodInMillis) {
-//                    broadcastAppendRequest();
-//                }
-                broadcastAppendRequest();
-                scheduleHeartbeat();
-            }
-        }
     }
 
     private void broadcastAppendRequest() {
@@ -176,5 +153,26 @@ public class RaftNodeImpl implements RaftNode {
     @Override
     public RaftIntegration integration() {
         return integration;
+    }
+
+    public enum RaftRole {
+        LEADER, FOLLOWER, CANDIDATE
+    }
+
+    private class HeartbeatTask extends RequireRoleTask {
+        HeartbeatTask() {
+            super(RaftNodeImpl.this, RaftRole.LEADER);
+        }
+
+        @Override
+        protected void innerRun() {
+            if (role == RaftRole.LEADER) {
+//                if (lastAppendEntriesTimestamp < Clock.currentTimeMillis() - heartbeatPeriodInMillis) {
+//                    broadcastAppendRequest();
+//                }
+                broadcastAppendRequest();
+                scheduleHeartbeat();
+            }
+        }
     }
 }

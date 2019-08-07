@@ -1,7 +1,6 @@
 package com.type2labs.undersea.runner;
 
 import org.junit.Assert;
-import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
@@ -9,8 +8,7 @@ import java.io.IOException;
 public class RunnerTest {
 
 
-
-//    @Test
+    //    @Test
     public void testRunner() throws IOException {
         String testProperties = "src/test/resources/test.properties";
 

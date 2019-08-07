@@ -19,7 +19,7 @@ public class AgentImpl implements Agent {
         speed = random.nextDouble(100);
         remainingBattery = random.nextDouble(100);
         range = random.nextDouble(100);
-        accuracy  = random.nextDouble(100);
+        accuracy = random.nextDouble(100);
     }
 
     @Override

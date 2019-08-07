@@ -4,6 +4,6 @@ import java.util.Map;
 
 public interface CostCalculator {
 
-    Map<Endpoint, Double> generate(RaftNode parent);
+    Map<Endpoint, Double> generateCost(RaftNode parent);
 
 }

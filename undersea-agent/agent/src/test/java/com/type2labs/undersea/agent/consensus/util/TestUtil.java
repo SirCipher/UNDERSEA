@@ -3,7 +3,6 @@ package com.type2labs.undersea.agent.consensus.util;
 public class TestUtil {
 
 
-
     public static void assertTrueEventually(Runnable task, long timeoutSeconds) {
         AssertionError assertionError = null;
 

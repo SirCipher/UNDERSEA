@@ -21,7 +21,7 @@ public class PoolInfo implements CostCalculator {
     }
 
     @Override
-    public Map<Endpoint, Double> generate(RaftNode parent) {
+    public Map<Endpoint, Double> generateCost(RaftNode parent) {
         RaftClusterConfig clusterConfig = parent.config();
         CostConfigurationImpl costConfiguration = (CostConfigurationImpl) clusterConfig.getCostConfiguration();
 
@@ -32,12 +32,22 @@ public class PoolInfo implements CostCalculator {
 
         for (Map.Entry<Endpoint, AgentInfo> e : agentInfo.entrySet()) {
             AgentInfo agentInfo = e.getValue();
-            double cost = ((agentInfo.accuracy * accuracyWeighting) + (agentInfo.remainingBattery * speedWeighting)) / agentInfo.range;
+            double cost = ((agentInfo.accuracy * accuracyWeighting)
+                    + (agentInfo.remainingBattery * speedWeighting))
+                    / agentInfo.range;
 
             costs.put(e.getKey(), cost);
         }
 
         return costs;
+    }
+
+    public boolean hasInfo() {
+        return agentInfo.size() > 0;
+    }
+
+    public Map<Endpoint, AgentInfo> getAgentInfo() {
+        return agentInfo;
     }
 
     public static class AgentInfo {
@@ -79,13 +89,5 @@ public class PoolInfo implements CostCalculator {
                     ", range=" + range +
                     '}';
         }
-    }
-
-    public boolean hasInfo() {
-        return agentInfo.size() > 0;
-    }
-
-    public Map<Endpoint, AgentInfo> getAgentInfo() {
-        return agentInfo;
     }
 }
