@@ -189,8 +189,7 @@ class MoosConfigurationWriter {
 
         String fileName = "meta_shoreside.moos";
 
-        AgentImplProxy agent = new AgentImplProxy();
-        agent.setName("shoreside");
+        AgentImplProxy agent = new AgentImplProxy("shoreside");
         agent.setMetaFileName(fileName);
 
         environmentProperties.addAgent(agent);

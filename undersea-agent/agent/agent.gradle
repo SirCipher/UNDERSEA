@@ -10,11 +10,6 @@ buildscript {
     }
 }
 
-group 'com.type2labs'
-version '1.0-SNAPSHOT'
-
-sourceCompatibility = 1.8
-
 repositories {
     mavenCentral()
 }
@@ -37,7 +32,6 @@ dependencies {
 
     // https://mvnrepository.com/artifact/io.github.classgraph/classgraph
     compile group: 'io.github.classgraph', name: 'classgraph', version: '4.8.43'
-
 }
 
 protobuf {

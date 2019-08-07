@@ -1,5 +1,5 @@
 syntax = "proto3";
-option java_package = "com.type2labs.undersea.consensus";
+option java_package = "com.type2labs.undersea.agent.consensus";
 option java_outer_classname = "RaftProtos";
 option java_generate_equals_and_hash = true;
 package proto;
@@ -7,7 +7,7 @@ import "google/protobuf/any.proto";
 
 service AcquireStatusService {
     rpc GetStatus (AcquireStatusRequest)
-    returns (AcquireStatusResponse) {}
+        returns (AcquireStatusResponse) {}
 }
 
 message AcquireStatusRequest {
@@ -15,5 +15,11 @@ message AcquireStatusRequest {
 }
 
 message AcquireStatusResponse {
-    repeated google.protobuf.Any status = 2;
+    string uuid = 1;
+    repeated Tuple status = 2;
+}
+
+message Tuple {
+    string fieldType = 1;
+    string value = 2;
 }

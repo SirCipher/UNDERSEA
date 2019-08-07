@@ -82,8 +82,7 @@ public class UUVListener extends UUVBaseListener {
             sensors.add(sensor);
         }
 
-        AgentImplProxy agent = new AgentImplProxy();
-        agent.setName(name);
+        AgentImplProxy agent = new AgentImplProxy(name);
         agent.setServerPort(port);
         Range range = new Range(min, max, steps);
         agent.setSpeedRange(range);

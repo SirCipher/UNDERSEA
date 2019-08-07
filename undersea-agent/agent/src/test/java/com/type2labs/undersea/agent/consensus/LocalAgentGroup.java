@@ -22,22 +22,35 @@ class LocalAgentGroup {
         return raftNodes;
     }
 
+    private RaftClusterConfig defaultConfig() {
+        RaftClusterConfig config = new RaftClusterConfig();
+
+        CostConfigurationImpl costConfiguration = new CostConfigurationImpl();
+        costConfiguration.withAccuracyWeighting(30);
+        costConfiguration.withSpeedWeighting(5);
+        config.setCostConfiguration(costConfiguration);
+
+        return config;
+    }
+
     LocalAgentGroup(int size) {
         groupId = new GroupIdImpl("test", "testuuid");
         raftNodes = new RaftNodeImpl[size];
         endpoints = new EndpointImpl[size];
         integrations = new RaftIntegrationImpl[size];
 
+        RaftClusterConfig config = defaultConfig();
+
         for (int i = 0; i < size; i++) {
             Endpoint endpoint = new EndpointImpl("endpoint:" + i, new InetSocketAddress("localhost", 5000 + i));
             endpoints[i] = endpoint;
             RaftIntegrationImpl integration = new RaftIntegrationImpl("endpoint:" + i, endpoint);
             integrations[i] = integration;
-            raftNodes[i] = new RaftNodeImpl(new AgentImpl(), "agent:" + i, endpoint, groupId, integration);
+            raftNodes[i] = new RaftNodeImpl(config, new AgentImpl(), "agent:" + i, endpoint, groupId, integration);
         }
     }
 
-    void shutdown(){
+    void shutdown() {
         for (RaftNodeImpl node : raftNodes) {
             node.shutdown();
         }

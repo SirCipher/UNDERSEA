@@ -2,6 +2,7 @@ package com.type2labs.undersea.models.impl;
 
 
 import com.type2labs.undersea.models.Agent;
+import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -134,6 +135,10 @@ public class AgentImpl implements Agent {
         return Objects.hash(getName(), getServerPort());
     }
 
+    @Override
+    public List<Pair<String, String>> status() {
+        throw new RuntimeException("Not implemented yet");
+    }
 }
 
 

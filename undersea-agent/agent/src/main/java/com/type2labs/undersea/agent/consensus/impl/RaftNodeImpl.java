@@ -1,6 +1,7 @@
 package com.type2labs.undersea.agent.consensus.impl;
 
 import com.type2labs.undersea.agent.consensus.ConsensusUtil;
+import com.type2labs.undersea.agent.consensus.RaftClusterConfig;
 import com.type2labs.undersea.agent.consensus.model.Endpoint;
 import com.type2labs.undersea.agent.consensus.model.GroupId;
 import com.type2labs.undersea.agent.consensus.model.RaftIntegration;
@@ -29,6 +30,7 @@ public class RaftNodeImpl implements RaftNode {
     private final Server server;
     private final RaftIntegration integration;
     private final Agent agent;
+    private final RaftClusterConfig config;
     private GroupId groupId;
     private RaftRole role = RaftRole.CANDIDATE;
     private PoolInfo poolInfo = new PoolInfo();
@@ -49,7 +51,9 @@ public class RaftNodeImpl implements RaftNode {
         return role;
     }
 
-    public RaftNodeImpl(Agent agent, String name, Endpoint endpoint, GroupId groupId, RaftIntegration integration) {
+    public RaftNodeImpl(RaftClusterConfig config, Agent agent, String name, Endpoint endpoint, GroupId groupId,
+                        RaftIntegration integration) {
+        this.config = config;
         this.agent = agent;
         this.name = name;
         this.endpoint = endpoint;
@@ -93,6 +97,11 @@ public class RaftNodeImpl implements RaftNode {
     @Override
     public RaftRole getRaftRole() {
         return role;
+    }
+
+    @Override
+    public RaftClusterConfig config() {
+        return config;
     }
 
     private void scheduleHeartbeat() {

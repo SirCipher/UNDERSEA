@@ -10,7 +10,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.Collection;
-import java.util.concurrent.ThreadLocalRandom;
+import java.util.List;
 
 public class AcquireStatusTask implements Runnable {
 
@@ -33,14 +33,14 @@ public class AcquireStatusTask implements Runnable {
 
                 // TODO
                 RaftProtos.AcquireStatusResponse status = blockingStub.getStatus(request);
-                ThreadLocalRandom random = ThreadLocalRandom.current();
-                PoolInfo.AgentInfo agentInfo = new PoolInfo.AgentInfo(random.nextInt(100), random.nextDouble(100),
-                        random.nextDouble(100));
+                List<RaftProtos.Tuple> statusList = status.getStatusList();
+
+                PoolInfo.AgentInfo agentInfo = new PoolInfo.AgentInfo(statusList);
 
                 raftNode.poolInfo().setAgentInformation(localNode.getLocalEndpoint(), agentInfo);
             }
         } catch (StatusRuntimeException e) {
-            logger.warn("RPC failed: " + e.getStatus());
+            throw new RuntimeException(e);
         }
     }
 }
