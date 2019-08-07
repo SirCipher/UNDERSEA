@@ -62,7 +62,7 @@ class LocalAgentGroup {
         }
     }
 
-    void initDiscovery() {
+    void doManualDiscovery() {
         for (RaftIntegrationImpl integration : integrations) {
             for (RaftNodeImpl node : raftNodes) {
                 if (!node.getLocalEndpoint().equals(integration.getLocalEndpoint())) {
@@ -76,4 +76,5 @@ class LocalAgentGroup {
     public RaftNode getLeaderNode() {
         return raftNodes[0];
     }
+
 }

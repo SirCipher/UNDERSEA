@@ -1,6 +1,6 @@
 package com.type2labs.undersea.prospect.impl;
 
-import com.type2labs.undersea.prospect.ConsensusUtil;
+import com.type2labs.undersea.prospect.ServerBuilder;
 import com.type2labs.undersea.prospect.RaftClusterConfig;
 import com.type2labs.undersea.prospect.model.Endpoint;
 import com.type2labs.undersea.prospect.model.GroupId;
@@ -45,7 +45,7 @@ public class RaftNodeImpl implements RaftNode {
         this.endpoint = endpoint;
         this.groupId = groupId;
         this.integration = integration;
-        this.server = ConsensusUtil.buildServer(endpoint.socketAddress(), this);
+        this.server = ServerBuilder.build(endpoint.socketAddress(), this);
     }
 
     public void shutdown() {
@@ -122,9 +122,8 @@ public class RaftNodeImpl implements RaftNode {
     public void start() {
         try {
             server.start();
-            logger.trace("Started node: " + name);
-
             execute(new AcquireStatusTask(RaftNodeImpl.this));
+            logger.trace("Started node: " + name);
             started = true;
         } catch (IOException e) {
             throw new RuntimeException("Failed to start server: " + name, e);

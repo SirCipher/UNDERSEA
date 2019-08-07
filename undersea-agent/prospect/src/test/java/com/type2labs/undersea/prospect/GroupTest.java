@@ -9,13 +9,12 @@ import static org.junit.Assert.assertNotNull;
 
 public class GroupTest {
 
-
     @Test
     public void testAcquireStatusTask() {
         int count = 10;
 
         LocalAgentGroup localAgentGroup = new LocalAgentGroup(count);
-        localAgentGroup.initDiscovery();
+        localAgentGroup.doManualDiscovery();
         localAgentGroup.start();
 
         assertTrueEventually(() -> {
@@ -34,7 +33,7 @@ public class GroupTest {
         int count = 10;
 
         LocalAgentGroup localAgentGroup = new LocalAgentGroup(count);
-        localAgentGroup.initDiscovery();
+        localAgentGroup.doManualDiscovery();
         localAgentGroup.start();
 
         localAgentGroup.shutdown();

@@ -7,7 +7,6 @@ import io.github.classgraph.ClassInfo;
 import io.github.classgraph.ScanResult;
 import io.grpc.BindableService;
 import io.grpc.Server;
-import io.grpc.ServerBuilder;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -16,13 +15,13 @@ import java.net.InetSocketAddress;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class ConsensusUtil {
+public class ServerBuilder {
 
-    private static final Logger logger = LogManager.getLogger(ConsensusUtil.class);
-    private static final Set<Class<?>> services;
+    private static final Logger logger = LogManager.getLogger(ServerBuilder.class);
+    private static final Set<Class<?>> registeredServices;
 
-    private ConsensusUtil() {
-        
+    private ServerBuilder() {
+
     }
 
     static {
@@ -35,7 +34,7 @@ public class ConsensusUtil {
                 .whitelistPackages(AcquireStatusImpl.class.getPackage().getName())
                 .scan();
 
-        services = scanResult
+        registeredServices = scanResult
                 // Superclass of GRPC services
                 .getClassesImplementing(BindableService.class.getName())
                 .stream()
@@ -44,19 +43,19 @@ public class ConsensusUtil {
                 .map(ClassInfo::loadClass)
                 .collect(Collectors.toSet());
 
-        if (services.size() == 0) {
+        if (registeredServices.size() == 0) {
             logger.warn("No services found, this doesn't seem right...");
         }
 
-        for (Class<?> clazz : services) {
+        for (Class<?> clazz : registeredServices) {
             logger.info("Registered class: " + clazz.getName());
         }
     }
 
-    public static Server buildServer(InetSocketAddress address, RaftNode raftNode) {
-        ServerBuilder<?> builder = ServerBuilder.forPort(address.getPort());
+    public static Server build(InetSocketAddress address, RaftNode raftNode) {
+        io.grpc.ServerBuilder builder = io.grpc.ServerBuilder.forPort(address.getPort());
 
-        for (Class<?> service : services) {
+        for (Class<?> service : registeredServices) {
             BindableService instance;
             try {
                 instance = (BindableService) service.getDeclaredConstructor(RaftNode.class).newInstance(raftNode);
