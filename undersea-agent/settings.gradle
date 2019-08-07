@@ -8,7 +8,6 @@ include 'agent'
 include 'missionplanner'
 include 'runner'
 include 'seachain'
-include 'consensus'
 include 'controller'
 include 'models'
 

@@ -25,7 +25,7 @@ jobs:
       inputs:
         gradleWrapperFile: 'undersea-agent/gradlew'
         workingDirectory: 'undersea-agent'
-        tasks: 'clean build test --info'
+        tasks: 'clean build test --scan'
         javaHomeOption: 'JDKVersion'
         jdkVersionOption: 1.8
         codeCoverageToolOption: 'None'
@@ -59,7 +59,7 @@ jobs:
       inputs:
         gradleWrapperFile: 'undersea-agent/gradlew'
         workingDirectory: 'undersea-agent'
-        tasks: 'clean build test --info'
+        tasks: 'clean build test --scan'
         javaHomeOption: 'JDKVersion'
         jdkVersionOption: 1.8
         codeCoverageToolOption: 'None'

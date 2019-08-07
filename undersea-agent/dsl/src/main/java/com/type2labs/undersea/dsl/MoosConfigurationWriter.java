@@ -3,8 +3,8 @@ package com.type2labs.undersea.dsl;
 
 import com.type2labs.undersea.dsl.uuv.factory.FactoryProvider;
 import com.type2labs.undersea.dsl.uuv.factory.SensorFactory;
-import com.type2labs.undersea.dsl.uuv.model.AgentProxy;
-import com.type2labs.undersea.models.model.Sensor;
+import com.type2labs.undersea.dsl.uuv.model.AgentImplProxy;
+import com.type2labs.undersea.models.impl.Sensor;
 import com.type2labs.undersea.utilities.Utility;
 
 import java.io.File;
@@ -26,7 +26,7 @@ class MoosConfigurationWriter {
         buildDir = Utility.getProperty(environmentProperties.getRunnerProperties(), "config.output");
     }
 
-    private static void generateIvPHelmBlock(AgentProxy agent) {
+    private static void generateIvPHelmBlock(AgentImplProxy agent) {
         StringBuilder ivpBlock = new StringBuilder();
         ivpBlock.append("//-----------------------------\n");
         ivpBlock.append("// Helm IvP configuration block\n");
@@ -74,13 +74,13 @@ class MoosConfigurationWriter {
         launchScript.append("# Launch the processes\n");
         launchScript.append("#---------------------\n");
 
-        AgentProxy shoreside = environmentProperties.getShoreside();
+        AgentImplProxy shoreside = environmentProperties.getShoreside();
 
         launchScript.append("printf \"Launching " + shoreside.getName() + " MOOS Community\"\n");
         launchScript.append("pAntler " + shoreside.getMetaFileName() + " >& /dev/null &\n\n");
 
-        for (Map.Entry<String, AgentProxy> e : environmentProperties.getAgents().entrySet()) {
-            AgentProxy agent = e.getValue();
+        for (Map.Entry<String, AgentImplProxy> e : environmentProperties.getAgents().entrySet()) {
+            AgentImplProxy agent = e.getValue();
             launchScript.append("printf \"Launching " + agent.getName() + " MOOS Community\"\n");
             launchScript.append("pAntler " + agent.getMetaFileName() + " >& /dev/null &\n\n");
         }
@@ -189,7 +189,7 @@ class MoosConfigurationWriter {
 
         String fileName = "meta_shoreside.moos";
 
-        AgentProxy agent = new AgentProxy();
+        AgentImplProxy agent = new AgentImplProxy();
         agent.setName("shoreside");
         agent.setMetaFileName(fileName);
 
@@ -200,7 +200,7 @@ class MoosConfigurationWriter {
                 false);
     }
 
-    private static void generateTargetVehicleBlock(AgentProxy agent) {
+    private static void generateTargetVehicleBlock(AgentImplProxy agent) {
         StringBuilder vehicleBlock = new StringBuilder();
         vehicleBlock.append("//-------------------------\n");
         vehicleBlock.append("// Meta vehicle config file\n");
@@ -259,10 +259,10 @@ class MoosConfigurationWriter {
         generateShoreside();
         generateSensors();
 
-        Map<String, AgentProxy> agents = environmentProperties.getAgents();
+        Map<String, AgentImplProxy> agents = environmentProperties.getAgents();
 
-        for (Map.Entry<String, AgentProxy> entry : agents.entrySet()) {
-            AgentProxy agent = entry.getValue();
+        for (Map.Entry<String, AgentImplProxy> entry : agents.entrySet()) {
+            AgentImplProxy agent = entry.getValue();
 
             //generate agent moos block
             Utility.exportToFile(MoosConfigurationWriter.buildDir + File.separator + "plug_agent_" + agent.getName() +

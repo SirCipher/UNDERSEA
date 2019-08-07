@@ -18,7 +18,7 @@ dependencies {
         throw new GradleException("Unsupported Prism OS type")
     }
 
-    compile files("../repo/protobuf-7.2.6977.jar")
+//    compile files("../repo/protobuf-7.2.6977.jar")
 
     // https://mvnrepository.com/artifact/org.antlr/antlr4
     compile group: 'org.antlr', name: 'antlr4', version: '4.7.2'

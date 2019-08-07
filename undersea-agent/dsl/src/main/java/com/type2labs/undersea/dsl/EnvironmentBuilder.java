@@ -1,6 +1,6 @@
 package com.type2labs.undersea.dsl;
 
-import com.type2labs.undersea.dsl.uuv.model.AgentProxy;
+import com.type2labs.undersea.dsl.uuv.model.AgentImplProxy;
 import com.type2labs.undersea.utilities.UnderseaException;
 import com.type2labs.undersea.utilities.Utility;
 import org.apache.commons.io.IOUtils;
@@ -26,7 +26,7 @@ class EnvironmentBuilder {
     }
 
     static void build() {
-        AgentProxy shoreside = environmentProperties.getShoreside();
+        AgentImplProxy shoreside = environmentProperties.getShoreside();
 
         logger.info("Writing mission files to: " + buildDir.getPath());
 
@@ -46,8 +46,8 @@ class EnvironmentBuilder {
 
         nsplug(shoreside.getMetaFileName(), shoreside.getMetaFileName(), nsPlugArgs);
 
-        for (Map.Entry<String, AgentProxy> entry : environmentProperties.getAgents().entrySet()) {
-            AgentProxy agent = entry.getValue();
+        for (Map.Entry<String, AgentImplProxy> entry : environmentProperties.getAgents().entrySet()) {
+            AgentImplProxy agent = entry.getValue();
 
             nsPlugArgs.clear();
             nsPlugArgs.add("WARP=" +

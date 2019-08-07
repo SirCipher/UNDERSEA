@@ -1,22 +1,19 @@
 package com.type2labs.undersea.dsl.uuv.model;
 
-import com.type2labs.undersea.models.model.Agent;
-import com.type2labs.undersea.models.model.Node;
-import com.type2labs.undersea.models.model.Sensor;
+import com.type2labs.undersea.models.impl.AgentImpl;
+import com.type2labs.undersea.models.impl.Node;
+import com.type2labs.undersea.models.impl.Sensor;
 
 import java.util.Iterator;
 
-public class AgentProxy extends Agent {
+public class AgentImplProxy extends AgentImpl {
 
     private boolean parsed = false;
 
     private String metaFileName;
 
-    public AgentProxy() {
 
-    }
-
-    public AgentProxy(String name) {
+    public AgentImplProxy(String name) {
         super(name);
     }
 

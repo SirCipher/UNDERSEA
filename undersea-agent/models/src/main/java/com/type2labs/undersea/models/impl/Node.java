@@ -1,4 +1,4 @@
-package com.type2labs.undersea.models.model;
+package com.type2labs.undersea.models.impl;
 
 import java.util.concurrent.ThreadLocalRandom;
 

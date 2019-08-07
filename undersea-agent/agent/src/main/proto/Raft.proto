@@ -1,0 +1,18 @@
+syntax = "proto3";
+option java_package = "com.type2labs.undersea.agent.consensus";
+option java_outer_classname = "RaftProtos";
+option java_generate_equals_and_hash = true;
+package proto;
+
+service AcquireStatusService {
+    rpc GetStatus (AcquireStatusRequest)
+        returns (AcquireStatusResponse) {}
+}
+
+message AcquireStatusRequest {
+    string status = 1;
+}
+
+message AcquireStatusResponse {
+    string status = 1;
+}

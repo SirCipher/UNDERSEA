@@ -1,37 +1,36 @@
-package com.type2labs.undersea.models.model;
+package com.type2labs.undersea.models.impl;
 
 
+import com.type2labs.undersea.models.Agent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * Created by Thomas Klapwijk on 2019-07-23.
  */
-public class Agent {
+public class AgentImpl implements Agent {
 
-    private static final Logger logger = LogManager.getLogger(Agent.class);
+    private static final Logger logger = LogManager.getLogger(AgentImpl.class);
 
     private String name;
     private List<Node> assignedNodes = new ArrayList<>();
 
     private String rate;
-    private String serverPort;
+    private int serverPort;
     private Range speedRange;
     private List<Sensor> sensors = new ArrayList<>();
+
     // TEST
     // Assume 1 per metre travelled
     private double batteryRange = ThreadLocalRandom.current().nextDouble(100);
 
-    public Agent() {
-
-    }
-
-    public Agent(String name) {
+    public AgentImpl(String name) {
         this.name = name;
     }
 
@@ -79,12 +78,16 @@ public class Agent {
         this.sensors = sensors;
     }
 
-    public String getServerPort() {
+    public int getServerPort() {
         return serverPort;
     }
 
     public void setServerPort(String serverPort) {
-        this.serverPort = serverPort;
+        this.serverPort = Integer.parseInt(serverPort);
+    }
+
+    public void setServerPort(int port) {
+        this.serverPort = port;
     }
 
     public Range getSpeedRange() {
@@ -110,6 +113,27 @@ public class Agent {
 
         return result.toString();
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        AgentImpl agentImpl = (AgentImpl) o;
+
+        return getName().equals(agentImpl.getName());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getName(), getServerPort());
+    }
+
 }
 
 

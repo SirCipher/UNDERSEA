@@ -6,9 +6,9 @@ import com.type2labs.undersea.dsl.uuv.factory.AbstractFactory;
 import com.type2labs.undersea.dsl.uuv.factory.FactoryProvider;
 import com.type2labs.undersea.dsl.uuv.gen.UUVBaseListener;
 import com.type2labs.undersea.dsl.uuv.gen.UUVParser;
-import com.type2labs.undersea.dsl.uuv.model.AgentProxy;
-import com.type2labs.undersea.models.model.Range;
-import com.type2labs.undersea.models.model.Sensor;
+import com.type2labs.undersea.dsl.uuv.model.AgentImplProxy;
+import com.type2labs.undersea.models.impl.Range;
+import com.type2labs.undersea.models.impl.Sensor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -82,7 +82,7 @@ public class UUVListener extends UUVBaseListener {
             sensors.add(sensor);
         }
 
-        AgentProxy agent = new AgentProxy();
+        AgentImplProxy agent = new AgentImplProxy();
         agent.setName(name);
         agent.setServerPort(port);
         Range range = new Range(min, max, steps);
