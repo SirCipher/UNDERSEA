@@ -1,12 +1,13 @@
 syntax = "proto3";
-option java_package = "com.type2labs.undersea.agent.consensus";
+option java_package = "com.type2labs.undersea.consensus";
 option java_outer_classname = "RaftProtos";
 option java_generate_equals_and_hash = true;
 package proto;
+import "google/protobuf/any.proto";
 
 service AcquireStatusService {
     rpc GetStatus (AcquireStatusRequest)
-        returns (AcquireStatusResponse) {}
+    returns (AcquireStatusResponse) {}
 }
 
 message AcquireStatusRequest {
@@ -14,18 +15,5 @@ message AcquireStatusRequest {
 }
 
 message AcquireStatusResponse {
-    string status = 1;
-}
-
-message Object {
-
-}
-
-enum ObjectType {
-    string
-    number
-}
-
-message Status {
-    repeated
+    repeated google.protobuf.Any status = 2;
 }
