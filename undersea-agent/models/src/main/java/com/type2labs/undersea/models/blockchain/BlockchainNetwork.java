@@ -1,4 +1,8 @@
 package com.type2labs.undersea.models.blockchain;
 
-public interface BlockchainNetwork {
+import com.type2labs.undersea.models.Initialiseable;
+
+public interface BlockchainNetwork extends Initialiseable {
+
+
 }

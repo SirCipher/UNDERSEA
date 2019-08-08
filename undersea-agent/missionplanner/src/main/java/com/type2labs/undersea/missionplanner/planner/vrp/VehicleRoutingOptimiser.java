@@ -7,14 +7,11 @@ import com.mathworks.toolbox.javabuilder.MWException;
 import com.mathworks.toolbox.javabuilder.MWNumericArray;
 import com.type2labs.undersea.missionplanner.MatlabUtils;
 import com.type2labs.undersea.missionplanner.decomposer.delaunay.DelaunayDecomposer;
-import com.type2labs.undersea.models.missionplanner.Mission;
-import com.type2labs.undersea.models.missionplanner.MissionParameters;
-import com.type2labs.undersea.models.missionplanner.PlannerException;
 import com.type2labs.undersea.missionplanner.model.MissionImpl;
 import com.type2labs.undersea.missionplanner.model.MissionParametersImpl;
 import com.type2labs.undersea.missionplanner.model.PlanDataModel;
 import com.type2labs.undersea.models.impl.AgentImpl;
-import com.type2labs.undersea.models.missionplanner.MissionPlanner;
+import com.type2labs.undersea.models.missionplanner.*;
 import com.type2labs.undersea.utilities.PlannerUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -119,6 +116,11 @@ public class VehicleRoutingOptimiser implements MissionPlanner {
         }
         logger.info("Maximum of the route distances: " + maxRouteDistance + "m");
 
+    }
+
+    @Override
+    public List<Task> getTasks() {
+        return null;
     }
 
     private MissionImpl solve(PlanDataModel model, MissionParametersImpl missionParametersImpl) {

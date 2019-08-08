@@ -1,5 +1,7 @@
 package com.type2labs.undersea.models.missionplanner;
 
+import java.util.List;
+
 public interface MissionPlanner {
 
     /**
@@ -17,5 +19,7 @@ public interface MissionPlanner {
      * @param mission to print
      */
     void print(Mission mission);
+
+    List<Task> getTasks();
 
 }

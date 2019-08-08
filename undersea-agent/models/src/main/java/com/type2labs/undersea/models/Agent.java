@@ -8,7 +8,7 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.List;
 
-public interface Agent {
+public interface Agent extends Initialiseable{
 
     ConsensusAlgorithm consensusAlgorithm();
 

@@ -29,9 +29,9 @@ public class RaftNodeImpl implements RaftNode {
     private final Endpoint endpoint;
     private final Server server;
     private final RaftIntegration integration;
+    private final RaftClusterConfig config;
     // This cannot be final as both an Agent and this class require it
     private Agent agent;
-    private final RaftClusterConfig config;
     private GroupId groupId;
     private RaftRole role = RaftRole.CANDIDATE;
     private PoolInfo poolInfo = new PoolInfo();
@@ -48,14 +48,19 @@ public class RaftNodeImpl implements RaftNode {
         this.server = ServerBuilder.build(endpoint.socketAddress(), this);
     }
 
-    public void shutdown() {
-        scheduledExecutor.shutdown();
-        endpoint.shutdown();
-        server.shutdownNow();
+    private void broadcastAppendRequest() {
+        for (Endpoint follower : integration.localNodes().keySet()) {
+//            sendAppendRequest(follower);
+        }
     }
 
     public RaftRole getRole() {
         return role;
+    }
+
+    @Override
+    public boolean isAvailable() {
+        return !(server.isShutdown() || server.isTerminated()) && started;
     }
 
     @Override
@@ -66,64 +71,6 @@ public class RaftNodeImpl implements RaftNode {
     @Override
     public Endpoint getLocalEndpoint() {
         return endpoint;
-    }
-
-    public void toLeader() {
-        role = RaftRole.LEADER;
-        logger.info(name + " is now the leader");
-        scheduleHeartbeat();
-    }
-
-    public void toCandidate() {
-        role = RaftRole.CANDIDATE;
-        logger.info(name + " is now a candidate");
-    }
-
-    public void toFollower() {
-        role = RaftRole.FOLLOWER;
-        logger.info(name + " is now a follower");
-    }
-
-    @Override
-    public PoolInfo poolInfo() {
-        return poolInfo;
-    }
-
-    @Override
-    public RaftRole getRaftRole() {
-        return role;
-    }
-
-    @Override
-    public RaftClusterConfig config() {
-        return config;
-    }
-
-    private void scheduleHeartbeat() {
-//        broadcastAppendRequest();
-        schedule(new HeartbeatTask(), 500);
-    }
-
-    private void broadcastAppendRequest() {
-        for (Endpoint follower : integration.localNodes().keySet()) {
-//            sendAppendRequest(follower);
-        }
-    }
-
-    public void schedule(Runnable task, long delayInMillis) {
-        if (!isAvailable()) {
-            return;
-        }
-
-        integration.schedule(task, delayInMillis, MILLISECONDS);
-    }
-
-    public void setAgent(Agent agent) {
-        if (this.agent != null) {
-            throw new RuntimeException("Cannot set agent again: " + name);
-        }
-
-        this.agent = agent;
     }
 
     @Override
@@ -143,11 +90,6 @@ public class RaftNodeImpl implements RaftNode {
     }
 
     @Override
-    public boolean isAvailable() {
-        return !(server.isShutdown() || server.isTerminated()) && started;
-    }
-
-    @Override
     public Agent agent() {
         return agent;
     }
@@ -164,6 +106,64 @@ public class RaftNodeImpl implements RaftNode {
     @Override
     public RaftIntegration integration() {
         return integration;
+    }
+
+    @Override
+    public PoolInfo poolInfo() {
+        return poolInfo;
+    }
+
+    @Override
+    public RaftRole getRaftRole() {
+        return role;
+    }
+
+    @Override
+    public RaftClusterConfig config() {
+        return config;
+    }
+
+    public void schedule(Runnable task, long delayInMillis) {
+        if (!isAvailable()) {
+            return;
+        }
+
+        integration.schedule(task, delayInMillis, MILLISECONDS);
+    }
+
+    private void scheduleHeartbeat() {
+//        broadcastAppendRequest();
+        schedule(new HeartbeatTask(), 500);
+    }
+
+    public void setAgent(Agent agent) {
+        if (this.agent != null) {
+            throw new RuntimeException("Cannot set agent again: " + name);
+        }
+
+        this.agent = agent;
+    }
+
+    public void shutdown() {
+        scheduledExecutor.shutdown();
+        endpoint.shutdown();
+        server.shutdownNow();
+    }
+
+    public void toCandidate() {
+        role = RaftRole.CANDIDATE;
+        logger.info(name + " is now a candidate");
+    }
+
+    public void toFollower() {
+        role = RaftRole.FOLLOWER;
+        logger.info(name + " is now a follower");
+    }
+
+    public void toLeader() {
+        role = RaftRole.LEADER;
+        logger.info(name + " is now the leader");
+        scheduleHeartbeat();
     }
 
     public enum RaftRole {

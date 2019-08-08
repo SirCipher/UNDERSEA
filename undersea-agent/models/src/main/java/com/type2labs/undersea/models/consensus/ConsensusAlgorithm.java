@@ -1,4 +1,7 @@
 package com.type2labs.undersea.models.consensus;
 
-public interface ConsensusAlgorithm {
+import com.type2labs.undersea.models.Initialiseable;
+
+public interface ConsensusAlgorithm extends Initialiseable {
+
 }

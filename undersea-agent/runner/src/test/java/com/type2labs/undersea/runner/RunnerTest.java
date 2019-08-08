@@ -8,7 +8,7 @@ import java.io.IOException;
 
 public class RunnerTest {
 
-//    @Test
+    @Test
     public void testRunner() throws IOException {
         String testProperties = "src/test/resources/test.properties";
 

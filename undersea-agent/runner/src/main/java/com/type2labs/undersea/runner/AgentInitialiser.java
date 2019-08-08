@@ -3,6 +3,7 @@ package com.type2labs.undersea.runner;
 import com.type2labs.undersea.controller.ControllerEngine;
 import com.type2labs.undersea.dsl.uuv.model.DslAgentProxy;
 import com.type2labs.undersea.missionplanner.planner.vrp.VehicleRoutingOptimiser;
+import com.type2labs.undersea.models.AgentStatus;
 import com.type2labs.undersea.prospect.RaftClusterConfig;
 import com.type2labs.undersea.prospect.impl.EndpointImpl;
 import com.type2labs.undersea.prospect.impl.GroupIdImpl;
@@ -24,8 +25,8 @@ import java.util.Properties;
 public class AgentInitialiser {
 
     private static final Logger logger = LogManager.getLogger(AgentInitialiser.class);
-    private final RaftClusterConfig raftClusterConfig;
     private static AgentInitialiser instance;
+    private final RaftClusterConfig raftClusterConfig;
     private Properties properties;
     private List<UnderseaAgent> dslAgents = new LinkedList<>();
 
@@ -59,8 +60,12 @@ public class AgentInitialiser {
                     new RaftIntegrationImpl(value.getName(), endpoint)
             );
 
-            UnderseaAgent underseaAgent = new UnderseaAgent(raftNode, new BlockchainNetworkImpl(),
-                    new ControllerEngine(), new VehicleRoutingOptimiser());
+            UnderseaAgent underseaAgent = new UnderseaAgent(
+                    raftNode,
+                    new BlockchainNetworkImpl(),
+                    new ControllerEngine(),
+                    new VehicleRoutingOptimiser(),
+                    new AgentStatus(value.getName(), value.getSensors()));
 
             raftNode.setAgent(underseaAgent);
 

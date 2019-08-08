@@ -12,24 +12,24 @@ import java.util.Timer;
 public class ControllerEngine implements com.type2labs.undersea.models.controller.Controller {
 
     // TODO: Pass properties to controller
-    private static final Properties properties = Utility.getPropertiesByName("config.properties");
+    private static final Properties properties = null;//Utility.getPropertiesByName("config.properties");
 
 
     /**
      * Time window for invoking the uuv
      */
-    private static long TIME_WINDOW =
-            Math.round(Double.parseDouble(Utility.getProperty(properties, "TIME_WINDOW")) * 1000);
+    private static long TIME_WINDOW = 0;//            Math.round(Double.parseDouble(Utility.getProperty
+    // (properties, "TIME_WINDOW")) * 1000);
     /**
      * Simulation time
      */
-    private static long SIMULATION_TIME = Math.round(Double.parseDouble(Utility.getProperty(properties,
-            "SIMULATION_TIME")) * 1000);
+    private static long SIMULATION_TIME = 0;//Math.round(Double.parseDouble(Utility.getProperty(properties,
+            //"SIMULATION_TIME")) * 1000);
     /**
      * Simulation speed
      */
-    private static long SIMULATION_SPEED = Math.round(Double.parseDouble(Utility.getProperty(properties,
-            "SIMULATION_SPEED")));
+    private static long SIMULATION_SPEED = 0;//Math.round(Double.parseDouble(Utility.getProperty(properties,
+            //"SIMULATION_SPEED")));
 
     public ControllerEngine() {
     }
@@ -68,4 +68,13 @@ public class ControllerEngine implements com.type2labs.undersea.models.controlle
         }
     }
 
+    @Override
+    public void start() {
+
+    }
+
+    @Override
+    public boolean isAvailable() {
+        return false;
+    }
 }

@@ -1,6 +1,6 @@
 package com.type2labs.undersea.prospect.impl;
 
-import com.type2labs.undersea.models.*;
+import com.type2labs.undersea.models.Agent;
 import com.type2labs.undersea.models.blockchain.BlockchainNetwork;
 import com.type2labs.undersea.models.consensus.ConsensusAlgorithm;
 import com.type2labs.undersea.models.controller.Controller;
@@ -25,16 +25,6 @@ public class AgentImpl implements Agent {
         remainingBattery = random.nextDouble(100);
         range = random.nextDouble(100);
         accuracy = random.nextDouble(100);
-    }
-
-    @Override
-    public String toString() {
-        return "AgentImpl{" +
-                "speed=" + speed +
-                ", remainingBattery=" + remainingBattery +
-                ", range=" + range +
-                ", accuracy=" + accuracy +
-                '}';
     }
 
     @Override
@@ -66,5 +56,25 @@ public class AgentImpl implements Agent {
         status.add(Pair.of("accuracy", Double.toString(accuracy)));
 
         return status;
+    }
+
+    @Override
+    public void start() {
+
+    }
+
+    @Override
+    public boolean isAvailable() {
+        return false;
+    }
+
+    @Override
+    public String toString() {
+        return "AgentImpl{" +
+                "speed=" + speed +
+                ", remainingBattery=" + remainingBattery +
+                ", range=" + range +
+                ", accuracy=" + accuracy +
+                '}';
     }
 }

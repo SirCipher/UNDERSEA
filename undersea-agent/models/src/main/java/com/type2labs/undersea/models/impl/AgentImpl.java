@@ -31,7 +31,9 @@ public class AgentImpl implements Agent {
     private int serverPort;
     private Range speedRange;
     private List<Sensor> sensors = new ArrayList<>();
+    // TODO: Add to grammar
     private String host = "localhost";
+    // TODO: Add to grammar
     private String groupName = "test";
 
     public String getGroupName() {
@@ -172,6 +174,16 @@ public class AgentImpl implements Agent {
     @Override
     public MissionPlanner missionPlanner() {
         return null;
+    }
+
+    @Override
+    public void start() {
+
+    }
+
+    @Override
+    public boolean isAvailable() {
+        return false;
     }
 
     @Override
