@@ -3,7 +3,6 @@ package com.type2labs.undersea.prospect.task;
 import com.type2labs.undersea.prospect.AcquireStatusServiceGrpc;
 import com.type2labs.undersea.prospect.RaftProtos;
 import com.type2labs.undersea.prospect.impl.PoolInfo;
-import com.type2labs.undersea.prospect.impl.RaftNodeImpl;
 import com.type2labs.undersea.prospect.model.RaftNode;
 import io.grpc.StatusRuntimeException;
 import org.apache.logging.log4j.LogManager;
@@ -23,7 +22,7 @@ public class AcquireStatusTask implements Runnable {
 
     @Override
     public void run() {
-        Collection<RaftNodeImpl> localNodes = raftNode.integration().localNodes().values();
+        Collection<RaftNode> localNodes = raftNode.state().localNodes().values();
 
         try {
             for (RaftNode localNode : localNodes) {

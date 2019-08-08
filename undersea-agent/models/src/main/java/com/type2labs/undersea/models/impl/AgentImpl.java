@@ -3,11 +3,7 @@ package com.type2labs.undersea.models.impl;
 
 import com.type2labs.undersea.models.Agent;
 import com.type2labs.undersea.models.AgentService;
-import com.type2labs.undersea.models.AgentServices;
-import com.type2labs.undersea.models.blockchain.BlockchainNetwork;
-import com.type2labs.undersea.models.consensus.ConsensusAlgorithm;
-import com.type2labs.undersea.models.controller.Controller;
-import com.type2labs.undersea.models.missionplanner.MissionPlanner;
+import com.type2labs.undersea.models.ServiceManager;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -43,7 +39,7 @@ public class AgentImpl implements Agent {
     }
 
     @Override
-    public AgentServices services() {
+    public ServiceManager services() {
         return null;
     }
 

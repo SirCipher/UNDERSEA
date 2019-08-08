@@ -2,11 +2,10 @@ package com.type2labs.undersea.runner;
 
 import com.type2labs.undersea.controller.ControllerEngine;
 import com.type2labs.undersea.missionplanner.planner.vrp.VehicleRoutingOptimiser;
-import com.type2labs.undersea.models.AgentServices;
+import com.type2labs.undersea.models.ServiceManager;
 import com.type2labs.undersea.models.AgentStatus;
 import com.type2labs.undersea.prospect.RaftClusterConfig;
 import com.type2labs.undersea.prospect.impl.EndpointImpl;
-import com.type2labs.undersea.prospect.impl.GroupIdImpl;
 import com.type2labs.undersea.prospect.impl.RaftIntegrationImpl;
 import com.type2labs.undersea.prospect.impl.RaftNodeImpl;
 import com.type2labs.undersea.seachain.BlockchainNetworkImpl;
@@ -30,17 +29,16 @@ public class UnderseaAgentTest {
                 new RaftClusterConfig(),
                 "test",
                 endpoint,
-                new GroupIdImpl("test", "0"),
                 new RaftIntegrationImpl("test", endpoint)
         );
 
-        AgentServices agentServices = new AgentServices();
-        agentServices.registerService(raftNode);
-        agentServices.registerService(new BlockchainNetworkImpl());
-        agentServices.registerService(new ControllerEngine());
-        agentServices.registerService(new VehicleRoutingOptimiser());
+        ServiceManager serviceManager = new ServiceManager();
+        serviceManager.registerService(raftNode);
+        serviceManager.registerService(new BlockchainNetworkImpl());
+        serviceManager.registerService(new ControllerEngine());
+        serviceManager.registerService(new VehicleRoutingOptimiser());
 
-        UnderseaAgent underseaAgent = new UnderseaAgent(agentServices, new AgentStatus("test", new ArrayList<>()));
+        UnderseaAgent underseaAgent = new UnderseaAgent(serviceManager, new AgentStatus("test", new ArrayList<>()));
 
         assertNotNull(underseaAgent.getBlockchainNetwork());
         assertNotNull(underseaAgent.getMissionPlanner());

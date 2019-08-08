@@ -5,6 +5,7 @@ import com.type2labs.undersea.models.consensus.ConsensusAlgorithm;
 import com.type2labs.undersea.prospect.RaftClusterConfig;
 import com.type2labs.undersea.prospect.impl.PoolInfo;
 import com.type2labs.undersea.prospect.impl.RaftNodeImpl;
+import com.type2labs.undersea.prospect.impl.RaftState;
 
 public interface RaftNode extends ConsensusAlgorithm {
 
@@ -23,5 +24,7 @@ public interface RaftNode extends ConsensusAlgorithm {
     String name();
 
     PoolInfo poolInfo();
+
+    RaftState state();
 
 }

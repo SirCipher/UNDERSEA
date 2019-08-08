@@ -10,6 +10,7 @@ import com.type2labs.undersea.utilities.Utility;
 import java.io.File;
 import java.nio.file.attribute.PosixFilePermission;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.Map;
 
 @SuppressWarnings("StringConcatenationInsideStringBufferAppend")
@@ -258,9 +259,7 @@ class MoosConfigurationWriter {
         generateShoreside();
         generateSensors();
 
-        Map<String, DslAgentProxy> agents = environmentProperties.getAgents();
-
-        for (Map.Entry<String, DslAgentProxy> entry : agents.entrySet()) {
+        for (Map.Entry<String, DslAgentProxy> entry : environmentProperties.getAgents().entrySet()) {
             DslAgentProxy agent = entry.getValue();
 
             //generate agent moos block
@@ -276,6 +275,24 @@ class MoosConfigurationWriter {
         }
 
         generateLaunchAndCleanScripts();
+        writePortListFile();
+    }
+
+    private static void writePortListFile() {
+        StringBuilder ports = new StringBuilder();
+
+        Iterator<DslAgentProxy> it = environmentProperties.getAgents().values().iterator();
+
+        while (it.hasNext()) {
+            ports.append(it.next().getServerPort());
+
+            if (it.hasNext()) {
+                ports.append(":");
+            }
+        }
+
+        Utility.exportToFile(MoosConfigurationWriter.buildDir + File.separator + "agents.ports", ports.toString(),
+                false);
     }
 
     private static void writeHostInfo(StringBuilder vehicleBlock) {

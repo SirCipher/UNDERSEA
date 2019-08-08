@@ -4,10 +4,10 @@ import com.type2labs.undersea.models.Agent;
 import com.type2labs.undersea.prospect.RaftClusterConfig;
 import com.type2labs.undersea.prospect.ServerBuilder;
 import com.type2labs.undersea.prospect.model.Endpoint;
-import com.type2labs.undersea.prospect.model.GroupId;
 import com.type2labs.undersea.prospect.model.RaftIntegration;
 import com.type2labs.undersea.prospect.model.RaftNode;
 import com.type2labs.undersea.prospect.task.AcquireStatusTask;
+import com.type2labs.undersea.prospect.task.PreVoteTask;
 import com.type2labs.undersea.prospect.task.RequireRoleTask;
 import io.grpc.Server;
 import org.apache.logging.log4j.LogManager;
@@ -27,31 +27,36 @@ public class RaftNodeImpl implements RaftNode {
     private final ScheduledExecutorService scheduledExecutor = Executors.newSingleThreadScheduledExecutor();
     private final String name;
     private final Endpoint endpoint;
+    private final RaftState raftState;
     private final Server server;
     private final RaftIntegration integration;
-    private final RaftClusterConfig config;
+    private final RaftClusterConfig raftClusterConfig;
     // This cannot be final as both an Agent and this class require it
     private Agent agent;
-    private GroupId groupId;
     private RaftRole role = RaftRole.CANDIDATE;
     private PoolInfo poolInfo = new PoolInfo();
-
     private boolean started = false;
 
-    public RaftNodeImpl(RaftClusterConfig config, String name, Endpoint endpoint, GroupId groupId,
+    private long lastHeartbeatTime;
+
+    public RaftNodeImpl(RaftClusterConfig raftClusterConfig, String name, Endpoint endpoint,
                         RaftIntegration integration) {
-        this.config = config;
+        this.raftClusterConfig = raftClusterConfig;
         this.name = name;
         this.endpoint = endpoint;
-        this.groupId = groupId;
         this.integration = integration;
         this.server = ServerBuilder.build(endpoint.socketAddress(), this);
+        this.raftState = new RaftState();
     }
 
     private void broadcastAppendRequest() {
-        for (Endpoint follower : integration.localNodes().keySet()) {
+        for (Endpoint follower : state().localNodes().keySet()) {
 //            sendAppendRequest(follower);
         }
+    }
+
+    public RaftState state() {
+        return raftState;
     }
 
     public RaftRole getRole() {
@@ -82,6 +87,8 @@ public class RaftNodeImpl implements RaftNode {
         try {
             server.start();
             execute(new AcquireStatusTask(RaftNodeImpl.this));
+            execute(new PreVoteTask(RaftNodeImpl.this, 0));
+
             logger.trace("Started node: " + name);
             started = true;
         } catch (IOException e) {
@@ -120,7 +127,7 @@ public class RaftNodeImpl implements RaftNode {
 
     @Override
     public RaftClusterConfig config() {
-        return config;
+        return raftClusterConfig;
     }
 
     public void schedule(Runnable task, long delayInMillis) {
@@ -132,7 +139,7 @@ public class RaftNodeImpl implements RaftNode {
     }
 
     private void scheduleHeartbeat() {
-//        broadcastAppendRequest();
+        broadcastAppendRequest();
         schedule(new HeartbeatTask(), 500);
     }
 
@@ -178,9 +185,11 @@ public class RaftNodeImpl implements RaftNode {
         @Override
         protected void innerRun() {
             if (role == RaftRole.LEADER) {
-//                if (lastAppendEntriesTimestamp < Clock.currentTimeMillis() - heartbeatPeriodInMillis) {
-//                    broadcastAppendRequest();
-//                }
+                long heartbeatPeriodInMillis = raftClusterConfig.HEARTBEAT_PERIOD;
+
+                if (lastHeartbeatTime < System.currentTimeMillis() - heartbeatPeriodInMillis) {
+                    broadcastAppendRequest();
+                }
                 broadcastAppendRequest();
                 scheduleHeartbeat();
             }

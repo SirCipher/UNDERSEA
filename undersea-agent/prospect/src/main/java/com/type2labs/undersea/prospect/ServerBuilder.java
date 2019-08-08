@@ -26,11 +26,9 @@ public class ServerBuilder {
 
     static {
         ScanResult scanResult = new ClassGraph()
-                .verbose()
-                .enableAllInfo()
-                .disableNestedJarScanning()
+//                .verbose()
+//                .enableAllInfo()
                 .disableModuleScanning()
-                .disableJarScanning()
                 .whitelistPackages(AcquireStatusImpl.class.getPackage().getName())
                 .scan();
 

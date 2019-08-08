@@ -3,11 +3,10 @@ package com.type2labs.undersea.runner;
 import com.type2labs.undersea.controller.ControllerEngine;
 import com.type2labs.undersea.dsl.uuv.model.DslAgentProxy;
 import com.type2labs.undersea.missionplanner.planner.vrp.VehicleRoutingOptimiser;
-import com.type2labs.undersea.models.AgentServices;
+import com.type2labs.undersea.models.ServiceManager;
 import com.type2labs.undersea.models.AgentStatus;
 import com.type2labs.undersea.prospect.RaftClusterConfig;
 import com.type2labs.undersea.prospect.impl.EndpointImpl;
-import com.type2labs.undersea.prospect.impl.GroupIdImpl;
 import com.type2labs.undersea.prospect.impl.RaftIntegrationImpl;
 import com.type2labs.undersea.prospect.impl.RaftNodeImpl;
 import com.type2labs.undersea.seachain.BlockchainNetworkImpl;
@@ -29,7 +28,7 @@ public class AgentInitialiser {
     private static AgentInitialiser instance;
     private final RaftClusterConfig raftClusterConfig;
     private Properties properties;
-    private List<UnderseaAgent> dslAgents = new LinkedList<>();
+    private List<UnderseaAgent> agents = new LinkedList<>();
 
 
     private AgentInitialiser(RaftClusterConfig raftClusterConfig) {
@@ -45,7 +44,7 @@ public class AgentInitialiser {
         return instance;
     }
 
-    public void initalise(Map<String, DslAgentProxy> agentProxyMap) {
+    public List<UnderseaAgent> initalise(Map<String, DslAgentProxy> agentProxyMap) {
         agentProxyMap.forEach((key, value) -> {
             if (!value.isParsed()) {
                 throw new RuntimeException("Agent: " + value.getName() + " is uninitialised. Cannot proceed");
@@ -57,26 +56,26 @@ public class AgentInitialiser {
                     raftClusterConfig,
                     value.getName(),
                     endpoint,
-                    new GroupIdImpl(value.getGroupName(), "0"),
                     new RaftIntegrationImpl(value.getName(), endpoint)
             );
 
-            AgentServices agentServices = new AgentServices();
-            agentServices.registerService(raftNode);
-            agentServices.registerService(new BlockchainNetworkImpl());
-            agentServices.registerService(new ControllerEngine());
-            agentServices.registerService(new VehicleRoutingOptimiser());
+            ServiceManager serviceManager = new ServiceManager();
+            serviceManager.registerService(raftNode);
+            serviceManager.registerService(new BlockchainNetworkImpl());
+            serviceManager.registerService(new ControllerEngine());
+            serviceManager.registerService(new VehicleRoutingOptimiser());
 
-            UnderseaAgent underseaAgent = new UnderseaAgent(agentServices,
+            UnderseaAgent underseaAgent = new UnderseaAgent(serviceManager,
                     new AgentStatus(value.getName(), value.getSensors()));
 
 
             raftNode.setAgent(underseaAgent);
 
-            dslAgents.add(underseaAgent);
+            agents.add(underseaAgent);
         });
 
         logger.info("Registered " + agentProxyMap.size() + " agents");
+        return agents;
     }
 
 }

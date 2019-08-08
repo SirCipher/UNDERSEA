@@ -2,8 +2,8 @@ package com.type2labs.undersea.runner;
 
 import com.type2labs.undersea.models.Agent;
 import com.type2labs.undersea.models.AgentService;
-import com.type2labs.undersea.models.AgentServices;
 import com.type2labs.undersea.models.AgentStatus;
+import com.type2labs.undersea.models.ServiceManager;
 import com.type2labs.undersea.models.blockchain.BlockchainNetwork;
 import com.type2labs.undersea.models.controller.Controller;
 import com.type2labs.undersea.models.missionplanner.MissionPlanner;
@@ -20,15 +20,17 @@ public class UnderseaAgent implements Agent {
 
     private static final Logger logger = LogManager.getLogger(UnderseaAgent.class);
     private final ScheduledExecutorService internalExecutor = new ScheduledThreadPoolExecutor(4);
-    private final AgentServices services;
+    private final ServiceManager services;
     private final AgentStatus status;
 
-    public UnderseaAgent(AgentServices agentServices, AgentStatus status) {
-        this.services = agentServices;
+    public UnderseaAgent(ServiceManager serviceManager, AgentStatus status) {
+        this.services = serviceManager;
         this.status = status;
+        logServices();
+    }
 
+    private void logServices() {
         StringBuilder s = new StringBuilder("Agent: " + status.getName() + ". Registered services:");
-
         Iterator<AgentService> it = services.getServices().iterator();
 
         while (it.hasNext()) {
@@ -55,7 +57,7 @@ public class UnderseaAgent implements Agent {
     }
 
     @Override
-    public AgentServices services() {
+    public ServiceManager services() {
         return services;
     }
 

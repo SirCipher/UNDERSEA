@@ -12,22 +12,12 @@ public class RaftIntegrationImpl implements RaftIntegration {
     private static final Logger logger = LogManager.getLogger(RaftIntegrationImpl.class);
     private final ScheduledExecutorService scheduledExecutor = Executors.newSingleThreadScheduledExecutor();
 
-    private final ConcurrentMap<Endpoint, RaftNodeImpl> nodes = new ConcurrentHashMap<>();
     private final Endpoint endpoint;
     private final String parentName;
 
     public RaftIntegrationImpl(String parentName, Endpoint endpoint) {
         this.parentName = parentName;
         this.endpoint = endpoint;
-    }
-
-    public void discoverNode(RaftNodeImpl node) {
-        nodes.putIfAbsent(node.getLocalEndpoint(), node);
-    }
-
-    @Override
-    public ConcurrentMap<Endpoint, RaftNodeImpl> localNodes() {
-        return nodes;
     }
 
     @Override

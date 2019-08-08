@@ -30,11 +30,14 @@ public class GroupTest {
 
     @Test
     public void testElection() {
-        int count = 10;
+        int count = 3;
 
         LocalAgentGroup localAgentGroup = new LocalAgentGroup(count);
         localAgentGroup.doManualDiscovery();
         localAgentGroup.start();
+
+        RaftNodeImpl raftNode = (RaftNodeImpl) localAgentGroup.getLeaderNode();
+        raftNode.toLeader();
 
         localAgentGroup.shutdown();
     }

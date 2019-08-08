@@ -1,5 +1,8 @@
 package com.type2labs.undersea.models;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -7,9 +10,10 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * Created by Thomas Klapwijk on 2019-08-08.
  */
-public class AgentServices {
+public class ServiceManager {
 
-    private Map<Class<? extends AgentService>, AgentService> services = new ConcurrentHashMap<>();
+    private static final Logger logger = LogManager.getLogger(ServiceManager.class);
+    private final Map<Class<? extends AgentService>, AgentService> services = new ConcurrentHashMap<>();
 
     public boolean available() {
         return services.entrySet().stream().filter(s -> s.getValue().isAvailable()).count() == services.size();
@@ -22,7 +26,7 @@ public class AgentServices {
             }
         }
 
-        return null;
+        throw new IllegalArgumentException(s.getName() + " is not registered");
     }
 
     public Collection<AgentService> getServices() {
@@ -34,6 +38,10 @@ public class AgentServices {
     }
 
     public void registerService(AgentService service) {
+        if (services.containsKey(service.getClass())) {
+            throw new IllegalArgumentException("Service already exists");
+        }
+
         services.put(service.getClass(), service);
     }
 
@@ -47,6 +55,16 @@ public class AgentServices {
         for (Map.Entry<Class<? extends AgentService>, AgentService> e : services.entrySet()) {
             e.getValue().start();
         }
+    }
+
+    public void startService(Class<? extends AgentService> service) {
+        AgentService agentService = getService(service);
+        agentService.start();
+    }
+
+    public void shutdownService(Class<? extends AgentService> service) {
+        AgentService agentService = getService(service);
+        agentService.shutdown();
     }
 
 }
