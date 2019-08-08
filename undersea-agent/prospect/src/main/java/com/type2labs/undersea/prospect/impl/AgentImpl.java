@@ -1,6 +1,8 @@
 package com.type2labs.undersea.prospect.impl;
 
 import com.type2labs.undersea.models.Agent;
+import com.type2labs.undersea.models.AgentService;
+import com.type2labs.undersea.models.AgentServices;
 import com.type2labs.undersea.models.blockchain.BlockchainNetwork;
 import com.type2labs.undersea.models.consensus.ConsensusAlgorithm;
 import com.type2labs.undersea.models.controller.Controller;
@@ -27,23 +29,14 @@ public class AgentImpl implements Agent {
         accuracy = random.nextDouble(100);
     }
 
+
     @Override
-    public ConsensusAlgorithm consensusAlgorithm() {
+    public AgentServices services() {
         return null;
     }
 
     @Override
-    public BlockchainNetwork blockchain() {
-        return null;
-    }
-
-    @Override
-    public Controller controller() {
-        return null;
-    }
-
-    @Override
-    public MissionPlanner missionPlanner() {
+    public AgentService getService() {
         return null;
     }
 
@@ -66,6 +59,11 @@ public class AgentImpl implements Agent {
     @Override
     public boolean isAvailable() {
         return false;
+    }
+
+    @Override
+    public void shutdown() {
+
     }
 
     @Override

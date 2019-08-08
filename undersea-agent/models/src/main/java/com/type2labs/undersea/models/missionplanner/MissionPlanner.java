@@ -1,8 +1,10 @@
 package com.type2labs.undersea.models.missionplanner;
 
+import com.type2labs.undersea.models.AgentService;
+
 import java.util.List;
 
-public interface MissionPlanner {
+public interface MissionPlanner extends AgentService {
 
     /**
      * Generates a mission meeting the given criteria

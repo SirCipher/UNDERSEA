@@ -1,15 +1,17 @@
 package com.type2labs.undersea.runner;
 
 import com.type2labs.undersea.models.Agent;
+import com.type2labs.undersea.models.AgentService;
+import com.type2labs.undersea.models.AgentServices;
 import com.type2labs.undersea.models.AgentStatus;
 import com.type2labs.undersea.models.blockchain.BlockchainNetwork;
-import com.type2labs.undersea.models.consensus.ConsensusAlgorithm;
 import com.type2labs.undersea.models.controller.Controller;
 import com.type2labs.undersea.models.missionplanner.MissionPlanner;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
@@ -18,72 +20,67 @@ public class UnderseaAgent implements Agent {
 
     private static final Logger logger = LogManager.getLogger(UnderseaAgent.class);
     private final ScheduledExecutorService internalExecutor = new ScheduledThreadPoolExecutor(4);
-    private final ConsensusAlgorithm consensusAlgorithm;
-    private final BlockchainNetwork blockchainNetwork;
-    private final Controller controller;
-    private final AgentStatus agentStatus;
-    /*
-        Not final as this may change based on mission requirements
-     */
-    private MissionPlanner missionPlanner;
+    private final AgentServices services;
+    private final AgentStatus status;
 
-    public UnderseaAgent(ConsensusAlgorithm consensusAlgorithm, BlockchainNetwork blockchainNetwork,
-                         Controller controller, MissionPlanner missionPlanner, AgentStatus agentStatus) {
-        this.consensusAlgorithm = consensusAlgorithm;
-        this.blockchainNetwork = blockchainNetwork;
-        this.controller = controller;
-        this.missionPlanner = missionPlanner;
-        this.agentStatus = agentStatus;
+    public UnderseaAgent(AgentServices agentServices, AgentStatus status) {
+        this.services = agentServices;
+        this.status = status;
 
-        logger.info("Initialised agent: " + agentStatus.getName()
-                + ". With: " + consensusAlgorithm.getClass().getSimpleName()
-                + ", " + blockchainNetwork.getClass().getSimpleName()
-                + ", " + controller.getClass().getSimpleName()
-                + ", " + missionPlanner.getClass().getSimpleName());
+        StringBuilder s = new StringBuilder("Agent: " + status.getName() + ". Registered services:");
+
+        Iterator<AgentService> it = services.getServices().iterator();
+
+        while (it.hasNext()) {
+            s.append(" ").append(it.next().getClass().getSimpleName());
+
+            if (it.hasNext()) {
+                s.append(",");
+            }
+        }
+
+        logger.info(s);
+    }
+
+    public BlockchainNetwork getBlockchainNetwork() {
+        return (BlockchainNetwork) services.getService(BlockchainNetwork.class);
+    }
+
+    public Controller getController() {
+        return (Controller) services.getService(Controller.class);
+    }
+
+    public MissionPlanner getMissionPlanner() {
+        return (MissionPlanner) services.getService(MissionPlanner.class);
     }
 
     @Override
-    public ConsensusAlgorithm consensusAlgorithm() {
-        return this.consensusAlgorithm;
+    public AgentServices services() {
+        return services;
     }
 
     @Override
-    public BlockchainNetwork blockchain() {
-        return this.blockchainNetwork;
-    }
-
-    @Override
-    public Controller controller() {
-        return this.controller;
-    }
-
-    @Override
-    public MissionPlanner missionPlanner() {
-        return this.missionPlanner;
+    public AgentService getService() {
+        return null;
     }
 
     @Override
     public List<Pair<String, String>> status() {
-        return this.agentStatus.transportableStatus();
+        return null;
     }
 
     @Override
     public void start() {
-        consensusAlgorithm.start();
-        blockchainNetwork.start();
-        controller.start();
+        services.startServices();
     }
 
     @Override
     public boolean isAvailable() {
-        return consensusAlgorithm.isAvailable() && blockchainNetwork.isAvailable() && controller.isAvailable();
+        return services.available();
     }
 
     @Override
     public void shutdown() {
-        consensusAlgorithm.shutdown();
-        blockchainNetwork.shutdown();
-        controller.shutdown();
+        services.shutdownServices();
     }
-
 }

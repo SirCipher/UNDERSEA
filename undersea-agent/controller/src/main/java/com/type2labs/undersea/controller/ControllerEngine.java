@@ -77,4 +77,9 @@ public class ControllerEngine implements com.type2labs.undersea.models.controlle
     public boolean isAvailable() {
         return false;
     }
+
+    @Override
+    public void shutdown() {
+
+    }
 }

@@ -2,6 +2,8 @@ package com.type2labs.undersea.models.impl;
 
 
 import com.type2labs.undersea.models.Agent;
+import com.type2labs.undersea.models.AgentService;
+import com.type2labs.undersea.models.AgentServices;
 import com.type2labs.undersea.models.blockchain.BlockchainNetwork;
 import com.type2labs.undersea.models.consensus.ConsensusAlgorithm;
 import com.type2labs.undersea.models.controller.Controller;
@@ -38,6 +40,21 @@ public class AgentImpl implements Agent {
 
     public String getGroupName() {
         return groupName;
+    }
+
+    @Override
+    public AgentServices services() {
+        return null;
+    }
+
+    @Override
+    public AgentService getService() {
+        return null;
+    }
+
+    @Override
+    public List<Pair<String, String>> status() {
+        return null;
     }
 
     public void setGroupName(String groupName) {
@@ -156,25 +173,7 @@ public class AgentImpl implements Agent {
         return Objects.hash(getName(), getServerPort());
     }
 
-    @Override
-    public ConsensusAlgorithm consensusAlgorithm() {
-        return null;
-    }
 
-    @Override
-    public BlockchainNetwork blockchain() {
-        return null;
-    }
-
-    @Override
-    public Controller controller() {
-        return null;
-    }
-
-    @Override
-    public MissionPlanner missionPlanner() {
-        return null;
-    }
 
     @Override
     public void start() {
@@ -187,8 +186,8 @@ public class AgentImpl implements Agent {
     }
 
     @Override
-    public List<Pair<String, String>> status() {
-        throw new RuntimeException("Not implemented yet");
+    public void shutdown() {
+
     }
 
     public String getHost() {

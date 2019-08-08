@@ -13,4 +13,10 @@ public class BlockchainNetworkImpl implements BlockchainNetwork {
     public boolean isAvailable() {
         return false;
     }
+
+    @Override
+    public void shutdown() {
+
+    }
+
 }

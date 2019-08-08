@@ -8,15 +8,11 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.List;
 
-public interface Agent extends Initialiseable{
+public interface Agent extends AgentService {
 
-    ConsensusAlgorithm consensusAlgorithm();
+    AgentServices services();
 
-    BlockchainNetwork blockchain();
-
-    Controller controller();
-
-    MissionPlanner missionPlanner();
+    AgentService getService();
 
     List<Pair<String, String>> status();
 
