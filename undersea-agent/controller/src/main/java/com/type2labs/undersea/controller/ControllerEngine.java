@@ -9,7 +9,7 @@ import java.util.Properties;
 import java.util.Timer;
 
 
-public class ControllerEngine {
+public class ControllerEngine implements com.type2labs.undersea.models.controller.Controller {
 
     // TODO: Pass properties to controller
     private static final Properties properties = Utility.getPropertiesByName("config.properties");
@@ -31,7 +31,7 @@ public class ControllerEngine {
     private static long SIMULATION_SPEED = Math.round(Double.parseDouble(Utility.getProperty(properties,
             "SIMULATION_SPEED")));
 
-    private ControllerEngine() {
+    public ControllerEngine() {
     }
 
     public static void start(Controller controller) {

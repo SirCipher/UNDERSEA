@@ -2,7 +2,7 @@ package com.type2labs.undersea.models.impl;
 
 
 import com.type2labs.undersea.models.Agent;
-import com.type2labs.undersea.models.blockchain.Blockchain;
+import com.type2labs.undersea.models.blockchain.BlockchainNetwork;
 import com.type2labs.undersea.models.consensus.ConsensusAlgorithm;
 import com.type2labs.undersea.models.controller.Controller;
 import com.type2labs.undersea.models.missionplanner.MissionPlanner;
@@ -24,12 +24,27 @@ public class AgentImpl implements Agent {
     private static final Logger logger = LogManager.getLogger(AgentImpl.class);
 
     private String name;
+    // TODO: Remove
     private List<Node> assignedNodes = new ArrayList<>();
 
     private String rate;
     private int serverPort;
     private Range speedRange;
     private List<Sensor> sensors = new ArrayList<>();
+    private String host = "localhost";
+    private String groupName = "test";
+
+    public String getGroupName() {
+        return groupName;
+    }
+
+    public void setGroupName(String groupName) {
+        this.groupName = groupName;
+    }
+
+    public void setHost(String host) {
+        this.host = host;
+    }
 
     // TEST
     // Assume 1 per metre travelled
@@ -145,7 +160,7 @@ public class AgentImpl implements Agent {
     }
 
     @Override
-    public Blockchain blockchain() {
+    public BlockchainNetwork blockchain() {
         return null;
     }
 
@@ -162,6 +177,10 @@ public class AgentImpl implements Agent {
     @Override
     public List<Pair<String, String>> status() {
         throw new RuntimeException("Not implemented yet");
+    }
+
+    public String getHost() {
+        return host;
     }
 }
 

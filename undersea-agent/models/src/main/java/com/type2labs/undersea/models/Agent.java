@@ -1,6 +1,6 @@
 package com.type2labs.undersea.models;
 
-import com.type2labs.undersea.models.blockchain.Blockchain;
+import com.type2labs.undersea.models.blockchain.BlockchainNetwork;
 import com.type2labs.undersea.models.consensus.ConsensusAlgorithm;
 import com.type2labs.undersea.models.controller.Controller;
 import com.type2labs.undersea.models.missionplanner.MissionPlanner;
@@ -12,7 +12,7 @@ public interface Agent {
 
     ConsensusAlgorithm consensusAlgorithm();
 
-    Blockchain blockchain();
+    BlockchainNetwork blockchain();
 
     Controller controller();
 

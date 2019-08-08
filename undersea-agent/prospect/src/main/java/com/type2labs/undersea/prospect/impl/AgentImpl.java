@@ -1,7 +1,7 @@
 package com.type2labs.undersea.prospect.impl;
 
 import com.type2labs.undersea.models.*;
-import com.type2labs.undersea.models.blockchain.Blockchain;
+import com.type2labs.undersea.models.blockchain.BlockchainNetwork;
 import com.type2labs.undersea.models.consensus.ConsensusAlgorithm;
 import com.type2labs.undersea.models.controller.Controller;
 import com.type2labs.undersea.models.missionplanner.MissionPlanner;
@@ -43,7 +43,7 @@ public class AgentImpl implements Agent {
     }
 
     @Override
-    public Blockchain blockchain() {
+    public BlockchainNetwork blockchain() {
         return null;
     }
 

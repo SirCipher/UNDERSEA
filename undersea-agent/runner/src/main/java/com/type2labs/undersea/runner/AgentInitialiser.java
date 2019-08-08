@@ -1,10 +1,18 @@
 package com.type2labs.undersea.runner;
 
+import com.type2labs.undersea.controller.ControllerEngine;
 import com.type2labs.undersea.dsl.uuv.model.DslAgentProxy;
-import com.type2labs.undersea.models.impl.AgentImpl;
+import com.type2labs.undersea.missionplanner.planner.vrp.VehicleRoutingOptimiser;
+import com.type2labs.undersea.prospect.RaftClusterConfig;
+import com.type2labs.undersea.prospect.impl.EndpointImpl;
+import com.type2labs.undersea.prospect.impl.GroupIdImpl;
+import com.type2labs.undersea.prospect.impl.RaftIntegrationImpl;
+import com.type2labs.undersea.prospect.impl.RaftNodeImpl;
+import com.type2labs.undersea.seachain.BlockchainNetworkImpl;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.net.InetSocketAddress;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -16,17 +24,20 @@ import java.util.Properties;
 public class AgentInitialiser {
 
     private static final Logger logger = LogManager.getLogger(AgentInitialiser.class);
+    private final RaftClusterConfig raftClusterConfig;
     private static AgentInitialiser instance;
     private Properties properties;
-    private List<AgentImpl> dslAgents = new LinkedList<>();
+    private List<UnderseaAgent> dslAgents = new LinkedList<>();
 
-    private AgentInitialiser() {
+
+    private AgentInitialiser(RaftClusterConfig raftClusterConfig) {
+        this.raftClusterConfig = raftClusterConfig;
         logger.info("Initialised");
     }
 
-    public static AgentInitialiser getInstance() {
+    public static AgentInitialiser getInstance(RaftClusterConfig raftClusterConfig) {
         if (instance == null) {
-            instance = new AgentInitialiser();
+            instance = new AgentInitialiser(raftClusterConfig);
         }
 
         return instance;
@@ -37,7 +48,23 @@ public class AgentInitialiser {
             if (!value.isParsed()) {
                 throw new RuntimeException("Agent: " + value.getName() + " is uninitialised. Cannot proceed");
             }
-            dslAgents.add(value);
+
+            EndpointImpl endpoint = new EndpointImpl(value.getName(), new InetSocketAddress(value.getHost(),
+                    value.getServerPort()));
+            RaftNodeImpl raftNode = new RaftNodeImpl(
+                    raftClusterConfig,
+                    value.getName(),
+                    endpoint,
+                    new GroupIdImpl(value.getGroupName(), "0"),
+                    new RaftIntegrationImpl(value.getName(), endpoint)
+            );
+
+            UnderseaAgent underseaAgent = new UnderseaAgent(raftNode, new BlockchainNetworkImpl(),
+                    new ControllerEngine(), new VehicleRoutingOptimiser());
+
+            raftNode.setAgent(underseaAgent);
+
+            dslAgents.add(underseaAgent);
         });
 
         logger.info("Registered " + agentProxyMap.size() + " agents");

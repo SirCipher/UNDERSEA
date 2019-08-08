@@ -31,7 +31,10 @@ class LocalAgentGroup {
             endpoints[i] = endpoint;
             RaftIntegrationImpl integration = new RaftIntegrationImpl("endpoint:" + i, endpoint);
             integrations[i] = integration;
-            raftNodes[i] = new RaftNodeImpl(config, new AgentImpl(), "agent:" + i, endpoint, groupId, integration);
+            RaftNodeImpl node = new RaftNodeImpl(config, "agent:" + i, endpoint, groupId, integration);
+            node.setAgent(new AgentImpl());
+            raftNodes[i] = node;
+
         }
     }
 

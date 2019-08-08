@@ -21,6 +21,8 @@ public class EndpointImpl implements Endpoint {
         this.socketAddress = socketAddress;
     }
 
+
+
     @Override
     public String name() {
         return name;

@@ -12,6 +12,7 @@ import com.type2labs.undersea.missionplanner.model.MissionParametersImpl;
 import com.type2labs.undersea.missionplanner.planner.vrp.VehicleRoutingOptimiser;
 import com.type2labs.undersea.models.impl.AgentImpl;
 import com.type2labs.undersea.models.impl.Node;
+import com.type2labs.undersea.prospect.RaftClusterConfig;
 import com.type2labs.undersea.utilities.Utility;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -28,7 +29,7 @@ import java.util.Properties;
 public class Runner {
 
     private static final Logger logger = LogManager.getLogger(Runner.class);
-    private static AgentInitialiser agentInitialiser = AgentInitialiser.getInstance();
+    private static AgentInitialiser agentInitialiser = AgentInitialiser.getInstance(new RaftClusterConfig());
     private static EnvironmentProperties environmentProperties;
     private static Properties properties;
 
