@@ -1,7 +1,7 @@
 package com.type2labs.undersea.runner;
 
 import com.type2labs.undersea.dsl.uuv.model.DslAgentProxy;
-import com.type2labs.undersea.models.impl.DslAgent;
+import com.type2labs.undersea.models.impl.AgentImpl;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -18,7 +18,7 @@ public class AgentInitialiser {
     private static final Logger logger = LogManager.getLogger(AgentInitialiser.class);
     private static AgentInitialiser instance;
     private Properties properties;
-    private List<DslAgent> dslAgents = new LinkedList<>();
+    private List<AgentImpl> dslAgents = new LinkedList<>();
 
     private AgentInitialiser() {
         logger.info("Initialised");

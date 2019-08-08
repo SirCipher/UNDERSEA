@@ -1,11 +1,11 @@
 package com.type2labs.undersea.missionplanner.planner.vrp;
 
-import com.type2labs.undersea.missionplanner.exception.PlannerException;
-import com.type2labs.undersea.missionplanner.model.Mission;
-import com.type2labs.undersea.missionplanner.model.MissionParameters;
-import com.type2labs.undersea.missionplanner.model.MissionPlanner;
+import com.type2labs.undersea.models.missionplanner.MissionPlanner;
+import com.type2labs.undersea.models.missionplanner.PlannerException;
+import com.type2labs.undersea.missionplanner.model.MissionImpl;
+import com.type2labs.undersea.missionplanner.model.MissionParametersImpl;
 import com.type2labs.undersea.models.factory.AgentFactory;
-import com.type2labs.undersea.models.impl.DslAgent;
+import com.type2labs.undersea.models.impl.AgentImpl;
 import com.type2labs.undersea.utilities.Utility;
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -31,11 +31,11 @@ public class VehicleRoutingOptimiserTest {
         Properties properties = Utility.getPropertiesByName("../resources/runner.properties");
         double[][] area = Utility.propertyKeyTo2dDoubleArray(properties, "environment.area");
 
-        List<DslAgent> dslAgents = new AgentFactory().createN(5);
-        MissionParameters missionParameters = new MissionParameters(dslAgents, 1, area, 50);
+        List<AgentImpl> dslAgents = new AgentFactory().createN(5);
+        MissionParametersImpl missionParametersImpl = new MissionParametersImpl(dslAgents, 1, area, 50);
 
         try {
-            Mission mission = missionPlanner.generate(missionParameters);
+            MissionImpl mission = (MissionImpl) missionPlanner.generate(missionParametersImpl);
 
             if (mission.getAssignment() == null) {
                 Assert.fail("No solution found");

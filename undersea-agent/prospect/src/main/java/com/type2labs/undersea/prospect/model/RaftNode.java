@@ -1,11 +1,12 @@
 package com.type2labs.undersea.prospect.model;
 
+import com.type2labs.undersea.models.consensus.ConsensusAlgorithm;
 import com.type2labs.undersea.prospect.RaftClusterConfig;
 import com.type2labs.undersea.prospect.impl.PoolInfo;
 import com.type2labs.undersea.prospect.impl.RaftNodeImpl;
 import com.type2labs.undersea.models.Agent;
 
-public interface RaftNode {
+public interface RaftNode extends ConsensusAlgorithm {
 
     String name();
 

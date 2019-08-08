@@ -7,12 +7,14 @@ import com.mathworks.toolbox.javabuilder.MWException;
 import com.mathworks.toolbox.javabuilder.MWNumericArray;
 import com.type2labs.undersea.missionplanner.MatlabUtils;
 import com.type2labs.undersea.missionplanner.decomposer.delaunay.DelaunayDecomposer;
-import com.type2labs.undersea.missionplanner.exception.PlannerException;
-import com.type2labs.undersea.missionplanner.model.Mission;
-import com.type2labs.undersea.missionplanner.model.MissionParameters;
-import com.type2labs.undersea.missionplanner.model.MissionPlanner;
+import com.type2labs.undersea.models.missionplanner.Mission;
+import com.type2labs.undersea.models.missionplanner.MissionParameters;
+import com.type2labs.undersea.models.missionplanner.PlannerException;
+import com.type2labs.undersea.missionplanner.model.MissionImpl;
+import com.type2labs.undersea.missionplanner.model.MissionParametersImpl;
 import com.type2labs.undersea.missionplanner.model.PlanDataModel;
-import com.type2labs.undersea.models.impl.DslAgent;
+import com.type2labs.undersea.models.impl.AgentImpl;
+import com.type2labs.undersea.models.missionplanner.MissionPlanner;
 import com.type2labs.undersea.utilities.PlannerUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -36,7 +38,7 @@ public class VehicleRoutingOptimiser implements MissionPlanner {
         }
     }
 
-    private Mission generatedMission;
+    private MissionImpl generatedMission;
 
     private double[][] decompose(double[] x, double[] y, double sensorRange) throws PlannerException {
         MWNumericArray xArray = new MWNumericArray(x, MWClassID.DOUBLE);
@@ -66,8 +68,10 @@ public class VehicleRoutingOptimiser implements MissionPlanner {
     }
 
     @Override
-    public Mission generate(MissionParameters missionParameters) throws PlannerException {
-        double[][] polygon = missionParameters.getPolygon();
+    public MissionImpl generate(MissionParameters missionParameters) throws PlannerException {
+        MissionParametersImpl missionParametersImpl = (MissionParametersImpl) missionParameters;
+
+        double[][] polygon = missionParametersImpl.getPolygon();
         double[] x = new double[polygon.length];
         double[] y = new double[polygon.length];
 
@@ -76,21 +80,23 @@ public class VehicleRoutingOptimiser implements MissionPlanner {
             y[i] = polygon[i][1];
         }
 
-        double[][] centroids = decompose(x, y, missionParameters.getMinimumSensorRange());
-        missionParameters.setCentroids(centroids);
+        double[][] centroids = decompose(x, y, missionParametersImpl.getMinimumSensorRange());
+        missionParametersImpl.setCentroids(centroids);
 
         double[][] distanceMatrix = PlannerUtils.computeEuclideanDistanceMatrix(centroids);
 
-        PlanDataModel model = new PlanDataModel(missionParameters, distanceMatrix);
+        PlanDataModel model = new PlanDataModel(missionParametersImpl, distanceMatrix);
 
-        return solve(model, missionParameters);
+        return solve(model, missionParametersImpl);
     }
 
     @Override
     public void print(Mission mission) {
-        Assignment assignment = mission.getAssignment();
-        RoutingModel routing = mission.getRoutingModel();
-        RoutingIndexManager manager = mission.getRoutingIndexManager();
+        MissionImpl missionImpl = (MissionImpl) mission;
+
+        Assignment assignment = missionImpl.getAssignment();
+        RoutingModel routing = missionImpl.getRoutingModel();
+        RoutingIndexManager manager = missionImpl.getRoutingIndexManager();
 
         long maxRouteDistance = 0;
 
@@ -115,12 +121,12 @@ public class VehicleRoutingOptimiser implements MissionPlanner {
 
     }
 
-    private Mission solve(PlanDataModel model, MissionParameters missionParameters) {
+    private MissionImpl solve(PlanDataModel model, MissionParametersImpl missionParametersImpl) {
         logger.info("Generating solution");
         // Create Routing Index Manager
         RoutingIndexManager manager =
-                new RoutingIndexManager(model.getDistanceMatrix().length, missionParameters.getAgentCount(),
-                        missionParameters.getDepot());
+                new RoutingIndexManager(model.getDistanceMatrix().length, missionParametersImpl.getAgentCount(),
+                        missionParametersImpl.getStartingNode());
 
         // Create Routing Model.
         RoutingModel routing = new RoutingModel(manager);
@@ -148,7 +154,7 @@ public class VehicleRoutingOptimiser implements MissionPlanner {
 //        final int[] speeds = {1, 2, 3, 4, 5, 500};
 
         for (int vehicle = 0; vehicle < manager.getNumberOfVehicles(); ++vehicle) {
-            final DslAgent dslAgent = missionParameters.getDslAgents().get(vehicle);
+            final AgentImpl dslAgent = missionParametersImpl.getAgents().get(vehicle);
 
             final int callback = routing.registerTransitCallback((long fromIndex, long toIndex) -> {
                 // Convert from routing variable Index to user NodeIndex.
@@ -179,7 +185,7 @@ public class VehicleRoutingOptimiser implements MissionPlanner {
         // Solve the problem.
         Assignment solution = routing.solveWithParameters(searchParameters);
 
-        generatedMission = new Mission(model, solution, routing, manager, new ArrayList<>(), missionParameters);
+        generatedMission = new MissionImpl(model, solution, routing, manager, new ArrayList<>(), missionParametersImpl);
 
         return generatedMission;
     }

@@ -1,12 +1,12 @@
 package com.type2labs.undersea.dsl.uuv.model;
 
-import com.type2labs.undersea.models.impl.DslAgent;
+import com.type2labs.undersea.models.impl.AgentImpl;
 import com.type2labs.undersea.models.impl.Node;
 import com.type2labs.undersea.models.impl.Sensor;
 
 import java.util.Iterator;
 
-public class DslAgentProxy extends DslAgent {
+public class DslAgentProxy extends AgentImpl {
 
     private boolean parsed = false;
 

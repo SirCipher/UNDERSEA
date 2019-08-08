@@ -9,10 +9,10 @@ public class PlanDataModel {
     private final int agentCount;
     private final int depot;
 
-    public PlanDataModel(MissionParameters missionParameters, double[][] distanceMatrix) {
+    public PlanDataModel(MissionParametersImpl missionParametersImpl, double[][] distanceMatrix) {
         this.distanceMatrix = distanceMatrix;
-        this.agentCount = missionParameters.getAgentCount();
-        this.depot = missionParameters.getDepot();
+        this.agentCount = missionParametersImpl.getAgentCount();
+        this.depot = missionParametersImpl.getStartingNode();
     }
 
     public int getAgentCount() {
@@ -26,4 +26,5 @@ public class PlanDataModel {
     public int getDepot() {
         return depot;
     }
+
 }

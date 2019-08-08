@@ -5,12 +5,12 @@ import com.google.ortools.constraintsolver.RoutingIndexManager;
 import com.google.ortools.constraintsolver.RoutingModel;
 import com.type2labs.undersea.dsl.EnvironmentProperties;
 import com.type2labs.undersea.dsl.ParserEngine;
-import com.type2labs.undersea.missionplanner.exception.PlannerException;
-import com.type2labs.undersea.missionplanner.model.Mission;
-import com.type2labs.undersea.missionplanner.model.MissionParameters;
-import com.type2labs.undersea.missionplanner.model.MissionPlanner;
+import com.type2labs.undersea.models.missionplanner.MissionPlanner;
+import com.type2labs.undersea.models.missionplanner.PlannerException;
+import com.type2labs.undersea.missionplanner.model.MissionImpl;
+import com.type2labs.undersea.missionplanner.model.MissionParametersImpl;
 import com.type2labs.undersea.missionplanner.planner.vrp.VehicleRoutingOptimiser;
-import com.type2labs.undersea.models.impl.DslAgent;
+import com.type2labs.undersea.models.impl.AgentImpl;
 import com.type2labs.undersea.models.impl.Node;
 import com.type2labs.undersea.utilities.Utility;
 import org.apache.logging.log4j.LogManager;
@@ -43,22 +43,22 @@ public class Runner {
         ParserEngine parserEngine = new ParserEngine(properties);
         environmentProperties = parserEngine.parseMission();
 
-        Mission mission = planMission();
+        MissionImpl mission = planMission();
         RoutingModel routingModel = mission.getRoutingModel();
         Assignment assignment = mission.getAssignment();
         RoutingIndexManager manager = mission.getRoutingIndexManager();
 
-        List<DslAgent> dslAgents = new ArrayList<>(environmentProperties.getAgents().values());
+        List<AgentImpl> dslAgents = new ArrayList<>(environmentProperties.getAgents().values());
 
         for (int i = 0; i < manager.getNumberOfVehicles(); ++i) {
             long index = routingModel.start(i);
-            DslAgent dslAgent = dslAgents.get(i);
+            AgentImpl dslAgent = dslAgents.get(i);
 
             while (!routingModel.isEnd(index)) {
                 int centroidIndex = manager.indexToNode(index);
                 index = assignment.value(routingModel.nextVar(index));
 
-                double[] centroid = mission.getMissionParameters().getCentroid(centroidIndex);
+                double[] centroid = mission.getMissionParametersImpl().getCentroid(centroidIndex);
 
                 Node node = new Node(centroid[0], centroid[1]);
                 dslAgent.assignNode(node);
@@ -77,15 +77,15 @@ public class Runner {
         logger.info("Exiting runner...");
     }
 
-    private static Mission planMission() {
+    private static MissionImpl planMission() {
         MissionPlanner missionPlanner = new VehicleRoutingOptimiser();
         double[][] area = Utility.propertyKeyTo2dDoubleArray(properties, "environment.area");
 
-        List<DslAgent> dslAgents = new ArrayList<>(environmentProperties.getAgents().values());
-        MissionParameters missionParameters = new MissionParameters(dslAgents, 0, area, 50);
+        List<AgentImpl> dslAgents = new ArrayList<>(environmentProperties.getAgents().values());
+        MissionParametersImpl missionParametersImpl = new MissionParametersImpl(dslAgents, 0, area, 50);
 
         try {
-            Mission mission = missionPlanner.generate(missionParameters);
+            MissionImpl mission = (MissionImpl) missionPlanner.generate(missionParametersImpl);
             missionPlanner.print(mission);
 
             return mission;

@@ -1,10 +1,5 @@
-package com.type2labs.undersea.missionplanner.model;
+package com.type2labs.undersea.models.missionplanner;
 
-import com.type2labs.undersea.missionplanner.exception.PlannerException;
-
-/**
- * Created by Thomas Klapwijk on 2019-07-22.
- */
 public interface MissionPlanner {
 
     /**

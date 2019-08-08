@@ -1,6 +1,10 @@
 package com.type2labs.undersea.prospect.impl;
 
-import com.type2labs.undersea.models.Agent;
+import com.type2labs.undersea.models.*;
+import com.type2labs.undersea.models.blockchain.Blockchain;
+import com.type2labs.undersea.models.consensus.ConsensusAlgorithm;
+import com.type2labs.undersea.models.controller.Controller;
+import com.type2labs.undersea.models.missionplanner.MissionPlanner;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.ArrayList;
@@ -31,6 +35,26 @@ public class AgentImpl implements Agent {
                 ", range=" + range +
                 ", accuracy=" + accuracy +
                 '}';
+    }
+
+    @Override
+    public ConsensusAlgorithm consensusAlgorithm() {
+        return null;
+    }
+
+    @Override
+    public Blockchain blockchain() {
+        return null;
+    }
+
+    @Override
+    public Controller controller() {
+        return null;
+    }
+
+    @Override
+    public MissionPlanner missionPlanner() {
+        return null;
     }
 
     @Override

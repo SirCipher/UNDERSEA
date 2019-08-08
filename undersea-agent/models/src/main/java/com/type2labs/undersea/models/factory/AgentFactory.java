@@ -1,6 +1,6 @@
 package com.type2labs.undersea.models.factory;
 
-import com.type2labs.undersea.models.impl.DslAgent;
+import com.type2labs.undersea.models.impl.AgentImpl;
 import com.type2labs.undersea.models.impl.Range;
 import com.type2labs.undersea.models.impl.Sensor;
 import com.type2labs.undersea.utilities.AbstractFactory;
@@ -11,19 +11,19 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
-public class AgentFactory implements AbstractFactory<DslAgent> {
+public class AgentFactory implements AbstractFactory<AgentImpl> {
 
     @Override
-    public DslAgent get(String name) {
+    public AgentImpl get(String name) {
         throw new NotImplementedException("Get agent not supported at present");
     }
 
     @Override
-    public List<DslAgent> createN(int n) {
-        List<DslAgent> dslAgents = new ArrayList<>(n);
+    public List<AgentImpl> createN(int n) {
+        List<AgentImpl> dslAgents = new ArrayList<>(n);
 
         for (int i = 0; i < n; i++) {
-            DslAgent dslAgent = new DslAgent(Integer.toString(i));
+            AgentImpl dslAgent = new AgentImpl(Integer.toString(i));
 
             ThreadLocalRandom random = ThreadLocalRandom.current();
 

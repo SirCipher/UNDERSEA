@@ -2,6 +2,10 @@ package com.type2labs.undersea.models.impl;
 
 
 import com.type2labs.undersea.models.Agent;
+import com.type2labs.undersea.models.blockchain.Blockchain;
+import com.type2labs.undersea.models.consensus.ConsensusAlgorithm;
+import com.type2labs.undersea.models.controller.Controller;
+import com.type2labs.undersea.models.missionplanner.MissionPlanner;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -15,9 +19,9 @@ import java.util.concurrent.ThreadLocalRandom;
 /**
  * Created by Thomas Klapwijk on 2019-07-23.
  */
-public class DslAgent implements Agent {
+public class AgentImpl implements Agent {
 
-    private static final Logger logger = LogManager.getLogger(DslAgent.class);
+    private static final Logger logger = LogManager.getLogger(AgentImpl.class);
 
     private String name;
     private List<Node> assignedNodes = new ArrayList<>();
@@ -31,7 +35,7 @@ public class DslAgent implements Agent {
     // Assume 1 per metre travelled
     private double batteryRange = ThreadLocalRandom.current().nextDouble(100);
 
-    public DslAgent(String name) {
+    public AgentImpl(String name) {
         this.name = name;
     }
 
@@ -125,7 +129,7 @@ public class DslAgent implements Agent {
             return false;
         }
 
-        DslAgent dslAgent = (DslAgent) o;
+        AgentImpl dslAgent = (AgentImpl) o;
 
         return getName().equals(dslAgent.getName());
     }
@@ -133,6 +137,26 @@ public class DslAgent implements Agent {
     @Override
     public int hashCode() {
         return Objects.hash(getName(), getServerPort());
+    }
+
+    @Override
+    public ConsensusAlgorithm consensusAlgorithm() {
+        return null;
+    }
+
+    @Override
+    public Blockchain blockchain() {
+        return null;
+    }
+
+    @Override
+    public Controller controller() {
+        return null;
+    }
+
+    @Override
+    public MissionPlanner missionPlanner() {
+        return null;
     }
 
     @Override
