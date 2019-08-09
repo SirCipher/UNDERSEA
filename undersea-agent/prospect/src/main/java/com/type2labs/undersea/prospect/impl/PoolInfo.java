@@ -55,8 +55,10 @@ public class PoolInfo implements CostCalculator {
         private double remainingBattery;
         private double range;
         private double accuracy;
+        private Endpoint endpoint;
 
-        public AgentInfo(List<RaftProtos.Tuple> statusList) {
+        public AgentInfo(Endpoint endpoint, List<RaftProtos.Tuple> statusList) {
+            this.endpoint = endpoint;
             setFields(statusList);
         }
 
@@ -87,6 +89,8 @@ public class PoolInfo implements CostCalculator {
                     "speed=" + speed +
                     ", remainingBattery=" + remainingBattery +
                     ", range=" + range +
+                    ", accuracy=" + accuracy +
+                    ", endpoint=" + endpoint +
                     '}';
         }
     }

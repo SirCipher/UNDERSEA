@@ -49,10 +49,16 @@ public class RaftNodeImpl implements RaftNode {
         this.raftState = new RaftState();
     }
 
-    private void broadcastAppendRequest() {
+    private void broadcastMissionProgress() {
         for (Endpoint follower : state().localNodes().keySet()) {
-//            sendAppendRequest(follower);
+            sendMissionUpdateRequest(follower);
         }
+    }
+
+    private void sendMissionUpdateRequest(Endpoint follower) {
+
+
+
     }
 
     public RaftState state() {
@@ -139,7 +145,7 @@ public class RaftNodeImpl implements RaftNode {
     }
 
     private void scheduleHeartbeat() {
-        broadcastAppendRequest();
+        broadcastMissionProgress();
         schedule(new HeartbeatTask(), 500);
     }
 
@@ -188,9 +194,9 @@ public class RaftNodeImpl implements RaftNode {
                 long heartbeatPeriodInMillis = raftClusterConfig.HEARTBEAT_PERIOD;
 
                 if (lastHeartbeatTime < System.currentTimeMillis() - heartbeatPeriodInMillis) {
-                    broadcastAppendRequest();
+                    broadcastMissionProgress();
                 }
-                broadcastAppendRequest();
+                broadcastMissionProgress();
                 scheduleHeartbeat();
             }
         }

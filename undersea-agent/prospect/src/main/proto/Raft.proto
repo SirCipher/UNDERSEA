@@ -10,12 +10,18 @@ service AcquireStatusService {
     }
 }
 
+message RaftPeer {
+    int32 port = 1;
+    string host = 2;
+}
+
 message AcquireStatusRequest {
-    string status = 1;
+    RaftPeer raftPeer = 1;
+    string status = 2;
 }
 
 message AcquireStatusResponse {
-    string uuid = 1;
+    RaftPeer raftPeer = 1;
     repeated Tuple status = 2;
 }
 
@@ -23,3 +29,4 @@ message Tuple {
     string fieldType = 1;
     string value = 2;
 }
+

@@ -23,6 +23,8 @@ public class GroupTest {
                 assertEquals(count - 1, node.poolInfo().getAgentInfo().size());
             }
 
+            System.out.println(localAgentGroup.getLeaderNode().poolInfo());
+
         }, 5);
 
         localAgentGroup.shutdown();
