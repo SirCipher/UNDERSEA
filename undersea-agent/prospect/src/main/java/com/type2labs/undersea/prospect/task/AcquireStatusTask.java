@@ -35,7 +35,6 @@ public class AcquireStatusTask implements Runnable {
                 AcquireStatusServiceGrpc.AcquireStatusServiceBlockingStub blockingStub =
                         AcquireStatusServiceGrpc.newBlockingStub(localNode.getLocalEndpoint().channel());
 
-                // TODO
                 RaftProtos.AcquireStatusResponse status = blockingStub.getStatus(request);
                 List<RaftProtos.Tuple> statusList = status.getStatusList();
 

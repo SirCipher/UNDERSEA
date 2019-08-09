@@ -1,7 +1,7 @@
 package com.type2labs.undersea.prospect;
 
 import com.type2labs.undersea.prospect.model.RaftNode;
-import com.type2labs.undersea.prospect.service.AcquireStatusImpl;
+import com.type2labs.undersea.prospect.service.AcquireStatusServiceImpl;
 import io.github.classgraph.ClassGraph;
 import io.github.classgraph.ClassInfo;
 import io.github.classgraph.ScanResult;
@@ -29,7 +29,7 @@ public class ServerBuilder {
 //                .verbose()
 //                .enableAllInfo()
                 .disableModuleScanning()
-                .whitelistPackages(AcquireStatusImpl.class.getPackage().getName())
+                .whitelistPackages(AcquireStatusServiceImpl.class.getPackage().getName())
                 .scan();
 
         registeredServices = scanResult

@@ -23,6 +23,7 @@ public class MissionImpl implements Mission {
     private final List<Task> tasks;
     private final MissionParametersImpl missionParametersImpl;
 
+
     public MissionImpl(PlanDataModel planDataModel, Assignment assignment, RoutingModel routingModel,
                        RoutingIndexManager routingIndexManager, List<Task> tasks,
                        MissionParametersImpl missionParametersImpl) {
@@ -67,5 +68,6 @@ public class MissionImpl implements Mission {
     public double progress() {
         return tasks.stream().filter(t -> t.taskStatus() == TaskStatus.COMPLETED).count() / tasks.size();
     }
+
 
 }

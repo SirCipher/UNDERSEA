@@ -1,8 +1,7 @@
 package com.type2labs.undersea.prospect.impl;
 
 import com.type2labs.undersea.models.Agent;
-import com.type2labs.undersea.prospect.RaftClusterConfig;
-import com.type2labs.undersea.prospect.ServerBuilder;
+import com.type2labs.undersea.prospect.*;
 import com.type2labs.undersea.prospect.model.Endpoint;
 import com.type2labs.undersea.prospect.model.RaftIntegration;
 import com.type2labs.undersea.prospect.model.RaftNode;
@@ -55,10 +54,21 @@ public class RaftNodeImpl implements RaftNode {
         }
     }
 
+    /**
+     * Used as heartbeat also
+     *
+     * @param follower
+     */
     private void sendMissionUpdateRequest(Endpoint follower) {
+        RaftProtos.AppendEntryRequest.Builder builder = RaftProtos.AppendEntryRequest.newBuilder();
+        builder.setLogEntry(new NodeLog.LogEntry().toLogEntryProto());
 
+        AppendEntryServiceGrpc.AppendEntryServiceBlockingStub blockingStub =
+                AppendEntryServiceGrpc.newBlockingStub(follower.channel());
+        //noinspection ResultOfMethodCallIgnored
+        blockingStub.appendEntry(builder.build());
 
-
+        logger.info("Sending heartbeat to: " + follower.name());
     }
 
     public RaftState state() {

@@ -2,6 +2,7 @@ package com.type2labs.undersea.prospect.impl;
 
 import com.type2labs.undersea.models.Agent;
 import com.type2labs.undersea.models.AgentService;
+import com.type2labs.undersea.prospect.NodeLog;
 import com.type2labs.undersea.models.ServiceManager;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -46,6 +47,7 @@ public class AgentImpl implements Agent {
 
         return status;
     }
+
 
     @Override
     public void start() {

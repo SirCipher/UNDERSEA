@@ -9,11 +9,11 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.List;
 
-public class AcquireStatusImpl extends AcquireStatusServiceGrpc.AcquireStatusServiceImplBase {
+public class AcquireStatusServiceImpl extends AcquireStatusServiceGrpc.AcquireStatusServiceImplBase {
 
     private final RaftNode raftNode;
 
-    public AcquireStatusImpl(RaftNode raftNode) {
+    public AcquireStatusServiceImpl(RaftNode raftNode) {
         super();
         this.raftNode = raftNode;
     }

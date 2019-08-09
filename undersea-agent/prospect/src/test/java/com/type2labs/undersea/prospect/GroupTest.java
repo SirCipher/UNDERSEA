@@ -22,9 +22,6 @@ public class GroupTest {
                 assertNotNull(node.poolInfo());
                 assertEquals(count - 1, node.poolInfo().getAgentInfo().size());
             }
-
-            System.out.println(localAgentGroup.getLeaderNode().poolInfo());
-
         }, 5);
 
         localAgentGroup.shutdown();
@@ -41,7 +38,11 @@ public class GroupTest {
         RaftNodeImpl raftNode = (RaftNodeImpl) localAgentGroup.getLeaderNode();
         raftNode.toLeader();
 
-        localAgentGroup.shutdown();
+        while(true){
+
+        }
+
+//        localAgentGroup.shutdown();
     }
 
 }
