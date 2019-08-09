@@ -27,4 +27,8 @@ public interface RaftNode extends ConsensusAlgorithm {
 
     RaftState state();
 
+    void toLeader();
+
+    void toFollower(int term);
+
 }

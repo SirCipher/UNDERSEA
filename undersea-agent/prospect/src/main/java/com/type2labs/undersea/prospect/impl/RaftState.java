@@ -20,10 +20,15 @@ public class RaftState {
         localNodes.putIfAbsent(node.getLocalEndpoint(), node);
     }
 
-    public ConcurrentMap<Endpoint, RaftNode> localNodes (){
+    public ConcurrentMap<Endpoint, RaftNode> localNodes() {
         return localNodes;
     }
 
+    public int getTerm() {
+        return term;
+    }
 
-
+    public void setTerm(int term) {
+        this.term = term;
+    }
 }

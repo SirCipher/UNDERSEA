@@ -178,11 +178,14 @@ public class RaftNodeImpl implements RaftNode {
         logger.info(name + " is now a candidate");
     }
 
-    public void toFollower() {
+    @Override
+    public void toFollower(int term) {
         role = RaftRole.FOLLOWER;
+        raftState.setTerm(term);
         logger.info(name + " is now a follower");
     }
 
+    @Override
     public void toLeader() {
         role = RaftRole.LEADER;
         logger.info(name + " is now the leader");

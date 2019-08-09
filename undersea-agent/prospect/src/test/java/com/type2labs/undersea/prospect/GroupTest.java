@@ -38,11 +38,8 @@ public class GroupTest {
         RaftNodeImpl raftNode = (RaftNodeImpl) localAgentGroup.getLeaderNode();
         raftNode.toLeader();
 
-        while(true){
 
-        }
-
-//        localAgentGroup.shutdown();
+        localAgentGroup.shutdown();
     }
 
 }
