@@ -11,24 +11,30 @@ service AcquireStatusService {
 }
 
 service AppendEntryService {
-    rpc AppendEntry(AppendEntryRequest) returns (AppendEntryResponse){
+    rpc AppendEntry (AppendEntryRequest) returns (AppendEntryResponse) {
+
+    }
+}
+
+service ConsensusProtocolService {
+    rpc requestVote (VoteRequest) returns (VoteResponse){
 
     }
 }
 
 message RaftPeerProto {
-    int32 port = 1;
+    uint32 port = 1;
     string host = 2;
     string name = 3;
 }
 
 message AcquireStatusRequest {
-    RaftPeerProto raftPeer = 1;
+    RaftPeerProto client = 1;
     string status = 2;
 }
 
 message AcquireStatusResponse {
-    RaftPeerProto raftPeer = 1;
+    RaftPeerProto client = 1;
     repeated Tuple status = 2;
 }
 
@@ -38,16 +44,28 @@ message Tuple {
 }
 
 message AppendEntryRequest {
-    RaftPeerProto raftPeer = 1;
+    RaftPeerProto client = 1;
     LogEntryProto logEntry = 2;
-    int32 term = 3;
-    int32 prevLogIndex = 4;
+    uint32 term = 3;
+    uint32 prevLogIndex = 4;
 }
 
 message AppendEntryResponse {
-    RaftPeerProto raftPeer = 1;
+    RaftPeerProto client = 1;
 }
 
 message LogEntryProto {
     string data = 1;
 }
+
+message VoteRequest {
+    RaftPeerProto client = 1;
+    uint32 term = 2;
+}
+
+message VoteResponse {
+    RaftPeerProto client = 1;
+    RaftPeerProto nominee = 2;
+}
+
+

@@ -1,5 +1,7 @@
 package com.type2labs.undersea.prospect;
 
+import com.type2labs.undersea.prospect.model.CostCalculator;
+
 import static com.type2labs.undersea.utilities.Preconditions.isNotNull;
 
 @SuppressWarnings("ResultOfMethodCallIgnored")
@@ -19,4 +21,10 @@ public class RaftClusterConfig {
 
         return this;
     }
+
+
+    public CostCalculator getCostCalculator(){
+        return costConfiguration.getCostCalculator();
+    }
+
 }

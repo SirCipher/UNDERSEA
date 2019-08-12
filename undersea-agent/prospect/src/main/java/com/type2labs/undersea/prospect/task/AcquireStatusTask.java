@@ -29,7 +29,7 @@ public class AcquireStatusTask implements Runnable {
             for (RaftNode localNode : localNodes) {
                 RaftProtos.AcquireStatusRequest request = RaftProtos.AcquireStatusRequest
                         .newBuilder()
-                        .setRaftPeer(GrpcUtil.toRaftPeer(raftNode))
+                        .setClient(GrpcUtil.toRaftPeer(raftNode))
                         .build();
 
                 AcquireStatusServiceGrpc.AcquireStatusServiceBlockingStub blockingStub =

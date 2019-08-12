@@ -6,7 +6,7 @@ import com.type2labs.undersea.prospect.model.Endpoint;
 import com.type2labs.undersea.prospect.model.RaftIntegration;
 import com.type2labs.undersea.prospect.model.RaftNode;
 import com.type2labs.undersea.prospect.task.AcquireStatusTask;
-import com.type2labs.undersea.prospect.task.PreVoteTask;
+import com.type2labs.undersea.prospect.task.VoteTask;
 import com.type2labs.undersea.prospect.task.RequireRoleTask;
 import io.grpc.Server;
 import org.apache.logging.log4j.LogManager;
@@ -33,7 +33,7 @@ public class RaftNodeImpl implements RaftNode {
     // This cannot be final as both an Agent and this class require it
     private Agent agent;
     private RaftRole role = RaftRole.CANDIDATE;
-    private PoolInfo poolInfo = new PoolInfo();
+    private PoolInfo poolInfo;
     private boolean started = false;
 
     private long lastHeartbeatTime;
@@ -46,6 +46,7 @@ public class RaftNodeImpl implements RaftNode {
         this.integration = integration;
         this.server = ServerBuilder.build(endpoint.socketAddress(), this);
         this.raftState = new RaftState();
+        this.poolInfo = new PoolInfo(this);
     }
 
     private void broadcastMissionProgress() {
@@ -103,7 +104,7 @@ public class RaftNodeImpl implements RaftNode {
         try {
             server.start();
             execute(new AcquireStatusTask(RaftNodeImpl.this));
-            execute(new PreVoteTask(RaftNodeImpl.this, 0));
+            execute(new VoteTask(RaftNodeImpl.this, 0));
 
             logger.trace("Started node: " + name);
             started = true;

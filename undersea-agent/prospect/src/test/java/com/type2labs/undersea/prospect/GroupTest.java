@@ -20,7 +20,7 @@ public class GroupTest {
         assertTrueEventually(() -> {
             for (RaftNodeImpl node : localAgentGroup.getRaftNodes()) {
                 assertNotNull(node.poolInfo());
-                assertEquals(count - 1, node.poolInfo().getAgentInfo().size());
+                assertEquals(count - 1, node.poolInfo().getMembers().size());
             }
         }, 5);
 

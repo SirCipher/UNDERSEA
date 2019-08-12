@@ -9,15 +9,19 @@ import java.net.InetSocketAddress;
 
 public class GrpcUtil {
 
-    public static RaftProtos.RaftPeerProto toRaftPeer(RaftNode raftNode) {
+    public static RaftProtos.RaftPeerProto toRaftPeer(Endpoint endpoint) {
         RaftProtos.RaftPeerProto.Builder builder = RaftProtos.RaftPeerProto.newBuilder();
-        InetSocketAddress address = raftNode.getLocalEndpoint().socketAddress();
+        InetSocketAddress address = endpoint.socketAddress();
 
         builder.setHost(address.getHostString());
         builder.setPort(address.getPort());
-        builder.setName(raftNode.getLocalEndpoint().name());
+        builder.setName(endpoint.name());
 
         return builder.build();
+    }
+
+    public static RaftProtos.RaftPeerProto toRaftPeer(RaftNode raftNode) {
+        return toRaftPeer(raftNode.getLocalEndpoint());
     }
 
     public static Endpoint raftPeerProtoToEndpoint(RaftProtos.RaftPeerProto raftPeerProto) {

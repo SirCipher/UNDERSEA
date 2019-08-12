@@ -7,6 +7,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.net.InetSocketAddress;
+import java.util.HashMap;
+import java.util.Map;
 
 class LocalAgentGroup {
 
@@ -42,10 +44,30 @@ class LocalAgentGroup {
     private RaftClusterConfig defaultConfig() {
         RaftClusterConfig config = new RaftClusterConfig();
 
-        CostConfigurationImpl costConfiguration = new CostConfigurationImpl();
-        costConfiguration.withAccuracyWeighting(30);
-        costConfiguration.withSpeedWeighting(5);
+        CostConfiguration costConfiguration = new CostConfigurationImpl();
+        costConfiguration.setCostCalculator((RaftNode parent) -> {
+            PoolInfo agentInfo = parent.poolInfo();
+            double accuracyWeighting = (double) costConfiguration.getBias("ACCURACY");
+            double speedWeighting = (double) costConfiguration.getBias("SPEED");
+
+            Map<Endpoint, Double> costs = new HashMap<>(agentInfo.getMembers().size());
+
+            for (Map.Entry<Endpoint, PoolInfo.AgentInfo> e : agentInfo.getMembers().entrySet()) {
+                PoolInfo.AgentInfo a = e.getValue();
+                double cost = ((a.getAccuracy() * accuracyWeighting)
+                        + (a.getRemainingBattery() * speedWeighting))
+                        / a.getRange();
+
+                costs.put(e.getKey(), cost);
+            }
+            return costs;
+        });
+
+        costConfiguration.setBias("ACCURACY", 30.0);
+        costConfiguration.setBias("SPEED", 5.0);
+
         config.setCostConfiguration(costConfiguration);
+
 
         return config;
     }

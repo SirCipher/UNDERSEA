@@ -1,33 +1,33 @@
 package com.type2labs.undersea.prospect;
 
-import static com.type2labs.undersea.utilities.Preconditions.inRange;
+import com.type2labs.undersea.prospect.model.CostCalculator;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @SuppressWarnings("ResultOfMethodCallIgnored")
 public class CostConfigurationImpl implements CostConfiguration {
 
-    private double accuracyWeighting;
-    private double speedWeighting;
+    private CostCalculator costCalculator;
+    private Map<String, Object> biases = new HashMap<>();
 
-    public double getAccuracyWeighting() {
-        return accuracyWeighting;
+    public void setCostCalculator(CostCalculator costCalculator) {
+        this.costCalculator = costCalculator;
     }
 
-    public double getSpeedWeighting() {
-        return speedWeighting;
+    @Override
+    public CostCalculator getCostCalculator() {
+        return costCalculator;
     }
 
-    public CostConfigurationImpl withAccuracyWeighting(double weighting) {
-        inRange(0.0, 100.0, weighting, "Accuracy weighting must be between 0 and 100");
-        this.accuracyWeighting = weighting;
-
-        return this;
+    @Override
+    public void setBias(String key, Object value) {
+        biases.put(key, value);
     }
 
-    public CostConfigurationImpl withSpeedWeighting(double weighting) {
-        inRange(0.0, 100.0, weighting, "Speed weighting must be between 0 and 100");
-        this.accuracyWeighting = weighting;
-
-        return this;
+    @Override
+    public Object getBias(String key) {
+        return this.biases.get(key);
     }
 
 }

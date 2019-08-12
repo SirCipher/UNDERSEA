@@ -1,54 +1,48 @@
 package com.type2labs.undersea.prospect.impl;
 
-import com.type2labs.undersea.prospect.CostConfigurationImpl;
 import com.type2labs.undersea.prospect.RaftClusterConfig;
 import com.type2labs.undersea.prospect.RaftProtos;
-import com.type2labs.undersea.prospect.model.CostCalculator;
 import com.type2labs.undersea.prospect.model.Endpoint;
 import com.type2labs.undersea.prospect.model.RaftNode;
+import org.apache.commons.lang3.tuple.Pair;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.Map.Entry;
+import java.util.*;
 
 // TODO: This whole system needs refactoring as it's far too fragile
-public class PoolInfo implements CostCalculator {
+public class PoolInfo {
 
     private Map<Endpoint, AgentInfo> agentInfo = new HashMap<>();
+    private RaftNode parent;
+    private Map<Endpoint, Double> poolCosts;
+
+    public PoolInfo(RaftNode parent){
+        this.parent = parent;
+    }
 
     public void setAgentInformation(Endpoint endpoint, AgentInfo agent) {
         this.agentInfo.put(endpoint, agent);
-    }
-
-    @Override
-    public Map<Endpoint, Double> generateCost(RaftNode parent) {
-        RaftClusterConfig clusterConfig = parent.config();
-        CostConfigurationImpl costConfiguration = (CostConfigurationImpl) clusterConfig.getCostConfiguration();
-
-        double accuracyWeighting = costConfiguration.getAccuracyWeighting();
-        double speedWeighting = costConfiguration.getSpeedWeighting();
-
-        Map<Endpoint, Double> costs = new HashMap<>(agentInfo.size());
-
-        for (Map.Entry<Endpoint, AgentInfo> e : agentInfo.entrySet()) {
-            AgentInfo agentInfo = e.getValue();
-            double cost = ((agentInfo.accuracy * accuracyWeighting)
-                    + (agentInfo.remainingBattery * speedWeighting))
-                    / agentInfo.range;
-
-            costs.put(e.getKey(), cost);
-        }
-
-        return costs;
     }
 
     public boolean hasInfo() {
         return agentInfo.size() > 0;
     }
 
-    public Map<Endpoint, AgentInfo> getAgentInfo() {
+    public Map<Endpoint, AgentInfo> getMembers() {
         return agentInfo;
     }
+
+    public Pair<Endpoint, Double> getLowestCost() {
+        if (poolCosts ==null){
+            RaftClusterConfig config = parent.config();
+            this.poolCosts = config.getCostCalculator().generateCosts(parent);
+        }
+
+        Entry<Endpoint, Double> min = Collections.min(poolCosts.entrySet(), Entry.comparingByValue());
+        return Pair.of(min.getKey(), min.getValue());
+    }
+
+
 
     public static class AgentInfo {
         private double speed;
@@ -60,6 +54,26 @@ public class PoolInfo implements CostCalculator {
         public AgentInfo(Endpoint endpoint, List<RaftProtos.Tuple> statusList) {
             this.endpoint = endpoint;
             setFields(statusList);
+        }
+
+        public double getSpeed() {
+            return speed;
+        }
+
+        public double getRemainingBattery() {
+            return remainingBattery;
+        }
+
+        public double getRange() {
+            return range;
+        }
+
+        public double getAccuracy() {
+            return accuracy;
+        }
+
+        public Endpoint getEndpoint() {
+            return endpoint;
         }
 
         private void setFields(List<RaftProtos.Tuple> statusList) {

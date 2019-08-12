@@ -29,13 +29,11 @@ public class AppendEntryServiceImpl extends AppendEntryServiceGrpc.AppendEntrySe
         }
 
         int requestPreviousLogIndex = request.getPrevLogIndex();
-        Endpoint endpoint = GrpcUtil.raftPeerProtoToEndpoint(request.getRaftPeer());
-
+        Endpoint endpoint = GrpcUtil.raftPeerProtoToEndpoint(request.getClient());
 
         NodeLog.LogEntry logEntry = NodeLog.LogEntry.valueOf(request.getLogEntry());
-
-
         RaftProtos.AppendEntryResponse response = RaftProtos.AppendEntryResponse.newBuilder().build();
+
         responseObserver.onNext(response);
         responseObserver.onCompleted();
         endpoint.shutdown();
