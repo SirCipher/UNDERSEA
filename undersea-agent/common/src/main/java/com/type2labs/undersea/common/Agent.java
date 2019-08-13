@@ -20,4 +20,9 @@ public interface Agent extends AgentService, Serializable {
 
     String name();
 
+    void schedule(Runnable task);
+
+    void setVisualiser(VisualiserClient visualiser);
+
+    UnderseaRuntimeConfig config();
 }

@@ -6,20 +6,34 @@ import com.type2labs.undersea.common.missionplanner.MissionPlanner;
 import com.type2labs.undersea.common.visualiser.VisualiserClient;
 import com.type2labs.undersea.common.visualiser.VisualiserData;
 import com.type2labs.undersea.prospect.model.RaftNode;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.io.ObjectOutputStream;
+import java.net.ConnectException;
 import java.net.InetSocketAddress;
 import java.nio.channels.SocketChannel;
 
 // TODO: Add read/write replies
 public class VisualiserClientImpl implements VisualiserClient {
 
-    private Agent parent;
-    private final InetSocketAddress visualiserAddress = new InetSocketAddress("localhost", 5050);
-    private final SocketChannel channel;
+    private static final Logger logger = LogManager.getLogger(VisualiserClientImpl.class);
 
-    public VisualiserClientImpl() {
+    private final InetSocketAddress visualiserAddress = new InetSocketAddress("localhost", 5050);
+    private Agent parent;
+    private SocketChannel channel;
+    private boolean initialised = false;
+    private boolean enabled = false;
+
+    public VisualiserClientImpl(Agent parent) {
+        this.parent = parent;
+        enabled = parent.config().isVisualiserEnabled();
+
+        if (!enabled) {
+            return;
+        }
+
         try {
             channel = SocketChannel.open();
             channel.configureBlocking(true);
@@ -29,18 +43,25 @@ public class VisualiserClientImpl implements VisualiserClient {
                 // TODO: Set timeout
             }
 
+            initialised = true;
+            openConnection();
+        } catch (ConnectException e) {
+            logger.warn("Couldn't connect to visualiser, trying again");
+            parent.schedule(new VisualiserConnectionTask(parent));
         } catch (IOException e) {
-            throw new RuntimeException("Failed to connect to visualiser. Is it running?");
+            throw new RuntimeException("Failed to connect to visualiser. Is it running?", e);
         }
     }
 
-    public void setParent(Agent parent) {
-        this.parent = parent;
+    public boolean isInitialised() {
+        return initialised;
     }
 
     @Override
     public void write(VisualiserData data) throws IOException {
-
+        if (!enabled) {
+            return;
+        }
     }
 
     private VisualiserData agentState() {
@@ -53,10 +74,18 @@ public class VisualiserClientImpl implements VisualiserClient {
         return new VisualiserData(parent.name(), raftRole, noTasks, new double[]{0, 0});
     }
 
-    @Override
-    public void openConnection() throws IOException {
+    private void openConnection() throws IOException {
         if (parent == null) {
             throw new IllegalStateException("Cannot start connection to visualiser without a parent");
+        }
+
+        if (!enabled) {
+            return;
+        }
+
+        if (!isInitialised()) {
+            logger.warn("Not initialised yet");
+            return;
         }
 
         ObjectOutputStream oos = new ObjectOutputStream(channel.socket().getOutputStream());

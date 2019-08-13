@@ -1,9 +1,6 @@
 package com.type2labs.undersea.prospect.impl;
 
-import com.type2labs.undersea.common.Agent;
-import com.type2labs.undersea.common.AgentService;
-import com.type2labs.undersea.common.Endpoint;
-import com.type2labs.undersea.common.ServiceManager;
+import com.type2labs.undersea.common.*;
 import com.type2labs.undersea.common.visualiser.VisualiserClient;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -60,6 +57,21 @@ public class AgentImpl implements Agent {
 
     @Override
     public String name() {
+        return null;
+    }
+
+    @Override
+    public void schedule(Runnable task) {
+
+    }
+
+    @Override
+    public void setVisualiser(VisualiserClient visualiser) {
+
+    }
+
+    @Override
+    public UnderseaRuntimeConfig config() {
         return null;
     }
 

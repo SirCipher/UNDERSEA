@@ -39,7 +39,7 @@ public class Runner {
         if (args.length != 1) {
             throw new IllegalArgumentException("runner.properties file location must be supplied");
         }
-        Visualiser visualiser = new Visualiser();
+//        Visualiser visualiser = new Visualiser();
 
 
         properties = Utility.getPropertiesByName(args[0]);
@@ -79,13 +79,13 @@ public class Runner {
 
         agentInitialiser.initalise(environmentProperties.getAgents());
 
+        logger.info("Exiting runner...");
+
         try {
-            Thread.sleep(100000);
+            Thread.sleep(10000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-
-        logger.info("Exiting runner...");
     }
 
     private static MissionImpl planMission() {

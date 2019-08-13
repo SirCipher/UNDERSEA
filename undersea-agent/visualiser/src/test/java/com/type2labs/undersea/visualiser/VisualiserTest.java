@@ -36,15 +36,15 @@ public class VisualiserTest {
         serviceManager.registerService(raftNode);
         serviceManager.registerService(new VehicleRoutingOptimiser());
 
-        UnderseaAgent underseaAgent = new UnderseaAgent("test", serviceManager, new AgentStatus("test", new ArrayList<>()), null, null);
-        VisualiserClientImpl client = new VisualiserClientImpl();
+        UnderseaAgent underseaAgent = new UnderseaAgent(null, "test", serviceManager, new AgentStatus("test", new ArrayList<>()), null);
+        VisualiserClientImpl visualiserClient = new VisualiserClientImpl(underseaAgent);
+        underseaAgent.setVisualiser(visualiserClient);
 
-        client.setParent(underseaAgent);
-        client.openConnection();
+        visualiserClient.openConnection();
 
         Thread.sleep(5000);
 
-        client.closeConnection();
+        visualiserClient.closeConnection();
     }
 
 }

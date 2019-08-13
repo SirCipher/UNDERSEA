@@ -14,6 +14,9 @@ public class RaftClusterConfig implements UnderseaConfig {
     private CostConfiguration costConfiguration;
     private final UnderseaRuntimeConfig underseaRuntimeConfig;
 
+    public UnderseaRuntimeConfig getUnderseaRuntimeConfig() {
+        return underseaRuntimeConfig;
+    }
 
     public RaftClusterConfig(UnderseaRuntimeConfig underseaRuntimeConfig){
         this.underseaRuntimeConfig = underseaRuntimeConfig;

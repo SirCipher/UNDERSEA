@@ -68,16 +68,11 @@ public class AgentInitialiser {
             serviceManager.registerService(new ControllerEngine());
             serviceManager.registerService(new VehicleRoutingOptimiser());
 
-            VisualiserClientImpl visualiser = new VisualiserClientImpl();
-            UnderseaAgent underseaAgent = new UnderseaAgent(key, serviceManager,
-                    new AgentStatus(value.getName(), value.getSensors()), visualiser, endpoint);
-            visualiser.setParent(underseaAgent);
+            UnderseaAgent underseaAgent = new UnderseaAgent(raftClusterConfig.getUnderseaRuntimeConfig(), key, serviceManager,
+                    new AgentStatus(value.getName(), value.getSensors()), endpoint);
+            VisualiserClientImpl visualiser = new VisualiserClientImpl(underseaAgent);
 
-            try {
-                visualiser.openConnection();
-            } catch (IOException e) {
-                throw new RuntimeException("Failed to connect to visualiser");
-            }
+            underseaAgent.setVisualiser(visualiser);
 
             raftNode.setAgent(underseaAgent);
 

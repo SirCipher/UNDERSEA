@@ -12,6 +12,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 public class AbstractAgent implements Agent {
 
@@ -22,6 +23,7 @@ public class AbstractAgent implements Agent {
     private final ServiceManager services;
     private final AgentStatus status;
     private final Endpoint endpoint;
+    private final UnderseaRuntimeConfig config;
     private VisualiserClient visualiser;
     private String name;
 
@@ -61,12 +63,21 @@ public class AbstractAgent implements Agent {
         return name;
     }
 
-    public AbstractAgent(String name, ServiceManager serviceManager, AgentStatus status, VisualiserClient visualiser,
+    public void setVisualiser(VisualiserClient visualiser) {
+        this.visualiser = visualiser;
+    }
+
+    @Override
+    public UnderseaRuntimeConfig config() {
+        return config;
+    }
+
+    public AbstractAgent(UnderseaRuntimeConfig config, String name, ServiceManager serviceManager, AgentStatus status,
                          Endpoint endpoint) {
+        this.config = config;
         this.name = name;
         this.services = serviceManager;
         this.status = status;
-        this.visualiser = visualiser;
         this.endpoint = endpoint;
 
         logServices();
@@ -115,6 +126,11 @@ public class AbstractAgent implements Agent {
     @Override
     public String name() {
         return name;
+    }
+
+    @Override
+    public void schedule(Runnable task) {
+        internalExecutor.schedule(task, 500, TimeUnit.MILLISECONDS);
     }
 
     @Override
