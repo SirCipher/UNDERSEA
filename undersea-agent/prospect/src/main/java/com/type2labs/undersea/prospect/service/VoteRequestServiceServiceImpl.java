@@ -32,6 +32,8 @@ public class VoteRequestServiceServiceImpl extends ConsensusProtocolServiceGrpc.
 
         responseObserver.onNext(response);
         responseObserver.onCompleted();
+
+        raftNode.state().setVote(nominee.getKey());
     }
 
 }

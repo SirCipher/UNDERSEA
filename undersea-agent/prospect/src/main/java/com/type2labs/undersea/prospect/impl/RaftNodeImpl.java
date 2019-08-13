@@ -1,13 +1,13 @@
 package com.type2labs.undersea.prospect.impl;
 
-import com.type2labs.undersea.models.Agent;
+import com.type2labs.undersea.common.Agent;
 import com.type2labs.undersea.prospect.*;
 import com.type2labs.undersea.prospect.model.Endpoint;
 import com.type2labs.undersea.prospect.model.RaftIntegration;
 import com.type2labs.undersea.prospect.model.RaftNode;
 import com.type2labs.undersea.prospect.task.AcquireStatusTask;
-import com.type2labs.undersea.prospect.task.VoteTask;
 import com.type2labs.undersea.prospect.task.RequireRoleTask;
+import com.type2labs.undersea.prospect.task.VoteTask;
 import io.grpc.Server;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -176,6 +176,7 @@ public class RaftNodeImpl implements RaftNode {
 
     public void toCandidate() {
         role = RaftRole.CANDIDATE;
+        state().setVote(null);
         logger.info(name + " is now a candidate");
     }
 
@@ -204,12 +205,9 @@ public class RaftNodeImpl implements RaftNode {
 
         @Override
         protected void innerRun() {
-            if (role == RaftRole.LEADER) {
-                long heartbeatPeriodInMillis = raftClusterConfig.HEARTBEAT_PERIOD;
-
-                if (lastHeartbeatTime < System.currentTimeMillis() - heartbeatPeriodInMillis) {
-                    broadcastMissionProgress();
-                }
+            if (lastHeartbeatTime < System.currentTimeMillis() - RaftClusterConfig.HEARTBEAT_PERIOD) {
+                broadcastMissionProgress();
+            } else {
                 broadcastMissionProgress();
                 scheduleHeartbeat();
             }

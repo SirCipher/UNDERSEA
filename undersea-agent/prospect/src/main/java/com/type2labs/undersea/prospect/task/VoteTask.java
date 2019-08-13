@@ -21,6 +21,10 @@ public class VoteTask implements Runnable {
         this.term = term;
     }
 
+    /**
+     * Allows for an agent to vote more than one time as the client checks to see if it has already received a vote
+     * from an endpoint and does not allow for duplicates.
+     */
     @Override
     public void run() {
         if (!raftNode.poolInfo().hasInfo()) {
@@ -30,6 +34,11 @@ public class VoteTask implements Runnable {
             return;
         }
 
+        if (raftNode.state().getVotedFor() != null) {
+            logger.info("Node: " + raftNode.name() + " has already voted during this term. For: " + raftNode.state().getVotedFor() + ". Not voting again");
+        }
+
+        raftNode.toCandidate();
         Collection<RaftNode> localNodes = raftNode.state().localNodes().values();
 
         for (RaftNode localNode : localNodes) {
@@ -41,7 +50,6 @@ public class VoteTask implements Runnable {
                     ConsensusProtocolServiceGrpc.newBlockingStub(localNode.getLocalEndpoint().channel());
 
             RaftProtos.VoteResponse response = blockingStub.requestVote(request);
-            System.out.println(response);
         }
 
     }

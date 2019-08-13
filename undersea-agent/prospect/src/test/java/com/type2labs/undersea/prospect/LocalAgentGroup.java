@@ -1,5 +1,7 @@
 package com.type2labs.undersea.prospect;
 
+import com.type2labs.undersea.common.UnderseaRuntimeConfig;
+import com.type2labs.undersea.common.config.UnderseaConfig;
 import com.type2labs.undersea.prospect.impl.*;
 import com.type2labs.undersea.prospect.model.Endpoint;
 import com.type2labs.undersea.prospect.model.RaftNode;
@@ -42,7 +44,8 @@ class LocalAgentGroup {
     }
 
     private RaftClusterConfig defaultConfig() {
-        RaftClusterConfig config = new RaftClusterConfig();
+        UnderseaRuntimeConfig underseaConfig = new UnderseaRuntimeConfig();
+        RaftClusterConfig config = new RaftClusterConfig(underseaConfig);
 
         CostConfiguration costConfiguration = new CostConfigurationImpl();
         costConfiguration.setCostCalculator((RaftNode parent) -> {

@@ -10,8 +10,8 @@ import com.type2labs.undersea.missionplanner.decomposer.delaunay.DelaunayDecompo
 import com.type2labs.undersea.missionplanner.model.MissionImpl;
 import com.type2labs.undersea.missionplanner.model.MissionParametersImpl;
 import com.type2labs.undersea.missionplanner.model.PlanDataModel;
-import com.type2labs.undersea.models.impl.AgentImpl;
-import com.type2labs.undersea.models.missionplanner.*;
+import com.type2labs.undersea.common.impl.AgentImpl;
+import com.type2labs.undersea.common.missionplanner.*;
 import com.type2labs.undersea.utilities.PlannerUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

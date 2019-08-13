@@ -24,7 +24,7 @@ public class AppendEntryServiceImpl extends AppendEntryServiceGrpc.AppendEntrySe
                             StreamObserver<RaftProtos.AppendEntryResponse> responseObserver) {
         int requestTerm = request.getTerm();
 
-        if(requestTerm > raftNode.state().getTerm()){
+        if (requestTerm > raftNode.state().getTerm()) {
             raftNode.toFollower(requestTerm);
         }
 

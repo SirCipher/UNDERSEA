@@ -7,6 +7,6 @@
  */
 
 dependencies {
-    compile project(":models")
+    compile project(":common")
     compile project(":utilities")
 }

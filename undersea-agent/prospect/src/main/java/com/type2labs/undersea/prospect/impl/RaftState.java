@@ -12,7 +12,18 @@ public class RaftState {
     // TODO: Remove raft node value as we won't know it
     private final ConcurrentMap<Endpoint, RaftNode> localNodes = new ConcurrentHashMap<>();
     private final ConcurrentMap<Endpoint, RaftNode> lastNodeGroup = new ConcurrentHashMap<>();
+
+
+    public Endpoint getVotedFor() {
+        return votedFor;
+    }
+
+    /**
+     * Endpoint voted for during last term
+     */
     private final NodeLog nodeLog = new NodeLog();
+
+    private Endpoint votedFor;
 
     private int term;
 
@@ -31,4 +42,9 @@ public class RaftState {
     public void setTerm(int term) {
         this.term = term;
     }
+
+    public void setVote(Endpoint votedFor) {
+        this.votedFor = votedFor;
+    }
+
 }

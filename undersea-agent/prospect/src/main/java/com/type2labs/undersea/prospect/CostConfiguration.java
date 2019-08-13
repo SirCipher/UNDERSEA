@@ -4,9 +4,9 @@ import com.type2labs.undersea.prospect.model.CostCalculator;
 
 public interface CostConfiguration {
 
-    void setCostCalculator(CostCalculator costCalculator);
-
     CostCalculator getCostCalculator();
+
+    void setCostCalculator(CostCalculator costCalculator);
 
     void setBias(String key, Object value);
 

@@ -1,10 +1,13 @@
 package com.type2labs.undersea.runner;
 
-import com.type2labs.undersea.models.*;
-import com.type2labs.undersea.models.blockchain.BlockchainNetwork;
-import com.type2labs.undersea.models.controller.Controller;
-import com.type2labs.undersea.models.missionplanner.MissionPlanner;
-import com.type2labs.undersea.prospect.NodeLog;
+import com.type2labs.undersea.common.Agent;
+import com.type2labs.undersea.common.AgentService;
+import com.type2labs.undersea.common.AgentStatus;
+import com.type2labs.undersea.common.ServiceManager;
+import com.type2labs.undersea.common.blockchain.BlockchainNetwork;
+import com.type2labs.undersea.common.controller.Controller;
+import com.type2labs.undersea.common.missionplanner.MissionPlanner;
+import com.type2labs.undersea.common.visualiser.Visualiser;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -66,6 +69,11 @@ public class UnderseaAgent implements Agent {
 
     @Override
     public List<Pair<String, String>> status() {
+        return null;
+    }
+
+    @Override
+    public Visualiser visualiser() {
         return null;
     }
 

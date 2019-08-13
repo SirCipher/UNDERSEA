@@ -11,13 +11,13 @@ public class CostConfigurationImpl implements CostConfiguration {
     private CostCalculator costCalculator;
     private Map<String, Object> biases = new HashMap<>();
 
-    public void setCostCalculator(CostCalculator costCalculator) {
-        this.costCalculator = costCalculator;
-    }
-
     @Override
     public CostCalculator getCostCalculator() {
         return costCalculator;
+    }
+
+    public void setCostCalculator(CostCalculator costCalculator) {
+        this.costCalculator = costCalculator;
     }
 
     @Override

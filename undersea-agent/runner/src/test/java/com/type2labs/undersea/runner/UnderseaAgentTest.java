@@ -2,8 +2,9 @@ package com.type2labs.undersea.runner;
 
 import com.type2labs.undersea.controller.ControllerEngine;
 import com.type2labs.undersea.missionplanner.planner.vrp.VehicleRoutingOptimiser;
-import com.type2labs.undersea.models.ServiceManager;
-import com.type2labs.undersea.models.AgentStatus;
+import com.type2labs.undersea.common.AgentStatus;
+import com.type2labs.undersea.common.ServiceManager;
+import com.type2labs.undersea.common.UnderseaRuntimeConfig;
 import com.type2labs.undersea.prospect.RaftClusterConfig;
 import com.type2labs.undersea.prospect.impl.EndpointImpl;
 import com.type2labs.undersea.prospect.impl.RaftIntegrationImpl;
@@ -26,7 +27,7 @@ public class UnderseaAgentTest {
         EndpointImpl endpoint = new EndpointImpl("test", new InetSocketAddress("localhost",
                 5000));
         RaftNodeImpl raftNode = new RaftNodeImpl(
-                new RaftClusterConfig(),
+                new RaftClusterConfig(new UnderseaRuntimeConfig()),
                 "test",
                 endpoint,
                 new RaftIntegrationImpl("test", endpoint)

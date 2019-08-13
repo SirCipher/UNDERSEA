@@ -22,7 +22,6 @@ public class EndpointImpl implements Endpoint {
     }
 
 
-
     @Override
     public String name() {
         return name;

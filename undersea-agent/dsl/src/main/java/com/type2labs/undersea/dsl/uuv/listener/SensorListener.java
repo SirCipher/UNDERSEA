@@ -4,7 +4,7 @@ import com.type2labs.undersea.dsl.uuv.factory.AbstractFactory;
 import com.type2labs.undersea.dsl.uuv.factory.FactoryProvider;
 import com.type2labs.undersea.dsl.uuv.gen.SensorsBaseListener;
 import com.type2labs.undersea.dsl.uuv.gen.SensorsParser;
-import com.type2labs.undersea.models.impl.Sensor;
+import com.type2labs.undersea.common.impl.Sensor;
 
 
 public class SensorListener extends SensorsBaseListener {

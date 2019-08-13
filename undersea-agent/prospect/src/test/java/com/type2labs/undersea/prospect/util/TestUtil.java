@@ -1,14 +1,5 @@
 package com.type2labs.undersea.prospect.util;
 
-import com.type2labs.undersea.prospect.CostConfigurationImpl;
-import com.type2labs.undersea.prospect.RaftClusterConfig;
-import com.type2labs.undersea.prospect.impl.PoolInfo;
-import com.type2labs.undersea.prospect.model.Endpoint;
-import com.type2labs.undersea.prospect.model.RaftNode;
-
-import java.util.HashMap;
-import java.util.Map;
-
 public class TestUtil {
 
 
@@ -37,7 +28,6 @@ public class TestUtil {
             throw assertionError;
         }
     }
-
 
 
 }

@@ -1,7 +1,7 @@
 package com.type2labs.undersea.missionplanner.model;
 
-import com.type2labs.undersea.models.impl.AgentImpl;
-import com.type2labs.undersea.models.missionplanner.MissionParameters;
+import com.type2labs.undersea.common.impl.AgentImpl;
+import com.type2labs.undersea.common.missionplanner.MissionParameters;
 
 import java.util.List;
 

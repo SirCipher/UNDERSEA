@@ -1,8 +1,8 @@
 package com.type2labs.undersea.dsl.uuv.model;
 
-import com.type2labs.undersea.models.impl.AgentImpl;
-import com.type2labs.undersea.models.impl.Node;
-import com.type2labs.undersea.models.impl.Sensor;
+import com.type2labs.undersea.common.impl.AgentImpl;
+import com.type2labs.undersea.common.impl.Node;
+import com.type2labs.undersea.common.impl.Sensor;
 
 import java.util.Iterator;
 

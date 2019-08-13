@@ -1,11 +1,11 @@
 package com.type2labs.undersea.missionplanner.planner.vrp;
 
-import com.type2labs.undersea.models.missionplanner.MissionPlanner;
-import com.type2labs.undersea.models.missionplanner.PlannerException;
 import com.type2labs.undersea.missionplanner.model.MissionImpl;
 import com.type2labs.undersea.missionplanner.model.MissionParametersImpl;
-import com.type2labs.undersea.models.factory.AgentFactory;
-import com.type2labs.undersea.models.impl.AgentImpl;
+import com.type2labs.undersea.common.factory.AgentFactory;
+import com.type2labs.undersea.common.impl.AgentImpl;
+import com.type2labs.undersea.common.missionplanner.MissionPlanner;
+import com.type2labs.undersea.common.missionplanner.PlannerException;
 import com.type2labs.undersea.utilities.Utility;
 import org.junit.Assert;
 import org.junit.BeforeClass;

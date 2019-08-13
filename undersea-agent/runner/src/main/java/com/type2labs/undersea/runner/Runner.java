@@ -5,13 +5,14 @@ import com.google.ortools.constraintsolver.RoutingIndexManager;
 import com.google.ortools.constraintsolver.RoutingModel;
 import com.type2labs.undersea.dsl.EnvironmentProperties;
 import com.type2labs.undersea.dsl.ParserEngine;
-import com.type2labs.undersea.models.missionplanner.MissionPlanner;
-import com.type2labs.undersea.models.missionplanner.PlannerException;
 import com.type2labs.undersea.missionplanner.model.MissionImpl;
 import com.type2labs.undersea.missionplanner.model.MissionParametersImpl;
 import com.type2labs.undersea.missionplanner.planner.vrp.VehicleRoutingOptimiser;
-import com.type2labs.undersea.models.impl.AgentImpl;
-import com.type2labs.undersea.models.impl.Node;
+import com.type2labs.undersea.common.UnderseaRuntimeConfig;
+import com.type2labs.undersea.common.impl.AgentImpl;
+import com.type2labs.undersea.common.impl.Node;
+import com.type2labs.undersea.common.missionplanner.MissionPlanner;
+import com.type2labs.undersea.common.missionplanner.PlannerException;
 import com.type2labs.undersea.prospect.RaftClusterConfig;
 import com.type2labs.undersea.utilities.Utility;
 import org.apache.logging.log4j.LogManager;
@@ -29,7 +30,7 @@ import java.util.Properties;
 public class Runner {
 
     private static final Logger logger = LogManager.getLogger(Runner.class);
-    private static AgentInitialiser agentInitialiser = AgentInitialiser.getInstance(new RaftClusterConfig());
+    private static AgentInitialiser agentInitialiser = AgentInitialiser.getInstance(new RaftClusterConfig(new UnderseaRuntimeConfig()));
     private static EnvironmentProperties environmentProperties;
     private static Properties properties;
 

@@ -8,7 +8,7 @@
 import org.apache.tools.ant.taskdefs.condition.Os
 
 dependencies {
-    compile project(":models")
+    compile project(":common")
     compile project(":utilities")
 
     if (Os.isFamily(Os.FAMILY_UNIX)) {

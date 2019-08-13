@@ -10,6 +10,21 @@ public class NodeLog {
 
     private List<LogEntry> logEntries = new ArrayList<>();
 
+    public void appendLog(LogEntry logEntry) {
+        logEntries.add(logEntry);
+    }
+
+    /**
+     * Returns a sublist of log entries between the range
+     *
+     * @param lower endpoint (include)
+     * @param upper endpoint (exclusive)
+     * @return the sublist of entries
+     */
+    public List<LogEntry> getBetween(int lower, int upper) {
+        return logEntries.subList(lower, upper);
+    }
+
     public static class LogEntry {
 
         private int term;
@@ -24,6 +39,15 @@ public class NodeLog {
             this.term = term;
             this.index = index;
             this.operation = operation;
+        }
+
+        public static LogEntry valueOf(RaftProtos.LogEntryProto proto) {
+            ObjectMapper mapper = new ObjectMapper();
+            try {
+                return mapper.readValue(proto.getData(), LogEntry.class);
+            } catch (JsonProcessingException e) {
+                throw new RuntimeException("Unable to process log entry: " + proto.toString(), e);
+            }
         }
 
         public int getTerm() {
@@ -66,15 +90,6 @@ public class NodeLog {
             return builder.build();
         }
 
-        public static LogEntry valueOf(RaftProtos.LogEntryProto proto) {
-            ObjectMapper mapper = new ObjectMapper();
-            try {
-                return mapper.readValue(proto.getData(), LogEntry.class);
-            } catch (JsonProcessingException e) {
-                throw new RuntimeException("Unable to process log entry: " + proto.toString(), e);
-            }
-        }
-
         @Override
         public String toString() {
             return "LogEntry{" +
@@ -83,21 +98,6 @@ public class NodeLog {
                     ", operation=" + operation +
                     '}';
         }
-    }
-
-    public void appendLog(LogEntry logEntry) {
-        logEntries.add(logEntry);
-    }
-
-    /**
-     * Returns a sublist of log entries between the range
-     *
-     * @param lower endpoint (include)
-     * @param upper endpoint (exclusive)
-     * @return the sublist of entries
-     */
-    public List<LogEntry> getBetween(int lower, int upper) {
-        return logEntries.subList(lower, upper);
     }
 
 }

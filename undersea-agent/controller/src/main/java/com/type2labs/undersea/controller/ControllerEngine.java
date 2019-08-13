@@ -2,14 +2,13 @@ package com.type2labs.undersea.controller;
 
 import com.type2labs.undersea.controller.controller.Controller;
 import com.type2labs.undersea.controller.controller.Knowledge;
-import com.type2labs.undersea.utilities.Utility;
 
 import java.util.Date;
 import java.util.Properties;
 import java.util.Timer;
 
 
-public class ControllerEngine implements com.type2labs.undersea.models.controller.Controller {
+public class ControllerEngine implements com.type2labs.undersea.common.controller.Controller {
 
     // TODO: Pass properties to controller
     private static final Properties properties = null;//Utility.getPropertiesByName("config.properties");
@@ -24,12 +23,12 @@ public class ControllerEngine implements com.type2labs.undersea.models.controlle
      * Simulation time
      */
     private static long SIMULATION_TIME = 0;//Math.round(Double.parseDouble(Utility.getProperty(properties,
-            //"SIMULATION_TIME")) * 1000);
+    //"SIMULATION_TIME")) * 1000);
     /**
      * Simulation speed
      */
     private static long SIMULATION_SPEED = 0;//Math.round(Double.parseDouble(Utility.getProperty(properties,
-            //"SIMULATION_SPEED")));
+    //"SIMULATION_SPEED")));
 
     public ControllerEngine() {
     }

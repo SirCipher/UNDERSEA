@@ -20,10 +20,6 @@ public class ServerBuilder {
     private static final Logger logger = LogManager.getLogger(ServerBuilder.class);
     private static final Set<Class<?>> registeredServices;
 
-    private ServerBuilder() {
-
-    }
-
     static {
         ScanResult scanResult = new ClassGraph()
 //                .verbose()
@@ -48,6 +44,10 @@ public class ServerBuilder {
         for (Class<?> clazz : registeredServices) {
             logger.info("Registered class: " + clazz.getName());
         }
+    }
+
+    private ServerBuilder() {
+
     }
 
     public static Server build(InetSocketAddress address, RaftNode raftNode) {

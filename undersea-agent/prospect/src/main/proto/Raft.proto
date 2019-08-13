@@ -17,7 +17,7 @@ service AppendEntryService {
 }
 
 service ConsensusProtocolService {
-    rpc requestVote (VoteRequest) returns (VoteResponse){
+    rpc requestVote (VoteRequest) returns (VoteResponse) {
 
     }
 }

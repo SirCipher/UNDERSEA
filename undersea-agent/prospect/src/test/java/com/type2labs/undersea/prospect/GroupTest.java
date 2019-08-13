@@ -11,7 +11,7 @@ public class GroupTest {
 
     @Test
     public void testAcquireStatusTask() {
-        int count = 10;
+        int count = 3;
 
         LocalAgentGroup localAgentGroup = new LocalAgentGroup(count);
         localAgentGroup.doManualDiscovery();

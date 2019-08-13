@@ -7,7 +7,7 @@
  */
 dependencies {
     compile project(":agent")
-    compile project(":models")
+    compile project(":common")
     compile project(":utilities")
 
     // https://mvnrepository.com/artifact/org.antlr/antlr4

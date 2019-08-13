@@ -1,9 +1,9 @@
 package com.type2labs.undersea.prospect.impl;
 
-import com.type2labs.undersea.models.Agent;
-import com.type2labs.undersea.models.AgentService;
-import com.type2labs.undersea.prospect.NodeLog;
-import com.type2labs.undersea.models.ServiceManager;
+import com.type2labs.undersea.common.Agent;
+import com.type2labs.undersea.common.AgentService;
+import com.type2labs.undersea.common.ServiceManager;
+import com.type2labs.undersea.common.visualiser.Visualiser;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.ArrayList;
@@ -46,6 +46,11 @@ public class AgentImpl implements Agent {
         status.add(Pair.of("accuracy", Double.toString(accuracy)));
 
         return status;
+    }
+
+    @Override
+    public Visualiser visualiser() {
+        return null;
     }
 
 

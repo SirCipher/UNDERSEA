@@ -6,8 +6,11 @@ import com.type2labs.undersea.prospect.model.Endpoint;
 import com.type2labs.undersea.prospect.model.RaftNode;
 import org.apache.commons.lang3.tuple.Pair;
 
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
-import java.util.*;
 
 // TODO: This whole system needs refactoring as it's far too fragile
 public class PoolInfo {
@@ -16,7 +19,7 @@ public class PoolInfo {
     private RaftNode parent;
     private Map<Endpoint, Double> poolCosts;
 
-    public PoolInfo(RaftNode parent){
+    public PoolInfo(RaftNode parent) {
         this.parent = parent;
     }
 
@@ -33,7 +36,7 @@ public class PoolInfo {
     }
 
     public Pair<Endpoint, Double> getLowestCost() {
-        if (poolCosts ==null){
+        if (poolCosts == null) {
             RaftClusterConfig config = parent.config();
             this.poolCosts = config.getCostCalculator().generateCosts(parent);
         }
@@ -41,7 +44,6 @@ public class PoolInfo {
         Entry<Endpoint, Double> min = Collections.min(poolCosts.entrySet(), Entry.comparingByValue());
         return Pair.of(min.getKey(), min.getValue());
     }
-
 
 
     public static class AgentInfo {

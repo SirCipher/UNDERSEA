@@ -4,13 +4,12 @@ package com.type2labs.undersea.dsl;
 import com.type2labs.undersea.dsl.uuv.factory.FactoryProvider;
 import com.type2labs.undersea.dsl.uuv.factory.SensorFactory;
 import com.type2labs.undersea.dsl.uuv.model.DslAgentProxy;
-import com.type2labs.undersea.models.impl.Sensor;
+import com.type2labs.undersea.common.impl.Sensor;
 import com.type2labs.undersea.utilities.Utility;
 
 import java.io.File;
 import java.nio.file.attribute.PosixFilePermission;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.Map;
 
 @SuppressWarnings("StringConcatenationInsideStringBufferAppend")
@@ -281,15 +280,9 @@ class MoosConfigurationWriter {
     private static void writePortListFile() {
         StringBuilder ports = new StringBuilder();
 
-        Iterator<DslAgentProxy> it = environmentProperties.getAgents().values().iterator();
+        String s = "";
 
-        while (it.hasNext()) {
-            ports.append(it.next().getServerPort());
-
-            if (it.hasNext()) {
-                ports.append(":");
-            }
-        }
+        environmentProperties.getAllAgents().values().forEach(a -> ports.append(a.getServerPort() + "\n"));
 
         Utility.exportToFile(MoosConfigurationWriter.buildDir + File.separator + "agents.ports", ports.toString(),
                 false);

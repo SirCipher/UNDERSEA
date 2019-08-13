@@ -15,7 +15,7 @@ repositories {
 }
 
 dependencies {
-    compile project(":models")
+    compile project(":common")
     compile project(":prospect")
     compile project(":missionplanner")
     compile project(":controller")

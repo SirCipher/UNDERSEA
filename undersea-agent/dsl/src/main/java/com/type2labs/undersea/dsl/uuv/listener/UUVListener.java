@@ -7,8 +7,8 @@ import com.type2labs.undersea.dsl.uuv.factory.FactoryProvider;
 import com.type2labs.undersea.dsl.uuv.gen.UUVBaseListener;
 import com.type2labs.undersea.dsl.uuv.gen.UUVParser;
 import com.type2labs.undersea.dsl.uuv.model.DslAgentProxy;
-import com.type2labs.undersea.models.impl.Range;
-import com.type2labs.undersea.models.impl.Sensor;
+import com.type2labs.undersea.common.impl.Range;
+import com.type2labs.undersea.common.impl.Sensor;
 
 import java.util.ArrayList;
 import java.util.List;
