@@ -120,7 +120,7 @@ public class VehicleRoutingOptimiser implements MissionPlanner {
 
     @Override
     public List<Task> getTasks() {
-        return null;
+        return new ArrayList<>();
     }
 
     private MissionImpl solve(PlanDataModel model, MissionParametersImpl missionParametersImpl) {

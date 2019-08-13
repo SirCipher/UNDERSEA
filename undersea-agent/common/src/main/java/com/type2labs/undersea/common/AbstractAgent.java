@@ -1,6 +1,5 @@
-package com.type2labs.undersea.runner;
+package com.type2labs.undersea.common;
 
-import com.type2labs.undersea.common.*;
 import com.type2labs.undersea.common.blockchain.BlockchainNetwork;
 import com.type2labs.undersea.common.controller.Controller;
 import com.type2labs.undersea.common.missionplanner.MissionPlanner;
@@ -14,34 +13,62 @@ import java.util.List;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 
-public class UnderseaAgent implements Agent {
+public class AbstractAgent implements Agent {
 
-    private static final Logger logger = LogManager.getLogger(UnderseaAgent.class);
+    private static final Logger logger = LogManager.getLogger(AbstractAgent.class);
+    private static final long serialVersionUID = 6578957795091837535L;
+
     private final ScheduledExecutorService internalExecutor = new ScheduledThreadPoolExecutor(4);
     private final ServiceManager services;
     private final AgentStatus status;
-    private VisualiserClient visualiser;
     private final Endpoint endpoint;
+    private VisualiserClient visualiser;
+    private String name = "default";
 
-    public UnderseaAgent(ServiceManager serviceManager, AgentStatus status, VisualiserClient visualiser, Endpoint endpoint) {
+    public BlockchainNetwork getBlockchainNetwork() {
+        return (BlockchainNetwork) services.getService(BlockchainNetwork.class);
+    }
+
+    public Controller getController() {
+        return (Controller) services.getService(Controller.class);
+    }
+
+    public MissionPlanner getMissionPlanner() {
+        return (MissionPlanner) services.getService(MissionPlanner.class);
+    }
+
+    public static Logger getLogger() {
+        return logger;
+    }
+
+    public ServiceManager getServices() {
+        return services;
+    }
+
+    public AgentStatus getStatus() {
+        return status;
+    }
+
+    public Endpoint getEndpoint() {
+        return endpoint;
+    }
+
+    public VisualiserClient getVisualiser() {
+        return visualiser;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public AbstractAgent(ServiceManager serviceManager, AgentStatus status, VisualiserClient visualiser,
+                         Endpoint endpoint) {
         this.services = serviceManager;
         this.status = status;
         this.visualiser = visualiser;
         this.endpoint = endpoint;
 
         logServices();
-    }
-
-    public UnderseaAgent(ServiceManager serviceManager, AgentStatus status, Endpoint endpoint) {
-        this.services = serviceManager;
-        this.status = status;
-        this.endpoint = endpoint;
-
-        logServices();
-    }
-
-    public VisualiserClient getVisualiser() {
-        return visualiser;
     }
 
     private void logServices() {
@@ -57,18 +84,6 @@ public class UnderseaAgent implements Agent {
         }
 
         logger.info(s);
-    }
-
-    public BlockchainNetwork getBlockchainNetwork() {
-        return (BlockchainNetwork) services.getService(BlockchainNetwork.class);
-    }
-
-    public Controller getController() {
-        return (Controller) services.getService(Controller.class);
-    }
-
-    public MissionPlanner getMissionPlanner() {
-        return (MissionPlanner) services.getService(MissionPlanner.class);
     }
 
     @Override
@@ -96,6 +111,10 @@ public class UnderseaAgent implements Agent {
         return endpoint;
     }
 
+    @Override
+    public String name() {
+        return name;
+    }
 
     @Override
     public void start() {

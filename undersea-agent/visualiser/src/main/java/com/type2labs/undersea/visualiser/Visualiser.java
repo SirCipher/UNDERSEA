@@ -1,5 +1,6 @@
 package com.type2labs.undersea.visualiser;
 
+import com.type2labs.undersea.common.visualiser.VisualiserData;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -9,22 +10,22 @@ import javax.swing.border.Border;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.io.IOException;
-import java.net.InetSocketAddress;
-import java.nio.ByteBuffer;
-import java.nio.channels.AsynchronousServerSocketChannel;
-import java.nio.channels.AsynchronousSocketChannel;
-import java.nio.channels.CompletionHandler;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
+import java.io.ObjectInputStream;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class Visualiser {
 
     private static final Logger logger = LogManager.getLogger(Visualiser.class);
 
-    private JFrame frame;
+    private final List<Socket> clients = new ArrayList<>();
+
     private JTable table;
-    private int[] ports;
 
     public static void main(String[] args) {
         new Visualiser();
@@ -35,86 +36,66 @@ public class Visualiser {
         initGui();
     }
 
-    private void startServer() {
-        try {
-            final AsynchronousServerSocketChannel listener = AsynchronousServerSocketChannel
-                    .open()
-                    .bind(new InetSocketAddress("localhost", 5050));
 
-            // Listen for a new request
-            listener.accept(null, new CompletionHandler<AsynchronousSocketChannel, Void>() {
-                @Override
-                public void completed(AsynchronousSocketChannel ch, Void att) {
-                    // Accept the next connection
-                    listener.accept(null, this);
-
-                    // Greet the client
-                    ch.write(ByteBuffer.wrap("Hello, I am Echo Server 2020, let's have an engaging conversation!\n".getBytes()));
-
-                    // Allocate a byte buffer (4K) to read from the client
-                    ByteBuffer byteBuffer = ByteBuffer.allocate(4096);
-                    try {
-                        // Read the first line
-                        int bytesRead = ch.read(byteBuffer).get(20, TimeUnit.SECONDS);
-
-                        boolean running = true;
-                        while (bytesRead != -1 && running) {
-                            System.out.println("bytes read: " + bytesRead);
-
-                            // Make sure that we have data to read
-                            if (byteBuffer.position() > 2) {
-                                // Make the buffer ready to read
-                                byteBuffer.flip();
-
-                                // Convert the buffer into a line
-                                byte[] lineBytes = new byte[bytesRead];
-                                byteBuffer.get(lineBytes, 0, bytesRead);
-                                String line = new String(lineBytes);
-
-                                // Debug
-                                System.out.println("Message: " + line);
-
-                                // Echo back to the caller
-                                ch.write(ByteBuffer.wrap(line.getBytes()));
-
-                                // Make the buffer ready to write
-                                byteBuffer.clear();
-
-                                // Read the next line
-                                bytesRead = ch.read(byteBuffer).get(20, TimeUnit.SECONDS);
-                            } else {
-                                // An empty line signifies the end of the conversation in our protocol
-                                running = false;
-                            }
-                        }
-                    } catch (InterruptedException | ExecutionException e) {
-                        e.printStackTrace();
-                    } catch (TimeoutException e) {
-                        // The user exceeded the 20 second timeout, so close the connection
-                        ch.write(ByteBuffer.wrap("Good Bye\n".getBytes()));
-                        System.out.println("Connection timed out, closing connection");
-                    }
-
-//                    System.out.println("End of conversation");
-                    try {
-                        // Close the connection if we need to
-                        if (ch.isOpen()) {
-                            ch.close();
-                        }
-                    } catch (IOException e1) {
-                        e1.printStackTrace();
-                    }
-                }
-
-                @Override
-                public void failed(Throwable exc, Void att) {
-                    exc.printStackTrace();
-                }
-
-            });
-        } catch (IOException e) {
-            e.printStackTrace();
+    private void addClient(Socket address) {
+        if (!clients.contains(address)) {
+            clients.add(address);
+            logger.info("Registered client: " + address);
         }
+    }
+
+    private class ClientTask implements Runnable {
+        private final Socket clientSocket;
+
+        private ClientTask(Socket clientSocket) {
+            this.clientSocket = clientSocket;
+        }
+
+        @Override
+        public void run() {
+            System.out.println("Got a client !");
+
+            try {
+                ObjectInputStream ois = new ObjectInputStream(clientSocket.getInputStream());
+                VisualiserData agentState = (VisualiserData) ois.readObject();
+
+                DefaultTableModel model = (DefaultTableModel) table.getModel();
+                model.addRow(new Object[]{
+                        clientSocket.getLocalPort(),
+                        agentState.getName(),
+                        agentState.getRaftRole(),
+                        agentState.getNoTasks(),
+                        Arrays.toString(agentState.getPos())});
+
+                clientSocket.close();
+            } catch (IOException | ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+
+        }
+    }
+
+    private void startServer() {
+        final ExecutorService clientProcessingPool = Executors.newFixedThreadPool(10);
+
+        Runnable serverTask = () -> {
+            try {
+                ServerSocket serverSocket = new ServerSocket(5050);
+                System.out.println("Waiting for clients to connect...");
+
+                while (true) {
+                    Socket clientSocket = serverSocket.accept();
+                    addClient(clientSocket);
+                    clientProcessingPool.submit(new ClientTask(clientSocket));
+                }
+            } catch (IOException e) {
+                System.err.println("Unable to process client request");
+                e.printStackTrace();
+            }
+        };
+
+        Thread serverThread = new Thread(serverTask);
+        serverThread.start();
     }
 
     private void initGui() {
@@ -138,7 +119,7 @@ public class Visualiser {
         GridBagConstraints c = new GridBagConstraints();
         c.fill = GridBagConstraints.HORIZONTAL;
 
-        String[] columnNames = {"Connected", "Port", "Name", "Raft Status", "No. Tasks", "Pos (X,Y)"};
+        String[] columnNames = {"Port", "Name", "Raft Role", "No. Tasks", "Pos (X,Y)"};
         DefaultTableModel model = new DefaultTableModel(new Object[0][0], columnNames);
         table = new JTable(model) {
             @Override
@@ -146,10 +127,6 @@ public class Visualiser {
                 return false;
             }
         };
-
-        for (int i = 0; i < 50; i++) {
-            model.addRow(new Object[]{false, 0, "Alpha", "Leader", 0, "0,0"});
-        }
 
         JScrollPane scrollPane = new JScrollPane(table);
         table.setFillsViewportHeight(true);

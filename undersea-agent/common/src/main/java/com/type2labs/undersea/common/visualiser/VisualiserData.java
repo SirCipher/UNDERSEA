@@ -1,21 +1,36 @@
 package com.type2labs.undersea.common.visualiser;
 
-public class VisualiserData {
+import java.io.Serializable;
 
-    private Object data;
-    private VisualiserDataType dataType;
+public class VisualiserData implements Serializable {
 
-    public VisualiserData(Object data, VisualiserDataType dataType) {
-        this.data = data;
-        this.dataType = dataType;
+    private static final long serialVersionUID = 1980452255341789631L;
+    private String name;
+    private String raftRole;
+    private int noTasks;
+    private double[] pos;
+
+
+    public VisualiserData(String name, String raftRole, int noTasks, double[] pos) {
+        this.name = name;
+        this.raftRole = raftRole;
+        this.noTasks = noTasks;
+        this.pos = pos;
     }
 
-    public Object getData() {
-        return data;
+    public String getName() {
+        return name;
     }
 
-    public VisualiserDataType getDataType() {
-        return dataType;
+    public String getRaftRole() {
+        return raftRole;
     }
 
+    public int getNoTasks() {
+        return noTasks;
+    }
+
+    public double[] getPos() {
+        return pos;
+    }
 }

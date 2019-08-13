@@ -76,6 +76,11 @@ public class AgentImpl implements Agent {
         return null;
     }
 
+    @Override
+    public String name() {
+        return name;
+    }
+
     public double getBatteryRange() {
         return batteryRange;
     }

@@ -1,5 +1,6 @@
 package com.type2labs.undersea.runner;
 
+import com.type2labs.undersea.common.UnderseaAgent;
 import com.type2labs.undersea.controller.ControllerEngine;
 import com.type2labs.undersea.missionplanner.planner.vrp.VehicleRoutingOptimiser;
 import com.type2labs.undersea.common.AgentStatus;

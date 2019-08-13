@@ -58,6 +58,11 @@ public class AgentImpl implements Agent {
         return null;
     }
 
+    @Override
+    public String name() {
+        return null;
+    }
+
 
     @Override
     public void start() {

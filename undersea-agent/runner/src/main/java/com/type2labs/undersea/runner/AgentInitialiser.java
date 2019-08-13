@@ -2,7 +2,7 @@ package com.type2labs.undersea.runner;
 
 import com.type2labs.undersea.common.AgentStatus;
 import com.type2labs.undersea.common.ServiceManager;
-import com.type2labs.undersea.common.visualiser.VisualiserClientImpl;
+import com.type2labs.undersea.common.UnderseaAgent;
 import com.type2labs.undersea.controller.ControllerEngine;
 import com.type2labs.undersea.dsl.uuv.model.DslAgentProxy;
 import com.type2labs.undersea.missionplanner.planner.vrp.VehicleRoutingOptimiser;
@@ -11,6 +11,7 @@ import com.type2labs.undersea.prospect.impl.EndpointImpl;
 import com.type2labs.undersea.prospect.impl.RaftIntegrationImpl;
 import com.type2labs.undersea.prospect.impl.RaftNodeImpl;
 import com.type2labs.undersea.seachain.BlockchainNetworkImpl;
+import com.type2labs.undersea.visualiser.VisualiserClientImpl;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
