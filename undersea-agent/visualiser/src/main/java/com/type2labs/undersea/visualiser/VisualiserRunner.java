@@ -14,7 +14,6 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
 
-@SuppressWarnings("DuplicatedCode")
 public class VisualiserRunner {
 
     private static final Logger logger = LogManager.getLogger(VisualiserRunner.class);
@@ -25,7 +24,10 @@ public class VisualiserRunner {
 
 
     public VisualiserRunner(String properties) {
+        logger.info("Loading configuration");
         loadConfig(properties);
+
+        logger.info("Loaded configuration");
         initGui();
     }
 
@@ -46,7 +48,6 @@ public class VisualiserRunner {
 
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        JButton button;
         pane.setLayout(new GridBagLayout());
         GridBagConstraints c = new GridBagConstraints();
         c.fill = GridBagConstraints.HORIZONTAL;
