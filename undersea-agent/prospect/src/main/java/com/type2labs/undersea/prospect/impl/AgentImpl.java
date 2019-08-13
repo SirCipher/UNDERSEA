@@ -2,8 +2,9 @@ package com.type2labs.undersea.prospect.impl;
 
 import com.type2labs.undersea.common.Agent;
 import com.type2labs.undersea.common.AgentService;
+import com.type2labs.undersea.common.Endpoint;
 import com.type2labs.undersea.common.ServiceManager;
-import com.type2labs.undersea.common.visualiser.Visualiser;
+import com.type2labs.undersea.common.visualiser.VisualiserClient;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.ArrayList;
@@ -25,7 +26,6 @@ public class AgentImpl implements Agent {
         range = random.nextDouble(100);
         accuracy = random.nextDouble(100);
     }
-
 
     @Override
     public ServiceManager services() {
@@ -49,7 +49,12 @@ public class AgentImpl implements Agent {
     }
 
     @Override
-    public Visualiser visualiser() {
+    public VisualiserClient visualiser() {
+        return null;
+    }
+
+    @Override
+    public Endpoint endpoint() {
         return null;
     }
 

@@ -1,10 +1,11 @@
 package com.type2labs.undersea.runner;
 
+import com.type2labs.undersea.common.AgentStatus;
+import com.type2labs.undersea.common.ServiceManager;
+import com.type2labs.undersea.common.visualiser.VisualiserClientImpl;
 import com.type2labs.undersea.controller.ControllerEngine;
 import com.type2labs.undersea.dsl.uuv.model.DslAgentProxy;
 import com.type2labs.undersea.missionplanner.planner.vrp.VehicleRoutingOptimiser;
-import com.type2labs.undersea.common.AgentStatus;
-import com.type2labs.undersea.common.ServiceManager;
 import com.type2labs.undersea.prospect.RaftClusterConfig;
 import com.type2labs.undersea.prospect.impl.EndpointImpl;
 import com.type2labs.undersea.prospect.impl.RaftIntegrationImpl;
@@ -13,6 +14,7 @@ import com.type2labs.undersea.seachain.BlockchainNetworkImpl;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.LinkedList;
 import java.util.List;
@@ -65,9 +67,17 @@ public class AgentInitialiser {
             serviceManager.registerService(new ControllerEngine());
             serviceManager.registerService(new VehicleRoutingOptimiser());
 
-            UnderseaAgent underseaAgent = new UnderseaAgent(serviceManager,
-                    new AgentStatus(value.getName(), value.getSensors()));
+            VisualiserClientImpl visualiser = new VisualiserClientImpl();
 
+            try {
+                visualiser.openConnection();
+            } catch (IOException e) {
+                throw new RuntimeException("Failed to connect to visualiser");
+            }
+
+            UnderseaAgent underseaAgent = new UnderseaAgent(serviceManager,
+                    new AgentStatus(value.getName(), value.getSensors()), visualiser, endpoint);
+            visualiser.setParent(underseaAgent);
 
             raftNode.setAgent(underseaAgent);
 

@@ -1,4 +1,4 @@
-package com.type2labs.undersea.prospect.model;
+package com.type2labs.undersea.common;
 
 import io.grpc.ManagedChannel;
 

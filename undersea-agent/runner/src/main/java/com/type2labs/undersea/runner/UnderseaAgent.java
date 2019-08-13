@@ -1,13 +1,10 @@
 package com.type2labs.undersea.runner;
 
-import com.type2labs.undersea.common.Agent;
-import com.type2labs.undersea.common.AgentService;
-import com.type2labs.undersea.common.AgentStatus;
-import com.type2labs.undersea.common.ServiceManager;
+import com.type2labs.undersea.common.*;
 import com.type2labs.undersea.common.blockchain.BlockchainNetwork;
 import com.type2labs.undersea.common.controller.Controller;
 import com.type2labs.undersea.common.missionplanner.MissionPlanner;
-import com.type2labs.undersea.common.visualiser.Visualiser;
+import com.type2labs.undersea.common.visualiser.VisualiserClient;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -23,11 +20,28 @@ public class UnderseaAgent implements Agent {
     private final ScheduledExecutorService internalExecutor = new ScheduledThreadPoolExecutor(4);
     private final ServiceManager services;
     private final AgentStatus status;
+    private VisualiserClient visualiser;
+    private final Endpoint endpoint;
 
-    public UnderseaAgent(ServiceManager serviceManager, AgentStatus status) {
+    public UnderseaAgent(ServiceManager serviceManager, AgentStatus status, VisualiserClient visualiser, Endpoint endpoint) {
         this.services = serviceManager;
         this.status = status;
+        this.visualiser = visualiser;
+        this.endpoint = endpoint;
+
         logServices();
+    }
+
+    public UnderseaAgent(ServiceManager serviceManager, AgentStatus status, Endpoint endpoint) {
+        this.services = serviceManager;
+        this.status = status;
+        this.endpoint = endpoint;
+
+        logServices();
+    }
+
+    public VisualiserClient getVisualiser() {
+        return visualiser;
     }
 
     private void logServices() {
@@ -73,8 +87,13 @@ public class UnderseaAgent implements Agent {
     }
 
     @Override
-    public Visualiser visualiser() {
-        return null;
+    public VisualiserClient visualiser() {
+        return visualiser;
+    }
+
+    @Override
+    public Endpoint endpoint() {
+        return endpoint;
     }
 
 

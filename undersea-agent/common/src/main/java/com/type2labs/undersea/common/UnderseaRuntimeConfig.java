@@ -1,12 +1,12 @@
 package com.type2labs.undersea.common;
 
-import com.type2labs.undersea.common.visualiser.Visualiser;
+import com.type2labs.undersea.common.visualiser.VisualiserClient;
 
 public class UnderseaRuntimeConfig {
 
-    private Visualiser visualiser;
+    private VisualiserClient visualiser;
 
-    public UnderseaRuntimeConfig setVisualiser(Visualiser visualiser){
+    public UnderseaRuntimeConfig setVisualiser(VisualiserClient visualiser){
         this.visualiser = visualiser;
 
         return this;

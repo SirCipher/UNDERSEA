@@ -2,7 +2,7 @@ package com.type2labs.undersea.prospect.impl;
 
 import com.type2labs.undersea.prospect.RaftClusterConfig;
 import com.type2labs.undersea.prospect.RaftProtos;
-import com.type2labs.undersea.prospect.model.Endpoint;
+import com.type2labs.undersea.common.Endpoint;
 import com.type2labs.undersea.prospect.model.RaftNode;
 import org.apache.commons.lang3.tuple.Pair;
 

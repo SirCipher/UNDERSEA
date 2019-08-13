@@ -39,7 +39,7 @@ public class UnderseaAgentTest {
         serviceManager.registerService(new ControllerEngine());
         serviceManager.registerService(new VehicleRoutingOptimiser());
 
-        UnderseaAgent underseaAgent = new UnderseaAgent(serviceManager, new AgentStatus("test", new ArrayList<>()));
+        UnderseaAgent underseaAgent = new UnderseaAgent(serviceManager, new AgentStatus("test", new ArrayList<>()), null, null);
 
         assertNotNull(underseaAgent.getBlockchainNetwork());
         assertNotNull(underseaAgent.getMissionPlanner());

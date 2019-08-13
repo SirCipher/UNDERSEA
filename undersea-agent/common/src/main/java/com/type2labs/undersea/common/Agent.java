@@ -1,6 +1,6 @@
 package com.type2labs.undersea.common;
 
-import com.type2labs.undersea.common.visualiser.Visualiser;
+import com.type2labs.undersea.common.visualiser.VisualiserClient;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.List;
@@ -13,6 +13,8 @@ public interface Agent extends AgentService {
 
     List<Pair<String, String>> status();
 
-    Visualiser visualiser();
+    VisualiserClient visualiser();
+
+    Endpoint endpoint();
 
 }
