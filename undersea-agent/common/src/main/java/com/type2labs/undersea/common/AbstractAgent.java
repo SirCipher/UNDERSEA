@@ -27,6 +27,21 @@ public class AbstractAgent implements Agent {
     private VisualiserClient visualiser;
     private String name;
 
+    public AbstractAgent(UnderseaRuntimeConfig config, String name, ServiceManager serviceManager, AgentStatus status,
+                         Endpoint endpoint) {
+        this.config = config;
+        this.name = name;
+        this.services = serviceManager;
+        this.status = status;
+        this.endpoint = endpoint;
+
+        logServices();
+    }
+
+    public static Logger getLogger() {
+        return logger;
+    }
+
     public BlockchainNetwork getBlockchainNetwork() {
         return (BlockchainNetwork) services.getService(BlockchainNetwork.class);
     }
@@ -37,10 +52,6 @@ public class AbstractAgent implements Agent {
 
     public MissionPlanner getMissionPlanner() {
         return (MissionPlanner) services.getService(MissionPlanner.class);
-    }
-
-    public static Logger getLogger() {
-        return logger;
     }
 
     public ServiceManager getServices() {
@@ -59,28 +70,17 @@ public class AbstractAgent implements Agent {
         return visualiser;
     }
 
-    public String getName() {
-        return name;
-    }
-
     public void setVisualiser(VisualiserClient visualiser) {
         this.visualiser = visualiser;
+    }
+
+    public String getName() {
+        return name;
     }
 
     @Override
     public UnderseaRuntimeConfig config() {
         return config;
-    }
-
-    public AbstractAgent(UnderseaRuntimeConfig config, String name, ServiceManager serviceManager, AgentStatus status,
-                         Endpoint endpoint) {
-        this.config = config;
-        this.name = name;
-        this.services = serviceManager;
-        this.status = status;
-        this.endpoint = endpoint;
-
-        logServices();
     }
 
     private void logServices() {

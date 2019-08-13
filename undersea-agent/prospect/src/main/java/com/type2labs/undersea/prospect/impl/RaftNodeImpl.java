@@ -1,8 +1,8 @@
 package com.type2labs.undersea.prospect.impl;
 
 import com.type2labs.undersea.common.Agent;
-import com.type2labs.undersea.prospect.*;
 import com.type2labs.undersea.common.Endpoint;
+import com.type2labs.undersea.prospect.*;
 import com.type2labs.undersea.prospect.model.RaftIntegration;
 import com.type2labs.undersea.prospect.model.RaftNode;
 import com.type2labs.undersea.prospect.task.AcquireStatusTask;

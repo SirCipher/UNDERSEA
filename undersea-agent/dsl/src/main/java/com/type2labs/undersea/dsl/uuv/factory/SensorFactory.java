@@ -1,9 +1,9 @@
 package com.type2labs.undersea.dsl.uuv.factory;
 
 
-import com.type2labs.undersea.dsl.uuv.gen.SensorsParser;
 import com.type2labs.undersea.common.impl.Range;
 import com.type2labs.undersea.common.impl.Sensor;
+import com.type2labs.undersea.dsl.uuv.gen.SensorsParser;
 import com.type2labs.undersea.utilities.UnderseaException;
 import org.antlr.v4.runtime.ParserRuleContext;
 

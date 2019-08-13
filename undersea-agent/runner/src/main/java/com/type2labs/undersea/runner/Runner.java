@@ -3,16 +3,16 @@ package com.type2labs.undersea.runner;
 import com.google.ortools.constraintsolver.Assignment;
 import com.google.ortools.constraintsolver.RoutingIndexManager;
 import com.google.ortools.constraintsolver.RoutingModel;
-import com.type2labs.undersea.dsl.EnvironmentProperties;
-import com.type2labs.undersea.dsl.ParserEngine;
-import com.type2labs.undersea.missionplanner.model.MissionImpl;
-import com.type2labs.undersea.missionplanner.model.MissionParametersImpl;
-import com.type2labs.undersea.missionplanner.planner.vrp.VehicleRoutingOptimiser;
 import com.type2labs.undersea.common.UnderseaRuntimeConfig;
 import com.type2labs.undersea.common.impl.AgentImpl;
 import com.type2labs.undersea.common.impl.Node;
 import com.type2labs.undersea.common.missionplanner.MissionPlanner;
 import com.type2labs.undersea.common.missionplanner.PlannerException;
+import com.type2labs.undersea.dsl.EnvironmentProperties;
+import com.type2labs.undersea.dsl.ParserEngine;
+import com.type2labs.undersea.missionplanner.model.MissionImpl;
+import com.type2labs.undersea.missionplanner.model.MissionParametersImpl;
+import com.type2labs.undersea.missionplanner.planner.vrp.VehicleRoutingOptimiser;
 import com.type2labs.undersea.prospect.RaftClusterConfig;
 import com.type2labs.undersea.utilities.Utility;
 import com.type2labs.undersea.visualiser.Visualiser;
@@ -31,22 +31,23 @@ import java.util.Properties;
 public class Runner {
 
     private static final Logger logger = LogManager.getLogger(Runner.class);
-    private static AgentInitialiser agentInitialiser = AgentInitialiser.getInstance(new RaftClusterConfig(new UnderseaRuntimeConfig()));
+    private static AgentInitialiser agentInitialiser =
+            AgentInitialiser.getInstance(new RaftClusterConfig(new UnderseaRuntimeConfig()));
     private static EnvironmentProperties environmentProperties;
     private static Properties properties;
 
-    public static void main(String[] args) throws IOException {
-        if (args.length != 1) {
-            throw new IllegalArgumentException("runner.properties file location must be supplied");
-        }
-//        Visualiser visualiser = new Visualiser();
+    private void init(String propLocation) {
+        new Visualiser();
 
-
-        properties = Utility.getPropertiesByName(args[0]);
+        properties = Utility.getPropertiesByName(propLocation);
         logger.info("Initialised " + properties.size() + " properties");
 
         ParserEngine parserEngine = new ParserEngine(properties);
-        environmentProperties = parserEngine.parseMission();
+        try {
+            environmentProperties = parserEngine.parseMission();
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to parse mission: ", e);
+        }
 
         MissionImpl mission = planMission();
         RoutingModel routingModel = mission.getRoutingModel();
@@ -80,12 +81,15 @@ public class Runner {
         agentInitialiser.initalise(environmentProperties.getAgents());
 
         logger.info("Exiting runner...");
+    }
 
-        try {
-            Thread.sleep(10000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+    public static void main(String[] args) {
+        if (args.length != 1) {
+            throw new IllegalArgumentException("runner.properties file location must be supplied");
         }
+
+        Runner runner = new Runner();
+        runner.init(args[0]);
     }
 
     private static MissionImpl planMission() {

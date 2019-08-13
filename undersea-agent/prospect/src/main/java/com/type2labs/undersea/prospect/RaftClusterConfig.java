@@ -10,16 +10,15 @@ import static com.type2labs.undersea.utilities.Preconditions.isNotNull;
 public class RaftClusterConfig implements UnderseaConfig {
 
     public static final long HEARTBEAT_PERIOD = 100;
-
-    private CostConfiguration costConfiguration;
     private final UnderseaRuntimeConfig underseaRuntimeConfig;
+    private CostConfiguration costConfiguration;
+
+    public RaftClusterConfig(UnderseaRuntimeConfig underseaRuntimeConfig) {
+        this.underseaRuntimeConfig = underseaRuntimeConfig;
+    }
 
     public UnderseaRuntimeConfig getUnderseaRuntimeConfig() {
         return underseaRuntimeConfig;
-    }
-
-    public RaftClusterConfig(UnderseaRuntimeConfig underseaRuntimeConfig){
-        this.underseaRuntimeConfig = underseaRuntimeConfig;
     }
 
     public CostConfiguration getCostConfiguration() {

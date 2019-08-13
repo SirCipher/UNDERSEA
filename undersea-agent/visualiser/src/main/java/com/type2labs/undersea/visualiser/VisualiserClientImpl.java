@@ -15,7 +15,6 @@ import java.net.ConnectException;
 import java.net.InetSocketAddress;
 import java.nio.channels.SocketChannel;
 
-// TODO: Add read/write replies
 public class VisualiserClientImpl implements VisualiserClient {
 
     private static final Logger logger = LogManager.getLogger(VisualiserClientImpl.class);
@@ -97,7 +96,9 @@ public class VisualiserClientImpl implements VisualiserClient {
 
     @Override
     public void closeConnection() throws IOException {
-        channel.close();
+        if (isInitialised()) {
+            channel.close();
+        }
     }
 
 

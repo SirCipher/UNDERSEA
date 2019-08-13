@@ -27,51 +27,19 @@ public class Visualiser {
 
     private JTable table;
 
-    public static void main(String[] args) {
-        new Visualiser();
-    }
-
     public Visualiser() {
         startServer();
         initGui();
     }
 
+    public static void main(String[] args) {
+        new Visualiser();
+    }
 
     private void addClient(Socket address) {
         if (!clients.contains(address)) {
             clients.add(address);
             logger.info("Registered client: " + address);
-        }
-    }
-
-    private class ClientTask implements Runnable {
-        private final Socket clientSocket;
-
-        private ClientTask(Socket clientSocket) {
-            this.clientSocket = clientSocket;
-        }
-
-        @Override
-        public void run() {
-            System.out.println("Got a client !");
-
-            try {
-                ObjectInputStream ois = new ObjectInputStream(clientSocket.getInputStream());
-                VisualiserData agentState = (VisualiserData) ois.readObject();
-
-                DefaultTableModel model = (DefaultTableModel) table.getModel();
-                model.addRow(new Object[]{
-                        clientSocket.getRemoteSocketAddress(),
-                        agentState.getName(),
-                        agentState.getRaftRole(),
-                        agentState.getNoTasks(),
-                        Arrays.toString(agentState.getPos())});
-
-                clientSocket.close();
-            } catch (IOException | ClassNotFoundException e) {
-                e.printStackTrace();
-            }
-
         }
     }
 
@@ -203,9 +171,37 @@ public class Visualiser {
         frame.setVisible(true);
     }
 
-
     private void connectToAgent(int port) {
 
+    }
+
+    private class ClientTask implements Runnable {
+        private final Socket clientSocket;
+
+        private ClientTask(Socket clientSocket) {
+            this.clientSocket = clientSocket;
+        }
+
+        @Override
+        public void run() {
+            try {
+                ObjectInputStream ois = new ObjectInputStream(clientSocket.getInputStream());
+                VisualiserData agentState = (VisualiserData) ois.readObject();
+
+                DefaultTableModel model = (DefaultTableModel) table.getModel();
+                model.addRow(new Object[]{
+                        clientSocket.getRemoteSocketAddress(),
+                        agentState.getName(),
+                        agentState.getRaftRole(),
+                        agentState.getNoTasks(),
+                        Arrays.toString(agentState.getPos())});
+
+                clientSocket.close();
+            } catch (IOException | ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+
+        }
     }
 
 }
