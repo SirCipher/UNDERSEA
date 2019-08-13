@@ -9,8 +9,8 @@ public class UnderseaAgent extends AbstractAgent {
     private static final Logger logger = LogManager.getLogger(UnderseaAgent.class);
     private static final long serialVersionUID = 788441301443053690L;
 
-    public UnderseaAgent(ServiceManager serviceManager, AgentStatus status, VisualiserClient visualiser, Endpoint endpoint) {
-        super(serviceManager, status, visualiser, endpoint);
+    public UnderseaAgent(String name, ServiceManager serviceManager, AgentStatus status, VisualiserClient visualiser, Endpoint endpoint) {
+        super(name, serviceManager, status, visualiser, endpoint);
     }
 
 }

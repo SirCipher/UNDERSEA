@@ -61,7 +61,7 @@ public class Visualiser {
 
                 DefaultTableModel model = (DefaultTableModel) table.getModel();
                 model.addRow(new Object[]{
-                        clientSocket.getLocalPort(),
+                        clientSocket.getRemoteSocketAddress(),
                         agentState.getName(),
                         agentState.getRaftRole(),
                         agentState.getNoTasks(),

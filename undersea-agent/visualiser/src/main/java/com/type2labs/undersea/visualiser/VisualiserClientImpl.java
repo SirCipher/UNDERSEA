@@ -43,7 +43,7 @@ public class VisualiserClientImpl implements VisualiserClient {
 
     }
 
-    private VisualiserData agentState(){
+    private VisualiserData agentState() {
         RaftNode raftNode = (RaftNode) parent.services().getService(ConsensusAlgorithm.class);
         String raftRole = String.valueOf(raftNode.getRaftRole());
 
@@ -55,6 +55,10 @@ public class VisualiserClientImpl implements VisualiserClient {
 
     @Override
     public void openConnection() throws IOException {
+        if (parent == null) {
+            throw new IllegalStateException("Cannot start connection to visualiser without a parent");
+        }
+
         ObjectOutputStream oos = new ObjectOutputStream(channel.socket().getOutputStream());
 
         oos.flush();

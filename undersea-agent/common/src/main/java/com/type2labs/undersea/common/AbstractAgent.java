@@ -23,7 +23,7 @@ public class AbstractAgent implements Agent {
     private final AgentStatus status;
     private final Endpoint endpoint;
     private VisualiserClient visualiser;
-    private String name = "default";
+    private String name;
 
     public BlockchainNetwork getBlockchainNetwork() {
         return (BlockchainNetwork) services.getService(BlockchainNetwork.class);
@@ -61,8 +61,9 @@ public class AbstractAgent implements Agent {
         return name;
     }
 
-    public AbstractAgent(ServiceManager serviceManager, AgentStatus status, VisualiserClient visualiser,
+    public AbstractAgent(String name, ServiceManager serviceManager, AgentStatus status, VisualiserClient visualiser,
                          Endpoint endpoint) {
+        this.name = name;
         this.services = serviceManager;
         this.status = status;
         this.visualiser = visualiser;

@@ -15,6 +15,7 @@ import com.type2labs.undersea.common.missionplanner.MissionPlanner;
 import com.type2labs.undersea.common.missionplanner.PlannerException;
 import com.type2labs.undersea.prospect.RaftClusterConfig;
 import com.type2labs.undersea.utilities.Utility;
+import com.type2labs.undersea.visualiser.Visualiser;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -38,6 +39,8 @@ public class Runner {
         if (args.length != 1) {
             throw new IllegalArgumentException("runner.properties file location must be supplied");
         }
+        Visualiser visualiser = new Visualiser();
+
 
         properties = Utility.getPropertiesByName(args[0]);
         logger.info("Initialised " + properties.size() + " properties");
@@ -75,6 +78,12 @@ public class Runner {
         parserEngine.generateFiles();
 
         agentInitialiser.initalise(environmentProperties.getAgents());
+
+        try {
+            Thread.sleep(100000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
         logger.info("Exiting runner...");
     }
