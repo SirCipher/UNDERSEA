@@ -1,8 +1,8 @@
 package com.type2labs.undersea.runner;
 
-import com.type2labs.undersea.common.AgentStatus;
-import com.type2labs.undersea.common.ServiceManager;
-import com.type2labs.undersea.common.UnderseaAgent;
+import com.type2labs.undersea.common.agent.AgentStatus;
+import com.type2labs.undersea.common.agent.UnderseaAgent;
+import com.type2labs.undersea.common.service.ServiceManager;
 import com.type2labs.undersea.controller.ControllerEngine;
 import com.type2labs.undersea.dsl.uuv.model.DslAgentProxy;
 import com.type2labs.undersea.missionplanner.planner.vrp.VehicleRoutingOptimiser;
@@ -72,8 +72,8 @@ public class AgentInitialiser {
                     new AgentStatus(value.getName(), value.getSensors()), endpoint);
             VisualiserClientImpl visualiser = new VisualiserClientImpl(underseaAgent);
 
-            serviceManager.setAgent(underseaAgent);
             underseaAgent.setVisualiser(visualiser);
+            serviceManager.setAgent(underseaAgent);
             raftNode.setAgent(underseaAgent);
 
             underseaAgent.start();

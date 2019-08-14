@@ -1,7 +1,7 @@
 package com.type2labs.undersea.common.logger;
 
 
-import com.type2labs.undersea.common.Agent;
+import com.type2labs.undersea.common.agent.Agent;
 import com.type2labs.undersea.common.visualiser.VisualiserClient;
 import org.apache.logging.log4j.core.*;
 import org.apache.logging.log4j.core.appender.AbstractAppender;

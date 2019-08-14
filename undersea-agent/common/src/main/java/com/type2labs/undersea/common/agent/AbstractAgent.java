@@ -1,9 +1,14 @@
-package com.type2labs.undersea.common;
+package com.type2labs.undersea.common.agent;
+
 
 import com.type2labs.undersea.common.blockchain.BlockchainNetwork;
+import com.type2labs.undersea.common.config.UnderseaRuntimeConfig;
 import com.type2labs.undersea.common.consensus.ConsensusAlgorithm;
 import com.type2labs.undersea.common.controller.Controller;
 import com.type2labs.undersea.common.missionplanner.MissionPlanner;
+import com.type2labs.undersea.common.networking.Endpoint;
+import com.type2labs.undersea.common.service.AgentService;
+import com.type2labs.undersea.common.service.ServiceManager;
 import com.type2labs.undersea.common.visualiser.VisualiserClient;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.LogManager;
@@ -30,6 +35,23 @@ public class AbstractAgent implements Agent {
 
     public AbstractAgent(UnderseaRuntimeConfig config, String name, ServiceManager serviceManager, AgentStatus status,
                          Endpoint endpoint) {
+        // Avoided using javax validation for minimal reliance on reflection
+        if (config == null) {
+            throw new IllegalArgumentException("Runtime configuration must be provided");
+        }
+
+        if (serviceManager == null) {
+            throw new IllegalArgumentException("Service manager must be provided");
+        }
+
+        if (status == null) {
+            throw new IllegalArgumentException("Agent status must be provided");
+        }
+
+        if (endpoint == null) {
+            throw new IllegalArgumentException("Endpoint must be provided");
+        }
+
         this.config = config;
         this.name = name;
         this.services = serviceManager;

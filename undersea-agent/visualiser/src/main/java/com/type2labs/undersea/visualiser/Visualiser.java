@@ -70,7 +70,7 @@ public class Visualiser {
     }
 
     private void initGui() {
-        JFrame frame = new JFrame("UNDERSEA");
+        JFrame frame = new JFrame("UNDERSEA cluster monitor");
         frame.setLayout(new BorderLayout());
 
         JPanel pane = new JPanel();
@@ -234,7 +234,8 @@ public class Visualiser {
             }
         }
 
-        throw new IllegalArgumentException("Agent " + name + " does not exist in the data model");
+        logger.error("Agent " + name + " does not exist in the data model");
+        return -1;
     }
 
     private class ClientTask implements Runnable {
@@ -293,11 +294,13 @@ public class Visualiser {
                     } else {
                         int rowId = getRowByAgentName(agentName);
 
-                        model.setValueAt(clientSocket.getRemoteSocketAddress(), rowId, 0);
-                        model.setValueAt(agentState.getName(), rowId, 1);
-                        model.setValueAt(agentState.getRaftRole(), rowId, 2);
-                        model.setValueAt(agentState.getNoTasks(), rowId, 3);
-                        model.setValueAt(Arrays.toString(agentState.getPos()), rowId, 4);
+                        if (rowId != -1) {
+                            model.setValueAt(clientSocket.getRemoteSocketAddress(), rowId, 0);
+                            model.setValueAt(agentState.getName(), rowId, 1);
+                            model.setValueAt(agentState.getRaftRole(), rowId, 2);
+                            model.setValueAt(agentState.getNoTasks(), rowId, 3);
+                            model.setValueAt(Arrays.toString(agentState.getPos()), rowId, 4);
+                        }
                     }
                 } else if (received instanceof LogMessage) {
                     LogMessage logMessage = (LogMessage) received;

@@ -1,7 +1,7 @@
 package com.type2labs.undersea.prospect;
 
-import com.type2labs.undersea.common.Endpoint;
-import com.type2labs.undersea.common.UnderseaRuntimeConfig;
+import com.type2labs.undersea.common.config.UnderseaRuntimeConfig;
+import com.type2labs.undersea.common.networking.Endpoint;
 import com.type2labs.undersea.prospect.impl.*;
 import com.type2labs.undersea.prospect.model.RaftNode;
 import org.apache.logging.log4j.LogManager;

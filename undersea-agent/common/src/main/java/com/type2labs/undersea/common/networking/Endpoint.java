@@ -1,4 +1,4 @@
-package com.type2labs.undersea.common;
+package com.type2labs.undersea.common.networking;
 
 import io.grpc.ManagedChannel;
 

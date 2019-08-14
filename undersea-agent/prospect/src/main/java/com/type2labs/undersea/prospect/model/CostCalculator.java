@@ -1,6 +1,6 @@
 package com.type2labs.undersea.prospect.model;
 
-import com.type2labs.undersea.common.Endpoint;
+import com.type2labs.undersea.common.networking.Endpoint;
 
 import java.util.Map;
 

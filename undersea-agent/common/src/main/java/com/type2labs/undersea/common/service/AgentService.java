@@ -1,4 +1,4 @@
-package com.type2labs.undersea.common;
+package com.type2labs.undersea.common.service;
 
 /**
  * Created by Thomas Klapwijk on 2019-08-08.

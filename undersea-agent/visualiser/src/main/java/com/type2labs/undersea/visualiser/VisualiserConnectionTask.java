@@ -1,7 +1,7 @@
 package com.type2labs.undersea.visualiser;
 
 
-import com.type2labs.undersea.common.Agent;
+import com.type2labs.undersea.common.agent.Agent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

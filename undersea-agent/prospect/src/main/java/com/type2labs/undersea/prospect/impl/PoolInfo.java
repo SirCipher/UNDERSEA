@@ -1,6 +1,6 @@
 package com.type2labs.undersea.prospect.impl;
 
-import com.type2labs.undersea.common.Endpoint;
+import com.type2labs.undersea.common.networking.Endpoint;
 import com.type2labs.undersea.prospect.RaftClusterConfig;
 import com.type2labs.undersea.prospect.RaftProtos;
 import com.type2labs.undersea.prospect.model.RaftNode;

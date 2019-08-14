@@ -1,9 +1,9 @@
 package com.type2labs.undersea.runner;
 
-import com.type2labs.undersea.common.AgentStatus;
-import com.type2labs.undersea.common.ServiceManager;
-import com.type2labs.undersea.common.UnderseaAgent;
-import com.type2labs.undersea.common.UnderseaRuntimeConfig;
+import com.type2labs.undersea.common.agent.AgentStatus;
+import com.type2labs.undersea.common.agent.UnderseaAgent;
+import com.type2labs.undersea.common.config.UnderseaRuntimeConfig;
+import com.type2labs.undersea.common.service.ServiceManager;
 import com.type2labs.undersea.controller.ControllerEngine;
 import com.type2labs.undersea.missionplanner.planner.vrp.VehicleRoutingOptimiser;
 import com.type2labs.undersea.prospect.RaftClusterConfig;
@@ -11,6 +11,7 @@ import com.type2labs.undersea.prospect.impl.EndpointImpl;
 import com.type2labs.undersea.prospect.impl.RaftIntegrationImpl;
 import com.type2labs.undersea.prospect.impl.RaftNodeImpl;
 import com.type2labs.undersea.seachain.BlockchainNetworkImpl;
+import com.type2labs.undersea.visualiser.VisualiserClientImpl;
 import org.junit.Test;
 
 import java.net.InetSocketAddress;
@@ -40,9 +41,10 @@ public class UnderseaAgentTest {
         serviceManager.registerService(new ControllerEngine());
         serviceManager.registerService(new VehicleRoutingOptimiser());
 
-        UnderseaAgent underseaAgent = new UnderseaAgent(null, "test", serviceManager, new AgentStatus("test",
-                new ArrayList<>()), null);
+        UnderseaAgent underseaAgent = new UnderseaAgent(new UnderseaRuntimeConfig(), "test", serviceManager, new AgentStatus("test",
+                new ArrayList<>()), endpoint);
 
+        underseaAgent.setVisualiser(new VisualiserClientImpl(underseaAgent));
         serviceManager.setAgent(underseaAgent);
 
         assertNotNull(underseaAgent.getBlockchainNetwork());

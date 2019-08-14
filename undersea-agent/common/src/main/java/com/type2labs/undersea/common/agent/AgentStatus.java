@@ -1,4 +1,4 @@
-package com.type2labs.undersea.common;
+package com.type2labs.undersea.common.agent;
 
 import com.type2labs.undersea.common.impl.Sensor;
 import org.apache.commons.lang3.tuple.Pair;

@@ -1,4 +1,8 @@
-package com.type2labs.undersea.common;
+package com.type2labs.undersea.common.agent;
+
+import com.type2labs.undersea.common.config.UnderseaRuntimeConfig;
+import com.type2labs.undersea.common.networking.Endpoint;
+import com.type2labs.undersea.common.service.ServiceManager;
 
 public class UnderseaAgent extends AbstractAgent {
 

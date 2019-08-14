@@ -3,7 +3,7 @@ package com.type2labs.undersea.runner;
 import com.google.ortools.constraintsolver.Assignment;
 import com.google.ortools.constraintsolver.RoutingIndexManager;
 import com.google.ortools.constraintsolver.RoutingModel;
-import com.type2labs.undersea.common.UnderseaRuntimeConfig;
+import com.type2labs.undersea.common.config.UnderseaRuntimeConfig;
 import com.type2labs.undersea.common.impl.AgentImpl;
 import com.type2labs.undersea.common.impl.Node;
 import com.type2labs.undersea.common.missionplanner.MissionPlanner;
@@ -26,7 +26,6 @@ import java.util.Properties;
 /**
  * Entry point of UNDERSEA application
  */
-@SuppressWarnings("Duplicates")
 public class Runner {
 
     private static final Logger logger = LogManager.getLogger(Runner.class);

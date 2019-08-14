@@ -1,4 +1,4 @@
-package com.type2labs.undersea.common;
+package com.type2labs.undersea.common.config;
 
 import com.type2labs.undersea.common.visualiser.VisualiserClient;
 
@@ -9,6 +9,12 @@ public class UnderseaRuntimeConfig {
 
     public boolean isVisualiserEnabled() {
         return visualiserEnabled;
+    }
+
+    public UnderseaRuntimeConfig enableVisualiser(boolean visualiserEnabled) {
+        this.visualiserEnabled = visualiserEnabled;
+
+        return this;
     }
 
     public UnderseaRuntimeConfig setVisualiser(VisualiserClient visualiser) {

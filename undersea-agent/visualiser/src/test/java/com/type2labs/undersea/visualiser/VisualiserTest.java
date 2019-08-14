@@ -1,14 +1,15 @@
 package com.type2labs.undersea.visualiser;
 
-import com.type2labs.undersea.common.AgentStatus;
-import com.type2labs.undersea.common.ServiceManager;
-import com.type2labs.undersea.common.UnderseaAgent;
-import com.type2labs.undersea.common.UnderseaRuntimeConfig;
+import com.type2labs.undersea.common.agent.AgentStatus;
+import com.type2labs.undersea.common.agent.UnderseaAgent;
+import com.type2labs.undersea.common.config.UnderseaRuntimeConfig;
+import com.type2labs.undersea.common.service.ServiceManager;
 import com.type2labs.undersea.missionplanner.planner.vrp.VehicleRoutingOptimiser;
 import com.type2labs.undersea.prospect.RaftClusterConfig;
 import com.type2labs.undersea.prospect.impl.EndpointImpl;
 import com.type2labs.undersea.prospect.impl.RaftIntegrationImpl;
 import com.type2labs.undersea.prospect.impl.RaftNodeImpl;
+import org.junit.Test;
 
 import java.net.InetSocketAddress;
 import java.util.ArrayList;
@@ -35,8 +36,11 @@ public class VisualiserTest {
         serviceManager.registerService(raftNode);
         serviceManager.registerService(new VehicleRoutingOptimiser());
 
-        UnderseaAgent underseaAgent = new UnderseaAgent(new UnderseaRuntimeConfig(), name, serviceManager,
-                new AgentStatus(name, new ArrayList<>()), null);
+        UnderseaRuntimeConfig config = new UnderseaRuntimeConfig();
+        config.enableVisualiser(true);
+
+        UnderseaAgent underseaAgent = new UnderseaAgent(config, name, serviceManager,
+                new AgentStatus(name, new ArrayList<>()), endpoint);
         VisualiserClientImpl visualiserClient = new VisualiserClientImpl(underseaAgent);
 
         underseaAgent.setVisualiser(visualiserClient);
@@ -48,7 +52,7 @@ public class VisualiserTest {
         return underseaAgent;
     }
 
-    //    @Test
+//    @Test
     public void testDataUpdate() throws InterruptedException {
         new Visualiser();
 
