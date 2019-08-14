@@ -1,6 +1,7 @@
 package com.type2labs.undersea.common;
 
 import com.type2labs.undersea.common.blockchain.BlockchainNetwork;
+import com.type2labs.undersea.common.consensus.ConsensusAlgorithm;
 import com.type2labs.undersea.common.controller.Controller;
 import com.type2labs.undersea.common.missionplanner.MissionPlanner;
 import com.type2labs.undersea.common.visualiser.VisualiserClient;
@@ -52,6 +53,10 @@ public class AbstractAgent implements Agent {
 
     public MissionPlanner getMissionPlanner() {
         return (MissionPlanner) services.getService(MissionPlanner.class);
+    }
+
+    public ConsensusAlgorithm getConsensusAlgorithm() {
+        return (ConsensusAlgorithm) services.getService(ConsensusAlgorithm.class);
     }
 
     public ServiceManager getServices() {

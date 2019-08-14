@@ -14,6 +14,12 @@ public class ServiceManager {
 
     private static final Logger logger = LogManager.getLogger(ServiceManager.class);
     private final Map<Class<? extends AgentService>, AgentService> services = new ConcurrentHashMap<>();
+    private Agent agent;
+
+    public void setAgent(Agent agent) {
+        this.agent = agent;
+        logger.info("Agent " + agent.name() + " service manager assigned", agent);
+    }
 
     public boolean available() {
         return services.entrySet().stream().filter(s -> s.getValue().isAvailable()).count() == services.size();
@@ -54,6 +60,8 @@ public class ServiceManager {
     public void startServices() {
         for (Map.Entry<Class<? extends AgentService>, AgentService> e : services.entrySet()) {
             e.getValue().start();
+
+            logger.info("Agent " + agent.name() + " starting service: " + e.getKey().getSimpleName(), agent);
         }
     }
 

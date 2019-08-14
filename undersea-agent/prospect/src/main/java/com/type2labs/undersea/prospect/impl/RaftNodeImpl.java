@@ -98,6 +98,7 @@ public class RaftNodeImpl implements RaftNode {
     @Override
     public void start() {
         if (agent == null) {
+            logger.error("Agent not set for: " + name);
             throw new RuntimeException("Agent not set for: " + name);
         }
 

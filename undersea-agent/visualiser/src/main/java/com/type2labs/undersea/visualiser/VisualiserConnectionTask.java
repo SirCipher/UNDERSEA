@@ -18,11 +18,8 @@ public class VisualiserConnectionTask implements Runnable {
     public void run() {
         VisualiserClientImpl visualiserClient = new VisualiserClientImpl(parent);
 
-        if (visualiserClient.isInitialised()) {
             parent.setVisualiser(visualiserClient);
-        } else {
-            logger.info("Couldn't connect to visualiser. Will try again");
-        }
+
     }
 
 

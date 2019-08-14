@@ -49,6 +49,8 @@ public class Runner {
             throw new RuntimeException("Failed to parse mission: ", e);
         }
 
+        agentInitialiser.initalise(environmentProperties.getAgents());
+
         MissionImpl mission = planMission();
         RoutingModel routingModel = mission.getRoutingModel();
         Assignment assignment = mission.getAssignment();
@@ -70,6 +72,7 @@ public class Runner {
                 dslAgent.assignNode(node);
             }
 
+            // TODO: Change to missions instead of assigned nodes. An assigned node is a 'go to waypoint' task
             if (dslAgent.getAssignedNodes().size() == 1) {
                 logger.warn("More agents than required have been assigned to the mission. Removing nodes for agent: " + dslAgent.getName());
                 dslAgent.setAssignedNodes(new ArrayList<>());
@@ -77,8 +80,6 @@ public class Runner {
         }
 
         parserEngine.generateFiles();
-
-        agentInitialiser.initalise(environmentProperties.getAgents());
 
         logger.info("Exiting runner...");
     }

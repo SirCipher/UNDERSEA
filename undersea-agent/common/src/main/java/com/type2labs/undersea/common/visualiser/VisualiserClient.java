@@ -4,7 +4,7 @@ import java.io.IOException;
 
 public interface VisualiserClient {
 
-    void write(VisualiserData data) throws IOException;
+    void write(Object data) throws IOException;
 
     void closeConnection() throws IOException;
 

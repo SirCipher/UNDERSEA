@@ -48,9 +48,9 @@ public class AgentInitialiser {
 
     public List<UnderseaAgent> initalise(Map<String, DslAgentProxy> agentProxyMap) {
         agentProxyMap.forEach((key, value) -> {
-            if (!value.isParsed()) {
-                throw new RuntimeException("Agent: " + value.getName() + " is uninitialised. Cannot proceed");
-            }
+//            if (!value.isParsed()) {
+//                throw new RuntimeException("Agent: " + value.getName() + " is uninitialised. Cannot proceed");
+//            }
 
             EndpointImpl endpoint = new EndpointImpl(value.getName(), new InetSocketAddress(value.getHost(),
                     value.getServerPort()));
@@ -72,9 +72,11 @@ public class AgentInitialiser {
                     new AgentStatus(value.getName(), value.getSensors()), endpoint);
             VisualiserClientImpl visualiser = new VisualiserClientImpl(underseaAgent);
 
+            serviceManager.setAgent(underseaAgent);
             underseaAgent.setVisualiser(visualiser);
-
             raftNode.setAgent(underseaAgent);
+
+            underseaAgent.start();
 
             agents.add(underseaAgent);
         });

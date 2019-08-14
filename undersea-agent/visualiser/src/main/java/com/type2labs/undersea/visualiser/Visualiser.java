@@ -1,5 +1,6 @@
 package com.type2labs.undersea.visualiser;
 
+import com.type2labs.undersea.common.logger.LogMessage;
 import com.type2labs.undersea.common.visualiser.VisualiserData;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -7,15 +8,22 @@ import org.apache.logging.log4j.Logger;
 import javax.swing.*;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.Border;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.text.AbstractDocument;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.Document;
+import javax.swing.text.Element;
 import java.awt.*;
+import java.io.EOFException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.ObjectInputStream;
-import java.net.ServerSocket;
-import java.net.Socket;
-import java.util.ArrayList;
+import java.net.*;
 import java.util.Arrays;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -23,7 +31,9 @@ public class Visualiser {
 
     private static final Logger logger = LogManager.getLogger(Visualiser.class);
 
-    private final List<Socket> clients = new ArrayList<>();
+    // AgentName:Log
+    private Map<String, String> logs = new HashMap<>();
+    private JTextArea logArea;
 
     private JTable table;
 
@@ -36,33 +46,24 @@ public class Visualiser {
         new Visualiser();
     }
 
-    private void addClient(Socket address) {
-        if (!clients.contains(address)) {
-            clients.add(address);
-            logger.info("Registered client: " + address);
-        }
-    }
-
     private void startServer() {
         final ExecutorService clientProcessingPool = Executors.newFixedThreadPool(10);
 
-        Runnable serverTask = () -> {
+        Thread serverThread = new Thread(() -> {
             try {
                 ServerSocket serverSocket = new ServerSocket(5050);
-                System.out.println("Waiting for clients to connect...");
+                logger.info("Waiting for clients to connect...");
 
                 while (true) {
                     Socket clientSocket = serverSocket.accept();
-                    addClient(clientSocket);
-                    clientProcessingPool.submit(new ClientTask(clientSocket));
+                    System.out.println("Accepted: " + clientSocket.getRemoteSocketAddress());
+                    clientProcessingPool.execute(new ClientTask(clientSocket));
                 }
             } catch (IOException e) {
                 System.err.println("Unable to process client request");
                 e.printStackTrace();
             }
-        };
-
-        Thread serverThread = new Thread(serverTask);
+        });
         serverThread.start();
     }
 
@@ -87,7 +88,8 @@ public class Visualiser {
         GridBagConstraints c = new GridBagConstraints();
         c.fill = GridBagConstraints.HORIZONTAL;
 
-        String[] columnNames = {"Port", "Name", "Raft Role", "No. Tasks", "Pos (X,Y)"};
+        // TODO: Address should be the MOOS address
+        String[] columnNames = {"Address", "Name", "Raft Role", "No. Tasks", "Pos (X,Y)"};
         DefaultTableModel model = new DefaultTableModel(new Object[0][0], columnNames);
         table = new JTable(model) {
             @Override
@@ -95,6 +97,13 @@ public class Visualiser {
                 return false;
             }
         };
+
+        table.getSelectionModel().addListSelectionListener(event -> {
+            if (table.getSelectedRow() > -1) {
+                String selected = (String) table.getValueAt(table.getSelectedRow(), 1);
+                logArea.setText(logs.get(selected));
+            }
+        });
 
         JScrollPane scrollPane = new JScrollPane(table);
         table.setFillsViewportHeight(true);
@@ -138,7 +147,50 @@ public class Visualiser {
 
         pane.add(agentOptions, east);
 
-        JTextArea logArea = new JTextArea("LOGS");
+
+        logArea = new JTextArea("LOGS");
+        JScrollPane logScrollPane = new JScrollPane(logArea);
+
+
+        logArea.setMaximumSize(new Dimension(frame.getWidth(), frame.getHeight() / 2));
+
+        int maximumLines = 100;
+
+        AbstractDocument abstractDocument = (AbstractDocument) logArea.getDocument();
+        abstractDocument.addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent documentEvent) {
+                SwingUtilities.invokeLater(() -> {
+                    // Tail log
+                    logArea.setCaretPosition(logArea.getDocument().getLength());
+
+                    Document document = documentEvent.getDocument();
+                    Element root = document.getDefaultRootElement();
+
+                    Element line = root.getElement(0);
+                    int end = line.getEndOffset();
+
+                    while (root.getElementCount() > maximumLines) {
+                        try {
+                            document.remove(0, end);
+                        } catch (BadLocationException e) {
+                            logger.error("Couldn't find start location to remove line");
+                        }
+                    }
+                });
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent documentEvent) {
+
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent documentEvent) {
+
+            }
+        });
+
         logArea.setEditable(false);
         logArea.setWrapStyleWord(true);
         logArea.setPreferredSize(new Dimension(frame.getWidth(), frame.getHeight()));
@@ -156,8 +208,7 @@ public class Visualiser {
         bagConstraints.gridx = 0;
         bagConstraints.gridy = 1;
 
-
-        pane.add(logArea, bagConstraints);
+        pane.add(logScrollPane, bagConstraints);
 
         JPanel statusPanel = new JPanel();
         statusPanel.setBorder(new BevelBorder(BevelBorder.LOWERED));
@@ -171,36 +222,75 @@ public class Visualiser {
         frame.setVisible(true);
     }
 
-    private void connectToAgent(int port) {
-
-    }
-
     private class ClientTask implements Runnable {
         private final Socket clientSocket;
 
         private ClientTask(Socket clientSocket) {
             this.clientSocket = clientSocket;
+            try {
+                clientSocket.setSoTimeout(200);
+            } catch (SocketException e) {
+                e.printStackTrace();
+            }
         }
 
         @Override
         public void run() {
+            InputStream inputStream;
+            ObjectInputStream ois;
+
             try {
-                ObjectInputStream ois = new ObjectInputStream(clientSocket.getInputStream());
-                VisualiserData agentState = (VisualiserData) ois.readObject();
+                inputStream = clientSocket.getInputStream();
+                ois = new ObjectInputStream(inputStream);
+                handleData(ois);
+            } catch (SocketTimeoutException ignored) {
 
-                DefaultTableModel model = (DefaultTableModel) table.getModel();
-                model.addRow(new Object[]{
-                        clientSocket.getRemoteSocketAddress(),
-                        agentState.getName(),
-                        agentState.getRaftRole(),
-                        agentState.getNoTasks(),
-                        Arrays.toString(agentState.getPos())});
+            } catch (IOException e) {
+                e.printStackTrace();
+                return;
+            }
 
+            try {
                 clientSocket.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        private void handleData(ObjectInputStream ois) {
+            try {
+                Object received = ois.readObject();
+
+                if (received instanceof VisualiserData) {
+                    VisualiserData agentState = (VisualiserData) received;
+                    String agentName = agentState.getName();
+                    DefaultTableModel model = (DefaultTableModel) table.getModel();
+
+                    if (!logs.containsKey(agentName)) {
+                        logs.put(agentName, "");
+
+                        model.addRow(new Object[]{
+                                clientSocket.getRemoteSocketAddress(),
+                                agentState.getName(),
+                                agentState.getRaftRole(),
+                                agentState.getNoTasks(),
+                                Arrays.toString(agentState.getPos())});
+                    } else {
+                        // TODO: Update row contents
+                    }
+                } else if (received instanceof LogMessage) {
+                    LogMessage logMessage = (LogMessage) received;
+
+                    String currentValue = logs.get(logMessage.getAgentName());
+                    currentValue += logMessage.getMessage();
+
+                    logs.put(logMessage.getAgentName(), currentValue);
+                }
+            } catch (EOFException ignored) {
+                // Connection is always kept open so this is expected
             } catch (IOException | ClassNotFoundException e) {
                 e.printStackTrace();
             }
-
         }
     }
 

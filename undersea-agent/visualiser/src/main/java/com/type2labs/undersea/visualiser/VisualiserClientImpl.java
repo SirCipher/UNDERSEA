@@ -34,16 +34,8 @@ public class VisualiserClientImpl implements VisualiserClient {
         }
 
         try {
-            channel = SocketChannel.open();
-            channel.configureBlocking(true);
-            channel.connect(visualiserAddress);
-
-            while (!channel.finishConnect()) {
-                // TODO: Set timeout
-            }
-
-            initialised = true;
             openConnection();
+            sendVisualiserData();
         } catch (ConnectException e) {
             logger.warn("Couldn't connect to visualiser, trying again");
             parent.schedule(new VisualiserConnectionTask(parent));
@@ -52,14 +44,43 @@ public class VisualiserClientImpl implements VisualiserClient {
         }
     }
 
-    public boolean isInitialised() {
-        return initialised;
+    private void openConnection() {
+        try {
+            channel = SocketChannel.open();
+            channel.configureBlocking(true);
+            channel.socket().setKeepAlive(true);
+            channel.connect(visualiserAddress);
+
+            while (!channel.finishConnect()) {
+                // TODO: Set timeout
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            // TODO
+        }
+
     }
 
     @Override
-    public void write(VisualiserData data) throws IOException {
+    public void write(Object data) throws IOException {
         if (!enabled) {
             return;
+        }
+
+        _write(data);
+    }
+
+    private void _write(Object data) throws IOException {
+        openConnection();
+        System.out.println("Writing " + data);
+
+        try {
+            ObjectOutputStream oos = new ObjectOutputStream(channel.socket().getOutputStream());
+
+            oos.writeObject(data);
+            oos.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
@@ -73,7 +94,7 @@ public class VisualiserClientImpl implements VisualiserClient {
         return new VisualiserData(parent.name(), raftRole, noTasks, new double[]{0, 0});
     }
 
-    private void openConnection() throws IOException {
+    private void sendVisualiserData() throws IOException {
         if (parent == null) {
             throw new IllegalStateException("Cannot start connection to visualiser without a parent");
         }
@@ -82,23 +103,13 @@ public class VisualiserClientImpl implements VisualiserClient {
             return;
         }
 
-        if (!isInitialised()) {
-            logger.warn("Not initialised yet");
-            return;
-        }
 
-        ObjectOutputStream oos = new ObjectOutputStream(channel.socket().getOutputStream());
-
-        oos.flush();
-        oos.writeObject(agentState());
-        oos.close();
+        _write(agentState());
     }
 
     @Override
     public void closeConnection() throws IOException {
-        if (isInitialised()) {
-            channel.close();
-        }
+        channel.close();
     }
 
 

@@ -43,6 +43,8 @@ public class UnderseaAgentTest {
         UnderseaAgent underseaAgent = new UnderseaAgent(null, "test", serviceManager, new AgentStatus("test",
                 new ArrayList<>()), null);
 
+        serviceManager.setAgent(underseaAgent);
+
         assertNotNull(underseaAgent.getBlockchainNetwork());
         assertNotNull(underseaAgent.getMissionPlanner());
         assertNotNull(underseaAgent.getController());
