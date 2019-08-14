@@ -1,4 +1,4 @@
-package com.type2labs.undersea.visualiser;
+package com.type2labs.undersea.monitor;
 
 import com.type2labs.undersea.common.agent.AgentStatus;
 import com.type2labs.undersea.common.agent.UnderseaAgent;
@@ -9,7 +9,6 @@ import com.type2labs.undersea.prospect.RaftClusterConfig;
 import com.type2labs.undersea.prospect.impl.EndpointImpl;
 import com.type2labs.undersea.prospect.impl.RaftIntegrationImpl;
 import com.type2labs.undersea.prospect.impl.RaftNodeImpl;
-import org.junit.Test;
 
 import java.net.InetSocketAddress;
 import java.util.ArrayList;

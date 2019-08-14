@@ -1,4 +1,4 @@
-package com.type2labs.undersea.visualiser;
+package com.type2labs.undersea.monitor;
 
 import com.type2labs.undersea.common.agent.Agent;
 import com.type2labs.undersea.common.consensus.ConsensusAlgorithm;
@@ -38,10 +38,10 @@ public class VisualiserClientImpl implements VisualiserClient {
             openConnection();
             sendVisualiserData();
         } catch (ConnectException e) {
-            logger.warn("Couldn't connect to visualiser, trying again");
+            logger.warn("Couldn't connect to monitor, trying again");
             parent.schedule(new VisualiserConnectionTask(parent));
         } catch (IOException e) {
-            throw new RuntimeException("Failed to connect to visualiser. Is it running?", e);
+            throw new RuntimeException("Failed to connect to monitor. Is it running?", e);
         }
     }
 
@@ -102,7 +102,7 @@ public class VisualiserClientImpl implements VisualiserClient {
 
     private void sendVisualiserData() throws IOException {
         if (parent == null) {
-            throw new IllegalStateException("Cannot start connection to visualiser without a parent");
+            throw new IllegalStateException("Cannot start connection to monitor without a parent");
         }
 
         if (!enabled) {

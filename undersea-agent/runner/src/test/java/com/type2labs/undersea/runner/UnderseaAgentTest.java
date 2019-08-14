@@ -11,7 +11,7 @@ import com.type2labs.undersea.prospect.impl.EndpointImpl;
 import com.type2labs.undersea.prospect.impl.RaftIntegrationImpl;
 import com.type2labs.undersea.prospect.impl.RaftNodeImpl;
 import com.type2labs.undersea.seachain.BlockchainNetworkImpl;
-import com.type2labs.undersea.visualiser.VisualiserClientImpl;
+import com.type2labs.undersea.monitor.VisualiserClientImpl;
 import org.junit.Test;
 
 import java.net.InetSocketAddress;

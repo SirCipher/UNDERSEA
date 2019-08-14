@@ -11,7 +11,7 @@ include 'seachain'
 include 'controller'
 include 'common'
 include 'prospect'
-include 'visualiser'
+include 'monitor'
 
 rootProject.children.each { project ->
     project.buildFileName = "${project.name}.gradle"

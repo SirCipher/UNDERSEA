@@ -1,4 +1,4 @@
-package com.type2labs.undersea.visualiser;
+package com.type2labs.undersea.monitor;
 
 import com.type2labs.undersea.common.logger.LogMessage;
 import com.type2labs.undersea.common.visualiser.VisualiserData;

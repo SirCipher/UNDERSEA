@@ -11,5 +11,5 @@ dependencies {
     compile project(":agent")
     compile project(":dsl")
     compile project(":missionplanner")
-    compile project(":visualiser")
+    compile project(":monitor")
 }
