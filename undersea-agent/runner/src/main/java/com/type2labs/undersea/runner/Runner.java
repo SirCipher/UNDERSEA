@@ -37,7 +37,7 @@ public class Runner {
     private static Properties properties;
 
     private void init(String propLocation) {
-        new Visualiser();
+//        new Visualiser();
 
         properties = Utility.getPropertiesByName(propLocation);
         logger.info("Initialised " + properties.size() + " properties");

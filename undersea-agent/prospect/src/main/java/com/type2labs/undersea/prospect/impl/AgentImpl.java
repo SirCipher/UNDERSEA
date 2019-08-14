@@ -1,6 +1,7 @@
 package com.type2labs.undersea.prospect.impl;
 
 import com.type2labs.undersea.common.*;
+import com.type2labs.undersea.common.visualiser.NullVisualiser;
 import com.type2labs.undersea.common.visualiser.VisualiserClient;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -47,7 +48,7 @@ public class AgentImpl implements Agent {
 
     @Override
     public VisualiserClient visualiser() {
-        return null;
+        return new NullVisualiser();
     }
 
     @Override

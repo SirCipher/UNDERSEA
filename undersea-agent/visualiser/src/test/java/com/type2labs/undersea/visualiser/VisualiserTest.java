@@ -47,7 +47,7 @@ public class VisualiserTest {
         return underseaAgent;
     }
 
-    @Test
+//    @Test
     public void testDataUpdate() throws InterruptedException {
         new Visualiser();
 
@@ -64,7 +64,7 @@ public class VisualiserTest {
         Thread.sleep(30000);
     }
 
-    @Test
+//    @Test
     public void testConnection() throws InterruptedException {
         new Visualiser();
 

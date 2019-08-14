@@ -5,7 +5,7 @@ import com.type2labs.undersea.common.visualiser.VisualiserClient;
 public class UnderseaRuntimeConfig {
 
     private VisualiserClient visualiser;
-    private boolean visualiserEnabled = true;
+    private boolean visualiserEnabled = false;
 
     public boolean isVisualiserEnabled() {
         return visualiserEnabled;
