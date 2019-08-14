@@ -10,3 +10,14 @@ dependencies {
     compile project(":prospect")
     compile project(":utilities")
 }
+
+jar {
+    manifest {
+        attributes (
+            'Main-Class': 'com.type2labs.undersea.monitor.Visualiser'
+        )
+    }
+    from {
+        configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+}

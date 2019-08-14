@@ -1,13 +1,13 @@
 package com.type2labs.undersea.prospect.impl;
 
-import com.type2labs.undersea.common.*;
 import com.type2labs.undersea.common.agent.Agent;
 import com.type2labs.undersea.common.config.UnderseaRuntimeConfig;
+import com.type2labs.undersea.common.monitor.Monitor;
 import com.type2labs.undersea.common.networking.Endpoint;
 import com.type2labs.undersea.common.service.AgentService;
 import com.type2labs.undersea.common.service.ServiceManager;
-import com.type2labs.undersea.common.visualiser.NullVisualiser;
-import com.type2labs.undersea.common.visualiser.VisualiserClient;
+import com.type2labs.undersea.common.monitor.NullVisualiser;
+import com.type2labs.undersea.common.monitor.VisualiserClient;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.ArrayList;
@@ -17,12 +17,23 @@ import java.util.concurrent.ThreadLocalRandom;
 // TODO: Replace with com.type2labs.undersea.models.impl.AgentImpl
 public class AgentImpl implements Agent {
 
+    private static final long serialVersionUID = 5509688757665347200L;
     private double speed;
     private double remainingBattery;
     private double range;
     private double accuracy;
+    private final Monitor monitor;
+    private final ServiceManager serviceManager;
 
-    public AgentImpl() {
+
+    public ServiceManager serviceManager() {
+        return serviceManager;
+    }
+
+    public AgentImpl(Monitor monitor, ServiceManager serviceManager) {
+        this.monitor = monitor;
+        this.serviceManager = serviceManager;
+
         ThreadLocalRandom random = ThreadLocalRandom.current();
         speed = random.nextDouble(100);
         remainingBattery = random.nextDouble(100);
@@ -52,11 +63,6 @@ public class AgentImpl implements Agent {
     }
 
     @Override
-    public VisualiserClient visualiser() {
-        return new NullVisualiser();
-    }
-
-    @Override
     public Endpoint endpoint() {
         return null;
     }
@@ -72,9 +78,10 @@ public class AgentImpl implements Agent {
     }
 
     @Override
-    public void setVisualiser(VisualiserClient visualiser) {
-
+    public Monitor getMonitor() {
+        return this.monitor;
     }
+
 
     @Override
     public UnderseaRuntimeConfig config() {

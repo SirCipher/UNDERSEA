@@ -3,6 +3,9 @@ package com.type2labs.undersea.runner;
 import com.type2labs.undersea.common.agent.AgentStatus;
 import com.type2labs.undersea.common.agent.UnderseaAgent;
 import com.type2labs.undersea.common.config.UnderseaRuntimeConfig;
+import com.type2labs.undersea.common.monitor.Monitor;
+import com.type2labs.undersea.common.monitor.MonitorImpl;
+import com.type2labs.undersea.common.monitor.NullVisualiser;
 import com.type2labs.undersea.common.service.ServiceManager;
 import com.type2labs.undersea.controller.ControllerEngine;
 import com.type2labs.undersea.missionplanner.planner.vrp.VehicleRoutingOptimiser;
@@ -11,7 +14,6 @@ import com.type2labs.undersea.prospect.impl.EndpointImpl;
 import com.type2labs.undersea.prospect.impl.RaftIntegrationImpl;
 import com.type2labs.undersea.prospect.impl.RaftNodeImpl;
 import com.type2labs.undersea.seachain.BlockchainNetworkImpl;
-import com.type2labs.undersea.monitor.VisualiserClientImpl;
 import org.junit.Test;
 
 import java.net.InetSocketAddress;
@@ -41,12 +43,19 @@ public class UnderseaAgentTest {
         serviceManager.registerService(new ControllerEngine());
         serviceManager.registerService(new VehicleRoutingOptimiser());
 
-        UnderseaAgent underseaAgent = new UnderseaAgent(new UnderseaRuntimeConfig(), "test", serviceManager, new AgentStatus("test",
-                new ArrayList<>()), endpoint);
+        Monitor monitor = new MonitorImpl();
+        serviceManager.registerService(monitor);
 
-        underseaAgent.setVisualiser(new VisualiserClientImpl(underseaAgent));
+        UnderseaAgent underseaAgent = new UnderseaAgent(new UnderseaRuntimeConfig(),
+                "test",
+                serviceManager,
+                new AgentStatus("test", new ArrayList<>()),
+                endpoint);
+
+        monitor.setVisualiser(new NullVisualiser());
         serviceManager.setAgent(underseaAgent);
 
+        assertNotNull(underseaAgent.getMonitor());
         assertNotNull(underseaAgent.getBlockchainNetwork());
         assertNotNull(underseaAgent.getMissionPlanner());
         assertNotNull(underseaAgent.getController());

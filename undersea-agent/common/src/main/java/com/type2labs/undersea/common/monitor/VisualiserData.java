@@ -1,4 +1,4 @@
-package com.type2labs.undersea.common.visualiser;
+package com.type2labs.undersea.common.monitor;
 
 import java.io.Serializable;
 

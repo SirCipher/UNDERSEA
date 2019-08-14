@@ -1,13 +1,13 @@
 package com.type2labs.undersea.common.impl;
 
 
-import com.type2labs.undersea.common.*;
 import com.type2labs.undersea.common.agent.Agent;
 import com.type2labs.undersea.common.config.UnderseaRuntimeConfig;
+import com.type2labs.undersea.common.monitor.Monitor;
 import com.type2labs.undersea.common.networking.Endpoint;
 import com.type2labs.undersea.common.service.AgentService;
 import com.type2labs.undersea.common.service.ServiceManager;
-import com.type2labs.undersea.common.visualiser.VisualiserClient;
+import com.type2labs.undersea.common.monitor.VisualiserClient;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -68,10 +68,6 @@ public class AgentImpl implements Agent {
         return null;
     }
 
-    @Override
-    public VisualiserClient visualiser() {
-        return null;
-    }
 
     @Override
     public Endpoint endpoint() {
@@ -89,8 +85,8 @@ public class AgentImpl implements Agent {
     }
 
     @Override
-    public void setVisualiser(VisualiserClient visualiser) {
-
+    public Monitor getMonitor() {
+        return null;
     }
 
     @Override

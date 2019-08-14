@@ -2,7 +2,7 @@ package com.type2labs.undersea.common.logger;
 
 
 import com.type2labs.undersea.common.agent.Agent;
-import com.type2labs.undersea.common.visualiser.VisualiserClient;
+import com.type2labs.undersea.common.monitor.VisualiserClient;
 import org.apache.logging.log4j.core.*;
 import org.apache.logging.log4j.core.appender.AbstractAppender;
 import org.apache.logging.log4j.core.config.plugins.Plugin;
@@ -45,13 +45,13 @@ public class UnderseaLogger extends AbstractAppender {
         String message = new String(getLayout().toByteArray(event));
         LogMessage logMessage = new LogMessage(agent.name(), message);
 
-        VisualiserClient visualiserClient = agent.visualiser();
+        VisualiserClient visualiserClient = agent.getMonitor().visualiser();
 
         try {
             visualiserClient.write(logMessage);
         } catch (IOException e) {
             // Logger cannot be used here
-            e.printStackTrace();
+            throw new RuntimeException("Failed to send message: " + logMessage, e);
         }
 
     }

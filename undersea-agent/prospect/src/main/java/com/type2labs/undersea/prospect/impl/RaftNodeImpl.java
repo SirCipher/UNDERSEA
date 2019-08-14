@@ -180,7 +180,7 @@ public class RaftNodeImpl implements RaftNode {
         state().setVote(null);
         logger.info(name + " is now a candidate", agent);
 
-        agent.visualiser().update();
+        agent.getMonitor().update();
     }
 
     @Override
@@ -189,16 +189,14 @@ public class RaftNodeImpl implements RaftNode {
         raftState.setTerm(term);
         logger.info(name + " is now a follower", agent);
 
-        agent.visualiser().update();
-    }
+        agent.getMonitor().update();    }
 
     @Override
     public void toLeader() {
         role = RaftRole.LEADER;
         logger.info(name + " is now the leader", agent);
 
-        agent.visualiser().update();
-
+        agent.getMonitor().update();
         scheduleHeartbeat();
     }
 

@@ -1,6 +1,6 @@
 package com.type2labs.undersea.common.config;
 
-import com.type2labs.undersea.common.visualiser.VisualiserClient;
+import com.type2labs.undersea.common.monitor.VisualiserClient;
 
 public class UnderseaRuntimeConfig {
 

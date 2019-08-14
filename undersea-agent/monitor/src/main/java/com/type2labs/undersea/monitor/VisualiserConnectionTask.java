@@ -17,9 +17,7 @@ public class VisualiserConnectionTask implements Runnable {
     @Override
     public void run() {
         VisualiserClientImpl visualiserClient = new VisualiserClientImpl(parent);
-
-        parent.setVisualiser(visualiserClient);
-
+        parent.getMonitor().setVisualiser(visualiserClient);
     }
 
 

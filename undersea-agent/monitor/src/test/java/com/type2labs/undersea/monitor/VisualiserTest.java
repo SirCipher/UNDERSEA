@@ -3,6 +3,8 @@ package com.type2labs.undersea.monitor;
 import com.type2labs.undersea.common.agent.AgentStatus;
 import com.type2labs.undersea.common.agent.UnderseaAgent;
 import com.type2labs.undersea.common.config.UnderseaRuntimeConfig;
+import com.type2labs.undersea.common.monitor.Monitor;
+import com.type2labs.undersea.common.monitor.MonitorImpl;
 import com.type2labs.undersea.common.service.ServiceManager;
 import com.type2labs.undersea.missionplanner.planner.vrp.VehicleRoutingOptimiser;
 import com.type2labs.undersea.prospect.RaftClusterConfig;
@@ -38,11 +40,16 @@ public class VisualiserTest {
         UnderseaRuntimeConfig config = new UnderseaRuntimeConfig();
         config.enableVisualiser(true);
 
-        UnderseaAgent underseaAgent = new UnderseaAgent(config, name, serviceManager,
-                new AgentStatus(name, new ArrayList<>()), endpoint);
-        VisualiserClientImpl visualiserClient = new VisualiserClientImpl(underseaAgent);
+        Monitor monitor = new MonitorImpl();
+        UnderseaAgent underseaAgent = new UnderseaAgent(config,
+                name,
+                serviceManager,
+                new AgentStatus(name, new ArrayList<>()),
+                endpoint);
 
-        underseaAgent.setVisualiser(visualiserClient);
+        VisualiserClientImpl visualiserClient = new VisualiserClientImpl(underseaAgent);
+        monitor.setVisualiser(visualiserClient);
+
         serviceManager.setAgent(underseaAgent);
         raftNode.setAgent(underseaAgent);
 
@@ -51,7 +58,7 @@ public class VisualiserTest {
         return underseaAgent;
     }
 
-//    @Test
+    //    @Test
     public void testDataUpdate() throws InterruptedException {
         new Visualiser();
 

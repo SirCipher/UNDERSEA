@@ -1,7 +1,7 @@
 package com.type2labs.undersea.monitor;
 
 import com.type2labs.undersea.common.logger.LogMessage;
-import com.type2labs.undersea.common.visualiser.VisualiserData;
+import com.type2labs.undersea.common.monitor.VisualiserData;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

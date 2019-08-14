@@ -6,10 +6,11 @@ import com.type2labs.undersea.common.config.UnderseaRuntimeConfig;
 import com.type2labs.undersea.common.consensus.ConsensusAlgorithm;
 import com.type2labs.undersea.common.controller.Controller;
 import com.type2labs.undersea.common.missionplanner.MissionPlanner;
+import com.type2labs.undersea.common.monitor.Monitor;
+import com.type2labs.undersea.common.monitor.VisualiserClient;
 import com.type2labs.undersea.common.networking.Endpoint;
 import com.type2labs.undersea.common.service.AgentService;
 import com.type2labs.undersea.common.service.ServiceManager;
-import com.type2labs.undersea.common.visualiser.VisualiserClient;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -30,7 +31,6 @@ public class AbstractAgent implements Agent {
     private final AgentStatus status;
     private final Endpoint endpoint;
     private final UnderseaRuntimeConfig config;
-    private VisualiserClient visualiser;
     private String name;
 
     public AbstractAgent(UnderseaRuntimeConfig config, String name, ServiceManager serviceManager, AgentStatus status,
@@ -93,14 +93,6 @@ public class AbstractAgent implements Agent {
         return endpoint;
     }
 
-    public VisualiserClient getVisualiser() {
-        return visualiser;
-    }
-
-    public void setVisualiser(VisualiserClient visualiser) {
-        this.visualiser = visualiser;
-    }
-
     public String getName() {
         return name;
     }
@@ -141,11 +133,6 @@ public class AbstractAgent implements Agent {
     }
 
     @Override
-    public VisualiserClient visualiser() {
-        return visualiser;
-    }
-
-    @Override
     public Endpoint endpoint() {
         return endpoint;
     }
@@ -158,6 +145,11 @@ public class AbstractAgent implements Agent {
     @Override
     public void schedule(Runnable task) {
         internalExecutor.schedule(task, 500, TimeUnit.MILLISECONDS);
+    }
+
+    @Override
+    public Monitor getMonitor() {
+        return (Monitor) services.getService(Monitor.class);
     }
 
     @Override
