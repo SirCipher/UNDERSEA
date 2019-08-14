@@ -18,7 +18,7 @@ public class VisualiserConnectionTask implements Runnable {
     public void run() {
         VisualiserClientImpl visualiserClient = new VisualiserClientImpl(parent);
 
-            parent.setVisualiser(visualiserClient);
+        parent.setVisualiser(visualiserClient);
 
     }
 

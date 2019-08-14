@@ -8,17 +8,17 @@ public class LogMessage implements Serializable {
     private final String agentName;
     private final Object message;
 
+    public LogMessage(String agentName, Object message) {
+        this.agentName = agentName;
+        this.message = message;
+    }
+
     public String getAgentName() {
         return agentName;
     }
 
     public Object getMessage() {
         return message;
-    }
-
-    public LogMessage(String agentName, Object message) {
-        this.agentName = agentName;
-        this.message = message;
     }
 
     @Override

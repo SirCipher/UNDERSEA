@@ -9,13 +9,14 @@ import com.type2labs.undersea.prospect.RaftClusterConfig;
 import com.type2labs.undersea.prospect.impl.EndpointImpl;
 import com.type2labs.undersea.prospect.impl.RaftIntegrationImpl;
 import com.type2labs.undersea.prospect.impl.RaftNodeImpl;
-import org.junit.Test;
 
-import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.ArrayList;
 import java.util.UUID;
 
+/**
+ * These tests are not for CI
+ */
 public class VisualiserTest {
 
     private UnderseaAgent createAgent(int port) {
@@ -47,7 +48,7 @@ public class VisualiserTest {
         return underseaAgent;
     }
 
-//    @Test
+    //    @Test
     public void testDataUpdate() throws InterruptedException {
         new Visualiser();
 
@@ -64,7 +65,7 @@ public class VisualiserTest {
         Thread.sleep(30000);
     }
 
-//    @Test
+    //    @Test
     public void testConnection() throws InterruptedException {
         new Visualiser();
 

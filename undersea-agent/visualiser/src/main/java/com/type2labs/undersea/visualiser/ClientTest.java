@@ -10,16 +10,16 @@ public class ClientTest {
     private SocketChannel channel;
     private ObjectOutputStream oos;
 
-    public static void main(String[] args) {
-        new ClientTest();
-    }
-
     public ClientTest() {
         try {
             init();
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public static void main(String[] args) {
+        new ClientTest();
     }
 
     private void _write(Object data) throws IOException {

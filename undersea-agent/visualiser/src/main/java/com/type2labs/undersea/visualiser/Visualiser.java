@@ -223,6 +223,20 @@ public class Visualiser {
         frame.setVisible(true);
     }
 
+    private int getRowByAgentName(String name) {
+        DefaultTableModel model = (DefaultTableModel) table.getModel();
+
+        for (int i = model.getRowCount() - 1; i >= 0; --i) {
+            for (int j = model.getColumnCount() - 1; j >= 0; --j) {
+                if (model.getValueAt(i, j).equals(name)) {
+                    return i;
+                }
+            }
+        }
+
+        throw new IllegalArgumentException("Agent " + name + " does not exist in the data model");
+    }
+
     private class ClientTask implements Runnable {
         private final Socket clientSocket;
 
@@ -303,20 +317,6 @@ public class Visualiser {
                 e.printStackTrace();
             }
         }
-    }
-
-    private int getRowByAgentName(String name) {
-        DefaultTableModel model = (DefaultTableModel) table.getModel();
-
-        for (int i = model.getRowCount() - 1; i >= 0; --i) {
-            for (int j = model.getColumnCount() - 1; j >= 0; --j) {
-                if (model.getValueAt(i, j).equals(name)) {
-                    return i;
-                }
-            }
-        }
-
-        throw new IllegalArgumentException("Agent " + name + " does not exist in the data model");
     }
 
 }

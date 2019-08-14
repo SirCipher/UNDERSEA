@@ -15,7 +15,6 @@ import com.type2labs.undersea.missionplanner.model.MissionParametersImpl;
 import com.type2labs.undersea.missionplanner.planner.vrp.VehicleRoutingOptimiser;
 import com.type2labs.undersea.prospect.RaftClusterConfig;
 import com.type2labs.undersea.utilities.Utility;
-import com.type2labs.undersea.visualiser.Visualiser;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -35,6 +34,33 @@ public class Runner {
             AgentInitialiser.getInstance(new RaftClusterConfig(new UnderseaRuntimeConfig()));
     private static EnvironmentProperties environmentProperties;
     private static Properties properties;
+
+    public static void main(String[] args) {
+        if (args.length != 1) {
+            throw new IllegalArgumentException("runner.properties file location must be supplied");
+        }
+
+        Runner runner = new Runner();
+        runner.init(args[0]);
+    }
+
+    private static MissionImpl planMission() {
+        MissionPlanner missionPlanner = new VehicleRoutingOptimiser();
+        double[][] area = Utility.propertyKeyTo2dDoubleArray(properties, "environment.area");
+
+        List<AgentImpl> dslAgents = new ArrayList<>(environmentProperties.getAgents().values());
+        MissionParametersImpl missionParametersImpl = new MissionParametersImpl(dslAgents, 0, area, 50);
+
+        try {
+            MissionImpl mission = (MissionImpl) missionPlanner.generate(missionParametersImpl);
+            missionPlanner.print(mission);
+
+            return mission;
+        } catch (PlannerException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Failed to plan mission", e);
+        }
+    }
 
     private void init(String propLocation) {
 //        new Visualiser();
@@ -82,33 +108,6 @@ public class Runner {
         parserEngine.generateFiles();
 
         logger.info("Exiting runner...");
-    }
-
-    public static void main(String[] args) {
-        if (args.length != 1) {
-            throw new IllegalArgumentException("runner.properties file location must be supplied");
-        }
-
-        Runner runner = new Runner();
-        runner.init(args[0]);
-    }
-
-    private static MissionImpl planMission() {
-        MissionPlanner missionPlanner = new VehicleRoutingOptimiser();
-        double[][] area = Utility.propertyKeyTo2dDoubleArray(properties, "environment.area");
-
-        List<AgentImpl> dslAgents = new ArrayList<>(environmentProperties.getAgents().values());
-        MissionParametersImpl missionParametersImpl = new MissionParametersImpl(dslAgents, 0, area, 50);
-
-        try {
-            MissionImpl mission = (MissionImpl) missionPlanner.generate(missionParametersImpl);
-            missionPlanner.print(mission);
-
-            return mission;
-        } catch (PlannerException e) {
-            e.printStackTrace();
-            throw new RuntimeException("Failed to plan mission", e);
-        }
     }
 
 }
