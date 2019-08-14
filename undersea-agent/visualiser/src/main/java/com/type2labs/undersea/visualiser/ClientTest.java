@@ -23,8 +23,6 @@ public class ClientTest {
     }
 
     private void _write(Object data) throws IOException {
-        System.out.println("Writing " + data);
-
         oos.writeObject(data);
         oos.flush();
         oos.reset();

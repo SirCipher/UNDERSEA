@@ -20,7 +20,10 @@ import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
-import java.net.*;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.net.SocketException;
+import java.net.SocketTimeoutException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -34,8 +37,8 @@ public class Visualiser {
     // AgentName:Log
     private Map<String, String> logs = new HashMap<>();
     private JTextArea logArea;
-
     private JTable table;
+    private String currentLog;
 
     public Visualiser() {
         startServer();
@@ -56,7 +59,6 @@ public class Visualiser {
 
                 while (true) {
                     Socket clientSocket = serverSocket.accept();
-                    System.out.println("Accepted: " + clientSocket.getRemoteSocketAddress());
                     clientProcessingPool.execute(new ClientTask(clientSocket));
                 }
             } catch (IOException e) {
@@ -102,6 +104,7 @@ public class Visualiser {
             if (table.getSelectedRow() > -1) {
                 String selected = (String) table.getValueAt(table.getSelectedRow(), 1);
                 logArea.setText(logs.get(selected));
+                currentLog = selected;
             }
         });
 
@@ -111,7 +114,7 @@ public class Visualiser {
         GridBagConstraints west = new GridBagConstraints();
         west.anchor = GridBagConstraints.WEST;
         west.fill = GridBagConstraints.BOTH;
-        west.weighty = 1;
+        west.weighty = 0.5;
         west.weightx = 1;
         west.gridx = 0;
         west.gridy = 0;
@@ -140,17 +143,15 @@ public class Visualiser {
         GridBagConstraints east = new GridBagConstraints();
         east.anchor = GridBagConstraints.EAST;
         east.fill = GridBagConstraints.BOTH;
-        east.weighty = 1;
+        east.weighty = 0.5;
         east.weightx = 0.1;
         east.gridx = 1;
         east.gridy = 0;
 
         pane.add(agentOptions, east);
 
-
-        logArea = new JTextArea("LOGS");
+        logArea = new JTextArea("Select an agent to view its logs");
         JScrollPane logScrollPane = new JScrollPane(logArea);
-
 
         logArea.setMaximumSize(new Dimension(frame.getWidth(), frame.getHeight() / 2));
 
@@ -203,7 +204,7 @@ public class Visualiser {
         bagConstraints.fill = GridBagConstraints.BOTH;
         bagConstraints.ipady = 40;
         bagConstraints.weightx = 1.0;
-        bagConstraints.weighty = 1.0;
+        bagConstraints.weighty = 0.5;
         bagConstraints.gridwidth = 3;
         bagConstraints.gridx = 0;
         bagConstraints.gridy = 1;
@@ -260,11 +261,11 @@ public class Visualiser {
         private void handleData(ObjectInputStream ois) {
             try {
                 Object received = ois.readObject();
+                DefaultTableModel model = (DefaultTableModel) table.getModel();
 
                 if (received instanceof VisualiserData) {
                     VisualiserData agentState = (VisualiserData) received;
                     String agentName = agentState.getName();
-                    DefaultTableModel model = (DefaultTableModel) table.getModel();
 
                     if (!logs.containsKey(agentName)) {
                         logs.put(agentName, "");
@@ -276,7 +277,13 @@ public class Visualiser {
                                 agentState.getNoTasks(),
                                 Arrays.toString(agentState.getPos())});
                     } else {
-                        // TODO: Update row contents
+                        int rowId = getRowByAgentName(agentName);
+
+                        model.setValueAt(clientSocket.getRemoteSocketAddress(), rowId, 0);
+                        model.setValueAt(agentState.getName(), rowId, 1);
+                        model.setValueAt(agentState.getRaftRole(), rowId, 2);
+                        model.setValueAt(agentState.getNoTasks(), rowId, 3);
+                        model.setValueAt(Arrays.toString(agentState.getPos()), rowId, 4);
                     }
                 } else if (received instanceof LogMessage) {
                     LogMessage logMessage = (LogMessage) received;
@@ -285,6 +292,10 @@ public class Visualiser {
                     currentValue += logMessage.getMessage();
 
                     logs.put(logMessage.getAgentName(), currentValue);
+
+                    if (currentLog != null && currentLog.equals(logMessage.getAgentName())) {
+                        logArea.setText(currentValue);
+                    }
                 }
             } catch (EOFException ignored) {
                 // Connection is always kept open so this is expected
@@ -292,6 +303,20 @@ public class Visualiser {
                 e.printStackTrace();
             }
         }
+    }
+
+    private int getRowByAgentName(String name) {
+        DefaultTableModel model = (DefaultTableModel) table.getModel();
+
+        for (int i = model.getRowCount() - 1; i >= 0; --i) {
+            for (int j = model.getColumnCount() - 1; j >= 0; --j) {
+                if (model.getValueAt(i, j).equals(name)) {
+                    return i;
+                }
+            }
+        }
+
+        throw new IllegalArgumentException("Agent " + name + " does not exist in the data model");
     }
 
 }

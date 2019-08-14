@@ -2,6 +2,7 @@ package com.type2labs.undersea.visualiser;
 
 import com.type2labs.undersea.common.Agent;
 import com.type2labs.undersea.common.consensus.ConsensusAlgorithm;
+import com.type2labs.undersea.common.logger.LogMessage;
 import com.type2labs.undersea.common.missionplanner.MissionPlanner;
 import com.type2labs.undersea.common.visualiser.VisualiserClient;
 import com.type2labs.undersea.common.visualiser.VisualiserData;
@@ -62,7 +63,13 @@ public class VisualiserClientImpl implements VisualiserClient {
     }
 
     @Override
-    public void write(Object data) throws IOException {
+    public void write(String data) throws IOException {
+        LogMessage logMessage = new LogMessage(parent.name(), data + "\n");
+        write(logMessage);
+    }
+
+    @Override
+    public void write(LogMessage data) throws IOException {
         if (!enabled) {
             return;
         }
@@ -72,7 +79,6 @@ public class VisualiserClientImpl implements VisualiserClient {
 
     private void _write(Object data) throws IOException {
         openConnection();
-        System.out.println("Writing " + data);
 
         try {
             ObjectOutputStream oos = new ObjectOutputStream(channel.socket().getOutputStream());
@@ -110,6 +116,15 @@ public class VisualiserClientImpl implements VisualiserClient {
     @Override
     public void closeConnection() throws IOException {
         channel.close();
+    }
+
+    @Override
+    public void update() {
+        try {
+            sendVisualiserData();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 

@@ -1,28 +1,22 @@
 package com.type2labs.undersea.visualiser;
 
-import com.type2labs.undersea.common.*;
+import com.type2labs.undersea.common.AgentStatus;
+import com.type2labs.undersea.common.ServiceManager;
+import com.type2labs.undersea.common.UnderseaAgent;
+import com.type2labs.undersea.common.UnderseaRuntimeConfig;
 import com.type2labs.undersea.missionplanner.planner.vrp.VehicleRoutingOptimiser;
 import com.type2labs.undersea.prospect.RaftClusterConfig;
 import com.type2labs.undersea.prospect.impl.EndpointImpl;
 import com.type2labs.undersea.prospect.impl.RaftIntegrationImpl;
 import com.type2labs.undersea.prospect.impl.RaftNodeImpl;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 public class VisualiserTest {
-
-    private List<Agent> agentList = new ArrayList<>();
-
-    @BeforeClass
-    public static void initVisualiser() {
-        new Visualiser();
-    }
 
     private UnderseaAgent createAgent(int port) {
         String name = UUID.randomUUID().toString();
@@ -50,19 +44,35 @@ public class VisualiserTest {
 
         underseaAgent.start();
 
-        agentList.add(underseaAgent);
-
         return underseaAgent;
     }
 
+    @Test
+    public void testDataUpdate() throws InterruptedException {
+        new Visualiser();
+
+        UnderseaAgent agent = createAgent(0);
+
+        for (int i = 0; i < 10; i++) {
+            createAgent(0);
+        }
+
+        RaftNodeImpl node = (RaftNodeImpl) agent.getConsensusAlgorithm();
+
+        Thread.sleep(3000);
+        node.toLeader();
+        Thread.sleep(30000);
+    }
 
     @Test
-    public void testConnection() throws IOException, InterruptedException {
+    public void testConnection() throws InterruptedException {
+        new Visualiser();
+
         for (int i = 0; i < 100; i++) {
             createAgent(0);
         }
 
-        Thread.sleep(30000);
+        Thread.sleep(10000);
     }
 
 }

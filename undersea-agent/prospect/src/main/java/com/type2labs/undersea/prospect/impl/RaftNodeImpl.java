@@ -69,7 +69,7 @@ public class RaftNodeImpl implements RaftNode {
         //noinspection ResultOfMethodCallIgnored
         blockingStub.appendEntry(builder.build());
 
-        logger.info("Sending heartbeat to: " + follower.name());
+        logger.info("Sending heartbeat to: " + follower.name(), agent);
     }
 
     public RaftState state() {
@@ -98,7 +98,7 @@ public class RaftNodeImpl implements RaftNode {
     @Override
     public void start() {
         if (agent == null) {
-            logger.error("Agent not set for: " + name);
+            logger.error("Agent not set for: " + name, agent);
             throw new RuntimeException("Agent not set for: " + name);
         }
 
@@ -107,7 +107,7 @@ public class RaftNodeImpl implements RaftNode {
             execute(new AcquireStatusTask(RaftNodeImpl.this));
             execute(new VoteTask(RaftNodeImpl.this, 0));
 
-            logger.trace("Started node: " + name);
+            logger.trace("Started node: " + name, agent);
             started = true;
         } catch (IOException e) {
             throw new RuntimeException("Failed to start server: " + name, e);
@@ -178,20 +178,27 @@ public class RaftNodeImpl implements RaftNode {
     public void toCandidate() {
         role = RaftRole.CANDIDATE;
         state().setVote(null);
-        logger.info(name + " is now a candidate");
+        logger.info(name + " is now a candidate", agent);
+
+        agent.visualiser().update();
     }
 
     @Override
     public void toFollower(int term) {
         role = RaftRole.FOLLOWER;
         raftState.setTerm(term);
-        logger.info(name + " is now a follower");
+        logger.info(name + " is now a follower", agent);
+
+        agent.visualiser().update();
     }
 
     @Override
     public void toLeader() {
         role = RaftRole.LEADER;
-        logger.info(name + " is now the leader");
+        logger.info(name + " is now the leader", agent);
+
+        agent.visualiser().update();
+
         scheduleHeartbeat();
     }
 
