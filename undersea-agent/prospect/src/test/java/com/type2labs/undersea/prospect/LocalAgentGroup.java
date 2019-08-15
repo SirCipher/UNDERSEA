@@ -6,6 +6,7 @@ import com.type2labs.undersea.common.monitor.Monitor;
 import com.type2labs.undersea.common.monitor.MonitorImpl;
 import com.type2labs.undersea.common.monitor.NullVisualiser;
 import com.type2labs.undersea.common.networking.Endpoint;
+import com.type2labs.undersea.common.networking.EndpointImpl;
 import com.type2labs.undersea.common.service.ServiceManager;
 import com.type2labs.undersea.prospect.impl.*;
 import com.type2labs.undersea.prospect.model.RaftNode;
@@ -36,17 +37,20 @@ class LocalAgentGroup {
             endpoints[i] = endpoint;
             RaftIntegrationImpl integration = new RaftIntegrationImpl("endpoint:" + i, endpoint);
             integrations[i] = integration;
-            RaftNodeImpl node = new RaftNodeImpl(config, "agent:" + i, endpoint, integration);
+            RaftNodeImpl raftNode = new RaftNodeImpl(config, "agent:" + i, endpoint, integration);
 
             Monitor monitor = new MonitorImpl();
             ServiceManager serviceManager = new ServiceManager();
             Agent agent = new AgentImpl(monitor, serviceManager);
+            serviceManager.setAgent(agent);
 
             serviceManager.registerService(monitor);
             monitor.setVisualiser(new NullVisualiser());
 
-            node.setAgent(agent);
-            raftNodes[i] = node;
+            raftNode.setAgent(agent);
+            serviceManager.startServices();
+
+            raftNodes[i] = raftNode;
 
         }
     }
@@ -95,7 +99,7 @@ class LocalAgentGroup {
 
     void start() {
         for (RaftNodeImpl node : raftNodes) {
-            node.start();
+            node.run();
         }
     }
 

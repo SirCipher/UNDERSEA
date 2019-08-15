@@ -192,19 +192,13 @@ public class VehicleRoutingOptimiser implements MissionPlanner {
         return generatedMission;
     }
 
-
-    @Override
-    public void start() {
-
-    }
-
-    @Override
-    public boolean isAvailable() {
-        return false;
-    }
-
     @Override
     public void shutdown() {
+
+    }
+
+    @Override
+    public void run() {
 
     }
 }

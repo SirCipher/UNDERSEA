@@ -17,17 +17,12 @@ public class NullMonitor implements Monitor {
     }
 
     @Override
-    public void start() {
-
-    }
-
-    @Override
-    public boolean isAvailable() {
-        return false;
-    }
-
-    @Override
     public void shutdown() {
+
+    }
+
+    @Override
+    public void run() {
 
     }
 }

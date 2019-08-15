@@ -80,7 +80,6 @@ public class RaftNodeImpl implements RaftNode {
         return role;
     }
 
-    @Override
     public boolean isAvailable() {
         return !(server.isShutdown() || server.isTerminated()) && started;
     }
@@ -93,25 +92,6 @@ public class RaftNodeImpl implements RaftNode {
     @Override
     public Endpoint getLocalEndpoint() {
         return endpoint;
-    }
-
-    @Override
-    public void start() {
-        if (agent == null) {
-            logger.error("Agent not set for: " + name, agent);
-            throw new RuntimeException("Agent not set for: " + name);
-        }
-
-        try {
-            server.start();
-            execute(new AcquireStatusTask(RaftNodeImpl.this));
-            execute(new VoteTask(RaftNodeImpl.this, 0));
-
-            logger.trace("Started node: " + name, agent);
-            started = true;
-        } catch (IOException e) {
-            throw new RuntimeException("Failed to start server: " + name, e);
-        }
     }
 
     @Override
@@ -189,7 +169,8 @@ public class RaftNodeImpl implements RaftNode {
         raftState.setTerm(term);
         logger.info(name + " is now a follower", agent);
 
-        agent.getMonitor().update();    }
+        agent.getMonitor().update();
+    }
 
     @Override
     public void toLeader() {
@@ -198,6 +179,25 @@ public class RaftNodeImpl implements RaftNode {
 
         agent.getMonitor().update();
         scheduleHeartbeat();
+    }
+
+    @Override
+    public void run() {
+        if (agent == null) {
+            logger.error("Agent not set for: " + name, agent);
+            throw new RuntimeException("Agent not set for: " + name);
+        }
+
+        try {
+            server.start();
+            execute(new AcquireStatusTask(RaftNodeImpl.this));
+            execute(new VoteTask(RaftNodeImpl.this, 0));
+
+            logger.trace("Started node: " + name, agent);
+            started = true;
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to start server: " + name, e);
+        }
     }
 
     public enum RaftRole {

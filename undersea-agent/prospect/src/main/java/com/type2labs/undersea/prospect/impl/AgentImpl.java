@@ -90,16 +90,6 @@ public class AgentImpl implements Agent {
 
 
     @Override
-    public void start() {
-
-    }
-
-    @Override
-    public boolean isAvailable() {
-        return false;
-    }
-
-    @Override
     public void shutdown() {
 
     }

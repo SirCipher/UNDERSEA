@@ -1,6 +1,5 @@
-package com.type2labs.undersea.prospect.impl;
+package com.type2labs.undersea.common.networking;
 
-import com.type2labs.undersea.common.networking.Endpoint;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 

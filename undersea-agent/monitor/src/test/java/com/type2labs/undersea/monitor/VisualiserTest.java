@@ -8,7 +8,7 @@ import com.type2labs.undersea.common.monitor.MonitorImpl;
 import com.type2labs.undersea.common.service.ServiceManager;
 import com.type2labs.undersea.missionplanner.planner.vrp.VehicleRoutingOptimiser;
 import com.type2labs.undersea.prospect.RaftClusterConfig;
-import com.type2labs.undersea.prospect.impl.EndpointImpl;
+import com.type2labs.undersea.common.networking.EndpointImpl;
 import com.type2labs.undersea.prospect.impl.RaftIntegrationImpl;
 import com.type2labs.undersea.prospect.impl.RaftNodeImpl;
 
@@ -53,7 +53,7 @@ public class VisualiserTest {
         serviceManager.setAgent(underseaAgent);
         raftNode.setAgent(underseaAgent);
 
-        underseaAgent.start();
+        serviceManager.startServices();
 
         return underseaAgent;
     }

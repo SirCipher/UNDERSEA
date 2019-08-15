@@ -20,17 +20,12 @@ public class MonitorImpl implements Monitor {
     }
 
     @Override
-    public void start() {
-
-    }
-
-    @Override
-    public boolean isAvailable() {
-        return true;
-    }
-
-    @Override
     public void shutdown() {
+
+    }
+
+    @Override
+    public void run() {
 
     }
 }

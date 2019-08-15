@@ -8,12 +8,12 @@ import com.type2labs.undersea.common.service.ServiceManager;
 import com.type2labs.undersea.controller.ControllerEngine;
 import com.type2labs.undersea.dsl.uuv.model.DslAgentProxy;
 import com.type2labs.undersea.missionplanner.planner.vrp.VehicleRoutingOptimiser;
+import com.type2labs.undersea.monitor.VisualiserClientImpl;
 import com.type2labs.undersea.prospect.RaftClusterConfig;
-import com.type2labs.undersea.prospect.impl.EndpointImpl;
+import com.type2labs.undersea.common.networking.EndpointImpl;
 import com.type2labs.undersea.prospect.impl.RaftIntegrationImpl;
 import com.type2labs.undersea.prospect.impl.RaftNodeImpl;
 import com.type2labs.undersea.seachain.BlockchainNetworkImpl;
-import com.type2labs.undersea.monitor.VisualiserClientImpl;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -84,7 +84,7 @@ public class AgentInitialiser {
             serviceManager.setAgent(underseaAgent);
             raftNode.setAgent(underseaAgent);
 
-            underseaAgent.start();
+            serviceManager.startServices();
 
             agents.add(underseaAgent);
         });

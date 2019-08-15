@@ -5,17 +5,12 @@ import com.type2labs.undersea.common.blockchain.BlockchainNetwork;
 public class BlockchainNetworkImpl implements BlockchainNetwork {
 
     @Override
-    public void start() {
-
-    }
-
-    @Override
-    public boolean isAvailable() {
-        return false;
-    }
-
-    @Override
     public void shutdown() {
+
+    }
+
+    @Override
+    public void run() {
 
     }
 

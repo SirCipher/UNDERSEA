@@ -68,17 +68,12 @@ public class ControllerEngine implements com.type2labs.undersea.common.controlle
     }
 
     @Override
-    public void start() {
-
-    }
-
-    @Override
-    public boolean isAvailable() {
-        return false;
-    }
-
-    @Override
     public void shutdown() {
+
+    }
+
+    @Override
+    public void run() {
 
     }
 }

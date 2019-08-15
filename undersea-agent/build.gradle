@@ -83,7 +83,6 @@ allprojects {
     }
 
     tasks.withType(Test) {
-        // Add Google OR Tools to path for testing only
         systemProperty "java.library.path", "${rootProject.projectDir}/../libraries/repo/ortools/:"
 
         if (Os.isFamily(Os.FAMILY_UNIX)) {

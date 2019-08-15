@@ -10,7 +10,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import java.io.Serializable;
 import java.util.List;
 
-public interface Agent extends AgentService, Serializable {
+public interface Agent extends Serializable {
 
     ServiceManager services();
 
@@ -27,5 +27,7 @@ public interface Agent extends AgentService, Serializable {
     Monitor getMonitor();
 
     UnderseaRuntimeConfig config();
+
+    void shutdown();
 
 }

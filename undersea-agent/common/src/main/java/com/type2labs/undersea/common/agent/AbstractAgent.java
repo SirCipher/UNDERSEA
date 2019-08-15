@@ -7,7 +7,6 @@ import com.type2labs.undersea.common.consensus.ConsensusAlgorithm;
 import com.type2labs.undersea.common.controller.Controller;
 import com.type2labs.undersea.common.missionplanner.MissionPlanner;
 import com.type2labs.undersea.common.monitor.Monitor;
-import com.type2labs.undersea.common.monitor.VisualiserClient;
 import com.type2labs.undersea.common.networking.Endpoint;
 import com.type2labs.undersea.common.service.AgentService;
 import com.type2labs.undersea.common.service.ServiceManager;
@@ -150,16 +149,6 @@ public class AbstractAgent implements Agent {
     @Override
     public Monitor getMonitor() {
         return (Monitor) services.getService(Monitor.class);
-    }
-
-    @Override
-    public void start() {
-        services.startServices();
-    }
-
-    @Override
-    public boolean isAvailable() {
-        return services.available();
     }
 
     @Override
