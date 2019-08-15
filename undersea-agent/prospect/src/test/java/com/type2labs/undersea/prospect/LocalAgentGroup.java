@@ -8,7 +8,10 @@ import com.type2labs.undersea.common.monitor.NullVisualiser;
 import com.type2labs.undersea.common.networking.Endpoint;
 import com.type2labs.undersea.common.networking.EndpointImpl;
 import com.type2labs.undersea.common.service.ServiceManager;
-import com.type2labs.undersea.prospect.impl.*;
+import com.type2labs.undersea.prospect.impl.AgentImpl;
+import com.type2labs.undersea.prospect.impl.PoolInfo;
+import com.type2labs.undersea.prospect.impl.RaftIntegrationImpl;
+import com.type2labs.undersea.prospect.impl.RaftNodeImpl;
 import com.type2labs.undersea.prospect.model.RaftNode;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -40,6 +43,8 @@ class LocalAgentGroup {
             RaftNodeImpl raftNode = new RaftNodeImpl(config, "agent:" + i, endpoint, integration);
 
             Monitor monitor = new MonitorImpl();
+            monitor.setVisualiser(new NullVisualiser());
+
             ServiceManager serviceManager = new ServiceManager();
             Agent agent = new AgentImpl(monitor, serviceManager);
             serviceManager.setAgent(agent);

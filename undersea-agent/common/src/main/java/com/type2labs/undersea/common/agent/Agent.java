@@ -14,8 +14,6 @@ public interface Agent extends Serializable {
 
     ServiceManager services();
 
-    AgentService getService();
-
     List<Pair<String, String>> status();
 
     Endpoint endpoint();
@@ -23,8 +21,6 @@ public interface Agent extends Serializable {
     String name();
 
     void schedule(Runnable task);
-
-    Monitor getMonitor();
 
     UnderseaRuntimeConfig config();
 

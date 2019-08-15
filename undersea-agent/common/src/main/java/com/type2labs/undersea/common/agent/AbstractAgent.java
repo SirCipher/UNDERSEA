@@ -122,11 +122,6 @@ public class AbstractAgent implements Agent {
     }
 
     @Override
-    public AgentService getService() {
-        return null;
-    }
-
-    @Override
     public List<Pair<String, String>> status() {
         return null;
     }
@@ -144,11 +139,6 @@ public class AbstractAgent implements Agent {
     @Override
     public void schedule(Runnable task) {
         internalExecutor.schedule(task, 500, TimeUnit.MILLISECONDS);
-    }
-
-    @Override
-    public Monitor getMonitor() {
-        return (Monitor) services.getService(Monitor.class);
     }
 
     @Override

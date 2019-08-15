@@ -6,11 +6,11 @@ import com.type2labs.undersea.common.config.UnderseaRuntimeConfig;
 import com.type2labs.undersea.common.monitor.Monitor;
 import com.type2labs.undersea.common.monitor.MonitorImpl;
 import com.type2labs.undersea.common.monitor.NullVisualiser;
+import com.type2labs.undersea.common.networking.EndpointImpl;
 import com.type2labs.undersea.common.service.ServiceManager;
 import com.type2labs.undersea.controller.ControllerEngine;
 import com.type2labs.undersea.missionplanner.planner.vrp.VehicleRoutingOptimiser;
 import com.type2labs.undersea.prospect.RaftClusterConfig;
-import com.type2labs.undersea.common.networking.EndpointImpl;
 import com.type2labs.undersea.prospect.impl.RaftIntegrationImpl;
 import com.type2labs.undersea.prospect.impl.RaftNodeImpl;
 import com.type2labs.undersea.seachain.BlockchainNetworkImpl;
@@ -55,7 +55,7 @@ public class UnderseaAgentTest {
         monitor.setVisualiser(new NullVisualiser());
         serviceManager.setAgent(underseaAgent);
 
-        assertNotNull(underseaAgent.getMonitor());
+        assertNotNull(serviceManager.getService(Monitor.class));
         assertNotNull(underseaAgent.getBlockchainNetwork());
         assertNotNull(underseaAgent.getMissionPlanner());
         assertNotNull(underseaAgent.getController());

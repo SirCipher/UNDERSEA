@@ -43,13 +43,9 @@ public class AgentImpl implements Agent {
 
     @Override
     public ServiceManager services() {
-        return null;
+        return serviceManager;
     }
 
-    @Override
-    public AgentService getService() {
-        return null;
-    }
 
     @Override
     public List<Pair<String, String>> status() {
@@ -76,12 +72,6 @@ public class AgentImpl implements Agent {
     public void schedule(Runnable task) {
 
     }
-
-    @Override
-    public Monitor getMonitor() {
-        return this.monitor;
-    }
-
 
     @Override
     public UnderseaRuntimeConfig config() {

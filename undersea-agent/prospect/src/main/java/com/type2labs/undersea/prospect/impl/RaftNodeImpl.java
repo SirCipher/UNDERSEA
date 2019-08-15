@@ -1,6 +1,7 @@
 package com.type2labs.undersea.prospect.impl;
 
 import com.type2labs.undersea.common.agent.Agent;
+import com.type2labs.undersea.common.monitor.Monitor;
 import com.type2labs.undersea.common.networking.Endpoint;
 import com.type2labs.undersea.prospect.*;
 import com.type2labs.undersea.prospect.model.RaftIntegration;
@@ -160,7 +161,7 @@ public class RaftNodeImpl implements RaftNode {
         state().setVote(null);
         logger.info(name + " is now a candidate", agent);
 
-        agent.getMonitor().update();
+        getMonitor().update();
     }
 
     @Override
@@ -169,7 +170,11 @@ public class RaftNodeImpl implements RaftNode {
         raftState.setTerm(term);
         logger.info(name + " is now a follower", agent);
 
-        agent.getMonitor().update();
+        getMonitor().update();
+    }
+
+    private Monitor getMonitor(){
+        return (Monitor) agent.services().getService(Monitor.class);
     }
 
     @Override
@@ -177,7 +182,7 @@ public class RaftNodeImpl implements RaftNode {
         role = RaftRole.LEADER;
         logger.info(name + " is now the leader", agent);
 
-        agent.getMonitor().update();
+        getMonitor().update();
         scheduleHeartbeat();
     }
 

@@ -59,11 +59,6 @@ public class AgentImpl implements Agent {
     }
 
     @Override
-    public AgentService getService() {
-        return null;
-    }
-
-    @Override
     public List<Pair<String, String>> status() {
         return null;
     }
@@ -82,11 +77,6 @@ public class AgentImpl implements Agent {
     @Override
     public void schedule(Runnable task) {
 
-    }
-
-    @Override
-    public Monitor getMonitor() {
-        return null;
     }
 
     @Override

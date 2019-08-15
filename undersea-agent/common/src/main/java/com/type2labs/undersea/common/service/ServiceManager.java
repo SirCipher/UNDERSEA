@@ -33,7 +33,7 @@ public class ServiceManager {
             }
         }
 
-        throw new IllegalArgumentException(s.getName() + " is not registered");
+        return null;
     }
 
     public Collection<AgentService> getServices() {
