@@ -87,10 +87,9 @@ allprojects {
         systemProperty "java.library.path", "${rootProject.projectDir}/../libraries/repo/ortools/:"
 
         if (Os.isFamily(Os.FAMILY_UNIX)) {
-            environment "LD_LIBRARY_PATH", "${rootProject.projectDir}/../libraries/MATLAB/sys/os/glnxa64/:${rootProject.projectDir}/../libraries/MATLAB/bin/glnxa64/:${rootProject.projectDir}/../libraries/MATLAB/v95/runtime/glnxa64/"
+            environment "LD_LIBRARY_PATH", "${rootProject.projectDir}/../libraries/MATLAB/v95/sys/os/glnxa64/:${rootProject.projectDir}/../libraries/MATLAB/v95/bin/glnxa64/:${rootProject.projectDir}/../libraries/MATLAB/v95/runtime/glnxa64/"
         } else if (Os.isFamily(Os.FAMILY_MAC)) {
-            // TODO
-//            environment "DYLD_LIBRARY_PATH", "${rootProject.projectDir}/../libraries/MATLAB/sys/os/glnxa64/:${rootProject.projectDir}/../libraries/MATLAB/bin/glnxa64/:${rootProject.projectDir}/../libraries/MATLAB/v95/runtime/glnxa64/"
+            environment "DYLD_LIBRARY_PATH", "${rootProject.projectDir}/../libraries/MATLAB/v95/sys/os/maci64/:${rootProject.projectDir}/../libraries/MATLAB/v95/bin/maci64/:${rootProject.projectDir}/../libraries/MATLAB/v95/extern/bin/maci64/"
         } else {
             throw new GradleException("Unsupported operating system")
         }
