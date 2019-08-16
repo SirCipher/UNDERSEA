@@ -4,10 +4,7 @@ import com.type2labs.undersea.common.agent.Agent;
 import com.type2labs.undersea.common.config.UnderseaRuntimeConfig;
 import com.type2labs.undersea.common.monitor.Monitor;
 import com.type2labs.undersea.common.networking.Endpoint;
-import com.type2labs.undersea.common.service.AgentService;
 import com.type2labs.undersea.common.service.ServiceManager;
-import com.type2labs.undersea.common.monitor.NullVisualiser;
-import com.type2labs.undersea.common.monitor.VisualiserClient;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.ArrayList;
@@ -18,20 +15,15 @@ import java.util.concurrent.ThreadLocalRandom;
 public class AgentImpl implements Agent {
 
     private static final long serialVersionUID = 5509688757665347200L;
+    private final ServiceManager serviceManager;
     private double speed;
     private double remainingBattery;
     private double range;
     private double accuracy;
-    private final Monitor monitor;
-    private final ServiceManager serviceManager;
+    private String name;
 
-
-    public ServiceManager serviceManager() {
-        return serviceManager;
-    }
-
-    public AgentImpl(Monitor monitor, ServiceManager serviceManager) {
-        this.monitor = monitor;
+    public AgentImpl(String name, ServiceManager serviceManager) {
+        this.name = name;
         this.serviceManager = serviceManager;
 
         ThreadLocalRandom random = ThreadLocalRandom.current();
@@ -39,6 +31,10 @@ public class AgentImpl implements Agent {
         remainingBattery = random.nextDouble(100);
         range = random.nextDouble(100);
         accuracy = random.nextDouble(100);
+    }
+
+    public ServiceManager serviceManager() {
+        return serviceManager;
     }
 
     @Override
@@ -65,7 +61,7 @@ public class AgentImpl implements Agent {
 
     @Override
     public String name() {
-        return null;
+        return name;
     }
 
     @Override

@@ -1,9 +1,12 @@
 package com.type2labs.undersea.controller.controller.comms;
 
+import com.type2labs.undersea.common.networking.Endpoint;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.net.ServerSocket;
 import java.net.Socket;
 
 public class Client {
@@ -26,37 +29,33 @@ public class Client {
      * @param host
      * @param port
      */
-    public Client(String host, int port) {
-        try {
-            socket = new Socket(host, port);
-            out = new PrintWriter(socket.getOutputStream(), true);
-            in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-        } catch (IOException e) {
-            e.printStackTrace();
-            System.exit(-1);
-        }
-    }
+    public Client(Endpoint endpoint) {
+//        try {
+//            ServerSocket serverSocket = endpoint.serverSocket();
+//            Socket socket = serverSocket.accept();
 
-    public BufferedReader getBufferedReader() {
-        return this.in;
-    }
-
-    public PrintWriter getPrintWriter() {
-        return this.out;
+//            out = new PrintWriter(socket.getOutputStream(), true);
+//            in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//            System.exit(-1);
+//        }
     }
 
     public String read() throws IOException {
-        return in.readLine();
+//        return in.readLine();
+        return "";
     }
 
     public boolean shutDown() throws IOException {
         String inputStr = write(SHUT_DOWN_STR);
-        return inputStr.equals(SHUT_DOWN_STR);
+        return true;//inputStr.equals(SHUT_DOWN_STR);
     }
 
     public String write(String outputStr) throws IOException {
-        out.println(outputStr);
-        out.flush();
-        return read();
+//        out.println(outputStr);
+//        out.flush();
+//        return read();
+        return "";
     }
 }

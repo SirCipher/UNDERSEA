@@ -4,13 +4,17 @@ import com.type2labs.undersea.common.agent.AgentStatus;
 import com.type2labs.undersea.common.agent.UnderseaAgent;
 import com.type2labs.undersea.common.monitor.Monitor;
 import com.type2labs.undersea.common.monitor.MonitorImpl;
+import com.type2labs.undersea.common.networking.EndpointImpl;
 import com.type2labs.undersea.common.service.ServiceManager;
-import com.type2labs.undersea.controller.ControllerEngine;
+import com.type2labs.undersea.controller.ControllerImpl;
+import com.type2labs.undersea.controller.controllerPMC.AnalyserPMC;
+import com.type2labs.undersea.controller.controllerPMC.ExecutorPMC;
+import com.type2labs.undersea.controller.controllerPMC.MonitorPMC;
+import com.type2labs.undersea.controller.controllerPMC.PlannerPMC;
 import com.type2labs.undersea.dsl.uuv.model.DslAgentProxy;
 import com.type2labs.undersea.missionplanner.planner.vrp.VehicleRoutingOptimiser;
 import com.type2labs.undersea.monitor.VisualiserClientImpl;
 import com.type2labs.undersea.prospect.RaftClusterConfig;
-import com.type2labs.undersea.common.networking.EndpointImpl;
 import com.type2labs.undersea.prospect.impl.RaftIntegrationImpl;
 import com.type2labs.undersea.prospect.impl.RaftNodeImpl;
 import com.type2labs.undersea.seachain.BlockchainNetworkImpl;
@@ -50,10 +54,6 @@ public class AgentInitialiser {
 
     public List<UnderseaAgent> initalise(Map<String, DslAgentProxy> agentProxyMap) {
         agentProxyMap.forEach((key, value) -> {
-//            if (!value.isParsed()) {
-//                throw new RuntimeException("Agent: " + value.getName() + " is uninitialised. Cannot proceed");
-//            }
-
             EndpointImpl endpoint = new EndpointImpl(value.getName(), new InetSocketAddress(value.getHost(),
                     value.getServerPort()));
             RaftNodeImpl raftNode = new RaftNodeImpl(
@@ -66,7 +66,6 @@ public class AgentInitialiser {
             ServiceManager serviceManager = new ServiceManager();
             serviceManager.registerService(raftNode);
             serviceManager.registerService(new BlockchainNetworkImpl());
-            serviceManager.registerService(new ControllerEngine());
             serviceManager.registerService(new VehicleRoutingOptimiser());
 
             Monitor monitor = new MonitorImpl();
@@ -77,6 +76,14 @@ public class AgentInitialiser {
                     serviceManager,
                     new AgentStatus(value.getName(), value.getSensors()),
                     endpoint);
+
+            serviceManager.registerService(new ControllerImpl(
+                    underseaAgent,
+                    new MonitorPMC(),
+                    new AnalyserPMC(),
+                    new PlannerPMC(),
+                    new ExecutorPMC()
+            ));
 
             VisualiserClientImpl visualiser = new VisualiserClientImpl(underseaAgent);
             monitor.setVisualiser(visualiser);

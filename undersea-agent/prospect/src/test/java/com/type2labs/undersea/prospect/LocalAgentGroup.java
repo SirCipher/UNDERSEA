@@ -4,7 +4,6 @@ import com.type2labs.undersea.common.agent.Agent;
 import com.type2labs.undersea.common.config.UnderseaRuntimeConfig;
 import com.type2labs.undersea.common.monitor.Monitor;
 import com.type2labs.undersea.common.monitor.MonitorImpl;
-import com.type2labs.undersea.common.monitor.NullVisualiser;
 import com.type2labs.undersea.common.networking.Endpoint;
 import com.type2labs.undersea.common.networking.EndpointImpl;
 import com.type2labs.undersea.common.service.ServiceManager;
@@ -36,23 +35,22 @@ class LocalAgentGroup {
         RaftClusterConfig config = defaultConfig();
 
         for (int i = 0; i < size; i++) {
-            Endpoint endpoint = new EndpointImpl("endpoint:" + i, new InetSocketAddress("localhost", 5000 + i));
+            String name = "agent:" + i;
+            Endpoint endpoint = new EndpointImpl("endpoint:" + i, new InetSocketAddress("localhost", 0));
             endpoints[i] = endpoint;
             RaftIntegrationImpl integration = new RaftIntegrationImpl("endpoint:" + i, endpoint);
             integrations[i] = integration;
             RaftNodeImpl raftNode = new RaftNodeImpl(config, "agent:" + i, endpoint, integration);
 
             Monitor monitor = new MonitorImpl();
-            monitor.setVisualiser(new NullVisualiser());
 
             ServiceManager serviceManager = new ServiceManager();
-            Agent agent = new AgentImpl(monitor, serviceManager);
+            Agent agent = new AgentImpl(name, serviceManager);
             serviceManager.setAgent(agent);
+            raftNode.setAgent(agent);
 
             serviceManager.registerService(monitor);
-            monitor.setVisualiser(new NullVisualiser());
 
-            raftNode.setAgent(agent);
             serviceManager.startServices();
 
             raftNodes[i] = raftNode;
@@ -99,6 +97,7 @@ class LocalAgentGroup {
     void shutdown() {
         for (RaftNodeImpl node : raftNodes) {
             node.shutdown();
+            node.agent().shutdown();
         }
     }
 

@@ -2,7 +2,6 @@ package com.type2labs.undersea.prospect.util;
 
 public class TestUtil {
 
-
     public static void assertTrueEventually(Runnable task, long timeoutSeconds) {
         AssertionError assertionError = null;
 
@@ -28,6 +27,5 @@ public class TestUtil {
             throw assertionError;
         }
     }
-
 
 }

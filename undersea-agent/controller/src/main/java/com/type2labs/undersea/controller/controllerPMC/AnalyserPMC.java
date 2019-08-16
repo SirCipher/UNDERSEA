@@ -13,13 +13,13 @@ import java.util.Properties;
 public class AnalyserPMC extends Analyser {
 
     // TODO: Pass properties to controller
-    private static final Properties properties = Utility.getPropertiesByName("config.properties");
+    private static final Properties properties = new Properties();//Utility.getPropertiesByName("config.properties");
 
     /**
      * System characteristics
      */
-    private final int NUM_OF_SENSORS = Utility.getProperty(properties, "SENSORS").split(",").length;
-    private final int NUM_OF_SENSOR_CONFIGS = (int) (Math.pow(2, NUM_OF_SENSORS)); //possible sensor configurations
+    private final int NUM_OF_SENSORS = 0;//Utility.getProperty(properties, "SENSORS").split(",").length;
+    private final int NUM_OF_SENSOR_CONFIGS = 0;//(int) (Math.pow(2, NUM_OF_SENSORS)); //possible sensor configurations
     /**
      * PRISM instance
      */
@@ -48,8 +48,8 @@ public class AnalyserPMC extends Analyser {
     public AnalyserPMC() {
         try {
             //Read  model and properties parameters
-            this.modelFileName = Utility.getProperty(properties, "MODEL_FILE");
-            this.propertiesFileName = Utility.getProperty(properties, "PROPERTIES_FILE");
+            this.modelFileName = "../controller/models/uuv/uuv.csl";//Utility.getProperty(properties, "MODEL_FILE");
+            this.propertiesFileName ="../controller/models/uuv/uuv.sm";// Utility.getProperty(properties, "PROPERTIES_FILE");
 
             //initialise PRISM instance
             this.prism = new PrismAPI();
@@ -59,7 +59,7 @@ public class AnalyserPMC extends Analyser {
             this.modelAsString = Utility.readFile(modelFileName);
 
             //init the output file
-            this.fileName = Utility.getProperty(properties, "RQV_OUTPUT_FILE");
+            this.fileName = "";//Utility.getProperty(properties, "RQV_OUTPUT_FILE");
         } catch (Exception e) {
             e.printStackTrace();
             System.exit(-1);

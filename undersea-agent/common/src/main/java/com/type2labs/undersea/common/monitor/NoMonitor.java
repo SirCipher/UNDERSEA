@@ -1,6 +1,7 @@
 package com.type2labs.undersea.common.monitor;
 
-public class NullMonitor implements Monitor {
+public class NoMonitor implements Monitor {
+
     @Override
     public void update() {
 
@@ -8,7 +9,7 @@ public class NullMonitor implements Monitor {
 
     @Override
     public VisualiserClient visualiser() {
-        return new NullVisualiser();
+        return new NoVisualiser();
     }
 
     @Override

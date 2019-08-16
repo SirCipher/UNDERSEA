@@ -4,7 +4,7 @@ import com.type2labs.undersea.common.logger.LogMessage;
 
 import java.io.IOException;
 
-public class NullVisualiser implements VisualiserClient {
+public class NoVisualiser implements VisualiserClient {
 
     @Override
     public void write(String data) throws IOException {

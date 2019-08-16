@@ -1,5 +1,9 @@
 package com.type2labs.undersea.prospect.impl;
 
+import com.google.common.util.concurrent.FutureCallback;
+import com.google.common.util.concurrent.Futures;
+import com.google.common.util.concurrent.ListenableFuture;
+import com.google.common.util.concurrent.MoreExecutors;
 import com.type2labs.undersea.common.agent.Agent;
 import com.type2labs.undersea.common.monitor.Monitor;
 import com.type2labs.undersea.common.networking.Endpoint;
@@ -12,6 +16,7 @@ import com.type2labs.undersea.prospect.task.VoteTask;
 import io.grpc.Server;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.io.IOException;
 import java.util.concurrent.Executors;
@@ -65,10 +70,23 @@ public class RaftNodeImpl implements RaftNode {
         RaftProtos.AppendEntryRequest.Builder builder = RaftProtos.AppendEntryRequest.newBuilder();
         builder.setLogEntry(new NodeLog.LogEntry().toLogEntryProto());
 
-        AppendEntryServiceGrpc.AppendEntryServiceBlockingStub blockingStub =
-                AppendEntryServiceGrpc.newBlockingStub(follower.channel());
-        //noinspection ResultOfMethodCallIgnored
-        blockingStub.appendEntry(builder.build());
+        RaftProtos.AppendEntryRequest request = builder.build();
+
+        AppendEntryServiceGrpc.AppendEntryServiceFutureStub futureStub = AppendEntryServiceGrpc.newFutureStub(follower.channel());
+        ListenableFuture<RaftProtos.AppendEntryResponse> response = futureStub.appendEntry(request);
+
+        Futures.addCallback(response, new FutureCallback<RaftProtos.AppendEntryResponse>() {
+            @Override
+            public void onSuccess(RaftProtos.@Nullable AppendEntryResponse result) {
+
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+
+            }
+        }, MoreExecutors.directExecutor());
+
 
         logger.info("Sending heartbeat to: " + follower.name(), agent);
     }
@@ -173,7 +191,7 @@ public class RaftNodeImpl implements RaftNode {
         getMonitor().update();
     }
 
-    private Monitor getMonitor(){
+    private Monitor getMonitor() {
         return (Monitor) agent.services().getService(Monitor.class);
     }
 

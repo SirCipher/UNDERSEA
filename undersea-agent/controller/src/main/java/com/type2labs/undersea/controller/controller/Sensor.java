@@ -57,7 +57,7 @@ public class Sensor {
         }
     }
 
-    protected void run() {
+    public void run() {
         try {
             reply = client.write(command);
             parseReply(reply);

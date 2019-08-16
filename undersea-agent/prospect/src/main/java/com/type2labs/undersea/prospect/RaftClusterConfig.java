@@ -1,7 +1,7 @@
 package com.type2labs.undersea.prospect;
 
-import com.type2labs.undersea.common.config.UnderseaRuntimeConfig;
 import com.type2labs.undersea.common.config.UnderseaConfig;
+import com.type2labs.undersea.common.config.UnderseaRuntimeConfig;
 import com.type2labs.undersea.prospect.model.CostCalculator;
 
 import static com.type2labs.undersea.utilities.Preconditions.isNotNull;

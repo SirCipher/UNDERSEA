@@ -64,8 +64,6 @@ class EnvironmentBuilder {
 
             nsPlugArgs.add("POINTS=" + agent.getBehaviour());
             nsplug("behaviour.bhv", "meta_" + agent.getName() + ".bhv", nsPlugArgs);
-
-            agent.setParsed(true);
         }
 
         cleanup();

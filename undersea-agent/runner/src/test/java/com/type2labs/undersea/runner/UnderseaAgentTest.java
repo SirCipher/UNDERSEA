@@ -5,10 +5,13 @@ import com.type2labs.undersea.common.agent.UnderseaAgent;
 import com.type2labs.undersea.common.config.UnderseaRuntimeConfig;
 import com.type2labs.undersea.common.monitor.Monitor;
 import com.type2labs.undersea.common.monitor.MonitorImpl;
-import com.type2labs.undersea.common.monitor.NullVisualiser;
 import com.type2labs.undersea.common.networking.EndpointImpl;
 import com.type2labs.undersea.common.service.ServiceManager;
-import com.type2labs.undersea.controller.ControllerEngine;
+import com.type2labs.undersea.controller.ControllerImpl;
+import com.type2labs.undersea.controller.controllerPMC.AnalyserPMC;
+import com.type2labs.undersea.controller.controllerPMC.ExecutorPMC;
+import com.type2labs.undersea.controller.controllerPMC.MonitorPMC;
+import com.type2labs.undersea.controller.controllerPMC.PlannerPMC;
 import com.type2labs.undersea.missionplanner.planner.vrp.VehicleRoutingOptimiser;
 import com.type2labs.undersea.prospect.RaftClusterConfig;
 import com.type2labs.undersea.prospect.impl.RaftIntegrationImpl;
@@ -40,11 +43,8 @@ public class UnderseaAgentTest {
         ServiceManager serviceManager = new ServiceManager();
         serviceManager.registerService(raftNode);
         serviceManager.registerService(new BlockchainNetworkImpl());
-        serviceManager.registerService(new ControllerEngine());
         serviceManager.registerService(new VehicleRoutingOptimiser());
-
-        Monitor monitor = new MonitorImpl();
-        serviceManager.registerService(monitor);
+        serviceManager.registerService(new MonitorImpl());
 
         UnderseaAgent underseaAgent = new UnderseaAgent(new UnderseaRuntimeConfig(),
                 "test",
@@ -52,13 +52,19 @@ public class UnderseaAgentTest {
                 new AgentStatus("test", new ArrayList<>()),
                 endpoint);
 
-        monitor.setVisualiser(new NullVisualiser());
+
         serviceManager.setAgent(underseaAgent);
+        serviceManager.startRepeatingService(new ControllerImpl(
+                underseaAgent,
+                new MonitorPMC(),
+                new AnalyserPMC(),
+                new PlannerPMC(),
+                new ExecutorPMC()
+        ), 1);
 
         assertNotNull(serviceManager.getService(Monitor.class));
         assertNotNull(underseaAgent.getBlockchainNetwork());
         assertNotNull(underseaAgent.getMissionPlanner());
-        assertNotNull(underseaAgent.getController());
     }
 
 }

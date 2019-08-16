@@ -48,6 +48,21 @@ public class ServiceManager {
         services.put(service.getClass(), service);
     }
 
+    /**
+     * Starts a repeating service for a given period. Repeating services will not return for the
+     * {@link ServiceManager#getService} method
+     *
+     * @param service to execute
+     * @param period  the period between successive executions
+     */
+    public void startRepeatingService(AgentService service, long period) {
+        ScheduledFuture<?> scheduledFuture = scheduledExecutor.scheduleAtFixedRate(service, 1, period,
+                TimeUnit.MILLISECONDS);
+        scheduledFutures.put(service.getClass(), scheduledFuture);
+
+        logger.info("Agent: " + agent.name() + ", started repeating service: " + service.getClass().getSimpleName() + " at period: " + period, agent);
+    }
+
     public void shutdownServices() {
         for (Map.Entry<Class<? extends AgentService>, AgentService> e : services.entrySet()) {
             shutdownService(e.getKey());
@@ -73,8 +88,8 @@ public class ServiceManager {
     public boolean serviceRunning(Class<? extends AgentService> service) {
         ScheduledFuture<?> scheduledFuture = getScheduledFuture(service);
 
-        if (scheduledFuture == null || !scheduledFuture.isDone()) {
-            return true;
+        if (scheduledFuture == null) {
+            return false;
         } else {
             return !scheduledFuture.isDone();
         }
@@ -95,6 +110,7 @@ public class ServiceManager {
 
         if (scheduledFuture != null) {
             scheduledFuture.cancel(true);
+            scheduledFutures.remove(service);
         }
     }
 

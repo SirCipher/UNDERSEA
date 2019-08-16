@@ -11,7 +11,6 @@ public class BlockchainNetworkImpl implements BlockchainNetwork {
 
     @Override
     public void run() {
-
     }
 
 }

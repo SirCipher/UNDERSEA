@@ -5,7 +5,6 @@ import com.type2labs.undersea.prospect.model.CostCalculator;
 import java.util.HashMap;
 import java.util.Map;
 
-@SuppressWarnings("ResultOfMethodCallIgnored")
 public class CostConfigurationImpl implements CostConfiguration {
 
     private CostCalculator costCalculator;

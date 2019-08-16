@@ -8,18 +8,12 @@ import java.util.Iterator;
 
 public class DslAgentProxy extends AgentImpl {
 
-    private boolean parsed = false;
+    private static final long serialVersionUID = -4045369914177688638L;
     private String metaFileName;
 
 
     public DslAgentProxy(String name) {
         super(name);
-    }
-
-    public void checkParsed(String access) {
-        if (!parsed) {
-            throw new RuntimeException("Cannot set " + access + " before agent has been parsed");
-        }
     }
 
     public String getMetaFileName() {
@@ -28,14 +22,6 @@ public class DslAgentProxy extends AgentImpl {
 
     public void setMetaFileName(String metaFileName) {
         this.metaFileName = metaFileName;
-    }
-
-    public boolean isParsed() {
-        return parsed;
-    }
-
-    public void setParsed(boolean parsed) {
-        this.parsed = parsed;
     }
 
     public void assignRandomNodes(int n, double latLowerBound, double latUpperBound, double longLowerBound,

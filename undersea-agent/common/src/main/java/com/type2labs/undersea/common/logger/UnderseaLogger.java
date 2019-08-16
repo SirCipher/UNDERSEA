@@ -59,7 +59,6 @@ public class UnderseaLogger extends AbstractAppender {
         try {
             visualiserClient.write(logMessage);
         } catch (IOException e) {
-            // Logger cannot be used here
             throw new RuntimeException("Failed to send message: " + logMessage, e);
         }
 

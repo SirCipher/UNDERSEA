@@ -1,11 +1,16 @@
 package com.type2labs.undersea.prospect.task;
 
+import com.google.common.util.concurrent.FutureCallback;
+import com.google.common.util.concurrent.Futures;
+import com.google.common.util.concurrent.ListenableFuture;
+import com.google.common.util.concurrent.MoreExecutors;
 import com.type2labs.undersea.prospect.ConsensusProtocolServiceGrpc;
 import com.type2labs.undersea.prospect.RaftProtos;
 import com.type2labs.undersea.prospect.model.RaftNode;
 import com.type2labs.undersea.prospect.util.GrpcUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.Collection;
 
@@ -28,8 +33,8 @@ public class VoteTask implements Runnable {
     @Override
     public void run() {
         if (!raftNode.poolInfo().hasInfo()) {
-            raftNode.execute(new AcquireStatusTask(raftNode));
             logger.info(raftNode.name() + " does not have the pool's info, attempting to acquire");
+            raftNode.execute(new AcquireStatusTask(raftNode));
 
             return;
         }
@@ -46,10 +51,23 @@ public class VoteTask implements Runnable {
                     .setClient(GrpcUtil.toRaftPeer(raftNode))
                     .setTerm(raftNode.state().getTerm() + 1)
                     .build();
-            ConsensusProtocolServiceGrpc.ConsensusProtocolServiceBlockingStub blockingStub =
-                    ConsensusProtocolServiceGrpc.newBlockingStub(localNode.getLocalEndpoint().channel());
+            ConsensusProtocolServiceGrpc.ConsensusProtocolServiceFutureStub futureStub =
+                    ConsensusProtocolServiceGrpc.newFutureStub(localNode.getLocalEndpoint().channel());
+            ListenableFuture<RaftProtos.VoteResponse> response = futureStub.requestVote(request);
 
-            RaftProtos.VoteResponse response = blockingStub.requestVote(request);
+            Futures.addCallback(response, new FutureCallback<RaftProtos.VoteResponse>() {
+                @Override
+                public void onSuccess(RaftProtos.@Nullable VoteResponse result) {
+                    if (result != null) {
+                        // TODO: 15/08/2019 handle response
+                    }
+                }
+
+                @Override
+                public void onFailure(Throwable t) {
+
+                }
+            }, MoreExecutors.directExecutor());
         }
 
     }

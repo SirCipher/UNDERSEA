@@ -33,7 +33,7 @@ public class Effector {
         return this.reply;
     }
 
-    protected void run() {
+    public void run() {
         try {
             reply = client.write(command);
         } catch (IOException e) {

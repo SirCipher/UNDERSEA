@@ -163,7 +163,7 @@ public class VehicleRoutingOptimiser implements MissionPlanner {
                 int fromNode = manager.indexToNode(fromIndex);
                 int toNode = manager.indexToNode(toIndex);
 
-                return (long) (model.getDistanceMatrix()[fromNode][toNode] / dslAgent.getSpeedRange().getMax()) * VehicleRoutingOptimiser.SPEED_SCALAR;
+                return (long) (model.getDistanceMatrix()[fromNode][toNode]);// / dslAgent.getSpeedRange().getMax()) * VehicleRoutingOptimiser.SPEED_SCALAR;
             });
 
             routing.setArcCostEvaluatorOfVehicle(callback, vehicle);
@@ -181,7 +181,7 @@ public class VehicleRoutingOptimiser implements MissionPlanner {
         RoutingSearchParameters searchParameters =
                 main.defaultRoutingSearchParameters()
                         .toBuilder()
-                        .setFirstSolutionStrategy(FirstSolutionStrategy.Value.LOCAL_CHEAPEST_ARC)
+                        .setFirstSolutionStrategy(FirstSolutionStrategy.Value.AUTOMATIC)
                         .build();
 
         // Solve the problem.

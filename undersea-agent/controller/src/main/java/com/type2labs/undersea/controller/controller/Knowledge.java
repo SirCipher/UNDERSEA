@@ -11,7 +11,9 @@ import java.util.*;
 
 
 public class Knowledge {
+
     private static Knowledge knowledge = null;
+
     /**
      * UUV
      */
@@ -33,7 +35,7 @@ public class Knowledge {
      */
     public List<Double> endTimeList = new ArrayList<Double>();
     /**
-     * flag showning whether analysis is required
+     * flag showing whether analysis is required
      */
     public boolean analysisRequired = false;
 

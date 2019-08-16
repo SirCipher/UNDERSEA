@@ -3,11 +3,8 @@ package com.type2labs.undersea.common.impl;
 
 import com.type2labs.undersea.common.agent.Agent;
 import com.type2labs.undersea.common.config.UnderseaRuntimeConfig;
-import com.type2labs.undersea.common.monitor.Monitor;
 import com.type2labs.undersea.common.networking.Endpoint;
-import com.type2labs.undersea.common.service.AgentService;
 import com.type2labs.undersea.common.service.ServiceManager;
-import com.type2labs.undersea.common.monitor.VisualiserClient;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -24,6 +21,7 @@ import java.util.concurrent.ThreadLocalRandom;
 public class AgentImpl implements Agent {
 
     private static final Logger logger = LogManager.getLogger(AgentImpl.class);
+    private static final long serialVersionUID = -1629589627663718213L;
 
     private String name;
     // TODO: Remove
@@ -45,13 +43,6 @@ public class AgentImpl implements Agent {
         this.name = name;
     }
 
-    public String getGroupName() {
-        return groupName;
-    }
-
-    public void setGroupName(String groupName) {
-        this.groupName = groupName;
-    }
 
     @Override
     public ServiceManager services() {

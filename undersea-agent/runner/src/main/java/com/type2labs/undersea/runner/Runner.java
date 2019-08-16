@@ -48,7 +48,7 @@ public class Runner {
         double[][] area = Utility.propertyKeyTo2dDoubleArray(properties, "environment.area");
 
         List<AgentImpl> dslAgents = new ArrayList<>(environmentProperties.getAgents().values());
-        MissionParametersImpl missionParametersImpl = new MissionParametersImpl(dslAgents, 0, area, 50);
+        MissionParametersImpl missionParametersImpl = new MissionParametersImpl(dslAgents, 0, area, 20);
 
         try {
             MissionImpl mission = (MissionImpl) missionPlanner.generate(missionParametersImpl);

@@ -2,11 +2,11 @@ package com.type2labs.undersea.common.monitor;
 
 public class MonitorImpl implements Monitor {
 
-    private VisualiserClient visualiserClient;
+    private VisualiserClient visualiserClient = new NoVisualiser();
 
     @Override
     public void update() {
-
+        visualiserClient.update();
     }
 
     @Override
@@ -28,4 +28,5 @@ public class MonitorImpl implements Monitor {
     public void run() {
 
     }
+
 }

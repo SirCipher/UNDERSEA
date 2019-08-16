@@ -8,7 +8,7 @@ import java.util.Properties;
 import java.util.TimerTask;
 
 
-public class Controller extends TimerTask {
+public class OldController extends TimerTask {
 
     // TODO: Pass properties to controller
     private static final Properties properties = Utility.getPropertiesByName("config.properties");
@@ -56,12 +56,12 @@ public class Controller extends TimerTask {
     /**
      * Controller constructor
      */
-    public Controller(Monitor monitor, Analyser analyser, Planner planner, Executor executor) {
+    public OldController(Monitor monitor, Analyser analyser, Planner planner, Executor executor) {
         try {
             //init comms client
             host = "localhost";
             port = Integer.parseInt(Utility.getProperty(properties, "PORT"));
-            client = new Client(host, port);
+            client = new Client(null);
 
             //init MAPE
             sensor = new Sensor(client);
@@ -86,6 +86,8 @@ public class Controller extends TimerTask {
     public void run() {
         double initTime = (System.currentTimeMillis() - start) / 1000.0 * SIMULATION_SPEED;
         Knowledge.getInstance().addToInitTimeList(initTime);
+
+
         System.out.println(initTime + "\tRequested UUV state");
 
         sensor.run();

@@ -83,15 +83,19 @@ allprojects {
     }
 
     tasks.withType(Test) {
-        systemProperty "java.library.path", "${rootProject.projectDir}/../libraries/repo/ortools/:"
+        String path = "${rootProject.projectDir}/../libraries/repo/ortools/:";
 
         if (Os.isFamily(Os.FAMILY_UNIX)) {
-            environment "LD_LIBRARY_PATH", "${rootProject.projectDir}/../libraries/MATLAB/v95/sys/os/glnxa64/:${rootProject.projectDir}/../libraries/MATLAB/v95/bin/glnxa64/:${rootProject.projectDir}/../libraries/MATLAB/v95/runtime/glnxa64/"
+            path += "${rootProject.projectDir}/repo/prism/linux/";
+            environment "LD_LIBRARY_PATH", "${rootProject.projectDir}/../libraries/MATLAB/v95/sys/os/glnxa64/:${rootProject.projectDir}/../libraries/MATLAB/v95/bin/glnxa64/:${rootProject.projectDir}/../libraries/MATLAB/v95/runtime/glnxa64/:${rootProject.projectDir}/repo/prism/linux/"
         } else if (Os.isFamily(Os.FAMILY_MAC)) {
-            environment "DYLD_LIBRARY_PATH", "${rootProject.projectDir}/../libraries/MATLAB/v95/sys/os/maci64/:${rootProject.projectDir}/../libraries/MATLAB/v95/bin/maci64/:${rootProject.projectDir}/../libraries/MATLAB/v95/extern/bin/maci64/"
+            path += "${rootProject.projectDir}/repo/prism/osx/";
+            environment "DYLD_LIBRARY_PATH", "${rootProject.projectDir}/../libraries/MATLAB/v95/sys/os/maci64/:${rootProject.projectDir}/../libraries/MATLAB/v95/bin/maci64/:${rootProject.projectDir}/../libraries/MATLAB/v95/extern/bin/maci64/:${rootProject.projectDir}/repo/prism/osx/"
         } else {
             throw new GradleException("Unsupported operating system")
         }
+
+        systemProperty "java.library.path", path
     }
 
 }
