@@ -2,11 +2,8 @@ package com.type2labs.undersea.prospect.model;
 
 import com.type2labs.undersea.common.agent.Agent;
 import com.type2labs.undersea.common.consensus.ConsensusAlgorithm;
-import com.type2labs.undersea.common.networking.Endpoint;
 import com.type2labs.undersea.prospect.RaftClusterConfig;
-import com.type2labs.undersea.prospect.impl.PoolInfo;
-import com.type2labs.undersea.prospect.impl.RaftNodeImpl;
-import com.type2labs.undersea.prospect.impl.RaftState;
+import com.type2labs.undersea.prospect.impl.*;
 
 public interface RaftNode extends ConsensusAlgorithm {
 
@@ -15,8 +12,6 @@ public interface RaftNode extends ConsensusAlgorithm {
     RaftClusterConfig config();
 
     void execute(Runnable task);
-
-    Endpoint getLocalEndpoint();
 
     RaftNodeImpl.RaftRole getRaftRole();
 
@@ -33,4 +28,8 @@ public interface RaftNode extends ConsensusAlgorithm {
     void toFollower(int term);
 
     void toCandidate();
+
+    GrpcServer server();
+
+    RaftPeerId peerId();
 }

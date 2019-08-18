@@ -61,7 +61,7 @@ public class OldController extends TimerTask {
             //init comms client
             host = "localhost";
             port = Integer.parseInt(Utility.getProperty(properties, "PORT"));
-            client = new Client(null);
+            client = new Client();
 
             //init MAPE
             sensor = new Sensor(client);

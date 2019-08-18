@@ -26,10 +26,9 @@ public class Client {
     /**
      * Constructor: create a new client instance
      *
-     * @param host
-     * @param port
+
      */
-    public Client(Endpoint endpoint) {
+    public Client() {
 //        try {
 //            ServerSocket serverSocket = endpoint.serverSocket();
 //            Socket socket = serverSocket.accept();

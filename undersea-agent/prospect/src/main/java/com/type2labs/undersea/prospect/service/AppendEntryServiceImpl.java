@@ -1,16 +1,15 @@
 package com.type2labs.undersea.prospect.service;
 
-import com.type2labs.undersea.common.networking.Endpoint;
-import com.type2labs.undersea.prospect.AppendEntryServiceGrpc;
 import com.type2labs.undersea.prospect.NodeLog;
 import com.type2labs.undersea.prospect.RaftProtos;
 import com.type2labs.undersea.prospect.model.RaftNode;
+import com.type2labs.undersea.prospect.networking.Client;
 import com.type2labs.undersea.prospect.util.GrpcUtil;
 import io.grpc.stub.StreamObserver;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-public class AppendEntryServiceImpl extends AppendEntryServiceGrpc.AppendEntryServiceImplBase {
+public class AppendEntryServiceImpl {
 
     private static final Logger logger = LogManager.getLogger(AppendEntryServiceImpl.class);
     private final RaftNode raftNode;
@@ -19,7 +18,7 @@ public class AppendEntryServiceImpl extends AppendEntryServiceGrpc.AppendEntrySe
         this.raftNode = raftNode;
     }
 
-    @Override
+    //    @Override
     public void appendEntry(RaftProtos.AppendEntryRequest request,
                             StreamObserver<RaftProtos.AppendEntryResponse> responseObserver) {
         int requestTerm = request.getTerm();
@@ -29,14 +28,14 @@ public class AppendEntryServiceImpl extends AppendEntryServiceGrpc.AppendEntrySe
         }
 
         int requestPreviousLogIndex = request.getPrevLogIndex();
-        Endpoint endpoint = GrpcUtil.raftPeerProtoToEndpoint(request.getClient());
+        Client client = GrpcUtil.raftPeerProtoToEndpoint(request.getClient());
 
         NodeLog.LogEntry logEntry = NodeLog.LogEntry.valueOf(request.getLogEntry());
         RaftProtos.AppendEntryResponse response = RaftProtos.AppendEntryResponse.newBuilder().build();
 
         responseObserver.onNext(response);
         responseObserver.onCompleted();
-        endpoint.shutdown();
+        client.shutdown();
     }
 
 

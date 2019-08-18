@@ -1,9 +1,9 @@
 package com.type2labs.undersea.prospect.impl;
 
-import com.type2labs.undersea.common.networking.Endpoint;
 import com.type2labs.undersea.prospect.RaftClusterConfig;
 import com.type2labs.undersea.prospect.RaftProtos;
 import com.type2labs.undersea.prospect.model.RaftNode;
+import com.type2labs.undersea.prospect.networking.Client;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.Collections;
@@ -15,33 +15,33 @@ import java.util.Map.Entry;
 // TODO: This whole system needs refactoring as it's far too fragile
 public class PoolInfo {
 
-    private Map<Endpoint, AgentInfo> agentInfo = new HashMap<>();
+    private Map<Client, AgentInfo> agentInfo = new HashMap<>();
     private RaftNode parent;
-    private Map<Endpoint, Double> poolCosts;
+    private Map<Client, Double> poolCosts;
 
     public PoolInfo(RaftNode parent) {
         this.parent = parent;
     }
 
-    public void setAgentInformation(Endpoint endpoint, AgentInfo agent) {
-        this.agentInfo.put(endpoint, agent);
+    public void setAgentInformation(Client client, AgentInfo agent) {
+        this.agentInfo.put(client, agent);
     }
 
     public boolean hasInfo() {
         return agentInfo.size() > 0;
     }
 
-    public Map<Endpoint, AgentInfo> getMembers() {
+    public Map<Client, AgentInfo> getMembers() {
         return agentInfo;
     }
 
-    public Pair<Endpoint, Double> getLowestCost() {
+    public Pair<Client, Double> getLowestCost() {
         if (poolCosts == null) {
             RaftClusterConfig config = parent.config();
             this.poolCosts = config.getCostCalculator().generateCosts(parent);
         }
 
-        Entry<Endpoint, Double> min = Collections.min(poolCosts.entrySet(), Entry.comparingByValue());
+        Entry<Client, Double> min = Collections.min(poolCosts.entrySet(), Entry.comparingByValue());
         return Pair.of(min.getKey(), min.getValue());
     }
 
@@ -51,10 +51,10 @@ public class PoolInfo {
         private double remainingBattery;
         private double range;
         private double accuracy;
-        private Endpoint endpoint;
+        private Client client;
 
-        public AgentInfo(Endpoint endpoint, List<RaftProtos.Tuple> statusList) {
-            this.endpoint = endpoint;
+        public AgentInfo(Client client, List<RaftProtos.Tuple> statusList) {
+            this.client = client;
             setFields(statusList);
         }
 
@@ -74,8 +74,8 @@ public class PoolInfo {
             return accuracy;
         }
 
-        public Endpoint getEndpoint() {
-            return endpoint;
+        public Client getClient() {
+            return client;
         }
 
         private void setFields(List<RaftProtos.Tuple> statusList) {
@@ -106,7 +106,7 @@ public class PoolInfo {
                     ", remainingBattery=" + remainingBattery +
                     ", range=" + range +
                     ", accuracy=" + accuracy +
-                    ", endpoint=" + endpoint +
+                    ", endpoint=" + client +
                     '}';
         }
     }

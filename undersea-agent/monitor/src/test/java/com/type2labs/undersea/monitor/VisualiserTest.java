@@ -5,13 +5,13 @@ import com.type2labs.undersea.common.agent.UnderseaAgent;
 import com.type2labs.undersea.common.config.UnderseaRuntimeConfig;
 import com.type2labs.undersea.common.monitor.Monitor;
 import com.type2labs.undersea.common.monitor.MonitorImpl;
-import com.type2labs.undersea.common.networking.EndpointImpl;
 import com.type2labs.undersea.common.service.ServiceManager;
 import com.type2labs.undersea.missionplanner.planner.vrp.VehicleRoutingOptimiser;
 import com.type2labs.undersea.prospect.RaftClusterConfig;
 import com.type2labs.undersea.prospect.impl.RaftIntegrationImpl;
 import com.type2labs.undersea.prospect.impl.RaftNodeImpl;
-import org.junit.Test;
+import com.type2labs.undersea.prospect.impl.RaftPeerId;
+import com.type2labs.undersea.prospect.networking.ClientImpl;
 
 import java.net.InetSocketAddress;
 import java.util.ArrayList;
@@ -25,13 +25,12 @@ public class VisualiserTest {
     private UnderseaAgent createAgent(int port) {
         String name = UUID.randomUUID().toString();
 
-        EndpointImpl endpoint = new EndpointImpl(name, new InetSocketAddress("localhost",
-                port));
+        ClientImpl endpoint = new ClientImpl(new InetSocketAddress("localhost", port));
         RaftNodeImpl raftNode = new RaftNodeImpl(
-                new RaftClusterConfig(new UnderseaRuntimeConfig()),
-                name,
-                endpoint,
-                new RaftIntegrationImpl(name, endpoint)
+                new RaftClusterConfig(new UnderseaRuntimeConfig()), name,
+                new RaftIntegrationImpl(name),
+                new InetSocketAddress("localhost", port),
+                RaftPeerId.newId()
         );
 
         ServiceManager serviceManager = new ServiceManager();
@@ -45,8 +44,7 @@ public class VisualiserTest {
         UnderseaAgent underseaAgent = new UnderseaAgent(config,
                 name,
                 serviceManager,
-                new AgentStatus(name, new ArrayList<>()),
-                endpoint);
+                new AgentStatus(name, new ArrayList<>()));
 
         VisualiserClientImpl visualiserClient = new VisualiserClientImpl(underseaAgent);
         monitor.setVisualiser(visualiserClient);
@@ -60,7 +58,7 @@ public class VisualiserTest {
         return underseaAgent;
     }
 
-//    @Test
+    //    @Test
     public void testDataUpdate() throws InterruptedException {
         new Visualiser();
 

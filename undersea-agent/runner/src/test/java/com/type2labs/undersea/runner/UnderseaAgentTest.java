@@ -5,7 +5,6 @@ import com.type2labs.undersea.common.agent.UnderseaAgent;
 import com.type2labs.undersea.common.config.UnderseaRuntimeConfig;
 import com.type2labs.undersea.common.monitor.Monitor;
 import com.type2labs.undersea.common.monitor.MonitorImpl;
-import com.type2labs.undersea.common.networking.EndpointImpl;
 import com.type2labs.undersea.common.service.ServiceManager;
 import com.type2labs.undersea.controller.ControllerImpl;
 import com.type2labs.undersea.controller.controllerPMC.AnalyserPMC;
@@ -16,6 +15,8 @@ import com.type2labs.undersea.missionplanner.planner.vrp.VehicleRoutingOptimiser
 import com.type2labs.undersea.prospect.RaftClusterConfig;
 import com.type2labs.undersea.prospect.impl.RaftIntegrationImpl;
 import com.type2labs.undersea.prospect.impl.RaftNodeImpl;
+import com.type2labs.undersea.prospect.impl.RaftPeerId;
+import com.type2labs.undersea.prospect.networking.ClientImpl;
 import com.type2labs.undersea.seachain.BlockchainNetworkImpl;
 import org.junit.Test;
 
@@ -31,13 +32,13 @@ public class UnderseaAgentTest {
 
     @Test
     public void testServices() {
-        EndpointImpl endpoint = new EndpointImpl("test", new InetSocketAddress("localhost",
-                5000));
+        ClientImpl endpoint = new ClientImpl(new InetSocketAddress("localhost", 5000));
         RaftNodeImpl raftNode = new RaftNodeImpl(
                 new RaftClusterConfig(new UnderseaRuntimeConfig()),
                 "test",
-                endpoint,
-                new RaftIntegrationImpl("test", endpoint)
+                new RaftIntegrationImpl("test"),
+                new InetSocketAddress("localhost", 5000),
+                RaftPeerId.newId()
         );
 
         ServiceManager serviceManager = new ServiceManager();
@@ -49,8 +50,7 @@ public class UnderseaAgentTest {
         UnderseaAgent underseaAgent = new UnderseaAgent(new UnderseaRuntimeConfig(),
                 "test",
                 serviceManager,
-                new AgentStatus("test", new ArrayList<>()),
-                endpoint);
+                new AgentStatus("test", new ArrayList<>()));
 
 
         serviceManager.setAgent(underseaAgent);

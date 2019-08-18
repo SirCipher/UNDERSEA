@@ -1,16 +1,15 @@
 package com.type2labs.undersea.prospect.service;
 
-import com.type2labs.undersea.common.networking.Endpoint;
-import com.type2labs.undersea.prospect.ConsensusProtocolServiceGrpc;
 import com.type2labs.undersea.prospect.RaftProtos;
 import com.type2labs.undersea.prospect.model.RaftNode;
+import com.type2labs.undersea.prospect.networking.Client;
 import com.type2labs.undersea.prospect.util.GrpcUtil;
 import io.grpc.stub.StreamObserver;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-public class VoteRequestServiceServiceImpl extends ConsensusProtocolServiceGrpc.ConsensusProtocolServiceImplBase {
+public class VoteRequestServiceServiceImpl {
 
     private static final Logger logger = LogManager.getLogger(VoteRequestServiceServiceImpl.class);
     private final RaftNode raftNode;
@@ -19,9 +18,9 @@ public class VoteRequestServiceServiceImpl extends ConsensusProtocolServiceGrpc.
         this.raftNode = raftNode;
     }
 
-    @Override
+    //    @Override
     public void requestVote(RaftProtos.VoteRequest request, StreamObserver<RaftProtos.VoteResponse> responseObserver) {
-        Pair<Endpoint, Double> nominee = raftNode.poolInfo().getLowestCost();
+        Pair<Client, Double> nominee = raftNode.poolInfo().getLowestCost();
 
         RaftProtos.VoteResponse response = RaftProtos.VoteResponse.newBuilder()
                 .setClient(GrpcUtil.toRaftPeer(raftNode))

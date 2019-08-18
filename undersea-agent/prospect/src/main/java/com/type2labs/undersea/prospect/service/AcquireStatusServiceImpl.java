@@ -1,7 +1,6 @@
 package com.type2labs.undersea.prospect.service;
 
 
-import com.type2labs.undersea.prospect.AcquireStatusServiceGrpc;
 import com.type2labs.undersea.prospect.RaftProtos;
 import com.type2labs.undersea.prospect.model.RaftNode;
 import io.grpc.stub.StreamObserver;
@@ -9,7 +8,7 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.List;
 
-public class AcquireStatusServiceImpl extends AcquireStatusServiceGrpc.AcquireStatusServiceImplBase {
+public class AcquireStatusServiceImpl {
 
     private final RaftNode raftNode;
 
@@ -18,7 +17,6 @@ public class AcquireStatusServiceImpl extends AcquireStatusServiceGrpc.AcquireSt
         this.raftNode = raftNode;
     }
 
-    @Override
     public void getStatus(RaftProtos.AcquireStatusRequest request,
                           StreamObserver<RaftProtos.AcquireStatusResponse> responseObserver) {
         RaftProtos.AcquireStatusResponse.Builder builder = RaftProtos.AcquireStatusResponse.newBuilder();

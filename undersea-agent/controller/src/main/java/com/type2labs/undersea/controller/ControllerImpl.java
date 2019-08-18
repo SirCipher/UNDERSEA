@@ -37,7 +37,7 @@ public class ControllerImpl implements Controller {
         //init comms client
         host = "localhost";
 
-        Client client = new Client(agent.endpoint());
+        Client client = new Client();
 
         //init MAPE
         sensor = new Sensor(client);

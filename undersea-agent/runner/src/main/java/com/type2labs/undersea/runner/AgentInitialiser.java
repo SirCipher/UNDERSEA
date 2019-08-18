@@ -4,7 +4,6 @@ import com.type2labs.undersea.common.agent.AgentStatus;
 import com.type2labs.undersea.common.agent.UnderseaAgent;
 import com.type2labs.undersea.common.monitor.Monitor;
 import com.type2labs.undersea.common.monitor.MonitorImpl;
-import com.type2labs.undersea.common.networking.EndpointImpl;
 import com.type2labs.undersea.common.service.ServiceManager;
 import com.type2labs.undersea.controller.ControllerImpl;
 import com.type2labs.undersea.controller.controllerPMC.AnalyserPMC;
@@ -17,6 +16,8 @@ import com.type2labs.undersea.monitor.VisualiserClientImpl;
 import com.type2labs.undersea.prospect.RaftClusterConfig;
 import com.type2labs.undersea.prospect.impl.RaftIntegrationImpl;
 import com.type2labs.undersea.prospect.impl.RaftNodeImpl;
+import com.type2labs.undersea.prospect.impl.RaftPeerId;
+import com.type2labs.undersea.prospect.networking.ClientImpl;
 import com.type2labs.undersea.seachain.BlockchainNetworkImpl;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -54,13 +55,14 @@ public class AgentInitialiser {
 
     public List<UnderseaAgent> initalise(Map<String, DslAgentProxy> agentProxyMap) {
         agentProxyMap.forEach((key, value) -> {
-            EndpointImpl endpoint = new EndpointImpl(value.getName(), new InetSocketAddress(value.getHost(),
+            ClientImpl endpoint = new ClientImpl(new InetSocketAddress(value.getHost(),
                     value.getServerPort()));
             RaftNodeImpl raftNode = new RaftNodeImpl(
                     raftClusterConfig,
                     value.getName(),
-                    endpoint,
-                    new RaftIntegrationImpl(value.getName(), endpoint)
+                    new RaftIntegrationImpl(value.getName()),
+                    new InetSocketAddress("localhost", value.getServerPort()),
+                    RaftPeerId.newId()
             );
 
             ServiceManager serviceManager = new ServiceManager();
@@ -74,8 +76,7 @@ public class AgentInitialiser {
             UnderseaAgent underseaAgent = new UnderseaAgent(raftClusterConfig.getUnderseaRuntimeConfig(),
                     key,
                     serviceManager,
-                    new AgentStatus(value.getName(), value.getSensors()),
-                    endpoint);
+                    new AgentStatus(value.getName(), value.getSensors()));
 
             serviceManager.registerService(new ControllerImpl(
                     underseaAgent,

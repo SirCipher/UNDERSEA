@@ -5,7 +5,6 @@ import com.type2labs.undersea.common.agent.UnderseaAgent;
 import com.type2labs.undersea.common.config.UnderseaRuntimeConfig;
 import com.type2labs.undersea.common.monitor.Monitor;
 import com.type2labs.undersea.common.monitor.MonitorImpl;
-import com.type2labs.undersea.common.networking.EndpointImpl;
 import org.junit.Test;
 
 import java.net.InetSocketAddress;
@@ -26,15 +25,10 @@ public class ServiceManagerTest {
         serviceManager.registerService(monitor);
         serviceManager.registerService(new ServiceSample());
 
-        EndpointImpl endpoint = new EndpointImpl(
-                name,
-                new InetSocketAddress("localhost", 0));
-
         UnderseaAgent underseaAgent = new UnderseaAgent(new UnderseaRuntimeConfig(),
                 name,
                 serviceManager,
-                new AgentStatus(name, new ArrayList<>()),
-                endpoint);
+                new AgentStatus(name, new ArrayList<>()));
 
         serviceManager.setAgent(underseaAgent);
 

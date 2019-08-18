@@ -5,21 +5,30 @@ option java_generate_equals_and_hash = true;
 package proto;
 import "google/protobuf/any.proto";
 
-service AcquireStatusService {
-    rpc GetStatus (AcquireStatusRequest) returns (AcquireStatusResponse) {
+service RaftProtocolService {
+    rpc GetStatus (AcquireStatusRequest) returns (stream AcquireStatusResponse) {
     }
-}
 
-service AppendEntryService {
     rpc AppendEntry (AppendEntryRequest) returns (AppendEntryResponse) {
 
     }
-}
 
-service ConsensusProtocolService {
-    rpc requestVote (VoteRequest) returns (VoteResponse) {
+    rpc RequestVote (VoteRequest) returns (VoteResponse) {
 
     }
+
+    rpc SayHello(HelloRequest) returns (HelloResponse) {
+
+    }
+
+}
+
+message HelloRequest {
+    string name = 1;
+}
+
+message HelloResponse {
+    string name = 1;
 }
 
 message RaftPeerProto {

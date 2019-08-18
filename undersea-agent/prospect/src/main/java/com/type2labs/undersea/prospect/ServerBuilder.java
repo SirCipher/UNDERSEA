@@ -1,7 +1,7 @@
 package com.type2labs.undersea.prospect;
 
 import com.type2labs.undersea.prospect.model.RaftNode;
-import com.type2labs.undersea.prospect.service.AcquireStatusServiceImpl;
+import com.type2labs.undersea.prospect.service.RaftProtocolServiceImpl;
 import io.github.classgraph.ClassGraph;
 import io.github.classgraph.ClassInfo;
 import io.github.classgraph.ScanResult;
@@ -13,6 +13,7 @@ import org.apache.logging.log4j.Logger;
 import java.lang.reflect.InvocationTargetException;
 import java.net.InetSocketAddress;
 import java.util.Set;
+import java.util.concurrent.ExecutorService;
 import java.util.stream.Collectors;
 
 public class ServerBuilder {
@@ -25,7 +26,7 @@ public class ServerBuilder {
 //                .verbose()
 //                .enableAllInfo()
                 .disableModuleScanning()
-                .whitelistPackages(AcquireStatusServiceImpl.class.getPackage().getName())
+                .whitelistPackages(RaftProtocolServiceImpl.class.getPackage().getName())
                 .scan();
 
         registeredServices = scanResult
@@ -50,7 +51,7 @@ public class ServerBuilder {
 
     }
 
-    public static Server build(InetSocketAddress address, RaftNode raftNode) {
+    public static Server build(InetSocketAddress address, RaftNode raftNode, ExecutorService executorService) {
         io.grpc.ServerBuilder builder = io.grpc.ServerBuilder.forPort(address.getPort());
 
         for (Class<?> service : registeredServices) {
@@ -65,7 +66,7 @@ public class ServerBuilder {
             builder.addService(instance);
         }
 
-        return builder.build();
+        return builder.executor(executorService).build();
     }
 
 }

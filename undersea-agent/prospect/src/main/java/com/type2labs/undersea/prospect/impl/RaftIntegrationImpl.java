@@ -1,6 +1,5 @@
 package com.type2labs.undersea.prospect.impl;
 
-import com.type2labs.undersea.common.networking.Endpoint;
 import com.type2labs.undersea.prospect.model.RaftIntegration;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -15,12 +14,10 @@ public class RaftIntegrationImpl implements RaftIntegration {
     private static final Logger logger = LogManager.getLogger(RaftIntegrationImpl.class);
     private final ScheduledExecutorService scheduledExecutor = Executors.newSingleThreadScheduledExecutor();
 
-    private final Endpoint endpoint;
     private final String parentName;
 
-    public RaftIntegrationImpl(String parentName, Endpoint endpoint) {
+    public RaftIntegrationImpl(String parentName) {
         this.parentName = parentName;
-        this.endpoint = endpoint;
     }
 
     @Override
@@ -30,11 +27,6 @@ public class RaftIntegrationImpl implements RaftIntegration {
         } catch (RejectedExecutionException e) {
             logger.error(e);
         }
-    }
-
-    @Override
-    public Endpoint getLocalEndpoint() {
-        return endpoint;
     }
 
     @Override

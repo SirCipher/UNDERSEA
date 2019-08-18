@@ -6,7 +6,6 @@ import com.type2labs.undersea.common.config.UnderseaRuntimeConfig;
 import com.type2labs.undersea.common.consensus.ConsensusAlgorithm;
 import com.type2labs.undersea.common.controller.Controller;
 import com.type2labs.undersea.common.missionplanner.MissionPlanner;
-import com.type2labs.undersea.common.networking.Endpoint;
 import com.type2labs.undersea.common.service.AgentService;
 import com.type2labs.undersea.common.service.ServiceManager;
 import org.apache.commons.lang3.tuple.Pair;
@@ -27,12 +26,10 @@ public class AbstractAgent implements Agent {
     private final ScheduledExecutorService internalExecutor = new ScheduledThreadPoolExecutor(4);
     private final ServiceManager services;
     private final AgentStatus status;
-    private final Endpoint endpoint;
     private final UnderseaRuntimeConfig config;
     private String name;
 
-    public AbstractAgent(UnderseaRuntimeConfig config, String name, ServiceManager serviceManager, AgentStatus status,
-                         Endpoint endpoint) {
+    public AbstractAgent(UnderseaRuntimeConfig config, String name, ServiceManager serviceManager, AgentStatus status) {
         // Avoided using javax validation for minimal reliance on reflection
         if (config == null) {
             throw new IllegalArgumentException("Runtime configuration must be provided");
@@ -46,15 +43,10 @@ public class AbstractAgent implements Agent {
             throw new IllegalArgumentException("Agent status must be provided");
         }
 
-        if (endpoint == null) {
-            throw new IllegalArgumentException("Endpoint must be provided");
-        }
-
         this.config = config;
         this.name = name;
         this.services = serviceManager;
         this.status = status;
-        this.endpoint = endpoint;
 
         logServices();
     }
@@ -87,9 +79,6 @@ public class AbstractAgent implements Agent {
         return status;
     }
 
-    public Endpoint getEndpoint() {
-        return endpoint;
-    }
 
     public String getName() {
         return name;
@@ -123,11 +112,6 @@ public class AbstractAgent implements Agent {
     @Override
     public List<Pair<String, String>> status() {
         return null;
-    }
-
-    @Override
-    public Endpoint endpoint() {
-        return endpoint;
     }
 
     @Override

@@ -3,7 +3,6 @@ package com.type2labs.undersea.common.impl;
 
 import com.type2labs.undersea.common.agent.Agent;
 import com.type2labs.undersea.common.config.UnderseaRuntimeConfig;
-import com.type2labs.undersea.common.networking.Endpoint;
 import com.type2labs.undersea.common.service.ServiceManager;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.LogManager;
@@ -51,12 +50,6 @@ public class AgentImpl implements Agent {
 
     @Override
     public List<Pair<String, String>> status() {
-        return null;
-    }
-
-
-    @Override
-    public Endpoint endpoint() {
         return null;
     }
 

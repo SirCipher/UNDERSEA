@@ -1,32 +1,33 @@
 package com.type2labs.undersea.prospect.util;
 
-import com.type2labs.undersea.common.networking.Endpoint;
-import com.type2labs.undersea.common.networking.EndpointImpl;
 import com.type2labs.undersea.prospect.RaftProtos;
 import com.type2labs.undersea.prospect.model.RaftNode;
+import com.type2labs.undersea.prospect.networking.Client;
 
 import java.net.InetSocketAddress;
 
 public class GrpcUtil {
 
-    public static RaftProtos.RaftPeerProto toRaftPeer(Endpoint endpoint) {
+    public static RaftProtos.RaftPeerProto toRaftPeer(Client client) {
         RaftProtos.RaftPeerProto.Builder builder = RaftProtos.RaftPeerProto.newBuilder();
-        InetSocketAddress address = endpoint.socketAddress();
+        InetSocketAddress address = client.socketAddress();
 
         builder.setHost(address.getHostString());
         builder.setPort(address.getPort());
-        builder.setName(endpoint.name());
+//        builder.setName(client.name());
 
         return builder.build();
     }
 
     public static RaftProtos.RaftPeerProto toRaftPeer(RaftNode raftNode) {
-        return toRaftPeer(raftNode.getLocalEndpoint());
+//        return toRaftPeer(raftNode.endpoint());
+        return null;
     }
 
-    public static Endpoint raftPeerProtoToEndpoint(RaftProtos.RaftPeerProto raftPeerProto) {
-        return new EndpointImpl(raftPeerProto.getName(), new InetSocketAddress(raftPeerProto.getHost(),
-                raftPeerProto.getPort()));
+    public static Client raftPeerProtoToEndpoint(RaftProtos.RaftPeerProto raftPeerProto) {
+//        return new EndpointImpl(raftPeerProto.getName(), new InetSocketAddress(raftPeerProto.getHost(),
+//                raftPeerProto.getPort()));
+        return null;
     }
 
 

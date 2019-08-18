@@ -1,24 +1,20 @@
 package com.type2labs.undersea.prospect.impl;
 
-import com.google.common.util.concurrent.FutureCallback;
-import com.google.common.util.concurrent.Futures;
-import com.google.common.util.concurrent.ListenableFuture;
-import com.google.common.util.concurrent.MoreExecutors;
 import com.type2labs.undersea.common.agent.Agent;
 import com.type2labs.undersea.common.monitor.Monitor;
-import com.type2labs.undersea.common.networking.Endpoint;
-import com.type2labs.undersea.prospect.*;
+import com.type2labs.undersea.prospect.NodeLog;
+import com.type2labs.undersea.prospect.RaftClusterConfig;
+import com.type2labs.undersea.prospect.RaftProtos;
 import com.type2labs.undersea.prospect.model.RaftIntegration;
 import com.type2labs.undersea.prospect.model.RaftNode;
+import com.type2labs.undersea.prospect.networking.Client;
 import com.type2labs.undersea.prospect.task.AcquireStatusTask;
 import com.type2labs.undersea.prospect.task.RequireRoleTask;
 import com.type2labs.undersea.prospect.task.VoteTask;
-import io.grpc.Server;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.checkerframework.checker.nullness.qual.Nullable;
 
-import java.io.IOException;
+import java.net.InetSocketAddress;
 import java.util.concurrent.Executors;
 import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.ScheduledExecutorService;
@@ -31,9 +27,8 @@ public class RaftNodeImpl implements RaftNode {
 
     private final ScheduledExecutorService scheduledExecutor = Executors.newSingleThreadScheduledExecutor();
     private final String name;
-    private final Endpoint endpoint;
     private final RaftState raftState;
-    private final Server server;
+    private final GrpcServer server;
     private final RaftIntegration integration;
     private final RaftClusterConfig raftClusterConfig;
     // This cannot be final as both an Agent and this class require it
@@ -43,20 +38,28 @@ public class RaftNodeImpl implements RaftNode {
     private boolean started = false;
 
     private long lastHeartbeatTime;
+    private RaftPeerId peerId;
 
-    public RaftNodeImpl(RaftClusterConfig raftClusterConfig, String name, Endpoint endpoint,
-                        RaftIntegration integration) {
+    public GrpcServer getServer() {
+        return server;
+    }
+
+    public RaftNodeImpl(RaftClusterConfig raftClusterConfig,
+                        String name,
+                        RaftIntegration integration,
+                        InetSocketAddress address,
+                        RaftPeerId peerId) {
+        this.peerId = peerId;
         this.raftClusterConfig = raftClusterConfig;
         this.name = name;
-        this.endpoint = endpoint;
         this.integration = integration;
-        this.server = ServerBuilder.build(endpoint.socketAddress(), this);
+        this.server = new GrpcServer(this, address);
         this.raftState = new RaftState();
         this.poolInfo = new PoolInfo(this);
     }
 
     private void broadcastMissionProgress() {
-        for (Endpoint follower : state().localNodes().keySet()) {
+        for (Client follower : state().localNodes().values()) {
             sendMissionUpdateRequest(follower);
         }
     }
@@ -66,29 +69,32 @@ public class RaftNodeImpl implements RaftNode {
      *
      * @param follower
      */
-    private void sendMissionUpdateRequest(Endpoint follower) {
+    private void sendMissionUpdateRequest(Client follower) {
         RaftProtos.AppendEntryRequest.Builder builder = RaftProtos.AppendEntryRequest.newBuilder();
         builder.setLogEntry(new NodeLog.LogEntry().toLogEntryProto());
 
         RaftProtos.AppendEntryRequest request = builder.build();
 
-        AppendEntryServiceGrpc.AppendEntryServiceFutureStub futureStub = AppendEntryServiceGrpc.newFutureStub(follower.channel());
-        ListenableFuture<RaftProtos.AppendEntryResponse> response = futureStub.appendEntry(request);
+//        AppendEntryServiceGrpc.AppendEntryServiceStub futureStub = AppendEntryServiceGrpc.newStub(follower.channel());
+//        futureStub.appendEntry(request, new StreamObserver<RaftProtos.AppendEntryResponse>() {
+//            @Override
+//            public void onNext(RaftProtos.AppendEntryResponse value) {
+//                System.out.println(value);
+//            }
+//
+//            @Override
+//            public void onError(Throwable t) {
+//                t.printStackTrace();
+//            }
+//
+//            @Override
+//            public void onCompleted() {
+//                System.out.println("Completed update request");
+//            }
+//        });
 
-        Futures.addCallback(response, new FutureCallback<RaftProtos.AppendEntryResponse>() {
-            @Override
-            public void onSuccess(RaftProtos.@Nullable AppendEntryResponse result) {
 
-            }
-
-            @Override
-            public void onFailure(Throwable t) {
-
-            }
-        }, MoreExecutors.directExecutor());
-
-
-        logger.info("Sending heartbeat to: " + follower.name(), agent);
+//        logger.info("Sending heartbeat to: " + follower.name(), agent);
     }
 
     public RaftState state() {
@@ -99,18 +105,9 @@ public class RaftNodeImpl implements RaftNode {
         return role;
     }
 
-    public boolean isAvailable() {
-        return !(server.isShutdown() || server.isTerminated()) && started;
-    }
-
     @Override
     public String name() {
         return name;
-    }
-
-    @Override
-    public Endpoint getLocalEndpoint() {
-        return endpoint;
     }
 
     @Override
@@ -148,10 +145,6 @@ public class RaftNodeImpl implements RaftNode {
     }
 
     public void schedule(Runnable task, long delayInMillis) {
-        if (!isAvailable()) {
-            return;
-        }
-
         integration.schedule(task, delayInMillis, MILLISECONDS);
     }
 
@@ -170,8 +163,7 @@ public class RaftNodeImpl implements RaftNode {
 
     public void shutdown() {
         scheduledExecutor.shutdown();
-        endpoint.shutdown();
-        server.shutdownNow();
+        server.shutdown();
     }
 
     public void toCandidate() {
@@ -180,6 +172,16 @@ public class RaftNodeImpl implements RaftNode {
         logger.info(name + " is now a candidate", agent);
 
         getMonitor().update();
+    }
+
+    @Override
+    public GrpcServer server() {
+        return server;
+    }
+
+    @Override
+    public RaftPeerId peerId() {
+        return peerId;
     }
 
     @Override
@@ -211,16 +213,12 @@ public class RaftNodeImpl implements RaftNode {
             throw new RuntimeException("Agent not set for: " + name);
         }
 
-        try {
-            server.start();
-            execute(new AcquireStatusTask(RaftNodeImpl.this));
-            execute(new VoteTask(RaftNodeImpl.this, 0));
+        server.start();
+        execute(new AcquireStatusTask(RaftNodeImpl.this));
+        execute(new VoteTask(RaftNodeImpl.this, 0));
 
-            logger.trace("Started node: " + name, agent);
-            started = true;
-        } catch (IOException e) {
-            throw new RuntimeException("Failed to start server: " + name, e);
-        }
+        logger.trace("Started node: " + name, agent);
+        started = true;
     }
 
     public enum RaftRole {
