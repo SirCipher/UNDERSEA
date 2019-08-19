@@ -20,6 +20,13 @@ public class UnderseaAgent extends AbstractAgent {
 
     public UnderseaAgent(UnderseaRuntimeConfig config, String name, ServiceManager serviceManager, AgentStatus status) {
         super(config, name, serviceManager, status);
+
+        ThreadLocalRandom random = ThreadLocalRandom.current();
+
+        speed = random.nextDouble(100);
+        remainingBattery = random.nextDouble(100);
+        range = random.nextDouble(100);
+        accuracy = random.nextDouble(100);
     }
 
     public static UnderseaAgent DEFAULT() {
@@ -34,12 +41,6 @@ public class UnderseaAgent extends AbstractAgent {
     @Override
     public List<Pair<String, String>> status() {
         List<Pair<String, String>> status = new ArrayList<>();
-        ThreadLocalRandom random = ThreadLocalRandom.current();
-
-        speed = random.nextDouble(100);
-        remainingBattery = random.nextDouble(100);
-        range = random.nextDouble(100);
-        accuracy = random.nextDouble(100);
 
         status.add(Pair.of("speed", Double.toString(speed)));
         status.add(Pair.of("remainingBattery", Double.toString(remainingBattery)));

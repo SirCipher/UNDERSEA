@@ -16,6 +16,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.net.InetSocketAddress;
+import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -29,6 +30,13 @@ public class ClientImpl implements Client {
     private final RaftProtocolServiceGrpc.RaftProtocolServiceBlockingStub blockingStub;
     private final ExecutorService clientExecutor;
     private final RaftPeerId clientId;
+    private boolean isSelf = false;
+
+    public static Client ofSelf(RaftNode raftNode){
+        ClientImpl self = new ClientImpl(raftNode, new InetSocketAddress(0), raftNode.peerId());
+        self.isSelf = true;
+        return self;
+    }
 
     public ClientImpl(RaftNode parent, InetSocketAddress socketAddress, RaftPeerId raftPeerId) {
         this.clientId = raftPeerId;
@@ -82,6 +90,26 @@ public class ClientImpl implements Client {
     public void requestVote(RaftProtos.VoteRequest request, FutureCallback<RaftProtos.VoteResponse> callback) {
         ListenableFuture<RaftProtos.VoteResponse> response = futureStub.requestVote(request);
         Futures.addCallback(response, callback, clientExecutor);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ClientImpl client = (ClientImpl) o;
+        return clientId.equals(client.clientId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(clientId);
+    }
+
+    @Override
+    public String toString() {
+        return "ClientImpl{" +
+                "clientId=" + clientId +
+                '}';
     }
 
     public abstract static class Callback<T> implements FutureCallback<T> {

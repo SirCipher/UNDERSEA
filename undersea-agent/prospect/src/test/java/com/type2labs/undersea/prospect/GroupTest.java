@@ -11,7 +11,7 @@ public class GroupTest {
 
     @Test
     public void testAcquireStatusTask() {
-        int count = 3;
+        int count = 10;
 
         try (LocalAgentGroup localAgentGroup = new LocalAgentGroup(count)) {
             localAgentGroup.doManualDiscovery();
@@ -23,10 +23,15 @@ public class GroupTest {
                     assertEquals(count - 1, node.poolInfo().getMembers().size());
                 }
             }, 5);
+
+
+            Thread.sleep(10000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
     }
 
-    // TODO: 19/08/2019  
+    // TODO: 19/08/2019
     @Test
     public void testElection() {
         int count = 3;

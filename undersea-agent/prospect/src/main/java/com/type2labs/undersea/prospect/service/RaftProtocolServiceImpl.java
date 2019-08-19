@@ -83,7 +83,7 @@ public class RaftProtocolServiceImpl extends RaftProtocolServiceGrpc.RaftProtoco
 
     @Override
     public void requestVote(RaftProtos.VoteRequest request, StreamObserver<RaftProtos.VoteResponse> responseObserver) {
-        logger.info(raftNode.name() + " processing hello request: " + request, raftNode.agent());
+        logger.info(raftNode.name() + " processing vote request: " + request, raftNode.agent());
 
         sendAbstractAsyncMessage(responseObserver, () -> {
             Pair<Client, Double> nominee = raftNode.poolInfo().getLowestCost();
@@ -93,7 +93,7 @@ public class RaftProtocolServiceImpl extends RaftProtocolServiceGrpc.RaftProtoco
                     .setNominee(GrpcUtil.toProtoClient(nominee.getKey()))
                     .build();
 
-            logger.info(raftNode.name() + ": voting for: " + nominee.getKey());
+            logger.info(raftNode.name() + ": voting for: " + nominee.getKey(), raftNode.agent());
             return response;
         });
     }

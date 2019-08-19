@@ -185,7 +185,7 @@ public class RaftNodeImpl implements RaftNode {
 
     public void toCandidate() {
         role = RaftRole.CANDIDATE;
-        state().setVote(null);
+        state().initCandidate();
         logger.info(name + " is now a candidate", agent);
 
         getMonitor().update();

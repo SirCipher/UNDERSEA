@@ -2,8 +2,11 @@ package com.type2labs.undersea.prospect.task;
 
 import com.google.common.util.concurrent.FutureCallback;
 import com.type2labs.undersea.prospect.RaftProtos;
+import com.type2labs.undersea.prospect.impl.PoolInfo;
+import com.type2labs.undersea.prospect.impl.RaftPeerId;
 import com.type2labs.undersea.prospect.model.RaftNode;
 import com.type2labs.undersea.prospect.networking.Client;
+import com.type2labs.undersea.prospect.networking.ClientImpl;
 import com.type2labs.undersea.prospect.util.GrpcUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -28,7 +31,9 @@ public class VoteTask implements Runnable {
      */
     @Override
     public void run() {
-        if (!raftNode.poolInfo().hasInfo()) {
+        PoolInfo poolInfo = raftNode.poolInfo();
+
+        if (!poolInfo.hasInfo()) {
             logger.info(raftNode.name() + " does not have the pool's info, attempting to acquire");
             raftNode.execute(new AcquireStatusTask(raftNode));
             return;
@@ -50,6 +55,24 @@ public class VoteTask implements Runnable {
             client.requestVote(request, new FutureCallback<RaftProtos.VoteResponse>() {
                 @Override
                 public void onSuccess(RaftProtos.VoteResponse result) {
+                    RaftPeerId nomineeId = RaftPeerId.valueOf(result.getNominee().getRaftPeerId());
+
+                    if (nomineeId.equals(raftNode.peerId())) {
+                        raftNode.state().getCandidate().vote(ClientImpl.ofSelf(raftNode));
+                    } else {
+                        Client nominee = raftNode.state().getClient(nomineeId);
+
+                        RaftPeerId responderId = RaftPeerId.valueOf(result.getClient().getRaftPeerId());
+                        Client responderClient = raftNode.state().getClient(responderId);
+
+                        if (raftNode.peerId().equals(nominee.peerId())) {
+                            raftNode.state().getCandidate().vote(responderClient);
+                        }
+                    }
+
+                    if (raftNode.state().getCandidate().wonRound()) {
+                        raftNode.toLeader();
+                    }
 
                 }
 

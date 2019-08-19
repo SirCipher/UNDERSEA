@@ -6,6 +6,8 @@ import com.type2labs.undersea.prospect.networking.Client;
 import com.type2labs.undersea.prospect.networking.ClientImpl;
 
 import java.net.InetSocketAddress;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
@@ -19,8 +21,36 @@ public class RaftState {
     private Client votedFor;
     private int term;
     private final RaftNode parent;
+    private Candidate candidate;
 
-    public RaftState(RaftNode parent){
+    public void initCandidate() {
+        this.candidate = new Candidate(localNodes.size() / 2);
+        this.votedFor = null;
+    }
+
+    public Candidate getCandidate() {
+        return candidate;
+    }
+
+    public class Candidate {
+        private final int mean;
+        private final Set<Client> voters = new HashSet<>();
+
+        public Candidate(int mean) {
+            this.mean = mean;
+        }
+
+        public void vote(Client client) {
+            this.voters.add(client);
+        }
+
+        public boolean wonRound() {
+            return voters.size() >= mean;
+        }
+    }
+
+
+    public RaftState(RaftNode parent) {
         this.parent = parent;
     }
 
@@ -42,6 +72,10 @@ public class RaftState {
 
     public ConcurrentMap<RaftPeerId, Client> localNodes() {
         return localNodes;
+    }
+
+    public Client getClient(RaftPeerId peerId) {
+        return localNodes.get(peerId);
     }
 
     public int getTerm() {
