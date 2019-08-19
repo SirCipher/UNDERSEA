@@ -32,7 +32,7 @@ public class ClientImpl implements Client {
     private final RaftPeerId clientId;
     private boolean isSelf = false;
 
-    public static Client ofSelf(RaftNode raftNode){
+    public static Client ofSelf(RaftNode raftNode) {
         ClientImpl self = new ClientImpl(raftNode, new InetSocketAddress(0), raftNode.peerId());
         self.isSelf = true;
         return self;
@@ -94,9 +94,15 @@ public class ClientImpl implements Client {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
         ClientImpl client = (ClientImpl) o;
+
         return clientId.equals(client.clientId);
     }
 

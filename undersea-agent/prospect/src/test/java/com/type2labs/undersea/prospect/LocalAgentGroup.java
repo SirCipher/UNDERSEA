@@ -17,7 +17,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.Closeable;
-import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -84,6 +83,10 @@ class LocalAgentGroup implements Closeable {
 
             for (Map.Entry<Client, PoolInfo.AgentInfo> e : agentInfo.getMembers().entrySet()) {
                 PoolInfo.AgentInfo a = e.getValue();
+                if (!a.isReachable()) {
+                    continue;
+                }
+
                 double cost = ((a.getAccuracy() * accuracyWeighting)
                         + (a.getRemainingBattery() * speedWeighting))
                         / a.getRange();
@@ -97,7 +100,6 @@ class LocalAgentGroup implements Closeable {
         costConfiguration.setBias("SPEED", 5.0);
 
         config.setCostConfiguration(costConfiguration);
-
 
         return config;
     }
@@ -127,7 +129,7 @@ class LocalAgentGroup implements Closeable {
     }
 
     @Override
-    public void close()  {
+    public void close() {
         logger.info("Shutting down local agent group");
 
         for (RaftNodeImpl node : raftNodes) {

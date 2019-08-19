@@ -25,7 +25,9 @@ public class RaftNodeImpl implements RaftNode {
 
     private static final Logger logger = LogManager.getLogger(RaftNodeImpl.class);
 
-    private final ScheduledExecutorService scheduledExecutor = Executors.newSingleThreadScheduledExecutor();
+    private final ScheduledExecutorService singleThreadScheduledExecutor = Executors.newSingleThreadScheduledExecutor();
+    private final ScheduledExecutorService scheduledThreadPool = Executors.newScheduledThreadPool(4);
+
     private final String name;
     private final RaftState raftState;
     private final GrpcServer server;
@@ -135,7 +137,7 @@ public class RaftNodeImpl implements RaftNode {
     @Override
     public void execute(Runnable task) {
         try {
-            scheduledExecutor.execute(task);
+            singleThreadScheduledExecutor.execute(task);
         } catch (RejectedExecutionException e) {
             logger.error(e);
         }
@@ -179,7 +181,7 @@ public class RaftNodeImpl implements RaftNode {
     }
 
     public void shutdown() {
-        scheduledExecutor.shutdown();
+        singleThreadScheduledExecutor.shutdown();
         server.close();
     }
 
@@ -223,6 +225,10 @@ public class RaftNodeImpl implements RaftNode {
         scheduleHeartbeat();
     }
 
+    private void startVotingRound() {
+        logger.info(agent.name() + " starting voting round", agent);
+        execute(new VoteTask(RaftNodeImpl.this, 0));
+    }
 
     @Override
     public void run() {
@@ -232,9 +238,7 @@ public class RaftNodeImpl implements RaftNode {
         }
 
         server.start();
-        execute(new AcquireStatusTask(RaftNodeImpl.this));
-        execute(new VoteTask(RaftNodeImpl.this, 0));
-
+        startVotingRound();
         logger.trace("Started node: " + name, agent);
         started = true;
     }
