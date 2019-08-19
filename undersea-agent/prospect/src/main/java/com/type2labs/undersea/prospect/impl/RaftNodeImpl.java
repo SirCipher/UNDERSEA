@@ -8,7 +8,9 @@ import com.type2labs.undersea.prospect.RaftProtos;
 import com.type2labs.undersea.prospect.model.RaftIntegration;
 import com.type2labs.undersea.prospect.model.RaftNode;
 import com.type2labs.undersea.prospect.networking.Client;
+import com.type2labs.undersea.prospect.task.AcquireStatusTask;
 import com.type2labs.undersea.prospect.task.RequireRoleTask;
+import com.type2labs.undersea.prospect.task.VoteTask;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -224,15 +226,15 @@ public class RaftNodeImpl implements RaftNode {
     @Override
     public void run() {
         if (agent == null) {
-//            logger.error("Agent not set for: " + name, agent);
-//            throw new RuntimeException("Agent not set for: " + name);
+            logger.error("Agent not set for: " + name);
+            throw new RuntimeException("Agent not set for: " + name);
         }
 
         server.start();
-//        execute(new AcquireStatusTask(RaftNodeImpl.this));
-//        execute(new VoteTask(RaftNodeImpl.this, 0));
+        execute(new AcquireStatusTask(RaftNodeImpl.this));
+        execute(new VoteTask(RaftNodeImpl.this, 0));
 //
-//        logger.trace("Started node: " + name, agent);
+        logger.trace("Started node: " + name, agent);
         started = true;
     }
 

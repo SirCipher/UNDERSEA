@@ -1,14 +1,21 @@
 package com.type2labs.undersea.prospect.service;
 
+import com.google.protobuf.AbstractMessage;
+import com.type2labs.undersea.prospect.NodeLog;
 import com.type2labs.undersea.prospect.RaftProtocolServiceGrpc;
 import com.type2labs.undersea.prospect.RaftProtos;
 import com.type2labs.undersea.prospect.model.RaftNode;
+import com.type2labs.undersea.prospect.networking.Client;
+import com.type2labs.undersea.prospect.util.GrpcUtil;
 import io.grpc.stub.StreamObserver;
+import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
+import java.util.function.Supplier;
 
 public class RaftProtocolServiceImpl extends RaftProtocolServiceGrpc.RaftProtocolServiceImplBase {
 
@@ -24,42 +31,84 @@ public class RaftProtocolServiceImpl extends RaftProtocolServiceGrpc.RaftProtoco
     @Override
     public void getStatus(RaftProtos.AcquireStatusRequest request,
                           StreamObserver<RaftProtos.AcquireStatusResponse> responseObserver) {
-        super.getStatus(request, responseObserver);
+        logger.info(raftNode.name() + " processing get status request: " + request, raftNode.agent());
+
+        sendAbstractAsyncMessage(responseObserver, () -> {
+            RaftProtos.AcquireStatusResponse.Builder builder = RaftProtos.AcquireStatusResponse.newBuilder();
+            List<Pair<String, String>> status = raftNode.agent().status();
+
+            for (Pair<String, String> p : status) {
+                RaftProtos.Tuple.Builder tupleBuilder = RaftProtos.Tuple.newBuilder();
+                tupleBuilder.setFieldType(p.getKey());
+                tupleBuilder.setValue(p.getValue());
+
+                builder.addStatus(tupleBuilder.build());
+            }
+
+            return builder.build();
+        });
     }
 
     @Override
     public void appendEntry(RaftProtos.AppendEntryRequest request,
                             StreamObserver<RaftProtos.AppendEntryResponse> responseObserver) {
-        super.appendEntry(request, responseObserver);
+        sendAbstractAsyncMessage(responseObserver, () -> {
+            int requestTerm = request.getTerm();
+
+            if (requestTerm > raftNode.state().getTerm()) {
+                raftNode.toFollower(requestTerm);
+            }
+
+            int requestPreviousLogIndex = request.getPrevLogIndex();
+            Client client = GrpcUtil.raftPeerProtoToEndpoint(request.getClient());
+
+            NodeLog.LogEntry logEntry = NodeLog.LogEntry.valueOf(request.getLogEntry());
+            return RaftProtos.AppendEntryResponse.newBuilder().build();
+        });
     }
 
-    @Override
-    public void requestVote(RaftProtos.VoteRequest request, StreamObserver<RaftProtos.VoteResponse> responseObserver) {
-        super.requestVote(request, responseObserver);
-    }
-
-    @Override
-    public void sayHello(RaftProtos.HelloRequest request, StreamObserver<RaftProtos.HelloResponse> observer) {
-        logger.info(raftNode.name() + " processing request: " + request);
-
-        final CompletableFuture<String> future = CompletableFuture.supplyAsync(
-                () -> {
-                    logger.info("Computing result");
-                    return "received: " + request.getName();
-                },
-                executor);
+    private <U extends AbstractMessage> void sendAbstractAsyncMessage(StreamObserver<U> responseObserver,
+                                                                      Supplier<U> supplier) {
+        final CompletableFuture<U> future = CompletableFuture.supplyAsync(supplier, executor);
 
         future.whenComplete((result, e) -> {
             if (e == null) {
-                observer.onNext(response(result));
-                observer.onCompleted();
+                responseObserver.onNext(result);
+                responseObserver.onCompleted();
             } else {
-                observer.onError(e);
+                responseObserver.onError(e);
             }
         });
     }
 
-    private static RaftProtos.HelloResponse response(String result) {
+    @Override
+    public void requestVote(RaftProtos.VoteRequest request, StreamObserver<RaftProtos.VoteResponse> responseObserver) {
+        logger.info(raftNode.name() + " processing hello request: " + request, raftNode.agent());
+
+        sendAbstractAsyncMessage(responseObserver, () -> {
+            Pair<Client, Double> nominee = raftNode.poolInfo().getLowestCost();
+
+            RaftProtos.VoteResponse response = RaftProtos.VoteResponse.newBuilder()
+                    .setClient(GrpcUtil.toRaftPeer(raftNode))
+                    .setNominee(GrpcUtil.toRaftPeer(nominee.getKey()))
+                    .build();
+
+            logger.info(raftNode.name() + ": voting for: " + nominee.getKey());
+            return response;
+        });
+    }
+
+    @Override
+    public void sayHello(RaftProtos.HelloRequest request, StreamObserver<RaftProtos.HelloResponse> responseObserver) {
+        logger.info(raftNode.name() + " processing hello request: " + request, raftNode.agent());
+
+        sendAbstractAsyncMessage(responseObserver, () -> {
+            logger.info("Computing result");
+            return helloResponse("received: " + request.getName());
+        });
+    }
+
+    private static RaftProtos.HelloResponse helloResponse(String result) {
         return RaftProtos.HelloResponse.newBuilder().
                 setName(result).
                 build();

@@ -3,20 +3,17 @@ package com.type2labs.undersea.prospect.networking;
 import com.type2labs.undersea.prospect.RaftClusterConfig;
 import com.type2labs.undersea.prospect.RaftProtos;
 import com.type2labs.undersea.prospect.impl.RaftNodeImpl;
-import com.type2labs.undersea.prospect.impl.RaftPeerId;
 import com.type2labs.undersea.prospect.model.RaftNode;
+import com.type2labs.undersea.utilities.ThrowableExecutor;
 import org.junit.Test;
 
-import java.net.InetSocketAddress;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
 
 public class GrpcServerTest {
 
-
-    private final Executor executor = Executors.newSingleThreadScheduledExecutor();
+    private final Executor executor = ThrowableExecutor.newSingleThreadExecutor();
 
     private List<RaftNode> getNagents(int n) {
         List<RaftNode> nodes = new ArrayList<>(n);

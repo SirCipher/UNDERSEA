@@ -15,6 +15,10 @@ import org.apache.logging.log4j.core.config.plugins.PluginFactory;
 import java.io.IOException;
 import java.io.Serializable;
 
+/**
+ *
+ */
+@SuppressWarnings("unused")
 @Plugin(
         name = "UnderseaLogger",
         category = Core.CATEGORY_NAME,

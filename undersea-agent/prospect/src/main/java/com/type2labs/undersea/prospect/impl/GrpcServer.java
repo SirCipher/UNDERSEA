@@ -15,28 +15,35 @@ import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.util.concurrent.ExecutorService;
 
+@SuppressWarnings("PlaceholderCountMatchesArgumentCount")
 public class GrpcServer implements Closeable {
 
     private static final Logger logger = LogManager.getLogger(GrpcServer.class);
 
     private final Server server;
     private final InetSocketAddress socketAddress;
-    private final String name;
+    private final RaftNode parentNode;
 
     /**
      * Creates a new gRPC server for the given {@link RaftNode} and listening on the provided socket address.
-     * The server is initialised with a handler executor for services and a a server executor. Both are initialised
-     * using the number of threads defined in the {@link com.type2labs.undersea.prospect.RaftClusterConfig}
+     * The server is initialised with a handler executor for services and a server executor for the {@link Server}.
+     * Both are initialised using the number of threads defined in the
+     * {@link com.type2labs.undersea.prospect.RaftClusterConfig}
      *
      * @param raftNode      that this server belongs to
      * @param socketAddress to bind the server to. If the port is defined to be 0 then an attempt is made to discover
      *                      an available local port on the machine
      */
     public GrpcServer(RaftNode raftNode, InetSocketAddress socketAddress) {
-        this.name = raftNode.name();
+        this.parentNode = raftNode;
+        String agentName = raftNode.name();
         ServerSocket serverSocket;
         int port;
 
+        /*
+            It may be possible that between getting the port and binding the Netty server that the port becomes
+            unavailable. This should be improved in the future
+         */
         try {
             serverSocket = new ServerSocket(socketAddress.getPort());
             port = serverSocket.getLocalPort();
@@ -51,13 +58,13 @@ public class GrpcServer implements Closeable {
 
         int executorThreads = raftNode.config().executorThreads();
 
-        ExecutorService handlerExecutor = ExecutorUtils.newExecutor(executorThreads, name + "-grpc-handler-%d");
+        ExecutorService handlerExecutor = ExecutorUtils.newExecutor(executorThreads, agentName + "-grpc-handler-%d");
         builder.addService(new RaftProtocolServiceImpl(raftNode, handlerExecutor));
 
-        ExecutorService serverExecutor = ExecutorUtils.newExecutor(executorThreads, name + "-grpc-server-%d");
+        ExecutorService serverExecutor = ExecutorUtils.newExecutor(executorThreads, agentName + "-grpc-server-%d");
         this.server = builder.executor(serverExecutor).build();
 
-        logger.info(name + ": gRPC available at  " + socketAddress.getHostString() + ":" + port);
+        logger.info(agentName + ": gRPC available at  " + socketAddress.getHostString() + ":" + port, raftNode.agent());
     }
 
     /**
@@ -70,16 +77,12 @@ public class GrpcServer implements Closeable {
         return socketAddress;
     }
 
-    public String name() {
-        return name;
-    }
-
     public void start() {
         try {
             server.start();
         } catch (IOException e) {
-            logger.error(name + " failed to start");
-            throw new RuntimeException(e);
+            logger.error("Failed to start", parentNode.agent());
+            throw new RuntimeException("Failed to start", e);
         }
     }
 
@@ -87,7 +90,6 @@ public class GrpcServer implements Closeable {
     public String toString() {
         return "GrpcServer{" +
                 "socketAddress=" + socketAddress.getHostName() + ":" + socketAddress.getPort() +
-                ", name='" + name + '\'' +
                 '}';
     }
 
@@ -96,9 +98,9 @@ public class GrpcServer implements Closeable {
      */
     @Override
     public void close() {
-        logger.info(name + " shutting down gRPC server");
+        logger.info("Shutting down gRPC server", parentNode.agent());
         server.shutdown();
-        logger.info(name + " shutdown gRPC server");
+        logger.info("Shutdown gRPC server", parentNode.agent());
     }
 
 }
