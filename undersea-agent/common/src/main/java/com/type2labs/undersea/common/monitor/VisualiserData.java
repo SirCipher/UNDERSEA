@@ -12,16 +12,16 @@ public class VisualiserData implements Serializable {
     private final double[] pos;
 
 
-    public String getRaftPeerId() {
-        return raftPeerId;
-    }
-
     public VisualiserData(String name, String raftPeerId, String raftRole, int noTasks, double[] pos) {
         this.name = name;
         this.raftPeerId = raftPeerId;
         this.raftRole = raftRole;
         this.noTasks = noTasks;
         this.pos = pos;
+    }
+
+    public String getRaftPeerId() {
+        return raftPeerId;
     }
 
     public String getName() {

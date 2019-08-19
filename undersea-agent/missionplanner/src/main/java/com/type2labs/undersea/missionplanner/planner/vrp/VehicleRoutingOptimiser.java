@@ -163,7 +163,8 @@ public class VehicleRoutingOptimiser implements MissionPlanner {
                 int fromNode = manager.indexToNode(fromIndex);
                 int toNode = manager.indexToNode(toIndex);
 
-                return (long) (model.getDistanceMatrix()[fromNode][toNode]);// / dslAgent.getSpeedRange().getMax()) * VehicleRoutingOptimiser.SPEED_SCALAR;
+                return (long) (model.getDistanceMatrix()[fromNode][toNode]);// / dslAgent.getSpeedRange().getMax()) *
+                // VehicleRoutingOptimiser.SPEED_SCALAR;
             });
 
             routing.setArcCostEvaluatorOfVehicle(callback, vehicle);

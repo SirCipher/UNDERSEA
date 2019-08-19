@@ -18,10 +18,14 @@ public class RaftState {
      * Endpoint voted for during last term
      */
     private final NodeLog nodeLog = new NodeLog();
+    private final RaftNode parent;
     private Client votedFor;
     private int term;
-    private final RaftNode parent;
     private Candidate candidate;
+
+    public RaftState(RaftNode parent) {
+        this.parent = parent;
+    }
 
     public void initCandidate() {
         this.candidate = new Candidate(localNodes.size() / 2);
@@ -30,28 +34,6 @@ public class RaftState {
 
     public Candidate getCandidate() {
         return candidate;
-    }
-
-    public class Candidate {
-        private final int mean;
-        private final Set<Client> voters = new HashSet<>();
-
-        public Candidate(int mean) {
-            this.mean = mean;
-        }
-
-        public void vote(Client client) {
-            this.voters.add(client);
-        }
-
-        public boolean wonRound() {
-            return voters.size() >= mean;
-        }
-    }
-
-
-    public RaftState(RaftNode parent) {
-        this.parent = parent;
     }
 
     public Client getVotedFor() {
@@ -88,6 +70,23 @@ public class RaftState {
 
     public void setVote(Client votedFor) {
         this.votedFor = votedFor;
+    }
+
+    public class Candidate {
+        private final int mean;
+        private final Set<Client> voters = new HashSet<>();
+
+        public Candidate(int mean) {
+            this.mean = mean;
+        }
+
+        public void vote(Client client) {
+            this.voters.add(client);
+        }
+
+        public boolean wonRound() {
+            return voters.size() >= mean;
+        }
     }
 
 }

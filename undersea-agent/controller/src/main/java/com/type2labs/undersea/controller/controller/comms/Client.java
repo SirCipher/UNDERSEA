@@ -3,9 +3,7 @@ package com.type2labs.undersea.controller.controller.comms;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.net.ServerSocket;
 import java.net.Socket;
 
 public class Client {
@@ -24,8 +22,6 @@ public class Client {
 
     /**
      * Constructor: create a new client instance
-     *
-
      */
     public Client() {
 //        try {

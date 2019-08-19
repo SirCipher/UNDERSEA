@@ -21,7 +21,11 @@ public class RaftClusterConfig implements UnderseaConfig {
     public RaftClusterConfig() {
     }
 
-    public RaftClusterConfig setStatusDeadline(long duration, TimeUnit timeUnit){
+    public RaftClusterConfig(UnderseaRuntimeConfig underseaRuntimeConfig) {
+        this.underseaRuntimeConfig = underseaRuntimeConfig;
+    }
+
+    public RaftClusterConfig setStatusDeadline(long duration, TimeUnit timeUnit) {
         this.getStatusDeadline = Deadline.after(duration, timeUnit);
         return this;
     }
@@ -43,10 +47,6 @@ public class RaftClusterConfig implements UnderseaConfig {
 
     public boolean autoPortDiscoveryEnabled() {
         return autoPortDiscovery;
-    }
-
-    public RaftClusterConfig(UnderseaRuntimeConfig underseaRuntimeConfig) {
-        this.underseaRuntimeConfig = underseaRuntimeConfig;
     }
 
     public UnderseaRuntimeConfig getUnderseaRuntimeConfig() {
@@ -82,6 +82,7 @@ public class RaftClusterConfig implements UnderseaConfig {
 
     /**
      * Returns the number of threads that an {@link java.util.concurrent.ExecutorService} should use
+     *
      * @return the number of threads
      */
     public int executorThreads() {

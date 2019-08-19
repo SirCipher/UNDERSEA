@@ -12,16 +12,16 @@ public class ThrowableExecutor extends ThreadPoolExecutor {
         super(corePoolSize, maximumPoolSize, keepAliveTime, unit, workQueue);
     }
 
+    public static ThrowableExecutor newSingleThreadExecutor() {
+        return new ThrowableExecutor(1, 1, 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<>());
+    }
+
     protected void afterExecute(Runnable r, Throwable t) {
         super.afterExecute(r, t);
 
         if (t != null) {
             throw new RuntimeException(t);
         }
-    }
-
-    public static ThrowableExecutor newSingleThreadExecutor() {
-        return new ThrowableExecutor(1, 1, 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<>());
     }
 
 }

@@ -10,16 +10,16 @@ public class RaftPeerId {
 
     private final String id;
 
+    private RaftPeerId(String id) {
+        this.id = id;
+    }
+
     public static RaftPeerId valueOf(String id) {
         return peerIds.computeIfAbsent(id, RaftPeerId::new);
     }
 
     public static RaftPeerId newId() {
         return valueOf(UUID.randomUUID().toString());
-    }
-
-    private RaftPeerId(String id) {
-        this.id = id;
     }
 
     @Override

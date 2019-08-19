@@ -17,7 +17,6 @@ import com.type2labs.undersea.prospect.RaftClusterConfig;
 import com.type2labs.undersea.prospect.impl.RaftIntegrationImpl;
 import com.type2labs.undersea.prospect.impl.RaftNodeImpl;
 import com.type2labs.undersea.prospect.impl.RaftPeerId;
-import com.type2labs.undersea.prospect.networking.ClientImpl;
 import com.type2labs.undersea.seachain.BlockchainNetworkImpl;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

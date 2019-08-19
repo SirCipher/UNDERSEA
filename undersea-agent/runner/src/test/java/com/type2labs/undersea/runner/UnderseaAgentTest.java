@@ -16,7 +16,6 @@ import com.type2labs.undersea.prospect.RaftClusterConfig;
 import com.type2labs.undersea.prospect.impl.RaftIntegrationImpl;
 import com.type2labs.undersea.prospect.impl.RaftNodeImpl;
 import com.type2labs.undersea.prospect.impl.RaftPeerId;
-import com.type2labs.undersea.prospect.networking.ClientImpl;
 import com.type2labs.undersea.seachain.BlockchainNetworkImpl;
 import org.junit.Test;
 

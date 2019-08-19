@@ -1,11 +1,9 @@
 package com.type2labs.undersea.controller;
 
-import com.type2labs.undersea.common.agent.AbstractAgent;
 import com.type2labs.undersea.common.agent.Agent;
 import com.type2labs.undersea.common.controller.Controller;
 import com.type2labs.undersea.controller.controller.*;
 import com.type2labs.undersea.controller.controller.comms.Client;
-import com.type2labs.undersea.utilities.Utility;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -17,9 +15,9 @@ public class ControllerImpl implements Controller {
 
     // TODO: Pass properties to controller
     private static final Properties properties = new Properties(); //Utility.getPropertiesByName("config.properties");
-    private static long SIMULATION_SPEED;
     private static final Logger logger = LogManager.getLogger(ControllerImpl.class);
-
+    private static long SIMULATION_SPEED;
+    private final Agent agent;
     protected Monitor monitor;
     protected Analyser analyser;
     protected Planner planner;
@@ -30,7 +28,6 @@ public class ControllerImpl implements Controller {
     private String host;//	= "localhost";
     private int port;// 		= 8888;
     private long start = System.currentTimeMillis();
-    private final Agent agent;
 
     public ControllerImpl(Agent agent, Monitor monitor, Analyser analyser, Planner planner, Executor executor) {
         this.agent = agent;

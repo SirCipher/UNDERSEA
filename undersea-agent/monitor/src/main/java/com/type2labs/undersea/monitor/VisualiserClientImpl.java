@@ -63,13 +63,13 @@ public class VisualiserClientImpl implements VisualiserClient {
     }
 
     @Override
-    public void write(String data)  {
+    public void write(String data) {
         LogMessage logMessage = new LogMessage(parent.name(), data + "\n");
         write(logMessage);
     }
 
     @Override
-    public void write(LogMessage data)  {
+    public void write(LogMessage data) {
         if (!enabled) {
             return;
         }
@@ -77,7 +77,7 @@ public class VisualiserClientImpl implements VisualiserClient {
         _write(data);
     }
 
-    private void _write(Object data)  {
+    private void _write(Object data) {
         openConnection();
 
         try {

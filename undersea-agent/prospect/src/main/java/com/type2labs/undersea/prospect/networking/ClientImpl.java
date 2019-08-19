@@ -32,12 +32,6 @@ public class ClientImpl implements Client {
     private final RaftPeerId clientId;
     private boolean isSelf = false;
 
-    public static Client ofSelf(RaftNode raftNode) {
-        ClientImpl self = new ClientImpl(raftNode, new InetSocketAddress(0), raftNode.peerId());
-        self.isSelf = true;
-        return self;
-    }
-
     public ClientImpl(RaftNode parent, InetSocketAddress socketAddress, RaftPeerId raftPeerId) {
         this.clientId = raftPeerId;
         this.socketAddress = socketAddress;
@@ -49,6 +43,12 @@ public class ClientImpl implements Client {
         int noThreads = parent.config().executorThreads();
         this.clientExecutor = Executors.newFixedThreadPool(noThreads,
                 new ThreadFactoryBuilder().setNameFormat(parent.name() + "-rpc-client-%d").build());
+    }
+
+    public static Client ofSelf(RaftNode raftNode) {
+        ClientImpl self = new ClientImpl(raftNode, new InetSocketAddress(0), raftNode.peerId());
+        self.isSelf = true;
+        return self;
     }
 
     @Override

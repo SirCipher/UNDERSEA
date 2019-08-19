@@ -8,7 +8,6 @@ import com.type2labs.undersea.prospect.RaftProtos;
 import com.type2labs.undersea.prospect.model.RaftIntegration;
 import com.type2labs.undersea.prospect.model.RaftNode;
 import com.type2labs.undersea.prospect.networking.Client;
-import com.type2labs.undersea.prospect.task.AcquireStatusTask;
 import com.type2labs.undersea.prospect.task.RequireRoleTask;
 import com.type2labs.undersea.prospect.task.VoteTask;
 import org.apache.logging.log4j.LogManager;
@@ -42,10 +41,6 @@ public class RaftNodeImpl implements RaftNode {
     private long lastHeartbeatTime;
     private RaftPeerId peerId;
 
-    public GrpcServer getServer() {
-        return server;
-    }
-
     public RaftNodeImpl(RaftClusterConfig raftClusterConfig,
                         String name,
                         RaftIntegration integration) {
@@ -75,6 +70,10 @@ public class RaftNodeImpl implements RaftNode {
         this.server = new GrpcServer(this, address);
         this.raftState = new RaftState(this);
         this.poolInfo = new PoolInfo(this);
+    }
+
+    public GrpcServer getServer() {
+        return server;
     }
 
     private void broadcastMissionProgress() {

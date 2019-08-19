@@ -49,7 +49,8 @@ public class AnalyserPMC extends Analyser {
         try {
             //Read  model and properties parameters
             this.modelFileName = "../controller/models/uuv/uuv.csl";//Utility.getProperty(properties, "MODEL_FILE");
-            this.propertiesFileName ="../controller/models/uuv/uuv.sm";// Utility.getProperty(properties, "PROPERTIES_FILE");
+            this.propertiesFileName = "../controller/models/uuv/uuv.sm";// Utility.getProperty(properties,
+            // "PROPERTIES_FILE");
 
             //initialise PRISM instance
             this.prism = new PrismAPI();
