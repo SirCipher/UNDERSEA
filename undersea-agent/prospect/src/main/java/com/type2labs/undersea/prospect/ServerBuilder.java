@@ -61,7 +61,7 @@ public class ServerBuilder {
                 instance = (BindableService) service.getDeclaredConstructor(RaftNode.class).newInstance(raftNode);
             } catch (InstantiationException | IllegalAccessException | InvocationTargetException |
                     NoSuchMethodException e) {
-                throw new RuntimeException("Failed to build server");
+                throw new RuntimeException("Failed to build server",e);
             }
 
             builder.addService(instance);

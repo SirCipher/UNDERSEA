@@ -6,12 +6,31 @@ import com.type2labs.undersea.prospect.model.CostCalculator;
 
 import static com.type2labs.undersea.utilities.Preconditions.isNotNull;
 
-@SuppressWarnings("ResultOfMethodCallIgnored")
 public class RaftClusterConfig implements UnderseaConfig {
 
     public static final long HEARTBEAT_PERIOD = 100;
-    private final UnderseaRuntimeConfig underseaRuntimeConfig;
+    private UnderseaRuntimeConfig underseaRuntimeConfig;
     private CostConfiguration costConfiguration;
+    private boolean autoPortDiscovery = true;
+    private int executorThreads = 4;
+
+    public RaftClusterConfig() {
+    }
+
+    /**
+     * Signals that a node should automatically assign its gRPC server port. Default is true
+     *
+     * @param autoPortDiscovery enabled
+     * @return this
+     */
+    public RaftClusterConfig autoPortDiscovery(boolean autoPortDiscovery) {
+        this.autoPortDiscovery = autoPortDiscovery;
+        return this;
+    }
+
+    public boolean autoPortDiscoveryEnabled() {
+        return autoPortDiscovery;
+    }
 
     public RaftClusterConfig(UnderseaRuntimeConfig underseaRuntimeConfig) {
         this.underseaRuntimeConfig = underseaRuntimeConfig;
@@ -32,9 +51,27 @@ public class RaftClusterConfig implements UnderseaConfig {
         return this;
     }
 
+    /**
+     * Signifies the number of threads that the {@link java.util.concurrent.ExecutorService}s should use for the gRPC
+     * server handlers, clients, and servers
+     *
+     * @param executorThreads to use per {@link java.util.concurrent.ExecutorService}
+     * @return this
+     */
+    public RaftClusterConfig noExecutorThreads(int executorThreads) {
+        this.executorThreads = executorThreads;
+        return this;
+    }
 
     public CostCalculator getCostCalculator() {
         return costConfiguration.getCostCalculator();
     }
 
+    /**
+     * Returns the number of threads that an {@link java.util.concurrent.ExecutorService} should use
+     * @return the number of threads
+     */
+    public int executorThreads() {
+        return executorThreads;
+    }
 }

@@ -1,11 +1,10 @@
 package com.type2labs.undersea.prospect.networking;
 
-import com.google.common.util.concurrent.FutureCallback;
+import com.type2labs.undersea.prospect.RaftClusterConfig;
 import com.type2labs.undersea.prospect.RaftProtos;
 import com.type2labs.undersea.prospect.impl.RaftNodeImpl;
 import com.type2labs.undersea.prospect.impl.RaftPeerId;
 import com.type2labs.undersea.prospect.model.RaftNode;
-import org.checkerframework.checker.nullness.qual.Nullable;
 import org.junit.Test;
 
 import java.net.InetSocketAddress;
@@ -24,11 +23,9 @@ public class GrpcServerTest {
 
         for (int i = 0; i < n; i++) {
             RaftNode node = new RaftNodeImpl(
-                    null,
+                    new RaftClusterConfig(),
                     "test:" + i,
-                    null,
-                    new InetSocketAddress(0),
-                    RaftPeerId.newId()
+                    null
             );
             nodes.add(node);
             executor.execute(node);
@@ -49,20 +46,14 @@ public class GrpcServerTest {
         for (Client client : master.state().localNodes().values()) {
             RaftProtos.HelloRequest request = RaftProtos.HelloRequest.newBuilder().setName("idk").build();
 
-            client.sayHello(request, new FutureCallback<RaftProtos.HelloResponse>() {
+            client.sayHello(request, new ClientImpl.Callback<RaftProtos.HelloResponse>() {
                 @Override
-                public void onSuccess(RaftProtos.@Nullable HelloResponse result) {
-                    System.out.println(result);
-                }
-
-                @Override
-                public void onFailure(Throwable t) {
-                    t.printStackTrace();
+                public void onSuccess(RaftProtos.HelloResponse response) {
+                    System.out.println(response);
                 }
             });
 
-//            System.out.println("Sleeping");
-
+            Thread.sleep(5000);
         }
 
     }

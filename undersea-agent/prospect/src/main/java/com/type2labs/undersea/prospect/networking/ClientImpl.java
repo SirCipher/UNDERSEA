@@ -60,7 +60,7 @@ public class ClientImpl implements Client {
 
     }
 
-    private abstract static class Callback<T> implements FutureCallback<T> {
+    public abstract static class Callback<T> implements FutureCallback<T> {
 
         @Override
         public void onSuccess(T response) {
@@ -69,7 +69,7 @@ public class ClientImpl implements Client {
 
         @Override
         public final void onFailure(Throwable t) {
-            t.printStackTrace();
+            throw new RuntimeException(t);
         }
     }
 

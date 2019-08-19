@@ -8,9 +8,7 @@ import com.type2labs.undersea.prospect.RaftProtos;
 import com.type2labs.undersea.prospect.model.RaftIntegration;
 import com.type2labs.undersea.prospect.model.RaftNode;
 import com.type2labs.undersea.prospect.networking.Client;
-import com.type2labs.undersea.prospect.task.AcquireStatusTask;
 import com.type2labs.undersea.prospect.task.RequireRoleTask;
-import com.type2labs.undersea.prospect.task.VoteTask;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -42,6 +40,23 @@ public class RaftNodeImpl implements RaftNode {
 
     public GrpcServer getServer() {
         return server;
+    }
+
+    public RaftNodeImpl(RaftClusterConfig raftClusterConfig,
+                        String name,
+                        RaftIntegration integration) {
+        this.peerId = RaftPeerId.newId();
+        this.raftClusterConfig = raftClusterConfig;
+        this.name = name;
+        this.integration = integration;
+
+        if (!raftClusterConfig.autoPortDiscoveryEnabled()) {
+            throw new IllegalArgumentException("Auto port discovery is not enabled");
+        }
+
+        this.server = new GrpcServer(this, new InetSocketAddress(0));
+        this.raftState = new RaftState();
+        this.poolInfo = new PoolInfo(this);
     }
 
     public RaftNodeImpl(RaftClusterConfig raftClusterConfig,
@@ -163,7 +178,7 @@ public class RaftNodeImpl implements RaftNode {
 
     public void shutdown() {
         scheduledExecutor.shutdown();
-        server.shutdown();
+        server.close();
     }
 
     public void toCandidate() {
