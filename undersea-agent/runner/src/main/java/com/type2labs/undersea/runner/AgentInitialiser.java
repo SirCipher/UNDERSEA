@@ -55,8 +55,6 @@ public class AgentInitialiser {
 
     public List<UnderseaAgent> initalise(Map<String, DslAgentProxy> agentProxyMap) {
         agentProxyMap.forEach((key, value) -> {
-            ClientImpl endpoint = new ClientImpl(new InetSocketAddress(value.getHost(),
-                    value.getServerPort()));
             RaftNodeImpl raftNode = new RaftNodeImpl(
                     raftClusterConfig,
                     value.getName(),

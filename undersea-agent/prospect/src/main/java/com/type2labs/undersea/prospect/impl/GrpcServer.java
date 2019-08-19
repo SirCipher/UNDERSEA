@@ -98,9 +98,11 @@ public class GrpcServer implements Closeable {
      */
     @Override
     public void close() {
-        logger.info("Shutting down gRPC server", parentNode.agent());
+        String name = parentNode.name();
+
+        logger.info(name+": shutting down gRPC server", parentNode.agent());
         server.shutdown();
-        logger.info("Shutdown gRPC server", parentNode.agent());
+        logger.info(name+": shutdown gRPC server", parentNode.agent());
     }
 
 }

@@ -6,6 +6,8 @@ import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.type2labs.undersea.prospect.RaftProtocolServiceGrpc;
 import com.type2labs.undersea.prospect.RaftProtos;
+import com.type2labs.undersea.prospect.impl.RaftPeerId;
+import com.type2labs.undersea.prospect.model.RaftNode;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import org.apache.logging.log4j.LogManager;
@@ -21,18 +23,27 @@ public class ClientImpl implements Client {
 
     private final InetSocketAddress socketAddress;
     private final ManagedChannel channel;
-
     private final RaftProtocolServiceGrpc.RaftProtocolServiceFutureStub futureStub;
     private final RaftProtocolServiceGrpc.RaftProtocolServiceBlockingStub blockingStub;
-    private final ExecutorService clientExecutor = Executors.newFixedThreadPool(4,
-            new ThreadFactoryBuilder().setNameFormat("rpc-client-%d").build());
+    private final ExecutorService clientExecutor;
+    private final RaftPeerId clientId;
 
-    public ClientImpl(InetSocketAddress socketAddress) {
+    public ClientImpl(RaftNode parent, InetSocketAddress socketAddress, RaftPeerId raftPeerId) {
+        this.clientId = raftPeerId;
         this.socketAddress = socketAddress;
         this.channel =
                 ManagedChannelBuilder.forAddress(socketAddress.getHostString(), socketAddress.getPort()).usePlaintext().build();
         this.futureStub = RaftProtocolServiceGrpc.newFutureStub(channel);
         this.blockingStub = RaftProtocolServiceGrpc.newBlockingStub(channel);
+
+        int noThreads = parent.config().executorThreads();
+        this.clientExecutor = Executors.newFixedThreadPool(noThreads,
+                new ThreadFactoryBuilder().setNameFormat(parent.name() + "-rpc-client-%d").build());
+    }
+
+    @Override
+    public RaftPeerId peerId() {
+        return clientId;
     }
 
     @Override
@@ -46,18 +57,23 @@ public class ClientImpl implements Client {
     }
 
     @Override
-    public void getStatus(RaftProtos.AcquireStatusRequest request) {
-
+    public void getStatus(RaftProtos.AcquireStatusRequest request,
+                          FutureCallback<RaftProtos.AcquireStatusResponse> callback) {
+        ListenableFuture<RaftProtos.AcquireStatusResponse> response = futureStub.getStatus(request);
+        Futures.addCallback(response, callback, clientExecutor);
     }
 
     @Override
-    public void appendEntry(RaftProtos.AppendEntryRequest request) {
-
+    public void appendEntry(RaftProtos.AppendEntryRequest request,
+                            FutureCallback<RaftProtos.AppendEntryResponse> callback) {
+        ListenableFuture<RaftProtos.AppendEntryResponse> response = futureStub.appendEntry(request);
+        Futures.addCallback(response, callback, clientExecutor);
     }
 
     @Override
-    public void requestVote(RaftProtos.VoteRequest request) {
-
+    public void requestVote(RaftProtos.VoteRequest request, FutureCallback<RaftProtos.VoteResponse> callback) {
+        ListenableFuture<RaftProtos.VoteResponse> response = futureStub.requestVote(request);
+        Futures.addCallback(response, callback, clientExecutor);
     }
 
     public abstract static class Callback<T> implements FutureCallback<T> {

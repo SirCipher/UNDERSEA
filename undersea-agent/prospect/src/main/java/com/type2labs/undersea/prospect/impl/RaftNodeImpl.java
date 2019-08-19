@@ -57,7 +57,7 @@ public class RaftNodeImpl implements RaftNode {
         }
 
         this.server = new GrpcServer(this, new InetSocketAddress(0));
-        this.raftState = new RaftState();
+        this.raftState = new RaftState(this);
         this.poolInfo = new PoolInfo(this);
     }
 
@@ -71,7 +71,7 @@ public class RaftNodeImpl implements RaftNode {
         this.name = name;
         this.integration = integration;
         this.server = new GrpcServer(this, address);
-        this.raftState = new RaftState();
+        this.raftState = new RaftState(this);
         this.poolInfo = new PoolInfo(this);
     }
 
@@ -233,7 +233,7 @@ public class RaftNodeImpl implements RaftNode {
         server.start();
         execute(new AcquireStatusTask(RaftNodeImpl.this));
         execute(new VoteTask(RaftNodeImpl.this, 0));
-//
+
         logger.trace("Started node: " + name, agent);
         started = true;
     }

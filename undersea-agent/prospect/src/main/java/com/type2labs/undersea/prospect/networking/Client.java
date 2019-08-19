@@ -1,26 +1,24 @@
 package com.type2labs.undersea.prospect.networking;
 
 import com.google.common.util.concurrent.FutureCallback;
-import com.type2labs.undersea.prospect.RaftProtocolServiceGrpc;
 import com.type2labs.undersea.prospect.RaftProtos;
-import io.grpc.ManagedChannel;
+import com.type2labs.undersea.prospect.impl.RaftPeerId;
 
 import java.net.InetSocketAddress;
-import java.net.ServerSocket;
 
 public interface Client {
+
+    RaftPeerId peerId();
 
     InetSocketAddress socketAddress();
 
     void shutdown();
 
+    void getStatus(RaftProtos.AcquireStatusRequest request, FutureCallback<RaftProtos.AcquireStatusResponse> callback);
 
+    void appendEntry(RaftProtos.AppendEntryRequest request, FutureCallback<RaftProtos.AppendEntryResponse> callback);
 
-    void getStatus(RaftProtos.AcquireStatusRequest request);
-
-    void appendEntry(RaftProtos.AppendEntryRequest request);
-
-    void requestVote(RaftProtos.VoteRequest request);
+    void requestVote(RaftProtos.VoteRequest request, FutureCallback<RaftProtos.VoteResponse> callback);
 
     void sayHello(RaftProtos.HelloRequest request, FutureCallback<RaftProtos.HelloResponse> callback);
 

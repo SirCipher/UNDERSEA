@@ -60,7 +60,7 @@ public class RaftProtocolServiceImpl extends RaftProtocolServiceGrpc.RaftProtoco
             }
 
             int requestPreviousLogIndex = request.getPrevLogIndex();
-            Client client = GrpcUtil.raftPeerProtoToEndpoint(request.getClient());
+//            Client client = GrpcUtil.raftPeerProtoToEndpoint(request.getClient());
 
             NodeLog.LogEntry logEntry = NodeLog.LogEntry.valueOf(request.getLogEntry());
             return RaftProtos.AppendEntryResponse.newBuilder().build();
@@ -102,10 +102,7 @@ public class RaftProtocolServiceImpl extends RaftProtocolServiceGrpc.RaftProtoco
     public void sayHello(RaftProtos.HelloRequest request, StreamObserver<RaftProtos.HelloResponse> responseObserver) {
         logger.info(raftNode.name() + " processing hello request: " + request, raftNode.agent());
 
-        sendAbstractAsyncMessage(responseObserver, () -> {
-            logger.info("Computing result");
-            return helloResponse("received: " + request.getName());
-        });
+        sendAbstractAsyncMessage(responseObserver, () -> helloResponse("received: " + request.getName()));
     }
 
     private static RaftProtos.HelloResponse helloResponse(String result) {

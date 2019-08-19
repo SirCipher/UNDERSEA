@@ -1,5 +1,6 @@
 package com.type2labs.undersea.prospect.networking;
 
+import com.type2labs.undersea.common.agent.UnderseaAgent;
 import com.type2labs.undersea.prospect.RaftClusterConfig;
 import com.type2labs.undersea.prospect.RaftProtos;
 import com.type2labs.undersea.prospect.impl.RaftNodeImpl;
@@ -15,15 +16,18 @@ public class GrpcServerTest {
 
     private final Executor executor = ThrowableExecutor.newSingleThreadExecutor();
 
-    private List<RaftNode> getNagents(int n) {
-        List<RaftNode> nodes = new ArrayList<>(n);
+    private List<RaftNodeImpl> getNagents(int n) {
+        List<RaftNodeImpl> nodes = new ArrayList<>(n);
 
         for (int i = 0; i < n; i++) {
-            RaftNode node = new RaftNodeImpl(
+            RaftNodeImpl node = new RaftNodeImpl(
                     new RaftClusterConfig(),
                     "test:" + i,
                     null
             );
+
+            node.setAgent(UnderseaAgent.DEFAULT());
+
             nodes.add(node);
             executor.execute(node);
         }
@@ -33,7 +37,7 @@ public class GrpcServerTest {
 
     @Test
     public void initN() throws InterruptedException {
-        List<RaftNode> nodes = getNagents(2);
+        List<RaftNodeImpl> nodes = getNagents(2);
         RaftNode master = nodes.get(0);
 
         for (int i = 1; i < nodes.size(); i++) {

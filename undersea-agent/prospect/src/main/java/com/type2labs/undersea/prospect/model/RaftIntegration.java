@@ -5,8 +5,6 @@ import java.util.concurrent.TimeUnit;
 
 public interface RaftIntegration {
 
-    boolean ready();
-
     void schedule(Runnable task, long delayInMillis, TimeUnit timeUnit);
 
 }

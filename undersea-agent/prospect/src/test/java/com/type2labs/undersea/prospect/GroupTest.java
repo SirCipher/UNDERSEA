@@ -17,12 +17,12 @@ public class GroupTest {
         localAgentGroup.doManualDiscovery();
         localAgentGroup.start();
 
-//        assertTrueEventually(() -> {
-//            for (RaftNodeImpl node : localAgentGroup.getRaftNodes()) {
-//                assertNotNull(node.poolInfo());
-//                assertEquals(count - 1, node.poolInfo().getMembers().size());
-//            }
-//        }, 5);
+        assertTrueEventually(() -> {
+            for (RaftNodeImpl node : localAgentGroup.getRaftNodes()) {
+                assertNotNull(node.poolInfo());
+                assertEquals(count - 1, node.poolInfo().getMembers().size());
+            }
+        }, 5);
         Thread.sleep(5000);
 
         try {

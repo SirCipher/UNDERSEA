@@ -12,13 +12,14 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-public class AbstractAgent implements Agent {
+public abstract class AbstractAgent implements Agent {
 
     private static final Logger logger = LogManager.getLogger(AbstractAgent.class);
     private static final long serialVersionUID = 6578957795091837535L;
@@ -107,11 +108,6 @@ public class AbstractAgent implements Agent {
     @Override
     public ServiceManager services() {
         return services;
-    }
-
-    @Override
-    public List<Pair<String, String>> status() {
-        return null;
     }
 
     @Override

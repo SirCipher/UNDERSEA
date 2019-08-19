@@ -18,6 +18,11 @@ public class RaftState {
     private final NodeLog nodeLog = new NodeLog();
     private Client votedFor;
     private int term;
+    private final RaftNode parent;
+
+    public RaftState(RaftNode parent){
+        this.parent = parent;
+    }
 
     public Client getVotedFor() {
         return votedFor;
@@ -32,7 +37,7 @@ public class RaftState {
      */
     public void discoverNode(RaftNode node) {
         InetSocketAddress address = node.server().getSocketAddress();
-        localNodes.computeIfAbsent(node.peerId(), n -> new ClientImpl(address));
+        localNodes.computeIfAbsent(node.peerId(), n -> new ClientImpl(parent, address, node.peerId()));
     }
 
     public ConcurrentMap<RaftPeerId, Client> localNodes() {

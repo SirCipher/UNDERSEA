@@ -22,4 +22,8 @@ public class RaftPeerId {
         this.id = id;
     }
 
+    @Override
+    public String toString() {
+        return id;
+    }
 }

@@ -25,7 +25,6 @@ public class VisualiserTest {
     private UnderseaAgent createAgent(int port) {
         String name = UUID.randomUUID().toString();
 
-        ClientImpl endpoint = new ClientImpl(new InetSocketAddress("localhost", port));
         RaftNodeImpl raftNode = new RaftNodeImpl(
                 new RaftClusterConfig(new UnderseaRuntimeConfig()), name,
                 new RaftIntegrationImpl(name),

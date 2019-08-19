@@ -32,7 +32,6 @@ public class UnderseaAgentTest {
 
     @Test
     public void testServices() {
-        ClientImpl endpoint = new ClientImpl(new InetSocketAddress("localhost", 5000));
         RaftNodeImpl raftNode = new RaftNodeImpl(
                 new RaftClusterConfig(new UnderseaRuntimeConfig()),
                 "test",

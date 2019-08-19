@@ -29,8 +29,4 @@ public class RaftIntegrationImpl implements RaftIntegration {
         }
     }
 
-    @Override
-    public boolean ready() {
-        return true;
-    }
 }
