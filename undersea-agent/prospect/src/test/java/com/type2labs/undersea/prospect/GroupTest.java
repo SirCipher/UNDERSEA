@@ -10,46 +10,33 @@ import static org.junit.Assert.assertNotNull;
 public class GroupTest {
 
     @Test
-    public void testAcquireStatusTask()  {
+    public void testAcquireStatusTask() {
         int count = 3;
 
-        LocalAgentGroup localAgentGroup = new LocalAgentGroup(count);
-        localAgentGroup.doManualDiscovery();
-        localAgentGroup.start();
+        try (LocalAgentGroup localAgentGroup = new LocalAgentGroup(count)) {
+            localAgentGroup.doManualDiscovery();
+            localAgentGroup.start();
 
-        assertTrueEventually(() -> {
-            for (RaftNodeImpl node : localAgentGroup.getRaftNodes()) {
-                assertNotNull(node.poolInfo());
-                assertEquals(count - 1, node.poolInfo().getMembers().size());
-            }
-        }, 5);
-
-        try {
-            localAgentGroup.shutdown();
-        } catch (Exception ignored) {
-            // TODO: 15/08/2019 Need to handle this more gracefully
+            assertTrueEventually(() -> {
+                for (RaftNodeImpl node : localAgentGroup.getRaftNodes()) {
+                    assertNotNull(node.poolInfo());
+                    assertEquals(count - 1, node.poolInfo().getMembers().size());
+                }
+            }, 5);
         }
-
-
     }
 
+    // TODO: 19/08/2019  
     @Test
     public void testElection() {
         int count = 3;
 
-        LocalAgentGroup localAgentGroup = new LocalAgentGroup(count);
-        localAgentGroup.doManualDiscovery();
-        localAgentGroup.start();
+        try (LocalAgentGroup localAgentGroup = new LocalAgentGroup(count)) {
+            localAgentGroup.doManualDiscovery();
+            localAgentGroup.start();
 
-        RaftNodeImpl raftNode = (RaftNodeImpl) localAgentGroup.getLeaderNode();
-        raftNode.toLeader();
-
-        System.out.println("Shutting down local agent group");
-
-        try {
-            localAgentGroup.shutdown();
-        } catch (Exception ignored) {
-            // TODO: 15/08/2019 Need to handle this more gracefully
+            RaftNodeImpl raftNode = (RaftNodeImpl) localAgentGroup.getLeaderNode();
+            raftNode.toLeader();
         }
     }
 

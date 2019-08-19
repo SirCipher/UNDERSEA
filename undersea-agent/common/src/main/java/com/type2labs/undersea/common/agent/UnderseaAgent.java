@@ -48,4 +48,9 @@ public class UnderseaAgent extends AbstractAgent {
 
         return status;
     }
+
+    public void start(){
+        services().startServices();
+    }
+
 }

@@ -1,6 +1,5 @@
 package com.type2labs.undersea.prospect.task;
 
-import com.google.common.util.concurrent.FutureCallback;
 import com.type2labs.undersea.prospect.RaftProtos;
 import com.type2labs.undersea.prospect.impl.PoolInfo;
 import com.type2labs.undersea.prospect.model.RaftNode;
@@ -26,38 +25,34 @@ public class AcquireStatusTask implements Runnable {
     public void run() {
         Collection<Client> localNodes = raftNode.state().localNodes().values();
 
+        if (localNodes.size() == 0) {
+            logger.info(raftNode.name() + " has no local nodes", raftNode.agent());
+        }
+
         for (Client localNode : localNodes) {
             RaftProtos.AcquireStatusRequest request = RaftProtos.AcquireStatusRequest
                     .newBuilder()
-                    .setClient(GrpcUtil.toRaftPeer(raftNode))
+                    .setClient(GrpcUtil.toProtoClient(raftNode))
                     .build();
 
-            localNode.getStatus(request, new FutureCallback<RaftProtos.AcquireStatusResponse>() {
-                @Override
-                public void onSuccess(RaftProtos.AcquireStatusResponse result) {
+            RaftProtos.AcquireStatusResponse response;
+
+            try {
+                response = localNode.getStatus(request, raftNode.config().getStatusDeadline());
+
+                PoolInfo poolInfo = raftNode.poolInfo();
+                PoolInfo.AgentInfo agentInfo = new PoolInfo.AgentInfo(localNode, response.getStatusList());
+                poolInfo.setAgentInformation(localNode, agentInfo);
+            } catch (StatusRuntimeException e) {
+                Status.Code code = e.getStatus().getCode();
+
+                if (code.equals(Status.Code.DEADLINE_EXCEEDED)) {
                     PoolInfo poolInfo = raftNode.poolInfo();
-                    PoolInfo.AgentInfo agentInfo = new PoolInfo.AgentInfo(localNode, result.getStatusList());
+                    PoolInfo.AgentInfo agentInfo = new PoolInfo.AgentInfo(localNode, false);
                     poolInfo.setAgentInformation(localNode, agentInfo);
                 }
-
-                @Override
-                public void onFailure(Throwable t) {
-                    if (t instanceof StatusRuntimeException) {
-                        StatusRuntimeException statusRuntimeException = (StatusRuntimeException) t;
-                        Status.Code code = statusRuntimeException.getStatus().getCode();
-
-                        if (code.equals(Status.Code.DEADLINE_EXCEEDED)) {
-                            PoolInfo poolInfo = raftNode.poolInfo();
-                            PoolInfo.AgentInfo agentInfo = new PoolInfo.AgentInfo(localNode, false);
-                            poolInfo.setAgentInformation(localNode, agentInfo);
-                        }
-                    } else {
-                        throw new RuntimeException(t);
-                    }
-                }
-            }, raftNode.config().getGetStatusDeadline());
+            }
 
         }
-
     }
 }

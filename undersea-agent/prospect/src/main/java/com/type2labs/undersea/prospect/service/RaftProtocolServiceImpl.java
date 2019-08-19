@@ -60,7 +60,7 @@ public class RaftProtocolServiceImpl extends RaftProtocolServiceGrpc.RaftProtoco
             }
 
             int requestPreviousLogIndex = request.getPrevLogIndex();
-//            Client client = GrpcUtil.raftPeerProtoToEndpoint(request.getClient());
+//            Client client = GrpcUtil.toProtoClient(request.getClient());
 
             NodeLog.LogEntry logEntry = NodeLog.LogEntry.valueOf(request.getLogEntry());
             return RaftProtos.AppendEntryResponse.newBuilder().build();
@@ -89,8 +89,8 @@ public class RaftProtocolServiceImpl extends RaftProtocolServiceGrpc.RaftProtoco
             Pair<Client, Double> nominee = raftNode.poolInfo().getLowestCost();
 
             RaftProtos.VoteResponse response = RaftProtos.VoteResponse.newBuilder()
-                    .setClient(GrpcUtil.toRaftPeer(raftNode))
-                    .setNominee(GrpcUtil.toRaftPeer(nominee.getKey()))
+                    .setClient(GrpcUtil.toProtoClient(raftNode))
+                    .setNominee(GrpcUtil.toProtoClient(nominee.getKey()))
                     .build();
 
             logger.info(raftNode.name() + ": voting for: " + nominee.getKey());
@@ -98,17 +98,5 @@ public class RaftProtocolServiceImpl extends RaftProtocolServiceGrpc.RaftProtoco
         });
     }
 
-    @Override
-    public void sayHello(RaftProtos.HelloRequest request, StreamObserver<RaftProtos.HelloResponse> responseObserver) {
-        logger.info(raftNode.name() + " processing hello request: " + request, raftNode.agent());
-
-        sendAbstractAsyncMessage(responseObserver, () -> helloResponse("received: " + request.getName()));
-    }
-
-    private static RaftProtos.HelloResponse helloResponse(String result) {
-        return RaftProtos.HelloResponse.newBuilder().
-                setName(result).
-                build();
-    }
 
 }

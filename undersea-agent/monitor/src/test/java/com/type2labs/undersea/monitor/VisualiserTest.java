@@ -10,11 +10,11 @@ import com.type2labs.undersea.missionplanner.planner.vrp.VehicleRoutingOptimiser
 import com.type2labs.undersea.prospect.RaftClusterConfig;
 import com.type2labs.undersea.prospect.impl.RaftIntegrationImpl;
 import com.type2labs.undersea.prospect.impl.RaftNodeImpl;
-import com.type2labs.undersea.prospect.impl.RaftPeerId;
-import com.type2labs.undersea.prospect.networking.ClientImpl;
+import com.type2labs.undersea.prospect.model.RaftNode;
+import org.junit.Test;
 
-import java.net.InetSocketAddress;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -26,10 +26,9 @@ public class VisualiserTest {
         String name = UUID.randomUUID().toString();
 
         RaftNodeImpl raftNode = new RaftNodeImpl(
-                new RaftClusterConfig(new UnderseaRuntimeConfig()), name,
-                new RaftIntegrationImpl(name),
-                new InetSocketAddress("localhost", port),
-                RaftPeerId.newId()
+                new RaftClusterConfig(new UnderseaRuntimeConfig()),
+                name,
+                new RaftIntegrationImpl(name)
         );
 
         ServiceManager serviceManager = new ServiceManager();
@@ -52,25 +51,29 @@ public class VisualiserTest {
         raftNode.setAgent(underseaAgent);
 
         serviceManager.registerService(monitor);
-        serviceManager.startServices();
+
+        underseaAgent.start();
 
         return underseaAgent;
     }
 
-    //    @Test
+    @Test
     public void testDataUpdate() throws InterruptedException {
         new Visualiser();
 
-        UnderseaAgent agent = createAgent(0);
+        UnderseaAgent leader = createAgent(0);
+        RaftNodeImpl raftNode = (RaftNodeImpl) leader.getConsensusAlgorithm();
+        List<UnderseaAgent> agents = new ArrayList<>();
 
         for (int i = 0; i < 10; i++) {
-            createAgent(0);
+            UnderseaAgent t = createAgent(0);
+            agents.add(t);
+            raftNode.state().discoverNode((RaftNode) t.getConsensusAlgorithm());
         }
 
-        RaftNodeImpl node = (RaftNodeImpl) agent.getConsensusAlgorithm();
 
         Thread.sleep(3000);
-        node.toLeader();
+        raftNode.toLeader();
         Thread.sleep(30000);
     }
 

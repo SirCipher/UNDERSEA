@@ -6,14 +6,14 @@ import com.type2labs.undersea.prospect.networking.Client;
 
 public class GrpcUtil {
 
-    public static RaftProtos.RaftPeerProto toRaftPeer(Client client) {
+    public static RaftProtos.RaftPeerProto toProtoClient(Client client) {
         RaftProtos.RaftPeerProto.Builder builder = RaftProtos.RaftPeerProto.newBuilder();
         builder.setRaftPeerId(client.peerId().toString());
 
         return builder.build();
     }
 
-    public static RaftProtos.RaftPeerProto toRaftPeer(RaftNode raftNode) {
+    public static RaftProtos.RaftPeerProto toProtoClient(RaftNode raftNode) {
         RaftProtos.RaftPeerProto.Builder builder = RaftProtos.RaftPeerProto.newBuilder();
         builder.setRaftPeerId(raftNode.peerId().toString());
 

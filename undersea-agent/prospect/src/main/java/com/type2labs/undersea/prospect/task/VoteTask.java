@@ -1,16 +1,12 @@
 package com.type2labs.undersea.prospect.task;
 
 import com.google.common.util.concurrent.FutureCallback;
-import com.google.common.util.concurrent.Futures;
-import com.google.common.util.concurrent.ListenableFuture;
-import com.google.common.util.concurrent.MoreExecutors;
 import com.type2labs.undersea.prospect.RaftProtos;
 import com.type2labs.undersea.prospect.model.RaftNode;
 import com.type2labs.undersea.prospect.networking.Client;
 import com.type2labs.undersea.prospect.util.GrpcUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.Collection;
 
@@ -47,14 +43,14 @@ public class VoteTask implements Runnable {
 
         for (Client client : localNodes) {
             RaftProtos.VoteRequest request = RaftProtos.VoteRequest.newBuilder()
-                    .setClient(GrpcUtil.toRaftPeer(raftNode))
+                    .setClient(GrpcUtil.toProtoClient(raftNode))
                     .setTerm(raftNode.state().getTerm() + 1)
                     .build();
 
             client.requestVote(request, new FutureCallback<RaftProtos.VoteResponse>() {
                 @Override
                 public void onSuccess(RaftProtos.VoteResponse result) {
-                    logger.info("Lolz");
+
                 }
 
                 @Override

@@ -63,13 +63,13 @@ public class VisualiserClientImpl implements VisualiserClient {
     }
 
     @Override
-    public void write(String data) throws IOException {
+    public void write(String data)  {
         LogMessage logMessage = new LogMessage(parent.name(), data + "\n");
         write(logMessage);
     }
 
     @Override
-    public void write(LogMessage data) throws IOException {
+    public void write(LogMessage data)  {
         if (!enabled) {
             return;
         }
@@ -77,7 +77,7 @@ public class VisualiserClientImpl implements VisualiserClient {
         _write(data);
     }
 
-    private void _write(Object data) throws IOException {
+    private void _write(Object data)  {
         openConnection();
 
         try {
@@ -97,7 +97,7 @@ public class VisualiserClientImpl implements VisualiserClient {
         MissionPlanner missionPlanner = (MissionPlanner) parent.services().getService(MissionPlanner.class);
         int noTasks = missionPlanner.getTasks().size();
 
-        return new VisualiserData(parent.name(), raftRole, noTasks, new double[]{0, 0});
+        return new VisualiserData(parent.name(), raftNode.peerId().toString(), raftRole, noTasks, new double[]{0, 0});
     }
 
     private void sendVisualiserData() throws IOException {

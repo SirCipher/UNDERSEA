@@ -11,6 +11,7 @@ import com.type2labs.undersea.prospect.model.RaftNode;
 import io.grpc.Deadline;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
+import io.grpc.StatusRuntimeException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -58,10 +59,16 @@ public class ClientImpl implements Client {
     }
 
     @Override
-    public void getStatus(RaftProtos.AcquireStatusRequest request,
-                          FutureCallback<RaftProtos.AcquireStatusResponse> callback, Deadline deadline) {
-        ListenableFuture<RaftProtos.AcquireStatusResponse> response = futureStub.withDeadline(deadline).getStatus(request);
-        Futures.addCallback(response, callback, clientExecutor);
+    public RaftProtos.AcquireStatusResponse getStatus(RaftProtos.AcquireStatusRequest request, Deadline deadline) throws StatusRuntimeException {
+        try {
+            return blockingStub.withDeadline(deadline).getStatus(request);
+        } catch (Exception e) {
+            if (e instanceof StatusRuntimeException) {
+                throw e;
+            } else {
+                throw new RuntimeException(e);
+            }
+        }
     }
 
     @Override
@@ -90,9 +97,4 @@ public class ClientImpl implements Client {
         }
     }
 
-    @Override
-    public void sayHello(RaftProtos.HelloRequest request, FutureCallback<RaftProtos.HelloResponse> callback) {
-        ListenableFuture<RaftProtos.HelloResponse> response = futureStub.sayHello(request);
-        Futures.addCallback(response, callback, clientExecutor);
-    }
 }

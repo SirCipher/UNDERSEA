@@ -91,7 +91,7 @@ public class Visualiser {
         c.fill = GridBagConstraints.HORIZONTAL;
 
         // TODO: Address should be the MOOS address
-        String[] columnNames = {"Address", "Name", "Raft Role", "No. Tasks", "Pos (X,Y)"};
+        String[] columnNames = {"Address", "Raft Peer ID", "Name", "Raft Role", "No. Tasks", "Pos (X,Y)"};
         DefaultTableModel model = new DefaultTableModel(new Object[0][0], columnNames);
         table = new JTable(model) {
             @Override
@@ -288,6 +288,7 @@ public class Visualiser {
                         model.addRow(new Object[]{
                                 clientSocket.getRemoteSocketAddress(),
                                 agentState.getName(),
+                                agentState.getRaftPeerId(),
                                 agentState.getRaftRole(),
                                 agentState.getNoTasks(),
                                 Arrays.toString(agentState.getPos())});
@@ -296,10 +297,11 @@ public class Visualiser {
 
                         if (rowId != -1) {
                             model.setValueAt(clientSocket.getRemoteSocketAddress(), rowId, 0);
-                            model.setValueAt(agentState.getName(), rowId, 1);
-                            model.setValueAt(agentState.getRaftRole(), rowId, 2);
-                            model.setValueAt(agentState.getNoTasks(), rowId, 3);
-                            model.setValueAt(Arrays.toString(agentState.getPos()), rowId, 4);
+                            model.setValueAt(agentState.getRaftPeerId(), rowId, 1);
+                            model.setValueAt(agentState.getName(), rowId, 2);
+                            model.setValueAt(agentState.getRaftRole(), rowId, 3);
+                            model.setValueAt(agentState.getNoTasks(), rowId, 4);
+                            model.setValueAt(Arrays.toString(agentState.getPos()), rowId, 5);
                         }
                     }
                 } else if (received instanceof LogMessage) {

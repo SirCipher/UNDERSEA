@@ -223,6 +223,7 @@ public class RaftNodeImpl implements RaftNode {
         scheduleHeartbeat();
     }
 
+
     @Override
     public void run() {
         if (agent == null) {

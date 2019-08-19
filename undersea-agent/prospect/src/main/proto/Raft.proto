@@ -16,19 +16,6 @@ service RaftProtocolService {
     rpc RequestVote (VoteRequest) returns (VoteResponse) {
 
     }
-
-    rpc SayHello(HelloRequest) returns (HelloResponse) {
-
-    }
-
-}
-
-message HelloRequest {
-    string name = 1;
-}
-
-message HelloResponse {
-    string name = 1;
 }
 
 message RaftPeerProto {

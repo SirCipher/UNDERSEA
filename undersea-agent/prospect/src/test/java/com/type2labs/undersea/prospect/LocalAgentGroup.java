@@ -16,12 +16,14 @@ import com.type2labs.undersea.prospect.networking.ClientImpl;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.io.Closeable;
+import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-class LocalAgentGroup {
+class LocalAgentGroup implements Closeable {
 
     private static final Logger logger = LogManager.getLogger(LocalAgentGroup.class);
 
@@ -58,11 +60,9 @@ class LocalAgentGroup {
             raftNode.setAgent(agent);
 
             serviceManager.registerService(monitor);
-
             serviceManager.startServices();
 
             raftNodes[i] = raftNode;
-
         }
     }
 
@@ -102,12 +102,6 @@ class LocalAgentGroup {
         return config;
     }
 
-    void shutdown() {
-        for (RaftNodeImpl node : raftNodes) {
-            node.shutdown();
-            node.agent().shutdown();
-        }
-    }
 
     void start() {
         for (RaftNodeImpl node : raftNodes) {
@@ -132,4 +126,13 @@ class LocalAgentGroup {
         return raftNodes[0];
     }
 
+    @Override
+    public void close()  {
+        logger.info("Shutting down local agent group");
+
+        for (RaftNodeImpl node : raftNodes) {
+            node.shutdown();
+            node.agent().shutdown();
+        }
+    }
 }

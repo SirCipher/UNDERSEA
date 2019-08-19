@@ -5,6 +5,8 @@ import com.type2labs.undersea.common.consensus.ConsensusAlgorithm;
 import com.type2labs.undersea.prospect.RaftClusterConfig;
 import com.type2labs.undersea.prospect.impl.*;
 
+import java.util.concurrent.Executor;
+
 public interface RaftNode extends ConsensusAlgorithm {
 
     Agent agent();
