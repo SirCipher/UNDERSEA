@@ -7,6 +7,7 @@ import io.github.classgraph.ClassInfo;
 import io.github.classgraph.ScanResult;
 import io.grpc.BindableService;
 import io.grpc.Server;
+import io.grpc.netty.shaded.io.grpc.netty.NettyServerBuilder;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -52,7 +53,7 @@ public class ServerBuilder {
     }
 
     public static Server build(InetSocketAddress address, RaftNode raftNode, ExecutorService executorService) {
-        io.grpc.ServerBuilder builder = io.grpc.ServerBuilder.forPort(address.getPort());
+        NettyServerBuilder builder = NettyServerBuilder.forPort(address.getPort());
 
         for (Class<?> service : registeredServices) {
             BindableService instance;

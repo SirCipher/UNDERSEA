@@ -30,7 +30,7 @@ public class ClientImpl implements Client {
     public ClientImpl(InetSocketAddress socketAddress) {
         this.socketAddress = socketAddress;
         this.channel =
-                ManagedChannelBuilder.forAddress(socketAddress.getHostName(), socketAddress.getPort()).usePlaintext(true).build();
+                ManagedChannelBuilder.forAddress(socketAddress.getHostString(), socketAddress.getPort()).usePlaintext().build();
         this.futureStub = RaftProtocolServiceGrpc.newFutureStub(channel);
         this.blockingStub = RaftProtocolServiceGrpc.newBlockingStub(channel);
     }

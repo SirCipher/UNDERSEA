@@ -209,15 +209,15 @@ public class RaftNodeImpl implements RaftNode {
     @Override
     public void run() {
         if (agent == null) {
-            logger.error("Agent not set for: " + name, agent);
-            throw new RuntimeException("Agent not set for: " + name);
+//            logger.error("Agent not set for: " + name, agent);
+//            throw new RuntimeException("Agent not set for: " + name);
         }
 
         server.start();
-        execute(new AcquireStatusTask(RaftNodeImpl.this));
-        execute(new VoteTask(RaftNodeImpl.this, 0));
-
-        logger.trace("Started node: " + name, agent);
+//        execute(new AcquireStatusTask(RaftNodeImpl.this));
+//        execute(new VoteTask(RaftNodeImpl.this, 0));
+//
+//        logger.trace("Started node: " + name, agent);
         started = true;
     }
 
