@@ -3,6 +3,9 @@ package com.type2labs.undersea.prospect;
 import com.type2labs.undersea.common.config.UnderseaConfig;
 import com.type2labs.undersea.common.config.UnderseaRuntimeConfig;
 import com.type2labs.undersea.prospect.model.CostCalculator;
+import io.grpc.Deadline;
+
+import java.util.concurrent.TimeUnit;
 
 import static com.type2labs.undersea.utilities.Preconditions.isNotNull;
 
@@ -13,8 +16,18 @@ public class RaftClusterConfig implements UnderseaConfig {
     private CostConfiguration costConfiguration;
     private boolean autoPortDiscovery = true;
     private int executorThreads = 4;
+    private Deadline getStatusDeadline = Deadline.after(30, TimeUnit.SECONDS);
 
     public RaftClusterConfig() {
+    }
+
+    public RaftClusterConfig getStatusDeadline(long duration, TimeUnit timeUnit){
+        this.getStatusDeadline = Deadline.after(duration, timeUnit);
+        return this;
+    }
+
+    public Deadline getGetStatusDeadline() {
+        return getStatusDeadline;
     }
 
     /**

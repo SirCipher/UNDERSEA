@@ -1,6 +1,5 @@
 package com.type2labs.undersea.controller.controller.comms;
 
-import com.type2labs.undersea.common.networking.Endpoint;
 
 import java.io.BufferedReader;
 import java.io.IOException;

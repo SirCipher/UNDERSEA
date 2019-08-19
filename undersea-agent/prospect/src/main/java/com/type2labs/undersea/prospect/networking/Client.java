@@ -3,6 +3,7 @@ package com.type2labs.undersea.prospect.networking;
 import com.google.common.util.concurrent.FutureCallback;
 import com.type2labs.undersea.prospect.RaftProtos;
 import com.type2labs.undersea.prospect.impl.RaftPeerId;
+import io.grpc.Deadline;
 
 import java.net.InetSocketAddress;
 
@@ -14,7 +15,9 @@ public interface Client {
 
     void shutdown();
 
-    void getStatus(RaftProtos.AcquireStatusRequest request, FutureCallback<RaftProtos.AcquireStatusResponse> callback);
+    void getStatus(RaftProtos.AcquireStatusRequest request,
+                   FutureCallback<RaftProtos.AcquireStatusResponse> callback,
+                   Deadline deadline);
 
     void appendEntry(RaftProtos.AppendEntryRequest request, FutureCallback<RaftProtos.AppendEntryResponse> callback);
 

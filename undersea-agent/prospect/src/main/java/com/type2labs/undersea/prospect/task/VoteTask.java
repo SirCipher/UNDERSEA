@@ -35,7 +35,6 @@ public class VoteTask implements Runnable {
         if (!raftNode.poolInfo().hasInfo()) {
             logger.info(raftNode.name() + " does not have the pool's info, attempting to acquire");
             raftNode.execute(new AcquireStatusTask(raftNode));
-
             return;
         }
 
@@ -47,29 +46,22 @@ public class VoteTask implements Runnable {
         Collection<Client> localNodes = raftNode.state().localNodes().values();
 
         for (Client client : localNodes) {
-
-
             RaftProtos.VoteRequest request = RaftProtos.VoteRequest.newBuilder()
                     .setClient(GrpcUtil.toRaftPeer(raftNode))
                     .setTerm(raftNode.state().getTerm() + 1)
                     .build();
-//            ConsensusProtocolServiceGrpc.ConsensusProtocolServiceFutureStub futureStub =
-//                    ConsensusProtocolServiceGrpc.newFutureStub(null);
-//            ListenableFuture<RaftProtos.VoteResponse> response = futureStub.requestVote(request);
 
-//            Futures.addCallback(response, new FutureCallback<RaftProtos.VoteResponse>() {
-//                @Override
-//                public void onSuccess(RaftProtos.@Nullable VoteResponse result) {
-//                    if (result != null) {
-                        // TODO: 15/08/2019 handle response
-//                    }
-//                }
-//
-//                @Override
-//                public void onFailure(Throwable t) {
-//
-//                }
-//            }, MoreExecutors.directExecutor());
+            client.requestVote(request, new FutureCallback<RaftProtos.VoteResponse>() {
+                @Override
+                public void onSuccess(RaftProtos.VoteResponse result) {
+                    logger.info("Lolz");
+                }
+
+                @Override
+                public void onFailure(Throwable t) {
+                    throw new RuntimeException(t);
+                }
+            });
         }
 
     }

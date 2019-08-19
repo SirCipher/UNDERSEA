@@ -47,15 +47,27 @@ public class PoolInfo {
 
 
     public static class AgentInfo {
+        private final Client client;
+
         private double speed;
         private double remainingBattery;
         private double range;
         private double accuracy;
-        private Client client;
+
+        private boolean reachable = true;
+
+        public AgentInfo(Client client, boolean reachable) {
+            this.client = client;
+            this.reachable = reachable;
+        }
 
         public AgentInfo(Client client, List<RaftProtos.Tuple> statusList) {
             this.client = client;
             setFields(statusList);
+        }
+
+        public boolean isReachable() {
+            return reachable;
         }
 
         public double getSpeed() {

@@ -8,6 +8,7 @@ import com.type2labs.undersea.prospect.RaftProtocolServiceGrpc;
 import com.type2labs.undersea.prospect.RaftProtos;
 import com.type2labs.undersea.prospect.impl.RaftPeerId;
 import com.type2labs.undersea.prospect.model.RaftNode;
+import io.grpc.Deadline;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import org.apache.logging.log4j.LogManager;
@@ -58,8 +59,8 @@ public class ClientImpl implements Client {
 
     @Override
     public void getStatus(RaftProtos.AcquireStatusRequest request,
-                          FutureCallback<RaftProtos.AcquireStatusResponse> callback) {
-        ListenableFuture<RaftProtos.AcquireStatusResponse> response = futureStub.getStatus(request);
+                          FutureCallback<RaftProtos.AcquireStatusResponse> callback, Deadline deadline) {
+        ListenableFuture<RaftProtos.AcquireStatusResponse> response = futureStub.withDeadline(deadline).getStatus(request);
         Futures.addCallback(response, callback, clientExecutor);
     }
 

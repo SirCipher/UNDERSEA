@@ -10,7 +10,7 @@ import static org.junit.Assert.assertNotNull;
 public class GroupTest {
 
     @Test
-    public void testAcquireStatusTask() throws InterruptedException {
+    public void testAcquireStatusTask()  {
         int count = 3;
 
         LocalAgentGroup localAgentGroup = new LocalAgentGroup(count);
@@ -23,7 +23,6 @@ public class GroupTest {
                 assertEquals(count - 1, node.poolInfo().getMembers().size());
             }
         }, 5);
-        Thread.sleep(5000);
 
         try {
             localAgentGroup.shutdown();
