@@ -23,6 +23,15 @@ public class GrpcServer implements Closeable {
     private final InetSocketAddress socketAddress;
     private final String name;
 
+    /**
+     * Creates a new gRPC server for the given {@link RaftNode} and listening on the provided socket address.
+     * The server is initialised with a handler executor for services and a a server executor. Both are initialised
+     * using the number of threads defined in the {@link com.type2labs.undersea.prospect.RaftClusterConfig}
+     *
+     * @param raftNode      that this server belongs to
+     * @param socketAddress to bind the server to. If the port is defined to be 0 then an attempt is made to discover
+     *                      an available local port on the machine
+     */
     public GrpcServer(RaftNode raftNode, InetSocketAddress socketAddress) {
         this.name = raftNode.name();
         ServerSocket serverSocket;
@@ -33,9 +42,10 @@ public class GrpcServer implements Closeable {
             port = serverSocket.getLocalPort();
             serverSocket.close();
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Unable to bind to socket", e);
         }
 
+        // If the provided port number was zero then the new port will be different
         this.socketAddress = new InetSocketAddress(port);
         final ServerBuilder builder = NettyServerBuilder.forPort(port);
 
@@ -47,9 +57,15 @@ public class GrpcServer implements Closeable {
         ExecutorService serverExecutor = ExecutorUtils.newExecutor(executorThreads, name + "-grpc-server-%d");
         this.server = builder.executor(serverExecutor).build();
 
-        logger.info(name + ": running at " + socketAddress.getHostString() + ":" + port);
+        logger.info(name + ": gRPC available at  " + socketAddress.getHostString() + ":" + port);
     }
 
+    /**
+     * Returns the {@link InetSocketAddress} that this server has binded to. This may be different to the initial
+     * socket address that was provided originally if the port was 0
+     *
+     * @return the address of the server
+     */
     public InetSocketAddress getSocketAddress() {
         return socketAddress;
     }
@@ -70,15 +86,19 @@ public class GrpcServer implements Closeable {
     @Override
     public String toString() {
         return "GrpcServer{" +
-//                "socketAddress=" + socketAddress.getHostName() + ":" + socketAddress.getPort() +
+                "socketAddress=" + socketAddress.getHostName() + ":" + socketAddress.getPort() +
                 ", name='" + name + '\'' +
                 '}';
     }
 
+    /**
+     * Indicates that the server should stop processing any new requests. Current requests are processed prior
+     */
     @Override
     public void close() {
         logger.info(name + " shutting down gRPC server");
-        server.shutdownNow();
+        server.shutdown();
         logger.info(name + " shutdown gRPC server");
     }
+
 }
