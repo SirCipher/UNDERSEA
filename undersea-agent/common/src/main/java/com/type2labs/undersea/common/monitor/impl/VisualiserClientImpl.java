@@ -91,7 +91,7 @@ public class VisualiserClientImpl implements VisualiserClient {
     }
 
     private VisualiserData agentState() {
-        RaftNode raftNode = (RaftNode) parent.services().getService(ConsensusAlgorithm.class);
+        ConsensusAlgorithm raftNode = (RaftNode) parent.services().getService(ConsensusAlgorithm.class);
         String raftRole = String.valueOf(raftNode.getRaftRole());
 
         MissionPlanner missionPlanner = (MissionPlanner) parent.services().getService(MissionPlanner.class);
