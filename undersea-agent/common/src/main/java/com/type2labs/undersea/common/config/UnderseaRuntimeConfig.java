@@ -6,6 +6,16 @@ public class UnderseaRuntimeConfig {
 
     private VisualiserClient visualiser;
     private boolean visualiserEnabled = false;
+    private boolean autoLogTransactions = true;
+
+    public UnderseaRuntimeConfig autoLogTransactions(boolean autoLogTransactions){
+        this.autoLogTransactions =autoLogTransactions;
+        return this;
+    }
+
+    public boolean autoLogTransactions() {
+        return autoLogTransactions;
+    }
 
     public boolean isVisualiserEnabled() {
         return visualiserEnabled;
@@ -23,6 +33,5 @@ public class UnderseaRuntimeConfig {
 
         return this;
     }
-
 
 }

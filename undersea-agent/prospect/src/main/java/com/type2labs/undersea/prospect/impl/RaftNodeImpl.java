@@ -1,7 +1,9 @@
 package com.type2labs.undersea.prospect.impl;
 
 import com.type2labs.undersea.common.agent.Agent;
+import com.type2labs.undersea.common.missionplanner.MissionPlanner;
 import com.type2labs.undersea.common.monitor.Monitor;
+import com.type2labs.undersea.common.service.Transaction;
 import com.type2labs.undersea.prospect.NodeLog;
 import com.type2labs.undersea.prospect.RaftClusterConfig;
 import com.type2labs.undersea.prospect.RaftProtos;
@@ -18,6 +20,7 @@ import java.net.InetSocketAddress;
 import java.util.concurrent.Executors;
 import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
 
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 
@@ -178,6 +181,12 @@ public class RaftNodeImpl implements RaftNode {
         server.close();
     }
 
+    @Override
+    public ScheduledFuture<?> executeTransaction(Transaction transaction) {
+        return null;
+    }
+
+
     public void toCandidate() {
         role = RaftRole.CANDIDATE;
         state().initCandidate();
@@ -218,6 +227,13 @@ public class RaftNodeImpl implements RaftNode {
 
         role = RaftRole.LEADER;
         logger.info(name + " is now the leader", agent);
+
+        Transaction transaction = new Transaction.Builder(agent)
+                .forService(MissionPlanner.class)
+                .withStatus(Transaction.StatusCode.ELECTED_LEADER)
+                .build();
+
+        agent.services().commitTransaction(transaction);
 
         getMonitor().update();
         scheduleHeartbeat();

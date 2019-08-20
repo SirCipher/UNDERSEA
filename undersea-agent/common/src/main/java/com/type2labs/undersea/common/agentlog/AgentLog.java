@@ -1,25 +1,13 @@
-package com.type2labs.undersea.common.monitor;
+package com.type2labs.undersea.common.agentlog;
 
+import com.type2labs.undersea.common.service.AgentService;
 import com.type2labs.undersea.common.service.Transaction;
 
 import java.util.concurrent.ScheduledFuture;
 
-public class NoMonitor implements Monitor {
+// TODO: 20/08/2019 implement ring buffer
+public class AgentLog implements AgentService {
 
-    @Override
-    public void update() {
-
-    }
-
-    @Override
-    public VisualiserClient visualiser() {
-        return new NoVisualiser();
-    }
-
-    @Override
-    public void setVisualiser(VisualiserClient visualiser) {
-
-    }
 
     @Override
     public void shutdown() {
@@ -30,8 +18,10 @@ public class NoMonitor implements Monitor {
     public ScheduledFuture<?> executeTransaction(Transaction transaction) {
         return null;
     }
+
     @Override
     public void run() {
 
     }
+
 }

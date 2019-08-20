@@ -7,6 +7,7 @@ import com.mathworks.toolbox.javabuilder.MWException;
 import com.mathworks.toolbox.javabuilder.MWNumericArray;
 import com.type2labs.undersea.common.impl.AgentImpl;
 import com.type2labs.undersea.common.missionplanner.*;
+import com.type2labs.undersea.common.service.Transaction;
 import com.type2labs.undersea.missionplanner.MatlabUtils;
 import com.type2labs.undersea.missionplanner.decomposer.delaunay.DelaunayDecomposer;
 import com.type2labs.undersea.missionplanner.model.MissionImpl;
@@ -18,6 +19,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ScheduledFuture;
 
 public class VehicleRoutingOptimiser implements MissionPlanner {
 
@@ -197,6 +199,13 @@ public class VehicleRoutingOptimiser implements MissionPlanner {
     public void shutdown() {
 
     }
+
+    @Override
+    public ScheduledFuture<?> executeTransaction(Transaction transaction) {
+        // TODO: 20/08/2019 handle on leader status change
+        return null;
+    }
+
 
     @Override
     public void run() {

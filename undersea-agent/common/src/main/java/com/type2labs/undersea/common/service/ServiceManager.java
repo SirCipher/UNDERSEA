@@ -4,8 +4,7 @@ import com.type2labs.undersea.common.agent.Agent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.Collection;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.*;
 
 /**
@@ -16,13 +15,17 @@ public class ServiceManager {
     private static final Logger logger = LogManager.getLogger(ServiceManager.class);
 
     private final Map<Class<? extends AgentService>, AgentService> services = new ConcurrentHashMap<>();
+
     private final ScheduledExecutorService scheduledExecutor = Executors.newSingleThreadScheduledExecutor();
     private final Map<Class<? extends AgentService>, ScheduledFuture<?>> scheduledFutures = new ConcurrentHashMap<>();
 
     private Agent agent;
+    private boolean autoLogTransactions;
+
 
     public void setAgent(Agent agent) {
         this.agent = agent;
+        this.autoLogTransactions = agent.config().autoLogTransactions();
         logger.info("Agent " + agent.name() + " service manager assigned", agent);
     }
 
@@ -46,6 +49,24 @@ public class ServiceManager {
         }
 
         services.put(service.getClass(), service);
+    }
+
+    public Collection<Class<? extends AgentService>> getServiceClasses() {
+        return services.keySet();
+    }
+
+    public Set<ScheduledFuture<?>> commitTransaction(Transaction transaction) {
+        Collection<Class<? extends AgentService>> destinationServices = transaction.getDestinationServices();
+        Set<ScheduledFuture<?>> futures = new HashSet<>(destinationServices.size());
+
+        for (Class<? extends AgentService> service : destinationServices) {
+            AgentService _registeredService = Objects.requireNonNull(getService(service),
+                    "Service not registered: " + service.getSimpleName());
+            ScheduledFuture<?> future = _registeredService.executeTransaction(transaction);
+            futures.add(future);
+        }
+
+        return Collections.unmodifiableSet(futures);
     }
 
     /**

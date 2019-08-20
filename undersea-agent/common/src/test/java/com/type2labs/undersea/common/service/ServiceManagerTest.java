@@ -8,6 +8,7 @@ import com.type2labs.undersea.common.monitor.MonitorImpl;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.concurrent.ScheduledFuture;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -69,6 +70,12 @@ public class ServiceManagerTest {
         public void shutdown() {
 
         }
+
+        @Override
+        public ScheduledFuture<?> executeTransaction(Transaction transaction) {
+            return null;
+        }
+
 
         @Override
         public void run() {

@@ -3,6 +3,7 @@ package com.type2labs.undersea.prospect;
 import com.type2labs.undersea.common.agent.AgentStatus;
 import com.type2labs.undersea.common.agent.UnderseaAgent;
 import com.type2labs.undersea.common.config.UnderseaRuntimeConfig;
+import com.type2labs.undersea.common.missionplanner.NoMissionPlanner;
 import com.type2labs.undersea.common.monitor.Monitor;
 import com.type2labs.undersea.common.monitor.MonitorImpl;
 import com.type2labs.undersea.common.service.ServiceManager;
@@ -55,6 +56,7 @@ class LocalAgentGroup implements Closeable {
                     new AgentStatus(name, new ArrayList<>()));
 
             serviceManager.setAgent(agent);
+            serviceManager.registerService(new NoMissionPlanner());
             raftNode.setAgent(agent);
 
             serviceManager.registerService(monitor);

@@ -1,5 +1,9 @@
 package com.type2labs.undersea.common.monitor;
 
+import com.type2labs.undersea.common.service.Transaction;
+
+import java.util.concurrent.ScheduledFuture;
+
 public class MonitorImpl implements Monitor {
 
     private VisualiserClient visualiserClient = new NoVisualiser();
@@ -22,6 +26,11 @@ public class MonitorImpl implements Monitor {
     @Override
     public void shutdown() {
 
+    }
+
+    @Override
+    public ScheduledFuture<?> executeTransaction(Transaction transaction) {
+        return null;
     }
 
     @Override
