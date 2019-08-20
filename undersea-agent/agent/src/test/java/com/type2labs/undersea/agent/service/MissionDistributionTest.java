@@ -1,11 +1,10 @@
 package com.type2labs.undersea.agent.service;
 
 import com.google.common.collect.Sets;
-import com.type2labs.undersea.common.missionplanner.NoMissionPlanner;
 import com.type2labs.undersea.common.monitor.MonitorImpl;
 import com.type2labs.undersea.common.service.AgentService;
 import com.type2labs.undersea.missionplanner.planner.vrp.VehicleRoutingOptimiser;
-import com.type2labs.undersea.prospect.impl.ClusterState;
+import com.type2labs.undersea.common.cluster.ClusterState;
 import com.type2labs.undersea.prospect.impl.LocalAgentGroup;
 import com.type2labs.undersea.prospect.impl.RaftNodeImpl;
 import org.junit.Test;
@@ -35,10 +34,9 @@ public class MissionDistributionTest {
                     ClusterState clusterState = node.state().clusterState();
 
                     assertNotNull(clusterState);
-                    assertEquals(count, clusterState.getMembers().size());
+                    assertEquals(count-1, clusterState.getMembers().size());
                 }
             }, 5);
-
 
             Thread.sleep(30000);
         } catch (InterruptedException e) {

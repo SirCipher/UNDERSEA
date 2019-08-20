@@ -5,16 +5,17 @@ import com.type2labs.undersea.common.agent.Agent;
 import com.type2labs.undersea.common.agent.AgentFactory;
 import com.type2labs.undersea.common.agent.AgentStatus;
 import com.type2labs.undersea.common.cluster.Client;
+import com.type2labs.undersea.common.cluster.ClusterState;
 import com.type2labs.undersea.common.cluster.PeerId;
 import com.type2labs.undersea.common.config.UnderseaRuntimeConfig;
-import com.type2labs.undersea.common.missionplanner.MissionParameters;
-import com.type2labs.undersea.common.missionplanner.MissionParametersImpl;
+import com.type2labs.undersea.common.cost.CostConfiguration;
+import com.type2labs.undersea.common.cost.CostConfigurationImpl;
 import com.type2labs.undersea.common.missionplanner.NoMissionPlanner;
+import com.type2labs.undersea.common.missionplanner.impl.MissionParametersImpl;
+import com.type2labs.undersea.common.missionplanner.models.MissionParameters;
 import com.type2labs.undersea.common.monitor.MonitorImpl;
 import com.type2labs.undersea.common.service.AgentService;
 import com.type2labs.undersea.common.service.ServiceManager;
-import com.type2labs.undersea.prospect.CostConfiguration;
-import com.type2labs.undersea.prospect.CostConfigurationImpl;
 import com.type2labs.undersea.prospect.RaftClusterConfig;
 import com.type2labs.undersea.prospect.model.RaftNode;
 import com.type2labs.undersea.prospect.networking.RaftClientImpl;
@@ -71,7 +72,7 @@ public class LocalAgentGroup implements Closeable {
         Properties properties = Utility.getPropertiesByName("../resources/runner.properties");
         double[][] area = Utility.propertyKeyTo2dDoubleArray(properties, "environment.area");
 
-        MissionParameters missionParameters = new MissionParametersImpl(agents, 0, area, 40);
+        MissionParameters missionParameters = new MissionParametersImpl(0, area, 40);
         config.getUnderseaRuntimeConfig().missionParameters(missionParameters);
     }
 
@@ -109,7 +110,7 @@ public class LocalAgentGroup implements Closeable {
         costConfiguration.setBias("ACCURACY", 30.0);
         costConfiguration.setBias("SPEED", 5.0);
 
-        config.setCostConfiguration(costConfiguration);
+        underseaConfig.setCostConfiguration(costConfiguration);
 
         return config;
     }

@@ -24,6 +24,11 @@ public class BlockchainNetworkImpl implements BlockchainNetwork {
 
     }
 
+    @Override
+    public Agent parent() {
+        return null;
+    }
+
 
     @Override
     public void run() {

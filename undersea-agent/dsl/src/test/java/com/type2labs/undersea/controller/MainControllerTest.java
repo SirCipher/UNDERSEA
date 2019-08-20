@@ -2,6 +2,7 @@ package com.type2labs.undersea.controller;
 
 import com.type2labs.undersea.agent.impl.UnderseaAgent;
 import com.type2labs.undersea.common.agent.AgentStatus;
+import com.type2labs.undersea.common.cluster.PeerId;
 import com.type2labs.undersea.common.config.UnderseaRuntimeConfig;
 import com.type2labs.undersea.common.service.ServiceManager;
 import com.type2labs.undersea.controller.controllerPMC.AnalyserPMC;
@@ -21,7 +22,8 @@ public class MainControllerTest {
                 new UnderseaRuntimeConfig(),
                 "test",
                 serviceManager,
-                new AgentStatus("test", new ArrayList<>()));
+                new AgentStatus("test", new ArrayList<>()),
+                PeerId.newId());
 
         serviceManager.startRepeatingService(new ControllerImpl(
                 underseaAgent,

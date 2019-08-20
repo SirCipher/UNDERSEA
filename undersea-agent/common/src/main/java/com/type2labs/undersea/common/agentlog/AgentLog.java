@@ -27,6 +27,11 @@ public class AgentLog implements AgentService {
     }
 
     @Override
+    public Agent parent() {
+        return null;
+    }
+
+    @Override
     public void run() {
 
     }

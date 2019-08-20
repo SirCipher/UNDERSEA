@@ -7,7 +7,12 @@ import com.mathworks.toolbox.javabuilder.MWClassID;
 import com.mathworks.toolbox.javabuilder.MWException;
 import com.mathworks.toolbox.javabuilder.MWNumericArray;
 import com.type2labs.undersea.common.agent.Agent;
-import com.type2labs.undersea.common.missionplanner.*;
+import com.type2labs.undersea.common.cluster.Client;
+import com.type2labs.undersea.common.cluster.ClusterState;
+import com.type2labs.undersea.common.missionplanner.PlannerException;
+import com.type2labs.undersea.common.missionplanner.impl.AgentMissionImpl;
+import com.type2labs.undersea.common.missionplanner.impl.TaskImpl;
+import com.type2labs.undersea.common.missionplanner.models.*;
 import com.type2labs.undersea.common.service.Transaction;
 import com.type2labs.undersea.common.service.TransactionStatusCode;
 import com.type2labs.undersea.missionplanner.decomposer.delaunay.DelaunayDecomposer;
@@ -20,8 +25,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
-import java.util.concurrent.Future;
 
 public class VehicleRoutingOptimiser implements MissionPlanner {
 
@@ -41,7 +46,7 @@ public class VehicleRoutingOptimiser implements MissionPlanner {
 
     private GeneratedMissionImpl generatedMission;
 
-    private double[][] decompose(double[] x, double[] y, double sensorRange) throws PlannerException {
+    private synchronized double[][] decompose(double[] x, double[] y, double sensorRange) throws PlannerException {
         MWNumericArray xArray = new MWNumericArray(x, MWClassID.DOUBLE);
         MWNumericArray yArray = new MWNumericArray(y, MWClassID.DOUBLE);
         double[][] results;
@@ -58,19 +63,20 @@ public class VehicleRoutingOptimiser implements MissionPlanner {
             results = (double[][]) numericArray.toDoubleArray();
 
             decomposer.dispose();
-            MWApplication.terminate();
 
             MatlabUtils.dispose(xArray, yArray, numericArray);
         } catch (MWException e) {
             e.printStackTrace();
             throw new PlannerException(e);
+        } finally {
+            MWApplication.terminate();
         }
 
         return results;
     }
 
     @Override
-    public GeneratedMissionImpl generate() throws PlannerException {
+    public GeneratedMission generate() throws PlannerException {
         MissionParameters missionParameters = parentAgent.config().missionParameters();
 
         double[][] polygon = missionParameters.getPolygon();
@@ -128,7 +134,7 @@ public class VehicleRoutingOptimiser implements MissionPlanner {
         return new ArrayList<>();
     }
 
-    private GeneratedMissionImpl solve(PlanDataModel model, MissionParameters missionParameters) {
+    private GeneratedMission solve(PlanDataModel model, MissionParameters missionParameters) {
         int clusterSize = parentAgent.clusterClients().size();
 
         logger.info("Generating solution");
@@ -137,6 +143,8 @@ public class VehicleRoutingOptimiser implements MissionPlanner {
 
         // Create Routing Model.
         RoutingModel routing = new RoutingModel(manager);
+        //noinspection MismatchedQueryAndUpdateOfCollection
+        List<Integer> callbacks = new ArrayList<>();
 
         // Create and register a transit callback.
         final int transitCallbackIndex =
@@ -147,9 +155,11 @@ public class VehicleRoutingOptimiser implements MissionPlanner {
                     return (long) model.getDistanceMatrix()[fromNode][toNode];
                 });
 
+        callbacks.add(transitCallbackIndex);
+
         // Define cost of each arc.
         final int bigNumber = 100000;
-        routing.addDimension(transitCallbackIndex, bigNumber, bigNumber, false, "Time");
+        routing.addDimension(transitCallbackIndex, 0, 3000, true, "Time");
 
 
 //        final Random randomGenerator = new Random(0xBEEF);
@@ -157,8 +167,14 @@ public class VehicleRoutingOptimiser implements MissionPlanner {
 
 //        final int[] speeds = {1, 2, 3, 4, 5, 500};
 
-        for (int vehicle = 0; vehicle < manager.getNumberOfVehicles(); ++vehicle) {
-            final Agent dslAgent = missionParameters.getAgents().get(vehicle);
+        List<Client> clients = new ArrayList<>(parentAgent.clusterClients().values());
+        // Sort by raft peer ids
+        clients.sort(Comparator.comparing(client -> client.peerId().toString()));
+
+
+        for (int vehicle = 0; vehicle < clients.size(); ++vehicle) {
+            Client client = clients.get(vehicle);
+            ClusterState.ClientState clientState = client.state();
 
             final int callback = routing.registerTransitCallback((long fromIndex, long toIndex) -> {
                 // Convert from routing variable Index to user NodeIndex.
@@ -169,6 +185,7 @@ public class VehicleRoutingOptimiser implements MissionPlanner {
                 // VehicleRoutingOptimiser.SPEED_SCALAR;
             });
 
+            callbacks.add(callback);
             routing.setArcCostEvaluatorOfVehicle(callback, vehicle);
         }
 
@@ -187,12 +204,57 @@ public class VehicleRoutingOptimiser implements MissionPlanner {
                         .build();
 
         // Solve the problem.
-        Assignment solution = routing.solveWithParameters(searchParameters);
+        Assignment assignment = routing.solveWithParameters(searchParameters);
+        long maxRouteDistance = 0;
 
-        generatedMission = new GeneratedMissionImpl(model, solution, routing, manager, new ArrayList<>(),
-                missionParameters);
+        for (int i = 0; i < manager.getNumberOfVehicles(); ++i) {
+            long index = routing.start(i);
+            logger.info("Route for Vehicle " + (i + 1) + ":");
+            long routeDistance = 0;
+            String route = "";
 
-        return generatedMission;
+            while (!routing.isEnd(index)) {
+                route += manager.indexToNode(index) + " -> ";
+                long previousIndex = index;
+                index = assignment.value(routing.nextVar(index));
+                routeDistance += routing.getArcCostForVehicle(previousIndex, index, i) / VehicleRoutingOptimiser.SPEED_SCALAR;
+            }
+
+            logger.info(route + manager.indexToNode(index));
+            logger.info("Distance of the route: " + routeDistance + "m");
+            maxRouteDistance = Math.max(routeDistance, maxRouteDistance);
+        }
+        logger.info("Maximum of the route distances: " + maxRouteDistance + "m");
+
+
+        return distributeMission(model, assignment, routing, manager, missionParameters);
+    }
+
+    private GeneratedMission distributeMission(PlanDataModel model, Assignment assignment, RoutingModel routing,
+                                               RoutingIndexManager manager,
+                                               MissionParameters missionParameters) {
+        double[][] centroids = missionParameters.getCentroids();
+        GeneratedMission mission = new GeneratedMissionImpl(model, assignment, routing, manager, missionParameters);
+
+        for (int i = 0; i < manager.getNumberOfVehicles(); ++i) {
+            long index = routing.start(i);
+            Client client = missionParameters.getClients().get(i);
+            ClusterState.ClientState clientState = client.state();
+            List<TaskImpl> tasks = new ArrayList<>();
+
+            while (!routing.isEnd(index)) {
+                index = assignment.value(routing.nextVar(index));
+                int ind = manager.indexToNode(index);
+                TaskImpl task = new TaskImpl(centroids[(int) ind], TaskType.WAYPOINT);
+
+                tasks.add(task);
+            }
+
+            AgentMission agentMission = new AgentMissionImpl(clientState.getClient(), tasks);
+            mission.addAgentMission(agentMission);
+        }
+
+        return mission;
     }
 
     @Override
@@ -202,7 +264,6 @@ public class VehicleRoutingOptimiser implements MissionPlanner {
 
     @Override
     public ListenableFuture<?> executeTransaction(Transaction transaction) {
-        logger.info("whaaaaaaaaaaaaat");
         logger.info("Received transaction: " + transaction);
         Agent agent = transaction.getAgent();
         TransactionStatusCode statusCode = (TransactionStatusCode) transaction.getStatusCode();
@@ -228,6 +289,11 @@ public class VehicleRoutingOptimiser implements MissionPlanner {
     @Override
     public void initialise(Agent parentAgent) {
         this.parentAgent = parentAgent;
+    }
+
+    @Override
+    public Agent parent() {
+        return parentAgent;
     }
 
 

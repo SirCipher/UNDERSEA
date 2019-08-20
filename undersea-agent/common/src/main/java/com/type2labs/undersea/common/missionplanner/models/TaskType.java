@@ -1,4 +1,4 @@
-package com.type2labs.undersea.common.missionplanner;
+package com.type2labs.undersea.common.missionplanner.models;
 
 public enum TaskType {
 

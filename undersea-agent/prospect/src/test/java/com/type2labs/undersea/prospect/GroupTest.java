@@ -1,6 +1,6 @@
 package com.type2labs.undersea.prospect;
 
-import com.type2labs.undersea.prospect.impl.ClusterState;
+import com.type2labs.undersea.common.cluster.ClusterState;
 import com.type2labs.undersea.prospect.impl.LocalAgentGroup;
 import com.type2labs.undersea.prospect.impl.RaftNodeImpl;
 import org.junit.Test;

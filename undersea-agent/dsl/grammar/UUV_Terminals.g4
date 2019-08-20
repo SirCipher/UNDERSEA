@@ -9,7 +9,7 @@ ASSIGN:
 ;
 
 MISSION_NAME:
-    'generatedMission name'
+    'mission name'
 ;
 
 NAME:

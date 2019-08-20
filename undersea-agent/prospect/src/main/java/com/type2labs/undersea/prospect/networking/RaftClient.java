@@ -26,4 +26,6 @@ public interface RaftClient extends Client {
 
     void requestVote(RaftProtos.VoteRequest request, FutureCallback<RaftProtos.VoteResponse> callback);
 
+    void distributeMission(RaftProtos.DistributeMissionRequest request, FutureCallback<RaftProtos.DisributeMissionResponse> callback);
+
 }

@@ -180,6 +180,11 @@ public class AgentImpl implements Agent {
         return new ConcurrentHashMap<>();
     }
 
+    @Override
+    public PeerId peerId() {
+        return null;
+    }
+
     public String getHost() {
         return host;
     }

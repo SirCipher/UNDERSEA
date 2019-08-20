@@ -48,9 +48,8 @@ public class UnderseaAgentTest {
         UnderseaAgent underseaAgent = new UnderseaAgent(new UnderseaRuntimeConfig(),
                 "test",
                 serviceManager,
-                new AgentStatus("test", new ArrayList<>()));
-
-
+                new AgentStatus("test", new ArrayList<>()),
+                PeerId.newId());
 
         serviceManager.startRepeatingService(new ControllerImpl(
                 underseaAgent,

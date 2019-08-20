@@ -1,7 +1,14 @@
 package com.type2labs.undersea.common.config;
 
-import com.type2labs.undersea.common.missionplanner.MissionParameters;
+import com.type2labs.undersea.common.cost.CostCalculator;
+import com.type2labs.undersea.common.cost.CostConfiguration;
+import com.type2labs.undersea.common.missionplanner.models.MissionParameters;
 import com.type2labs.undersea.common.monitor.VisualiserClient;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import static com.type2labs.undersea.utilities.preconditions.Preconditions.isNotNull;
 
 public class UnderseaRuntimeConfig {
 
@@ -9,8 +16,20 @@ public class UnderseaRuntimeConfig {
     private boolean visualiserEnabled = false;
     private boolean autoLogTransactions = true;
     private MissionParameters missionParameters;
+    private CostConfiguration costConfiguration;
 
-    public UnderseaRuntimeConfig missionParameters(MissionParameters missionParameters){
+    private Map<Class<? extends UnderseaConfig>, UnderseaConfig> serviceConfigs = new HashMap<>();
+
+    public UnderseaRuntimeConfig addServiceConfig(UnderseaConfig config) {
+        this.serviceConfigs.put(config.getClass(), config);
+        return this;
+    }
+
+    public UnderseaConfig getServiceConfig(Class<? extends UnderseaConfig> clazz) {
+        return serviceConfigs.get(clazz);
+    }
+
+    public UnderseaRuntimeConfig missionParameters(MissionParameters missionParameters) {
         this.missionParameters = missionParameters;
         return this;
     }
@@ -43,6 +62,21 @@ public class UnderseaRuntimeConfig {
         this.visualiserEnabled = true;
 
         return this;
+    }
+
+    public UnderseaRuntimeConfig setCostConfiguration(CostConfiguration costConfiguration) {
+        isNotNull(costConfiguration, "Cost configuration cannot be null");
+        this.costConfiguration = costConfiguration;
+
+        return this;
+    }
+
+    public CostConfiguration getCostConfiguration() {
+        return costConfiguration;
+    }
+
+    public CostCalculator getCostCalculator() {
+        return costConfiguration.getCostCalculator();
     }
 
 }

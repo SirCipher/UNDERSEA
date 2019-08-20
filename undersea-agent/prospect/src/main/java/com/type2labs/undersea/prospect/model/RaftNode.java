@@ -15,8 +15,6 @@ public interface RaftNode extends ConsensusAlgorithm {
 
     Agent agent();
 
-    RaftClusterConfig config();
-
     void execute(Runnable task);
 
     RaftNodeImpl.RaftRole getRaftRole();
@@ -34,8 +32,5 @@ public interface RaftNode extends ConsensusAlgorithm {
     void toCandidate();
 
     GrpcServer server();
-
-    PeerId peerId();
-
 
 }

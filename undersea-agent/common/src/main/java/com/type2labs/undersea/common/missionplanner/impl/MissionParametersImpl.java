@@ -1,8 +1,9 @@
-package com.type2labs.undersea.common.missionplanner;
+package com.type2labs.undersea.common.missionplanner.impl;
 
-import com.type2labs.undersea.common.agent.Agent;
-import com.type2labs.undersea.common.missionplanner.MissionParameters;
+import com.type2labs.undersea.common.cluster.Client;
+import com.type2labs.undersea.common.missionplanner.models.MissionParameters;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -11,20 +12,20 @@ import java.util.List;
 public class MissionParametersImpl implements MissionParameters {
 
     private final int startingNode;
-    private final List<Agent> agents;
+    private List<Client> agents;
     private final double[][] polygon;
     private double minimumSensorRange;
     private double[][] centroids;
 
-    public MissionParametersImpl(List<Agent> agents, int startingNode, double[][] polygon, int minimumSensorRange) {
-        this.agents = agents;
+    public MissionParametersImpl(int startingNode, double[][] polygon, int minimumSensorRange) {
         this.startingNode = startingNode;
         this.polygon = polygon;
         this.minimumSensorRange = minimumSensorRange;
     }
 
-    public List<Agent> getAgents() {
-        return agents;
+    @Override
+    public void setClients(List<Client> agents) {
+        this.agents = agents;
     }
 
     public double[][] getPolygon() {
@@ -43,6 +44,11 @@ public class MissionParametersImpl implements MissionParameters {
         return startingNode;
     }
 
+    @Override
+    public List<Client> getClients() {
+        return agents;
+    }
+
     public double[][] getCentroids() {
         return centroids;
     }
@@ -50,6 +56,7 @@ public class MissionParametersImpl implements MissionParameters {
     public void setCentroids(double[][] centroids) {
         this.centroids = centroids;
     }
+
 
     public double[] getCentroid(int index) {
         return centroids[index];

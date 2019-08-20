@@ -39,6 +39,11 @@ public class NoMonitor implements Monitor {
     }
 
     @Override
+    public Agent parent() {
+        return null;
+    }
+
+    @Override
     public void run() {
 
     }

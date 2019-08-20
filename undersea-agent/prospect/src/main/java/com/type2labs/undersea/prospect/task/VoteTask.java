@@ -62,7 +62,7 @@ public class VoteTask implements Runnable {
                     RaftState.Candidate candidate = raftNode.state().getCandidate();
 
                     // Grant vote if we were nominated
-                    if (nomineeId.equals(raftNode.peerId())) {
+                    if (nomineeId.equals(raftNode.parent().peerId())) {
                         Client responderClient = raftNode.state().getClient(responderId);
                         candidate.vote(responderClient);
                     }

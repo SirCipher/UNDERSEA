@@ -7,12 +7,12 @@ import com.type2labs.undersea.agent.impl.AgentImpl;
 import com.type2labs.undersea.agent.impl.Node;
 import com.type2labs.undersea.common.agent.Agent;
 import com.type2labs.undersea.common.config.UnderseaRuntimeConfig;
-import com.type2labs.undersea.common.missionplanner.MissionPlanner;
+import com.type2labs.undersea.common.missionplanner.models.MissionPlanner;
 import com.type2labs.undersea.common.missionplanner.PlannerException;
 import com.type2labs.undersea.dsl.EnvironmentProperties;
 import com.type2labs.undersea.dsl.ParserEngine;
 import com.type2labs.undersea.missionplanner.model.GeneratedMissionImpl;
-import com.type2labs.undersea.common.missionplanner.MissionParametersImpl;
+import com.type2labs.undersea.common.missionplanner.impl.MissionParametersImpl;
 import com.type2labs.undersea.missionplanner.planner.vrp.VehicleRoutingOptimiser;
 import com.type2labs.undersea.prospect.RaftClusterConfig;
 import com.type2labs.undersea.utilities.Utility;
@@ -49,7 +49,7 @@ public class Runner {
         double[][] area = Utility.propertyKeyTo2dDoubleArray(properties, "environment.area");
 
         List<Agent> dslAgents = new ArrayList<>(environmentProperties.getAgents().values());
-        MissionParametersImpl missionParametersImpl = new MissionParametersImpl(dslAgents, 0, area, 20);
+        MissionParametersImpl missionParametersImpl = new MissionParametersImpl( 0, area, 20);
 
         try {
             GeneratedMissionImpl mission = (GeneratedMissionImpl) missionPlanner.generate();

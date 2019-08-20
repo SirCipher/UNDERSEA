@@ -1,5 +1,6 @@
-package com.type2labs.undersea.common.missionplanner;
+package com.type2labs.undersea.common.missionplanner.models;
 
+import com.type2labs.undersea.common.missionplanner.PlannerException;
 import com.type2labs.undersea.common.service.AgentService;
 
 import java.util.List;

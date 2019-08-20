@@ -1,9 +1,10 @@
 package com.type2labs.undersea.prospect.task;
 
-import com.type2labs.undersea.prospect.RaftProtos;
-import com.type2labs.undersea.prospect.impl.ClusterState;
-import com.type2labs.undersea.prospect.model.RaftNode;
 import com.type2labs.undersea.common.cluster.Client;
+import com.type2labs.undersea.common.cluster.ClusterState;
+import com.type2labs.undersea.prospect.RaftClusterConfig;
+import com.type2labs.undersea.prospect.RaftProtos;
+import com.type2labs.undersea.prospect.model.RaftNode;
 import com.type2labs.undersea.prospect.networking.RaftClient;
 import com.type2labs.undersea.prospect.util.GrpcUtil;
 import io.grpc.Status;
@@ -31,7 +32,7 @@ public class AcquireStatusTask implements Runnable {
         }
 
         for (Client localNode : localNodes) {
-            RaftClient raftClient =(RaftClient) localNode;
+            RaftClient raftClient = (RaftClient) localNode;
 
             RaftProtos.AcquireStatusRequest request = RaftProtos.AcquireStatusRequest
                     .newBuilder()
@@ -42,9 +43,12 @@ public class AcquireStatusTask implements Runnable {
             ClusterState clusterState = raftNode.state().clusterState();
 
             try {
-                response = raftClient.getStatus(request, raftNode.config().getStatusDeadline());
+                RaftClusterConfig config = (RaftClusterConfig) raftNode.config();
 
-                ClusterState.ClientState agentInfo = new ClusterState.ClientState(localNode, response.getStatusList());
+                response = raftClient.getStatus(request, config.getStatusDeadline());
+
+                ClusterState.ClientState agentInfo = new ClusterState.ClientState(localNode,
+                        GrpcUtil.protoTupleToPair(response.getStatusList()));
                 clusterState.setAgentInformation(localNode, agentInfo);
             } catch (StatusRuntimeException e) {
                 Status.Code code = e.getStatus().getCode();

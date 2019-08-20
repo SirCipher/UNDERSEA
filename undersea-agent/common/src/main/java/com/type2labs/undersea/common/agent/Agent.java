@@ -28,4 +28,6 @@ public interface Agent extends Serializable {
 
     ConcurrentMap<PeerId, Client> clusterClients();
 
+    PeerId peerId();
+
 }

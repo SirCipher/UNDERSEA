@@ -7,7 +7,7 @@ import com.type2labs.undersea.common.cluster.PeerId;
 import com.type2labs.undersea.common.config.UnderseaRuntimeConfig;
 import com.type2labs.undersea.common.consensus.ConsensusAlgorithm;
 import com.type2labs.undersea.common.controller.Controller;
-import com.type2labs.undersea.common.missionplanner.MissionPlanner;
+import com.type2labs.undersea.common.missionplanner.models.MissionPlanner;
 import com.type2labs.undersea.common.service.AgentService;
 import com.type2labs.undersea.common.service.ServiceManager;
 import org.apache.logging.log4j.LogManager;
@@ -26,6 +26,7 @@ public abstract class AbstractAgent implements Agent {
     private final AgentStatus status;
     private final UnderseaRuntimeConfig config;
     private final ConcurrentHashMap<PeerId, Client> clusterClients = new ConcurrentHashMap<>();
+    private final PeerId peerId;
     private String name;
 
     @Override
@@ -33,7 +34,13 @@ public abstract class AbstractAgent implements Agent {
         return clusterClients;
     }
 
-    public AbstractAgent(UnderseaRuntimeConfig config, String name, ServiceManager serviceManager, AgentStatus status) {
+    @Override
+    public PeerId peerId() {
+        return peerId;
+    }
+
+    public AbstractAgent(UnderseaRuntimeConfig config, String name, ServiceManager serviceManager, AgentStatus status
+            , PeerId peerId) {
         // Avoided using javax validation for minimal reliance on reflection
         if (config == null) {
             throw new IllegalArgumentException("Runtime configuration must be provided");
@@ -47,11 +54,16 @@ public abstract class AbstractAgent implements Agent {
             throw new IllegalArgumentException("Agent status must be provided");
         }
 
+        if (peerId == null) {
+            throw new IllegalArgumentException("Peer ID must be provided");
+        }
+
         this.config = config;
         this.name = name;
         this.services = serviceManager;
         serviceManager.setAgent(this);
         this.status = status;
+        this.peerId = peerId;
 
         logServices();
     }

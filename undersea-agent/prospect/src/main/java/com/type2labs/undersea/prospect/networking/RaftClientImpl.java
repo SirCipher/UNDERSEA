@@ -5,9 +5,11 @@ import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.type2labs.undersea.common.cluster.Client;
+import com.type2labs.undersea.common.cluster.ClusterState;
+import com.type2labs.undersea.common.cluster.PeerId;
+import com.type2labs.undersea.prospect.RaftClusterConfig;
 import com.type2labs.undersea.prospect.RaftProtocolServiceGrpc;
 import com.type2labs.undersea.prospect.RaftProtos;
-import com.type2labs.undersea.common.cluster.PeerId;
 import com.type2labs.undersea.prospect.model.RaftNode;
 import io.grpc.Deadline;
 import io.grpc.ManagedChannel;
@@ -31,9 +33,16 @@ public class RaftClientImpl implements RaftClient {
     private final RaftProtocolServiceGrpc.RaftProtocolServiceBlockingStub blockingStub;
     private final ExecutorService clientExecutor;
     private final PeerId clientId;
+    private RaftNode consensusAlgorithm;
     private boolean isSelf = false;
 
-    public RaftClientImpl(RaftNode parent, InetSocketAddress socketAddress, PeerId peerId) {
+    @Override
+    public ClusterState.ClientState state() {
+        return consensusAlgorithm.state().clusterState().getClientState(this);
+    }
+
+    public RaftClientImpl(RaftNode consensusAlgorithm, InetSocketAddress socketAddress, PeerId peerId) {
+        this.consensusAlgorithm = consensusAlgorithm;
         this.clientId = peerId;
         this.socketAddress = socketAddress;
         this.channel =
@@ -41,13 +50,13 @@ public class RaftClientImpl implements RaftClient {
         this.futureStub = RaftProtocolServiceGrpc.newFutureStub(channel);
         this.blockingStub = RaftProtocolServiceGrpc.newBlockingStub(channel);
 
-        int noThreads = parent.config().executorThreads();
-        this.clientExecutor = Executors.newFixedThreadPool(noThreads,
-                new ThreadFactoryBuilder().setNameFormat(parent.name() + "-rpc-client-%d").build());
+        int executorThreads = ((RaftClusterConfig) consensusAlgorithm.config()).executorThreads();
+        this.clientExecutor = Executors.newFixedThreadPool(executorThreads,
+                new ThreadFactoryBuilder().setNameFormat(consensusAlgorithm.parent().name() + "-rpc-client-%d").build());
     }
 
     public static Client ofSelf(RaftNode raftNode) {
-        RaftClientImpl self = new RaftClientImpl(raftNode, new InetSocketAddress(0), raftNode.peerId());
+        RaftClientImpl self = new RaftClientImpl(raftNode, new InetSocketAddress(0), raftNode.parent().peerId());
         self.isSelf = true;
         return self;
     }
@@ -90,6 +99,13 @@ public class RaftClientImpl implements RaftClient {
     @Override
     public void requestVote(RaftProtos.VoteRequest request, FutureCallback<RaftProtos.VoteResponse> callback) {
         ListenableFuture<RaftProtos.VoteResponse> response = futureStub.requestVote(request);
+        Futures.addCallback(response, callback, clientExecutor);
+    }
+
+    @Override
+    public void distributeMission(RaftProtos.DistributeMissionRequest request,
+                                  FutureCallback<RaftProtos.DisributeMissionResponse> callback) {
+        ListenableFuture<RaftProtos.DisributeMissionResponse> response = futureStub.distributeMission(request);
         Futures.addCallback(response, callback, clientExecutor);
     }
 

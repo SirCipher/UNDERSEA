@@ -2,13 +2,15 @@ package com.type2labs.undersea.common.missionplanner;
 
 import com.google.common.util.concurrent.ListenableFuture;
 import com.type2labs.undersea.common.agent.Agent;
+import com.type2labs.undersea.common.missionplanner.models.GeneratedMission;
+import com.type2labs.undersea.common.missionplanner.models.MissionPlanner;
+import com.type2labs.undersea.common.missionplanner.models.Task;
 import com.type2labs.undersea.common.service.Transaction;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Future;
 
 public class NoMissionPlanner implements MissionPlanner {
 
@@ -45,6 +47,11 @@ public class NoMissionPlanner implements MissionPlanner {
     @Override
     public void initialise(Agent parentAgent) {
 
+    }
+
+    @Override
+    public Agent parent() {
+        return null;
     }
 
     @Override

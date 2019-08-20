@@ -1,6 +1,6 @@
 package com.type2labs.undersea.missionplanner.model;
 
-import com.type2labs.undersea.common.missionplanner.MissionParameters;
+import com.type2labs.undersea.common.missionplanner.models.MissionParameters;
 
 /**
  * Created by Thomas Klapwijk on 2019-07-22.
@@ -8,17 +8,11 @@ import com.type2labs.undersea.common.missionplanner.MissionParameters;
 // TODO: Remove
 public class PlanDataModel {
     private final double[][] distanceMatrix;
-    private final int agentCount;
     private final int depot;
 
-    public PlanDataModel(MissionParameters missionParametersImpl, double[][] distanceMatrix) {
+    public PlanDataModel(MissionParameters missionParameters, double[][] distanceMatrix) {
         this.distanceMatrix = distanceMatrix;
-        this.agentCount = missionParametersImpl.getAgents().size();
-        this.depot = missionParametersImpl.getStartingNode();
-    }
-
-    public int getAgentCount() {
-        return agentCount;
+        this.depot = missionParameters.getStartingNode();
     }
 
     public double[][] getDistanceMatrix() {

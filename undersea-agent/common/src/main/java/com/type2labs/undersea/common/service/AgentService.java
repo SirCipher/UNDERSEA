@@ -3,8 +3,6 @@ package com.type2labs.undersea.common.service;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.type2labs.undersea.common.agent.Agent;
 
-import java.util.concurrent.Future;
-
 /**
  * Created by Thomas Klapwijk on 2019-08-08.
  */
@@ -36,5 +34,13 @@ public interface AgentService extends Runnable {
      * @param parentAgent to associate with the service
      */
     void initialise(Agent parentAgent);
+
+    /**
+     * The agent that this service is associated with
+     *
+     * @return the associated agent
+     */
+    Agent parent();
+
 
 }

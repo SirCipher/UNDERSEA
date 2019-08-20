@@ -4,6 +4,7 @@ import com.google.common.util.concurrent.ListenableFuture;
 import com.type2labs.undersea.agent.impl.UnderseaAgent;
 import com.type2labs.undersea.common.agent.Agent;
 import com.type2labs.undersea.common.agent.AgentStatus;
+import com.type2labs.undersea.common.cluster.PeerId;
 import com.type2labs.undersea.common.config.UnderseaRuntimeConfig;
 import com.type2labs.undersea.common.monitor.Monitor;
 import com.type2labs.undersea.common.monitor.MonitorImpl;
@@ -30,14 +31,11 @@ public class ServiceManagerTest {
         serviceManager.registerService(monitor);
         serviceManager.registerService(new ServiceSample());
 
-        UnderseaAgent underseaAgent = new UnderseaAgent(new UnderseaRuntimeConfig(),
+        return new UnderseaAgent(new UnderseaRuntimeConfig(),
                 name,
                 serviceManager,
-                new AgentStatus(name, new ArrayList<>()));
-
-
-
-        return underseaAgent;
+                new AgentStatus(name, new ArrayList<>()),
+                PeerId.newId());
     }
 
     @Test
@@ -84,6 +82,11 @@ public class ServiceManagerTest {
         @Override
         public void initialise(Agent parentAgent) {
 
+        }
+
+        @Override
+        public Agent parent() {
+            return null;
         }
 
 

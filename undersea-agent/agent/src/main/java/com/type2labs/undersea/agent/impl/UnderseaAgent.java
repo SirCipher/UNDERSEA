@@ -3,6 +3,7 @@ package com.type2labs.undersea.agent.impl;
 
 import com.type2labs.undersea.common.agent.AbstractAgent;
 import com.type2labs.undersea.common.agent.AgentStatus;
+import com.type2labs.undersea.common.cluster.PeerId;
 import com.type2labs.undersea.common.config.UnderseaRuntimeConfig;
 import com.type2labs.undersea.common.service.ServiceManager;
 import org.apache.commons.lang3.tuple.Pair;
@@ -21,8 +22,9 @@ public class UnderseaAgent extends AbstractAgent {
     private double accuracy;
     private String name;
 
-    public UnderseaAgent(UnderseaRuntimeConfig config, String name, ServiceManager serviceManager, AgentStatus status) {
-        super(config, name, serviceManager, status);
+    public UnderseaAgent(UnderseaRuntimeConfig config, String name, ServiceManager serviceManager, AgentStatus status
+            , PeerId peerId) {
+        super(config, name, serviceManager, status, peerId);
 
         ThreadLocalRandom random = ThreadLocalRandom.current();
 
@@ -37,7 +39,8 @@ public class UnderseaAgent extends AbstractAgent {
                 new UnderseaRuntimeConfig(),
                 "DEFAULT",
                 new ServiceManager(),
-                new AgentStatus("DEFAULT", new ArrayList<>())
+                new AgentStatus("DEFAULT", new ArrayList<>()),
+                PeerId.newId()
         );
     }
 

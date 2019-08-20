@@ -3,7 +3,7 @@ package com.type2labs.undersea.monitor;
 import com.type2labs.undersea.common.agent.Agent;
 import com.type2labs.undersea.common.consensus.ConsensusAlgorithm;
 import com.type2labs.undersea.common.logger.LogMessage;
-import com.type2labs.undersea.common.missionplanner.MissionPlanner;
+import com.type2labs.undersea.common.missionplanner.models.MissionPlanner;
 import com.type2labs.undersea.common.monitor.VisualiserClient;
 import com.type2labs.undersea.common.monitor.VisualiserData;
 import com.type2labs.undersea.prospect.model.RaftNode;
@@ -97,7 +97,7 @@ public class VisualiserClientImpl implements VisualiserClient {
         MissionPlanner missionPlanner = (MissionPlanner) parent.services().getService(MissionPlanner.class);
         int noTasks = missionPlanner.getTasks().size();
 
-        return new VisualiserData(parent.name(), raftNode.peerId().toString(), raftRole, noTasks, new double[]{0, 0});
+        return new VisualiserData(parent.name(), raftNode.parent().peerId().toString(), raftRole, noTasks, new double[]{0, 0});
     }
 
     private void sendVisualiserData() throws IOException {

@@ -16,6 +16,20 @@ service RaftProtocolService {
     rpc RequestVote (VoteRequest) returns (VoteResponse) {
 
     }
+
+    rpc DistributeMission(DistributeMissionRequest) returns (DisributeMissionResponse){
+
+    }
+}
+
+message DistributeMissionRequest {
+    RaftPeerProto client = 1;
+    string mission = 2;
+}
+
+message DisributeMissionResponse {
+    RaftPeerProto client = 1;
+    int32 response =2;
 }
 
 message RaftPeerProto {

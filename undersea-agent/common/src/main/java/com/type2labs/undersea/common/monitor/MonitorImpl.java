@@ -41,6 +41,11 @@ public class MonitorImpl implements Monitor {
     }
 
     @Override
+    public Agent parent() {
+        return null;
+    }
+
+    @Override
     public void run() {
 
     }

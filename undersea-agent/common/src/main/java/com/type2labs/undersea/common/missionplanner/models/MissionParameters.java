@@ -1,14 +1,15 @@
-package com.type2labs.undersea.common.missionplanner;
+package com.type2labs.undersea.common.missionplanner.models;
 
-import com.type2labs.undersea.common.agent.Agent;
+import com.type2labs.undersea.common.cluster.Client;
 
+import java.util.Collection;
 import java.util.List;
 
 public interface MissionParameters {
 
     int getStartingNode();
 
-    List<Agent> getAgents();
+    List<Client> getClients();
 
     double[][] getPolygon();
 
@@ -18,4 +19,5 @@ public interface MissionParameters {
 
     void setCentroids(double[][] centroids);
 
+    void setClients(List<Client> clients);
 }

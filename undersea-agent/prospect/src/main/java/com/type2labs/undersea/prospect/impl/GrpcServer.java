@@ -1,5 +1,7 @@
 package com.type2labs.undersea.prospect.impl;
 
+import com.type2labs.undersea.common.config.UnderseaRuntimeConfig;
+import com.type2labs.undersea.prospect.RaftClusterConfig;
 import com.type2labs.undersea.prospect.model.RaftNode;
 import com.type2labs.undersea.prospect.service.RaftProtocolServiceImpl;
 import com.type2labs.undersea.utilities.executor.ExecutorUtils;
@@ -56,7 +58,7 @@ public class GrpcServer implements Closeable {
         this.socketAddress = new InetSocketAddress(port);
         final ServerBuilder builder = NettyServerBuilder.forPort(port);
 
-        int executorThreads = raftNode.config().executorThreads();
+        int executorThreads = ((RaftClusterConfig)raftNode.config()).executorThreads();
 
         ExecutorService handlerExecutor = ExecutorUtils.newExecutor(executorThreads, agentName + "-grpc-handler-%d");
         builder.addService(new RaftProtocolServiceImpl(raftNode, handlerExecutor));

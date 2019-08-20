@@ -2,19 +2,15 @@ package com.type2labs.undersea.prospect;
 
 import com.type2labs.undersea.common.config.UnderseaConfig;
 import com.type2labs.undersea.common.config.UnderseaRuntimeConfig;
-import com.type2labs.undersea.prospect.model.CostCalculator;
 import io.grpc.Deadline;
 
 import java.util.concurrent.TimeUnit;
-
-import static com.type2labs.undersea.utilities.preconditions.Preconditions.isNotNull;
 
 
 public class RaftClusterConfig implements UnderseaConfig {
 
     public static final long HEARTBEAT_PERIOD = 100;
     private UnderseaRuntimeConfig underseaRuntimeConfig;
-    private CostConfiguration costConfiguration;
     private boolean autoPortDiscovery = true;
     private int executorThreads = 4;
     private Deadline getStatusDeadline = Deadline.after(30, TimeUnit.SECONDS);
@@ -54,16 +50,6 @@ public class RaftClusterConfig implements UnderseaConfig {
         return underseaRuntimeConfig;
     }
 
-    public CostConfiguration getCostConfiguration() {
-        return costConfiguration;
-    }
-
-    public RaftClusterConfig setCostConfiguration(CostConfiguration costConfiguration) {
-        isNotNull(costConfiguration, "Cost configuration cannot be null");
-        this.costConfiguration = costConfiguration;
-
-        return this;
-    }
 
     /**
      * Signifies the number of threads that the {@link java.util.concurrent.ExecutorService}s should use for the gRPC
@@ -77,9 +63,6 @@ public class RaftClusterConfig implements UnderseaConfig {
         return this;
     }
 
-    public CostCalculator getCostCalculator() {
-        return costConfiguration.getCostCalculator();
-    }
 
     /**
      * Returns the number of threads that an {@link java.util.concurrent.ExecutorService} should use

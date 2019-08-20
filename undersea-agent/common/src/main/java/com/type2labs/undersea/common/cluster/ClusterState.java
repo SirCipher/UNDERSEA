@@ -1,10 +1,6 @@
-package com.type2labs.undersea.prospect.impl;
+package com.type2labs.undersea.common.cluster;
 
-import com.type2labs.undersea.prospect.RaftClusterConfig;
-import com.type2labs.undersea.prospect.RaftProtos;
-import com.type2labs.undersea.prospect.model.RaftNode;
-import com.type2labs.undersea.common.cluster.Client;
-import com.type2labs.undersea.prospect.networking.RaftClientImpl;
+import com.type2labs.undersea.common.consensus.ConsensusAlgorithm;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.*;
@@ -14,21 +10,19 @@ import java.util.Map.Entry;
 public class ClusterState {
 
     private final Map<Client, ClientState> clusterCosts;
-    //    private Map<Client, Double> clientCosts;
-    private final RaftNode parent;
+    private final ConsensusAlgorithm associatedAlg;
     private final int term;
     private boolean calculatedCosts = false;
 
-    public ClusterState(RaftNode parent, int term) {
-        this.parent = parent;
+    public ClusterState(ConsensusAlgorithm associatedAlg, int term) {
+        this.associatedAlg = associatedAlg;
         this.term = term;
         this.clusterCosts = new HashMap<>();
     }
 
-    private void addSelf() {
-        Client self = RaftClientImpl.ofSelf(parent);
+    public void addSelf(Client self) {
         ClientState agentInfo = new ClientState(self);
-        List<Pair<String, String>> status = parent.agent().status();
+        List<Pair<String, String>> status = associatedAlg.parent().status();
 
         for (Pair<String, String> pair : status) {
             agentInfo.setField(pair.getKey(), pair.getValue());
@@ -41,15 +35,18 @@ public class ClusterState {
         this.clusterCosts.put(client, agent);
     }
 
+    public ClientState getClientState(Client client){
+        return clusterCosts.get(client);
+    }
+
     public Map<Client, ClientState> getMembers() {
         return clusterCosts;
     }
 
-    public Pair<Client, ClientState> getNominee() {
+    public Pair<Client, ClientState> getNominee(Client self) {
         if (!calculatedCosts) {
-            addSelf();
-            RaftClusterConfig config = parent.config();
-            config.getCostCalculator().generateCosts(this);
+            addSelf(self);
+            associatedAlg.parent().config().getCostCalculator().generateCosts(this);
             calculatedCosts = true;
         }
 
@@ -84,7 +81,7 @@ public class ClusterState {
             this.reachable = reachable;
         }
 
-        public ClientState(Client client, List<RaftProtos.Tuple> statusList) {
+        public ClientState(Client client, List<Pair<String, String>> statusList) {
             this.client = client;
             setFields(statusList);
         }
@@ -140,9 +137,9 @@ public class ClusterState {
             }
         }
 
-        private void setFields(List<RaftProtos.Tuple> statusList) {
-            for (RaftProtos.Tuple tuple : statusList) {
-                setField(tuple.getFieldType(), tuple.getValue());
+        private void setFields(List<Pair<String, String>> statusList) {
+            for (Pair<String, String> p : statusList) {
+                setField(p.getKey(), p.getValue());
             }
         }
 

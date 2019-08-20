@@ -1,6 +1,4 @@
-package com.type2labs.undersea.prospect;
-
-import com.type2labs.undersea.prospect.model.CostCalculator;
+package com.type2labs.undersea.common.cost;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -1,6 +1,7 @@
 package com.type2labs.undersea.prospect.impl;
 
 import com.type2labs.undersea.common.cluster.Client;
+import com.type2labs.undersea.common.cluster.ClusterState;
 import com.type2labs.undersea.common.cluster.PeerId;
 import com.type2labs.undersea.prospect.NodeLog;
 import com.type2labs.undersea.prospect.model.RaftNode;
@@ -60,7 +61,7 @@ public class RaftState {
      */
     public void discoverNode(RaftNode node) {
         InetSocketAddress address = node.server().getSocketAddress();
-        localNodes.computeIfAbsent(node.peerId(), n -> new RaftClientImpl(parent, address, node.peerId()));
+        localNodes.computeIfAbsent(node.parent().peerId(), n -> new RaftClientImpl(parent, address, node.parent().peerId()));
     }
 
     public ConcurrentMap<PeerId, Client> localNodes() {

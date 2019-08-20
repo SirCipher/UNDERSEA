@@ -1,12 +1,17 @@
 package com.type2labs.undersea.prospect.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.protobuf.AbstractMessage;
+import com.type2labs.undersea.common.cluster.Client;
+import com.type2labs.undersea.common.cluster.ClusterState;
+import com.type2labs.undersea.common.missionplanner.impl.AgentMissionImpl;
+import com.type2labs.undersea.common.missionplanner.models.AgentMission;
 import com.type2labs.undersea.prospect.NodeLog;
 import com.type2labs.undersea.prospect.RaftProtocolServiceGrpc;
 import com.type2labs.undersea.prospect.RaftProtos;
-import com.type2labs.undersea.prospect.impl.ClusterState;
 import com.type2labs.undersea.prospect.model.RaftNode;
-import com.type2labs.undersea.common.cluster.Client;
+import com.type2labs.undersea.prospect.networking.RaftClientImpl;
 import com.type2labs.undersea.prospect.util.GrpcUtil;
 import io.grpc.stub.StreamObserver;
 import org.apache.commons.lang3.tuple.Pair;
@@ -87,7 +92,8 @@ public class RaftProtocolServiceImpl extends RaftProtocolServiceGrpc.RaftProtoco
         logger.info(raftNode.name() + " processing vote request: " + request, raftNode.agent());
 
         sendAbstractAsyncMessage(responseObserver, () -> {
-            Pair<Client, ClusterState.ClientState> nominee = raftNode.state().clusterState().getNominee();
+            Client self = RaftClientImpl.ofSelf(raftNode);
+            Pair<Client, ClusterState.ClientState> nominee = raftNode.state().clusterState().getNominee(self);
 
             RaftProtos.VoteResponse response = RaftProtos.VoteResponse.newBuilder()
                     .setClient(GrpcUtil.toProtoClient(raftNode))
@@ -97,6 +103,28 @@ public class RaftProtocolServiceImpl extends RaftProtocolServiceGrpc.RaftProtoco
             logger.info(raftNode.name() + ": voting for: " + nominee.getKey(), raftNode.agent());
             return response;
         });
+    }
+
+    @Override
+    public void distributeMission(RaftProtos.DistributeMissionRequest request,
+                                  StreamObserver<RaftProtos.DisributeMissionResponse> responseObserver) {
+        logger.info(raftNode.name() + " processing distribute mission request: " + request, raftNode.agent());
+
+        AgentMission agentMission;
+
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            agentMission = mapper.readValue(request.getMission(), AgentMissionImpl.class);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException("Unable to process AgentMission: " + request.toString(), e);
+        }
+
+        logger.info(raftNode.name() + ": received mission: " + agentMission);
+
+        sendAbstractAsyncMessage(responseObserver, () -> RaftProtos.DisributeMissionResponse.newBuilder()
+                .setClient(GrpcUtil.toProtoClient(raftNode))
+                .setResponse(1)
+                .build());
     }
 
 
