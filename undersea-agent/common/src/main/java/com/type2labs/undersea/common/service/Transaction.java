@@ -10,13 +10,18 @@ import java.util.concurrent.CompletableFuture;
 
 public class Transaction {
 
-    public enum StatusCode {
-        ELECTED_LEADER,
-        NOT_LEADER,
-        FAILING
-    }
-
     private final Agent agent;
+    private final Collection<Class<? extends AgentService>> destinationServices;
+    private final StatusCode statusCode;
+    private CompletableFuture<?> future;
+
+    private Transaction(Agent agent, Collection<Class<? extends AgentService>> destinationServices,
+                        CompletableFuture<?> task, StatusCode code) {
+        this.agent = agent;
+        this.future = task;
+        this.destinationServices = destinationServices;
+        this.statusCode = code;
+    }
 
     public Agent getAgent() {
         return agent;
@@ -26,7 +31,7 @@ public class Transaction {
         return future;
     }
 
-    public Collection<Class<? extends  AgentService>> getDestinationServices() {
+    public Collection<Class<? extends AgentService>> getDestinationServices() {
         return destinationServices;
     }
 
@@ -34,22 +39,17 @@ public class Transaction {
         return statusCode;
     }
 
-    private CompletableFuture<?> future;
-    private final Collection<Class<? extends  AgentService>> destinationServices;
-    private final StatusCode statusCode;
-
-    private Transaction(Agent agent, Collection<Class<? extends  AgentService>> destinationServices, CompletableFuture<?> task, StatusCode code) {
-        this.agent = agent;
-        this.future = task;
-        this.destinationServices = destinationServices;
-        this.statusCode = code;
+    public enum StatusCode {
+        ELECTED_LEADER,
+        NOT_LEADER,
+        FAILING
     }
 
     public static class Builder {
 
         private Agent agent;
         private CompletableFuture<?> task;
-        private Collection<Class<? extends  AgentService>> services = new HashSet<>();
+        private Collection<Class<? extends AgentService>> services = new HashSet<>();
         private StatusCode statusCode;
 
         public Builder(Agent agent) {
@@ -66,12 +66,12 @@ public class Transaction {
             return this;
         }
 
-        public Builder forService(Class<? extends  AgentService> service) {
+        public Builder forService(Class<? extends AgentService> service) {
             this.services = Collections.singleton(service);
             return this;
         }
 
-        public Builder forServices(Collection<Class<? extends  AgentService>> services) {
+        public Builder forServices(Collection<Class<? extends AgentService>> services) {
             this.services = services;
             return this;
         }

@@ -23,6 +23,8 @@ public class MainControllerTest {
                 serviceManager,
                 new AgentStatus("test", new ArrayList<>()));
 
+
+
         serviceManager.startRepeatingService(new ControllerImpl(
                 underseaAgent,
                 new MonitorPMC(),

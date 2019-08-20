@@ -6,6 +6,8 @@ public interface AbstractFactory<T> {
 
     T get(String name);
 
+    T create();
+
     List<T> createN(int n);
 
 }

@@ -14,10 +14,10 @@ import java.util.Map.Entry;
 public class ClusterState {
 
     private final Map<Client, ClientState> clusterCosts;
-    private boolean calculatedCosts = false;
     //    private Map<Client, Double> clientCosts;
     private final RaftNode parent;
     private final int term;
+    private boolean calculatedCosts = false;
 
     public ClusterState(RaftNode parent, int term) {
         this.parent = parent;
@@ -73,11 +73,6 @@ public class ClusterState {
         private double range;
         private double accuracy;
         private double cost;
-
-        public double getCost() {
-            return cost;
-        }
-
         private boolean reachable = true;
 
         private ClientState(Client client) {
@@ -92,6 +87,10 @@ public class ClusterState {
         public ClientState(Client client, List<RaftProtos.Tuple> statusList) {
             this.client = client;
             setFields(statusList);
+        }
+
+        public double getCost() {
+            return cost;
         }
 
         public void setCost(double cost) {

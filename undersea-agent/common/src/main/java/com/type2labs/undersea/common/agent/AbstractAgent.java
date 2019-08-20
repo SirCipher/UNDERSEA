@@ -44,6 +44,7 @@ public abstract class AbstractAgent implements Agent {
         this.config = config;
         this.name = name;
         this.services = serviceManager;
+        serviceManager.setAgent(this);
         this.status = status;
 
         logServices();

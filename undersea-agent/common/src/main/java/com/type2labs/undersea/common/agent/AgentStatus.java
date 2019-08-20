@@ -1,6 +1,5 @@
 package com.type2labs.undersea.common.agent;
 
-import com.type2labs.undersea.common.impl.Sensor;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.ArrayList;
@@ -12,19 +11,19 @@ import java.util.List;
 public class AgentStatus {
 
     private final String name;
-    private final List<Sensor> sensors;
+    private final List<Subsystem> subsystems;
 
-    public AgentStatus(String name, List<Sensor> sensors) {
+    public AgentStatus(String name, List<Subsystem> subsystems) {
         this.name = name;
-        this.sensors = sensors;
+        this.subsystems = subsystems;
     }
 
     public String getName() {
         return name;
     }
 
-    public List<Sensor> getSensors() {
-        return sensors;
+    public List<Subsystem> getSubsystems() {
+        return subsystems;
     }
 
     public List<Pair<String, String>> transportableStatus() {

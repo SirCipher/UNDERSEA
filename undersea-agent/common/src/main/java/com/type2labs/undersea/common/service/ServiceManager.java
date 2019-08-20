@@ -22,14 +22,13 @@ public class ServiceManager {
     private Agent agent;
     private boolean autoLogTransactions;
 
-
     public void setAgent(Agent agent) {
         this.agent = agent;
         this.autoLogTransactions = agent.config().autoLogTransactions();
         logger.info("Agent " + agent.name() + " service manager assigned", agent);
     }
 
-    public AgentService getService(Class<? extends AgentService> s) {
+    public synchronized AgentService getService(Class<? extends AgentService> s) {
         for (Map.Entry<Class<? extends AgentService>, AgentService> e : services.entrySet()) {
             if (s.isAssignableFrom(e.getKey())) {
                 return e.getValue();
@@ -39,11 +38,11 @@ public class ServiceManager {
         return null;
     }
 
-    public Collection<AgentService> getServices() {
+    public synchronized Collection<AgentService> getServices() {
         return services.values();
     }
 
-    public void registerService(AgentService service) {
+    public synchronized void registerService(AgentService service) {
         if (services.containsKey(service.getClass())) {
             throw new IllegalArgumentException("Service already exists");
         }
@@ -51,7 +50,7 @@ public class ServiceManager {
         services.put(service.getClass(), service);
     }
 
-    public Collection<Class<? extends AgentService>> getServiceClasses() {
+    Collection<Class<? extends AgentService>> getServiceClasses() {
         return services.keySet();
     }
 
@@ -76,7 +75,7 @@ public class ServiceManager {
      * @param service to execute
      * @param period  the period between successive executions
      */
-    public void startRepeatingService(AgentService service, long period) {
+    public synchronized void startRepeatingService(AgentService service, long period) {
         ScheduledFuture<?> scheduledFuture = scheduledExecutor.scheduleAtFixedRate(service, 1, period,
                 TimeUnit.MILLISECONDS);
         scheduledFutures.put(service.getClass(), scheduledFuture);
@@ -106,7 +105,7 @@ public class ServiceManager {
         return null;
     }
 
-    public boolean serviceRunning(Class<? extends AgentService> service) {
+    public synchronized boolean serviceRunning(Class<? extends AgentService> service) {
         ScheduledFuture<?> scheduledFuture = getScheduledFuture(service);
 
         if (scheduledFuture == null) {
@@ -116,7 +115,7 @@ public class ServiceManager {
         }
     }
 
-    public void startService(Class<? extends AgentService> service) {
+    private void startService(Class<? extends AgentService> service) {
         AgentService agentService = getService(service);
         logger.info("Agent " + agent.name() + " starting service: " + agentService.getClass().getSimpleName(), agent);
 

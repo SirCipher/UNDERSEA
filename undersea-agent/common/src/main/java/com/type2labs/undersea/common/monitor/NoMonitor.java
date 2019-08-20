@@ -30,6 +30,7 @@ public class NoMonitor implements Monitor {
     public ScheduledFuture<?> executeTransaction(Transaction transaction) {
         return null;
     }
+
     @Override
     public void run() {
 

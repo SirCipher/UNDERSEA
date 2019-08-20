@@ -1,7 +1,7 @@
 package com.type2labs.undersea.runner;
 
+import com.type2labs.undersea.agent.impl.UnderseaAgent;
 import com.type2labs.undersea.common.agent.AgentStatus;
-import com.type2labs.undersea.common.agent.UnderseaAgent;
 import com.type2labs.undersea.common.config.UnderseaRuntimeConfig;
 import com.type2labs.undersea.common.monitor.Monitor;
 import com.type2labs.undersea.common.monitor.MonitorImpl;
@@ -51,7 +51,7 @@ public class UnderseaAgentTest {
                 new AgentStatus("test", new ArrayList<>()));
 
 
-        serviceManager.setAgent(underseaAgent);
+
         serviceManager.startRepeatingService(new ControllerImpl(
                 underseaAgent,
                 new MonitorPMC(),

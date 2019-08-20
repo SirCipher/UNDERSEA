@@ -1,7 +1,8 @@
 package com.type2labs.undersea.runner;
 
+import com.type2labs.undersea.common.agent.Agent;
+import com.type2labs.undersea.common.agent.AgentFactory;
 import com.type2labs.undersea.common.agent.AgentStatus;
-import com.type2labs.undersea.common.agent.UnderseaAgent;
 import com.type2labs.undersea.common.monitor.Monitor;
 import com.type2labs.undersea.common.monitor.MonitorImpl;
 import com.type2labs.undersea.common.service.ServiceManager;
@@ -22,10 +23,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.net.InetSocketAddress;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
+import java.util.*;
 
 /**
  * Created by Thomas Klapwijk on 2019-07-23.
@@ -36,7 +34,7 @@ public class AgentInitialiser {
     private static AgentInitialiser instance;
     private final RaftClusterConfig raftClusterConfig;
     private Properties properties;
-    private List<UnderseaAgent> agents = new LinkedList<>();
+    private List<Agent> agents = new LinkedList<>();
 
 
     private AgentInitialiser(RaftClusterConfig raftClusterConfig) {
@@ -52,7 +50,9 @@ public class AgentInitialiser {
         return instance;
     }
 
-    public List<UnderseaAgent> initalise(Map<String, DslAgentProxy> agentProxyMap) {
+    public List<Agent> initialise(Map<String, DslAgentProxy> agentProxyMap) {
+        AgentFactory agentFactory = new AgentFactory();
+
         agentProxyMap.forEach((key, value) -> {
             RaftNodeImpl raftNode = new RaftNodeImpl(
                     raftClusterConfig,
@@ -70,10 +70,10 @@ public class AgentInitialiser {
             Monitor monitor = new MonitorImpl();
             serviceManager.registerService(monitor);
 
-            UnderseaAgent underseaAgent = new UnderseaAgent(raftClusterConfig.getUnderseaRuntimeConfig(),
-                    key,
+            Agent underseaAgent = agentFactory.createWith(raftClusterConfig.getUnderseaRuntimeConfig(), key,
                     serviceManager,
-                    new AgentStatus(value.getName(), value.getSensors()));
+                    new AgentStatus(key, new ArrayList<>()));
+
 
             serviceManager.registerService(new ControllerImpl(
                     underseaAgent,
@@ -86,7 +86,6 @@ public class AgentInitialiser {
             VisualiserClientImpl visualiser = new VisualiserClientImpl(underseaAgent);
             monitor.setVisualiser(visualiser);
 
-            serviceManager.setAgent(underseaAgent);
             raftNode.setAgent(underseaAgent);
 
             serviceManager.startServices();

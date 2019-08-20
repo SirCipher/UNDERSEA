@@ -8,8 +8,8 @@ public class UnderseaRuntimeConfig {
     private boolean visualiserEnabled = false;
     private boolean autoLogTransactions = true;
 
-    public UnderseaRuntimeConfig autoLogTransactions(boolean autoLogTransactions){
-        this.autoLogTransactions =autoLogTransactions;
+    public UnderseaRuntimeConfig autoLogTransactions(boolean autoLogTransactions) {
+        this.autoLogTransactions = autoLogTransactions;
         return this;
     }
 

@@ -3,7 +3,10 @@ package com.type2labs.undersea.prospect.model;
 import com.type2labs.undersea.common.agent.Agent;
 import com.type2labs.undersea.common.consensus.ConsensusAlgorithm;
 import com.type2labs.undersea.prospect.RaftClusterConfig;
-import com.type2labs.undersea.prospect.impl.*;
+import com.type2labs.undersea.prospect.impl.GrpcServer;
+import com.type2labs.undersea.prospect.impl.RaftNodeImpl;
+import com.type2labs.undersea.prospect.impl.RaftPeerId;
+import com.type2labs.undersea.prospect.impl.RaftState;
 
 public interface RaftNode extends ConsensusAlgorithm {
 

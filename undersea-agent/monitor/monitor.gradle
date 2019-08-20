@@ -5,7 +5,7 @@ repositories {
 }
 
 dependencies {
-    compile project(":common")
+    compile project(":agent")
     compile project(":missionplanner")
     compile project(":prospect")
     compile project(":utilities")

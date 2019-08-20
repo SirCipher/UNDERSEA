@@ -1,4 +1,4 @@
-package com.type2labs.undersea.common.impl;
+package com.type2labs.undersea.agent.impl;
 
 import java.util.concurrent.ThreadLocalRandom;
 

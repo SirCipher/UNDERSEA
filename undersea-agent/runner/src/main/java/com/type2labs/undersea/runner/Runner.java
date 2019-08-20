@@ -3,9 +3,10 @@ package com.type2labs.undersea.runner;
 import com.google.ortools.constraintsolver.Assignment;
 import com.google.ortools.constraintsolver.RoutingIndexManager;
 import com.google.ortools.constraintsolver.RoutingModel;
+import com.type2labs.undersea.agent.impl.AgentImpl;
+import com.type2labs.undersea.agent.impl.Node;
+import com.type2labs.undersea.common.agent.Agent;
 import com.type2labs.undersea.common.config.UnderseaRuntimeConfig;
-import com.type2labs.undersea.common.impl.AgentImpl;
-import com.type2labs.undersea.common.impl.Node;
 import com.type2labs.undersea.common.missionplanner.MissionPlanner;
 import com.type2labs.undersea.common.missionplanner.PlannerException;
 import com.type2labs.undersea.dsl.EnvironmentProperties;
@@ -47,7 +48,7 @@ public class Runner {
         MissionPlanner missionPlanner = new VehicleRoutingOptimiser();
         double[][] area = Utility.propertyKeyTo2dDoubleArray(properties, "environment.area");
 
-        List<AgentImpl> dslAgents = new ArrayList<>(environmentProperties.getAgents().values());
+        List<Agent> dslAgents = new ArrayList<>(environmentProperties.getAgents().values());
         MissionParametersImpl missionParametersImpl = new MissionParametersImpl(dslAgents, 0, area, 20);
 
         try {
@@ -74,7 +75,7 @@ public class Runner {
             throw new RuntimeException("Failed to parse mission: ", e);
         }
 
-        agentInitialiser.initalise(environmentProperties.getAgents());
+        agentInitialiser.initialise(environmentProperties.getAgents());
 
         MissionImpl mission = planMission();
         RoutingModel routingModel = mission.getRoutingModel();

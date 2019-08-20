@@ -1,6 +1,6 @@
 package com.type2labs.undersea.missionplanner.model;
 
-import com.type2labs.undersea.common.impl.AgentImpl;
+import com.type2labs.undersea.common.agent.Agent;
 import com.type2labs.undersea.common.missionplanner.MissionParameters;
 
 import java.util.List;
@@ -11,19 +11,19 @@ import java.util.List;
 public class MissionParametersImpl implements MissionParameters {
 
     private final int startingNode;
-    private final List<AgentImpl> agents;
+    private final List<Agent> agents;
     private final double[][] polygon;
     private double minimumSensorRange;
     private double[][] centroids;
 
-    public MissionParametersImpl(List<AgentImpl> agents, int startingNode, double[][] polygon, int minimumSensorRange) {
+    public MissionParametersImpl(List<Agent> agents, int startingNode, double[][] polygon, int minimumSensorRange) {
         this.agents = agents;
         this.startingNode = startingNode;
         this.polygon = polygon;
         this.minimumSensorRange = minimumSensorRange;
     }
 
-    public List<AgentImpl> getAgents() {
+    public List<Agent> getAgents() {
         return agents;
     }
 

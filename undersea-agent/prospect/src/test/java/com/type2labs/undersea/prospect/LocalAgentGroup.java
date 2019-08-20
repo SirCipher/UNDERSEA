@@ -1,7 +1,8 @@
 package com.type2labs.undersea.prospect;
 
+import com.type2labs.undersea.common.agent.Agent;
+import com.type2labs.undersea.common.agent.AgentFactory;
 import com.type2labs.undersea.common.agent.AgentStatus;
-import com.type2labs.undersea.common.agent.UnderseaAgent;
 import com.type2labs.undersea.common.config.UnderseaRuntimeConfig;
 import com.type2labs.undersea.common.missionplanner.NoMissionPlanner;
 import com.type2labs.undersea.common.monitor.Monitor;
@@ -36,6 +37,7 @@ class LocalAgentGroup implements Closeable {
         integrations = new RaftIntegrationImpl[size];
 
         RaftClusterConfig config = defaultConfig();
+        AgentFactory agentFactory = new AgentFactory();
 
         for (int i = 0; i < size; i++) {
             String name = "agent:" + i;
@@ -52,10 +54,9 @@ class LocalAgentGroup implements Closeable {
             Monitor monitor = new MonitorImpl();
             ServiceManager serviceManager = new ServiceManager();
 
-            UnderseaAgent agent = new UnderseaAgent(config.getUnderseaRuntimeConfig(), name, serviceManager,
+            Agent agent = agentFactory.createWith(config.getUnderseaRuntimeConfig(), name, serviceManager,
                     new AgentStatus(name, new ArrayList<>()));
 
-            serviceManager.setAgent(agent);
             serviceManager.registerService(new NoMissionPlanner());
             raftNode.setAgent(agent);
 

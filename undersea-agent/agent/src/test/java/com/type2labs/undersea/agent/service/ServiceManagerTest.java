@@ -1,10 +1,13 @@
-package com.type2labs.undersea.common.service;
+package com.type2labs.undersea.agent.service;
 
+import com.type2labs.undersea.agent.impl.UnderseaAgent;
 import com.type2labs.undersea.common.agent.AgentStatus;
-import com.type2labs.undersea.common.agent.UnderseaAgent;
 import com.type2labs.undersea.common.config.UnderseaRuntimeConfig;
 import com.type2labs.undersea.common.monitor.Monitor;
 import com.type2labs.undersea.common.monitor.MonitorImpl;
+import com.type2labs.undersea.common.service.AgentService;
+import com.type2labs.undersea.common.service.ServiceManager;
+import com.type2labs.undersea.common.service.Transaction;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -30,7 +33,7 @@ public class ServiceManagerTest {
                 serviceManager,
                 new AgentStatus(name, new ArrayList<>()));
 
-        serviceManager.setAgent(underseaAgent);
+
 
         return underseaAgent;
     }

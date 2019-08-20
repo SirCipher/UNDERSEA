@@ -1,6 +1,6 @@
 package com.type2labs.undersea.common.missionplanner;
 
-import com.type2labs.undersea.common.impl.AgentImpl;
+import com.type2labs.undersea.common.agent.Agent;
 
 import java.util.List;
 
@@ -8,7 +8,7 @@ public interface MissionParameters {
 
     int getStartingNode();
 
-    List<AgentImpl> getAgents();
+    List<Agent> getAgents();
 
     double[][] getPolygon();
 

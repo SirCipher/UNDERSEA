@@ -1,7 +1,7 @@
 package com.type2labs.undersea.monitor;
 
+import com.type2labs.undersea.agent.impl.UnderseaAgent;
 import com.type2labs.undersea.common.agent.AgentStatus;
-import com.type2labs.undersea.common.agent.UnderseaAgent;
 import com.type2labs.undersea.common.config.UnderseaRuntimeConfig;
 import com.type2labs.undersea.common.monitor.Monitor;
 import com.type2labs.undersea.common.monitor.MonitorImpl;
@@ -11,7 +11,6 @@ import com.type2labs.undersea.prospect.RaftClusterConfig;
 import com.type2labs.undersea.prospect.impl.RaftIntegrationImpl;
 import com.type2labs.undersea.prospect.impl.RaftNodeImpl;
 import com.type2labs.undersea.prospect.model.RaftNode;
-import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,7 +46,7 @@ public class VisualiserTest {
         VisualiserClientImpl visualiserClient = new VisualiserClientImpl(underseaAgent);
         monitor.setVisualiser(visualiserClient);
 
-        serviceManager.setAgent(underseaAgent);
+
         raftNode.setAgent(underseaAgent);
 
         serviceManager.registerService(monitor);
@@ -57,7 +56,7 @@ public class VisualiserTest {
         return underseaAgent;
     }
 
-    @Test
+    //    @Test
     public void testDataUpdate() throws InterruptedException {
         new Visualiser();
 

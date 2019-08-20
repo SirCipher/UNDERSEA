@@ -1,5 +1,8 @@
-package com.type2labs.undersea.common.agent;
+package com.type2labs.undersea.agent.impl;
 
+
+import com.type2labs.undersea.common.agent.AbstractAgent;
+import com.type2labs.undersea.common.agent.AgentStatus;
 import com.type2labs.undersea.common.config.UnderseaRuntimeConfig;
 import com.type2labs.undersea.common.service.ServiceManager;
 import org.apache.commons.lang3.tuple.Pair;

@@ -5,7 +5,7 @@ import com.mathworks.toolbox.javabuilder.MWApplication;
 import com.mathworks.toolbox.javabuilder.MWClassID;
 import com.mathworks.toolbox.javabuilder.MWException;
 import com.mathworks.toolbox.javabuilder.MWNumericArray;
-import com.type2labs.undersea.common.impl.AgentImpl;
+import com.type2labs.undersea.common.agent.Agent;
 import com.type2labs.undersea.common.missionplanner.*;
 import com.type2labs.undersea.common.service.Transaction;
 import com.type2labs.undersea.missionplanner.MatlabUtils;
@@ -158,7 +158,7 @@ public class VehicleRoutingOptimiser implements MissionPlanner {
 //        final int[] speeds = {1, 2, 3, 4, 5, 500};
 
         for (int vehicle = 0; vehicle < manager.getNumberOfVehicles(); ++vehicle) {
-            final AgentImpl dslAgent = missionParametersImpl.getAgents().get(vehicle);
+            final Agent dslAgent = missionParametersImpl.getAgents().get(vehicle);
 
             final int callback = routing.registerTransitCallback((long fromIndex, long toIndex) -> {
                 // Convert from routing variable Index to user NodeIndex.

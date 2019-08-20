@@ -1,10 +1,12 @@
-package com.type2labs.undersea.common.impl;
+package com.type2labs.undersea.agent.impl;
 
+
+import com.type2labs.undersea.common.agent.Subsystem;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class Sensor {
+public class Sensor implements Subsystem {
 
     private final String name;
     private final double rate;
@@ -64,6 +66,11 @@ public class Sensor {
         str.append("}\n");
 
         return str.toString();
+    }
+
+    @Override
+    public String name() {
+        return name;
     }
 
     public enum SensorType {
