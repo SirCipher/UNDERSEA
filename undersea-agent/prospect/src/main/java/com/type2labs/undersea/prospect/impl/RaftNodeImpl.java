@@ -20,6 +20,7 @@ import com.type2labs.undersea.common.service.TransactionStatusCode;
 import com.type2labs.undersea.prospect.NodeLog;
 import com.type2labs.undersea.prospect.RaftClusterConfig;
 import com.type2labs.undersea.prospect.RaftProtos;
+import com.type2labs.undersea.prospect.model.MultiRoleState;
 import com.type2labs.undersea.prospect.model.RaftIntegration;
 import com.type2labs.undersea.prospect.model.RaftNode;
 import com.type2labs.undersea.prospect.networking.RaftClient;
@@ -57,6 +58,7 @@ public class RaftNodeImpl implements RaftNode {
     // This cannot be final as both an Agent and this class require it
     private Agent agent;
     private RaftRole role = RaftRole.CANDIDATE;
+    private MultiRoleState multiRoleState;
     private boolean started = false;
 
     private long lastHeartbeatTime;
@@ -168,6 +170,11 @@ public class RaftNodeImpl implements RaftNode {
     @Override
     public RaftRole getRaftRole() {
         return role;
+    }
+
+    @Override
+    public MultiRoleState multiRole() {
+        return multiRoleState;
     }
 
     public RaftClusterConfig config() {

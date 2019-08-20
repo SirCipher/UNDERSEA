@@ -77,7 +77,7 @@ public class VisualiserTest {
         }
 
         Thread.sleep(3000);
-//        raftNode.toLeader();
+        raftNode.toLeader();
         Thread.sleep(30000);
         System.out.println("Shutting down");
     }
