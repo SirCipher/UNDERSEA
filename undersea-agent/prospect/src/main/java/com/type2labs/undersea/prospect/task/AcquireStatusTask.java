@@ -1,7 +1,7 @@
 package com.type2labs.undersea.prospect.task;
 
 import com.type2labs.undersea.prospect.RaftProtos;
-import com.type2labs.undersea.prospect.impl.PoolInfo;
+import com.type2labs.undersea.prospect.impl.ClusterState;
 import com.type2labs.undersea.prospect.model.RaftNode;
 import com.type2labs.undersea.prospect.networking.Client;
 import com.type2labs.undersea.prospect.util.GrpcUtil;
@@ -36,20 +36,19 @@ public class AcquireStatusTask implements Runnable {
                     .build();
 
             RaftProtos.AcquireStatusResponse response;
+            ClusterState clusterState = raftNode.state().clusterState();
 
             try {
                 response = localNode.getStatus(request, raftNode.config().getStatusDeadline());
 
-                PoolInfo poolInfo = raftNode.poolInfo();
-                PoolInfo.AgentInfo agentInfo = new PoolInfo.AgentInfo(localNode, response.getStatusList());
-                poolInfo.setAgentInformation(localNode, agentInfo);
+                ClusterState.ClientState agentInfo = new ClusterState.ClientState(localNode, response.getStatusList());
+                clusterState.setAgentInformation(localNode, agentInfo);
             } catch (StatusRuntimeException e) {
                 Status.Code code = e.getStatus().getCode();
 
                 if (code.equals(Status.Code.DEADLINE_EXCEEDED)) {
-                    PoolInfo poolInfo = raftNode.poolInfo();
-                    PoolInfo.AgentInfo agentInfo = new PoolInfo.AgentInfo(localNode, false);
-                    poolInfo.setAgentInformation(localNode, agentInfo);
+                    ClusterState.ClientState agentInfo = new ClusterState.ClientState(localNode, false);
+                    clusterState.setAgentInformation(localNode, agentInfo);
                 }
             }
 

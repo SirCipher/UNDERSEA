@@ -4,6 +4,8 @@ import com.type2labs.undersea.prospect.NodeLog;
 import com.type2labs.undersea.prospect.model.RaftNode;
 import com.type2labs.undersea.prospect.networking.Client;
 import com.type2labs.undersea.prospect.networking.ClientImpl;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.net.InetSocketAddress;
 import java.util.HashSet;
@@ -12,6 +14,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 public class RaftState {
+
+    private static final Logger logger = LogManager.getLogger(RaftState.class);
 
     private final ConcurrentMap<RaftPeerId, Client> localNodes = new ConcurrentHashMap<>();
     /**
@@ -22,13 +26,15 @@ public class RaftState {
     private Client votedFor;
     private int term;
     private Candidate candidate;
+    private ClusterState clusterState;
 
     public RaftState(RaftNode parent) {
         this.parent = parent;
+        this.clusterState = new ClusterState(parent, term);
     }
 
     public void initCandidate() {
-        this.candidate = new Candidate(localNodes.size() / 2);
+        this.candidate = new Candidate((localNodes.size() - 1));
         this.votedFor = null;
     }
 
@@ -38,6 +44,10 @@ public class RaftState {
 
     public Client getVotedFor() {
         return votedFor;
+    }
+
+    public ClusterState clusterState() {
+        return clusterState;
     }
 
     /**
@@ -73,19 +83,20 @@ public class RaftState {
     }
 
     public class Candidate {
-        private final int mean;
+        private final int threshold;
         private final Set<Client> voters = new HashSet<>();
 
-        public Candidate(int mean) {
-            this.mean = mean;
+        public Candidate(int threshold) {
+            this.threshold = threshold;
         }
 
         public void vote(Client client) {
             this.voters.add(client);
+            logger.info(parent.name() + " registering vote for: " + client);
         }
 
         public boolean wonRound() {
-            return voters.size() >= mean;
+            return voters.size() >= threshold;
         }
     }
 

@@ -1,5 +1,6 @@
 package com.type2labs.undersea.prospect;
 
+import com.type2labs.undersea.prospect.impl.ClusterState;
 import com.type2labs.undersea.prospect.impl.RaftNodeImpl;
 import org.junit.Test;
 
@@ -11,7 +12,7 @@ public class GroupTest {
 
     @Test
     public void testAcquireStatusTask() {
-        int count = 10;
+        int count = 3;
 
         try (LocalAgentGroup localAgentGroup = new LocalAgentGroup(count)) {
             localAgentGroup.doManualDiscovery();
@@ -19,13 +20,15 @@ public class GroupTest {
 
             assertTrueEventually(() -> {
                 for (RaftNodeImpl node : localAgentGroup.getRaftNodes()) {
-                    assertNotNull(node.poolInfo());
-                    assertEquals(count - 1, node.poolInfo().getMembers().size());
+                    ClusterState clusterState = node.state().clusterState();
+
+                    assertNotNull(clusterState);
+                    assertEquals(count, clusterState.getMembers().size());
                 }
             }, 5);
 
 
-            Thread.sleep(10000);
+            Thread.sleep(5000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

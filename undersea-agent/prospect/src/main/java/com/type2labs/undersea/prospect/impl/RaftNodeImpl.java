@@ -8,6 +8,7 @@ import com.type2labs.undersea.prospect.RaftProtos;
 import com.type2labs.undersea.prospect.model.RaftIntegration;
 import com.type2labs.undersea.prospect.model.RaftNode;
 import com.type2labs.undersea.prospect.networking.Client;
+import com.type2labs.undersea.prospect.task.AcquireStatusTask;
 import com.type2labs.undersea.prospect.task.RequireRoleTask;
 import com.type2labs.undersea.prospect.task.VoteTask;
 import org.apache.logging.log4j.LogManager;
@@ -35,7 +36,6 @@ public class RaftNodeImpl implements RaftNode {
     // This cannot be final as both an Agent and this class require it
     private Agent agent;
     private RaftRole role = RaftRole.CANDIDATE;
-    private PoolInfo poolInfo;
     private boolean started = false;
 
     private long lastHeartbeatTime;
@@ -55,7 +55,6 @@ public class RaftNodeImpl implements RaftNode {
 
         this.server = new GrpcServer(this, new InetSocketAddress(0));
         this.raftState = new RaftState(this);
-        this.poolInfo = new PoolInfo(this);
     }
 
     public RaftNodeImpl(RaftClusterConfig raftClusterConfig,
@@ -69,7 +68,6 @@ public class RaftNodeImpl implements RaftNode {
         this.integration = integration;
         this.server = new GrpcServer(this, address);
         this.raftState = new RaftState(this);
-        this.poolInfo = new PoolInfo(this);
     }
 
     public GrpcServer getServer() {
@@ -147,10 +145,6 @@ public class RaftNodeImpl implements RaftNode {
         return integration;
     }
 
-    @Override
-    public PoolInfo poolInfo() {
-        return poolInfo;
-    }
 
     @Override
     public RaftRole getRaftRole() {
@@ -217,6 +211,11 @@ public class RaftNodeImpl implements RaftNode {
 
     @Override
     public void toLeader() {
+        // Prevent reassigning the role
+        if (role == RaftRole.LEADER) {
+            return;
+        }
+
         role = RaftRole.LEADER;
         logger.info(name + " is now the leader", agent);
 
@@ -226,6 +225,7 @@ public class RaftNodeImpl implements RaftNode {
 
     private void startVotingRound() {
         logger.info(agent.name() + " starting voting round", agent);
+        execute(new AcquireStatusTask(RaftNodeImpl.this));
         execute(new VoteTask(RaftNodeImpl.this, 0));
     }
 

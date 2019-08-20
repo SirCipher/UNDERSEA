@@ -4,6 +4,7 @@ import com.google.protobuf.AbstractMessage;
 import com.type2labs.undersea.prospect.NodeLog;
 import com.type2labs.undersea.prospect.RaftProtocolServiceGrpc;
 import com.type2labs.undersea.prospect.RaftProtos;
+import com.type2labs.undersea.prospect.impl.ClusterState;
 import com.type2labs.undersea.prospect.model.RaftNode;
 import com.type2labs.undersea.prospect.networking.Client;
 import com.type2labs.undersea.prospect.util.GrpcUtil;
@@ -86,7 +87,7 @@ public class RaftProtocolServiceImpl extends RaftProtocolServiceGrpc.RaftProtoco
         logger.info(raftNode.name() + " processing vote request: " + request, raftNode.agent());
 
         sendAbstractAsyncMessage(responseObserver, () -> {
-            Pair<Client, Double> nominee = raftNode.poolInfo().getLowestCost();
+            Pair<Client, ClusterState.ClientState> nominee = raftNode.state().clusterState().getNominee();
 
             RaftProtos.VoteResponse response = RaftProtos.VoteResponse.newBuilder()
                     .setClient(GrpcUtil.toProtoClient(raftNode))

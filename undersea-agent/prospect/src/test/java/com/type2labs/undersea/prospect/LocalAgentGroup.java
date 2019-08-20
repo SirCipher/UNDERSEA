@@ -6,7 +6,7 @@ import com.type2labs.undersea.common.config.UnderseaRuntimeConfig;
 import com.type2labs.undersea.common.monitor.Monitor;
 import com.type2labs.undersea.common.monitor.MonitorImpl;
 import com.type2labs.undersea.common.service.ServiceManager;
-import com.type2labs.undersea.prospect.impl.PoolInfo;
+import com.type2labs.undersea.prospect.impl.ClusterState;
 import com.type2labs.undersea.prospect.impl.RaftIntegrationImpl;
 import com.type2labs.undersea.prospect.impl.RaftNodeImpl;
 import com.type2labs.undersea.prospect.impl.RaftPeerId;
@@ -19,7 +19,6 @@ import org.apache.logging.log4j.Logger;
 import java.io.Closeable;
 import java.net.InetSocketAddress;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Map;
 
 class LocalAgentGroup implements Closeable {
@@ -74,15 +73,12 @@ class LocalAgentGroup implements Closeable {
         RaftClusterConfig config = new RaftClusterConfig(underseaConfig);
 
         CostConfiguration costConfiguration = new CostConfigurationImpl();
-        costConfiguration.setCostCalculator((RaftNode parent) -> {
-            PoolInfo agentInfo = parent.poolInfo();
+        costConfiguration.setCostCalculator((ClusterState clusterState) -> {
             double accuracyWeighting = (double) costConfiguration.getBias("ACCURACY");
             double speedWeighting = (double) costConfiguration.getBias("SPEED");
 
-            Map<Client, Double> costs = new HashMap<>(agentInfo.getMembers().size());
-
-            for (Map.Entry<Client, PoolInfo.AgentInfo> e : agentInfo.getMembers().entrySet()) {
-                PoolInfo.AgentInfo a = e.getValue();
+            for (Map.Entry<Client, ClusterState.ClientState> e : clusterState.getMembers().entrySet()) {
+                ClusterState.ClientState a = e.getValue();
                 if (!a.isReachable()) {
                     continue;
                 }
@@ -91,9 +87,8 @@ class LocalAgentGroup implements Closeable {
                         + (a.getRemainingBattery() * speedWeighting))
                         / a.getRange();
 
-                costs.put(e.getKey(), cost);
+                e.getValue().setCost(cost);
             }
-            return costs;
         });
 
         costConfiguration.setBias("ACCURACY", 30.0);
