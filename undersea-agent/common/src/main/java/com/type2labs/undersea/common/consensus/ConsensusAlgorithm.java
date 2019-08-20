@@ -8,4 +8,6 @@ public interface ConsensusAlgorithm extends AgentService {
 
     UnderseaConfig config();
 
+    RaftRole getRaftRole();
+
 }

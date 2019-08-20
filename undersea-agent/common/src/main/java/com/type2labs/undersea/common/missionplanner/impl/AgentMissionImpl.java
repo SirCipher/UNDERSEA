@@ -5,6 +5,7 @@ import com.type2labs.undersea.common.cluster.Client;
 import com.type2labs.undersea.common.missionplanner.models.AgentMission;
 import com.type2labs.undersea.common.missionplanner.models.Task;
 
+import java.util.Arrays;
 import java.util.List;
 
 public class AgentMissionImpl implements AgentMission {
@@ -53,7 +54,7 @@ public class AgentMissionImpl implements AgentMission {
     @Override
     public String toString() {
         return "AgentMissionImpl{" +
-                "tasks=" + tasks +
+                "tasks=" + Arrays.toString(tasks.toArray()) +
                 ", progress=" + progress +
                 '}';
     }

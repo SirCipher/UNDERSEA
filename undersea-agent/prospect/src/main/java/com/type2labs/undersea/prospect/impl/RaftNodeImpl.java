@@ -9,11 +9,12 @@ import com.google.common.util.concurrent.MoreExecutors;
 import com.type2labs.undersea.common.agent.Agent;
 import com.type2labs.undersea.common.cluster.Client;
 import com.type2labs.undersea.common.cluster.PeerId;
+import com.type2labs.undersea.common.consensus.RaftRole;
 import com.type2labs.undersea.common.missionplanner.models.AgentMission;
 import com.type2labs.undersea.common.missionplanner.models.GeneratedMission;
 import com.type2labs.undersea.common.missionplanner.models.MissionParameters;
 import com.type2labs.undersea.common.missionplanner.models.MissionPlanner;
-import com.type2labs.undersea.common.monitor.Monitor;
+import com.type2labs.undersea.common.monitor.model.Monitor;
 import com.type2labs.undersea.common.service.Transaction;
 import com.type2labs.undersea.common.service.TransactionStatusCode;
 import com.type2labs.undersea.prospect.NodeLog;
@@ -43,9 +44,10 @@ public class RaftNodeImpl implements RaftNode {
 
     private static final Logger logger = LogManager.getLogger(RaftNodeImpl.class);
 
+    // TODO: 20/08/2019 Migrate to 4 threads
     private final ThrowableExecutor singleThreadScheduledExecutor = ThrowableExecutor.newSingleThreadExecutor();
     private final ListeningExecutorService listeningExecutorService =
-            MoreExecutors.listeningDecorator(ThrowableExecutor.newExecutor(4));
+            MoreExecutors.listeningDecorator(ThrowableExecutor.newSingleThreadExecutor());
 
     private final String name;
     private RaftState raftState;
@@ -310,10 +312,6 @@ public class RaftNodeImpl implements RaftNode {
         startVotingRound();
         logger.trace("Started node: " + name, agent);
         started = true;
-    }
-
-    public enum RaftRole {
-        LEADER, FOLLOWER, CANDIDATE
     }
 
     private class HeartbeatTask extends RequireRoleTask {

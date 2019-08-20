@@ -307,12 +307,16 @@ public class Visualiser {
                 } else if (received instanceof LogMessage) {
                     LogMessage logMessage = (LogMessage) received;
 
-                    String currentValue = logs.get(logMessage.getAgentName());
+                    String currentValue = logs.get(logMessage.getPeerId());
+                    if (currentValue == null) {
+                        currentValue = "";
+                    }
+
                     currentValue += logMessage.getMessage();
 
-                    logs.put(logMessage.getAgentName(), currentValue);
+                    logs.put(logMessage.getPeerId(), currentValue);
 
-                    if (currentLog != null && currentLog.equals(logMessage.getAgentName())) {
+                    if (currentLog != null && currentLog.equals(logMessage.getPeerId())) {
                         logArea.setText(currentValue);
                     }
                 }

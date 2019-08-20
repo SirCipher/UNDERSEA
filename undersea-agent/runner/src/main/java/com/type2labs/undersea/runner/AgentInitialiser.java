@@ -3,8 +3,8 @@ package com.type2labs.undersea.runner;
 import com.type2labs.undersea.common.agent.Agent;
 import com.type2labs.undersea.common.agent.AgentFactory;
 import com.type2labs.undersea.common.agent.AgentStatus;
-import com.type2labs.undersea.common.monitor.Monitor;
-import com.type2labs.undersea.common.monitor.MonitorImpl;
+import com.type2labs.undersea.common.monitor.model.Monitor;
+import com.type2labs.undersea.common.monitor.impl.MonitorImpl;
 import com.type2labs.undersea.common.service.ServiceManager;
 import com.type2labs.undersea.controller.ControllerImpl;
 import com.type2labs.undersea.controller.controllerPMC.AnalyserPMC;
@@ -13,7 +13,7 @@ import com.type2labs.undersea.controller.controllerPMC.MonitorPMC;
 import com.type2labs.undersea.controller.controllerPMC.PlannerPMC;
 import com.type2labs.undersea.dsl.uuv.model.DslAgentProxy;
 import com.type2labs.undersea.missionplanner.planner.vrp.VehicleRoutingOptimiser;
-import com.type2labs.undersea.monitor.VisualiserClientImpl;
+import com.type2labs.undersea.common.monitor.impl.VisualiserClientImpl;
 import com.type2labs.undersea.prospect.RaftClusterConfig;
 import com.type2labs.undersea.prospect.impl.RaftIntegrationImpl;
 import com.type2labs.undersea.prospect.impl.RaftNodeImpl;
@@ -83,8 +83,7 @@ public class AgentInitialiser {
                     new ExecutorPMC()
             ));
 
-            VisualiserClientImpl visualiser = new VisualiserClientImpl(underseaAgent);
-            monitor.setVisualiser(visualiser);
+            monitor.setVisualiser( new VisualiserClientImpl());
 
             serviceManager.startServices();
 

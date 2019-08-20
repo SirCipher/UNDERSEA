@@ -10,7 +10,7 @@ public class MatlabUtils {
 
     private static final Logger logger = LogManager.getLogger(MatlabUtils.class);
 
-    public static void initialise() {
+    public static synchronized void initialise() {
         if (!MWApplication.isMCRInitialized()) {
             logger.debug("Initialising MW Application with arguments NODISPLAY and NOJVM");
 

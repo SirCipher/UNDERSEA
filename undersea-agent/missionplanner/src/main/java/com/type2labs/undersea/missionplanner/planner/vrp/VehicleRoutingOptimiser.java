@@ -24,10 +24,12 @@ import com.type2labs.undersea.utilities.exception.NotSupportedException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import javax.annotation.concurrent.NotThreadSafe;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
+@NotThreadSafe
 public class VehicleRoutingOptimiser implements MissionPlanner {
 
     private static final Logger logger = LogManager.getLogger(VehicleRoutingOptimiser.class);
@@ -44,9 +46,7 @@ public class VehicleRoutingOptimiser implements MissionPlanner {
         }
     }
 
-    private GeneratedMissionImpl generatedMission;
-
-    private synchronized double[][] decompose(double[] x, double[] y, double sensorRange) throws PlannerException {
+    private double[][] decompose(double[] x, double[] y, double sensorRange) throws PlannerException {
         MWNumericArray xArray = new MWNumericArray(x, MWClassID.DOUBLE);
         MWNumericArray yArray = new MWNumericArray(y, MWClassID.DOUBLE);
         double[][] results;
@@ -125,8 +125,8 @@ public class VehicleRoutingOptimiser implements MissionPlanner {
             logger.info("Distance of the route: " + routeDistance + "m");
             maxRouteDistance = Math.max(routeDistance, maxRouteDistance);
         }
-        logger.info("Maximum of the route distances: " + maxRouteDistance + "m");
 
+        logger.info("Maximum of the route distances: " + maxRouteDistance + "m");
     }
 
     @Override
@@ -158,9 +158,7 @@ public class VehicleRoutingOptimiser implements MissionPlanner {
         callbacks.add(transitCallbackIndex);
 
         // Define cost of each arc.
-        final int bigNumber = 100000;
         routing.addDimension(transitCallbackIndex, 0, 3000, true, "Time");
-
 
 //        final Random randomGenerator = new Random(0xBEEF);
 //        final int costCoefficientMax = 3;
@@ -245,7 +243,7 @@ public class VehicleRoutingOptimiser implements MissionPlanner {
             while (!routing.isEnd(index)) {
                 index = assignment.value(routing.nextVar(index));
                 int ind = manager.indexToNode(index);
-                TaskImpl task = new TaskImpl(centroids[(int) ind], TaskType.WAYPOINT);
+                TaskImpl task = new TaskImpl(centroids[ind], TaskType.WAYPOINT);
 
                 tasks.add(task);
             }

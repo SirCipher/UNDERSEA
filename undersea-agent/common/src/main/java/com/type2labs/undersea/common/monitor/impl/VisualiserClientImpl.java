@@ -1,18 +1,18 @@
-package com.type2labs.undersea.monitor;
+package com.type2labs.undersea.common.monitor.impl;
 
+import com.google.common.util.concurrent.ListenableFuture;
 import com.type2labs.undersea.common.agent.Agent;
 import com.type2labs.undersea.common.consensus.ConsensusAlgorithm;
 import com.type2labs.undersea.common.logger.LogMessage;
 import com.type2labs.undersea.common.missionplanner.models.MissionPlanner;
-import com.type2labs.undersea.common.monitor.VisualiserClient;
 import com.type2labs.undersea.common.monitor.VisualiserData;
-import com.type2labs.undersea.prospect.model.RaftNode;
+import com.type2labs.undersea.common.monitor.model.VisualiserClient;
+import com.type2labs.undersea.common.service.Transaction;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.io.ObjectOutputStream;
-import java.net.ConnectException;
 import java.net.InetSocketAddress;
 import java.nio.channels.SocketChannel;
 
@@ -23,29 +23,13 @@ public class VisualiserClientImpl implements VisualiserClient {
     private final InetSocketAddress visualiserAddress = new InetSocketAddress("localhost", 5050);
     private Agent parent;
     private SocketChannel channel;
-    private boolean initialised = false;
     private boolean enabled = false;
 
-    public VisualiserClientImpl(Agent parent) {
-        this.parent = parent;
-        enabled = parent.config().isVisualiserEnabled();
+    public VisualiserClientImpl() {
 
-        if (!enabled) {
-            return;
-        }
-
-        try {
-            openConnection();
-            sendVisualiserData();
-        } catch (ConnectException e) {
-            logger.warn("Couldn't connect to monitor, trying again");
-            parent.schedule(new VisualiserConnectionTask(parent));
-        } catch (IOException e) {
-            throw new RuntimeException("Failed to connect to monitor. Is it running?", e);
-        }
     }
 
-    private void openConnection() {
+    private boolean openConnection() {
         try {
             channel = SocketChannel.open();
             channel.configureBlocking(true);
@@ -55,11 +39,12 @@ public class VisualiserClientImpl implements VisualiserClient {
             while (!channel.finishConnect()) {
                 // TODO: Set timeout
             }
-        } catch (IOException e) {
-            e.printStackTrace();
-            // TODO
-        }
 
+            return true;
+        } catch (IOException e) {
+            // TODO
+            return false;
+        }
     }
 
     @Override
@@ -78,7 +63,9 @@ public class VisualiserClientImpl implements VisualiserClient {
     }
 
     private void _write(Object data) {
-        openConnection();
+        if(!openConnection()){
+            return;
+        }
 
         try {
             ObjectOutputStream oos = new ObjectOutputStream(channel.socket().getOutputStream());
@@ -91,16 +78,17 @@ public class VisualiserClientImpl implements VisualiserClient {
     }
 
     private VisualiserData agentState() {
-        ConsensusAlgorithm raftNode = (RaftNode) parent.services().getService(ConsensusAlgorithm.class);
+        ConsensusAlgorithm raftNode = parent.services().getService(ConsensusAlgorithm.class);
         String raftRole = String.valueOf(raftNode.getRaftRole());
 
-        MissionPlanner missionPlanner = (MissionPlanner) parent.services().getService(MissionPlanner.class);
+        MissionPlanner missionPlanner = parent.services().getService(MissionPlanner.class);
         int noTasks = missionPlanner.getTasks().size();
 
-        return new VisualiserData(parent.name(), raftNode.parent().peerId().toString(), raftRole, noTasks, new double[]{0, 0});
+        return new VisualiserData(parent.name(), parent.peerId().toString(), raftRole, noTasks,
+                new double[]{0, 0});
     }
 
-    private void sendVisualiserData() throws IOException {
+    private void sendVisualiserData() {
         if (parent == null) {
             throw new IllegalStateException("Cannot start connection to monitor without a parent");
         }
@@ -120,12 +108,38 @@ public class VisualiserClientImpl implements VisualiserClient {
 
     @Override
     public void update() {
-        try {
-            sendVisualiserData();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        sendVisualiserData();
     }
 
 
+    @Override
+    public void shutdown() {
+
+    }
+
+    @Override
+    public ListenableFuture<?> executeTransaction(Transaction transaction) {
+        return null;
+    }
+
+    @Override
+    public void initialise(Agent parentAgent) {
+        this.parent = parentAgent;
+        enabled = parent.config().isVisualiserEnabled();
+        run();
+    }
+
+    @Override
+    public Agent parent() {
+        return parent;
+    }
+
+    @Override
+    public void run() {
+        if (!enabled) {
+            return;
+        }
+
+        sendVisualiserData();
+    }
 }

@@ -5,17 +5,14 @@ import java.io.Serializable;
 public class LogMessage implements Serializable {
 
     private static final long serialVersionUID = 9070444023024621142L;
-    private final String agentName;
+    private final String peerId;
     private final Object message;
 
-    public LogMessage(String agentName, Object message) {
-        this.agentName = agentName;
+    public LogMessage(String peerId, Object message) {
+        this.peerId = peerId;
         this.message = message;
     }
 
-    public String getAgentName() {
-        return agentName;
-    }
 
     public Object getMessage() {
         return message;
@@ -24,8 +21,12 @@ public class LogMessage implements Serializable {
     @Override
     public String toString() {
         return "LogMessage{" +
-                "agentName='" + agentName + '\'' +
+                "peerId='" + peerId + '\'' +
                 ", message=" + message +
                 '}';
+    }
+
+    public String getPeerId() {
+        return peerId;
     }
 }

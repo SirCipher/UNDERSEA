@@ -3,7 +3,7 @@ package com.type2labs.undersea.common.config;
 import com.type2labs.undersea.common.cost.CostCalculator;
 import com.type2labs.undersea.common.cost.CostConfiguration;
 import com.type2labs.undersea.common.missionplanner.models.MissionParameters;
-import com.type2labs.undersea.common.monitor.VisualiserClient;
+import com.type2labs.undersea.common.monitor.model.VisualiserClient;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -13,7 +13,7 @@ import static com.type2labs.undersea.utilities.preconditions.Preconditions.isNot
 public class UnderseaRuntimeConfig {
 
     private VisualiserClient visualiser;
-    private boolean visualiserEnabled = false;
+    private boolean visualiserEnabled = true;
     private boolean autoLogTransactions = true;
     private MissionParameters missionParameters;
     private CostConfiguration costConfiguration;

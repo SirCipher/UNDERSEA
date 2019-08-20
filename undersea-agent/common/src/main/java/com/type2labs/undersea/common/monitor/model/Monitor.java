@@ -1,4 +1,4 @@
-package com.type2labs.undersea.common.monitor;
+package com.type2labs.undersea.common.monitor.model;
 
 import com.type2labs.undersea.common.service.AgentService;
 

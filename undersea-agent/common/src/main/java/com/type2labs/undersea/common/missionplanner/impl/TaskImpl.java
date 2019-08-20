@@ -4,6 +4,8 @@ import com.type2labs.undersea.common.missionplanner.models.Task;
 import com.type2labs.undersea.common.missionplanner.models.TaskStatus;
 import com.type2labs.undersea.common.missionplanner.models.TaskType;
 
+import java.util.Arrays;
+
 public class TaskImpl implements Task {
 
     private double[] coordinates;
@@ -41,6 +43,16 @@ public class TaskImpl implements Task {
     @Override
     public TaskStatus getTaskStatus() {
         return taskStatus;
+    }
+
+    @Override
+    public String toString() {
+        return "TaskImpl{" +
+                "coordinates=" + Arrays.toString(coordinates) +
+                ", progress=" + progress +
+                ", taskType=" + taskType +
+                ", taskStatus=" + taskStatus +
+                '}';
     }
 
     @Override

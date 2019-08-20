@@ -3,12 +3,14 @@ package com.type2labs.undersea.common.service;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.type2labs.undersea.common.agent.Agent;
 import com.type2labs.undersea.utilities.executor.ScheduledThrowableExecutor;
-import com.type2labs.undersea.utilities.executor.ThrowableExecutor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.*;
-import java.util.concurrent.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by Thomas Klapwijk on 2019-08-08.
@@ -31,14 +33,14 @@ public class ServiceManager {
         logger.info("Agent " + agent.name() + " service manager assigned", agent);
     }
 
-    public synchronized AgentService getService(Class<? extends AgentService> s) {
+    public synchronized <T extends AgentService> T getService(Class<T> s) {
         for (Map.Entry<Class<? extends AgentService>, AgentService> e : services.entrySet()) {
             if (s.isAssignableFrom(e.getKey())) {
-                return e.getValue();
+                return (T) e.getValue();
             }
         }
 
-        return null;
+        throw new NullPointerException(s + " is not registered");
     }
 
     public synchronized Collection<AgentService> getServices() {
@@ -140,8 +142,8 @@ public class ServiceManager {
         }
     }
 
-    public void registerService(Set<AgentService> services) {
-        for(AgentService as: services){
+    public void registerServices(Set<AgentService> services) {
+        for (AgentService as : services) {
             registerService(as);
         }
     }

@@ -13,7 +13,10 @@ import com.type2labs.undersea.common.cost.CostConfigurationImpl;
 import com.type2labs.undersea.common.missionplanner.NoMissionPlanner;
 import com.type2labs.undersea.common.missionplanner.impl.MissionParametersImpl;
 import com.type2labs.undersea.common.missionplanner.models.MissionParameters;
-import com.type2labs.undersea.common.monitor.MonitorImpl;
+import com.type2labs.undersea.common.monitor.impl.MonitorImpl;
+import com.type2labs.undersea.common.monitor.impl.VisualiserClientImpl;
+import com.type2labs.undersea.common.monitor.model.Monitor;
+import com.type2labs.undersea.common.monitor.model.VisualiserClient;
 import com.type2labs.undersea.common.service.AgentService;
 import com.type2labs.undersea.common.service.ServiceManager;
 import com.type2labs.undersea.prospect.RaftClusterConfig;
@@ -36,7 +39,7 @@ public class LocalAgentGroup implements Closeable {
     private final Client[] clients;
     private final RaftIntegrationImpl[] integrations;
 
-    public LocalAgentGroup(int size, Set<AgentService> services) {
+    public LocalAgentGroup(int size, Set<AgentService> services, boolean withVisualiser) {
         raftNodes = new RaftNodeImpl[size];
         clients = new RaftClientImpl[size];
         integrations = new RaftIntegrationImpl[size];
@@ -61,8 +64,18 @@ public class LocalAgentGroup implements Closeable {
             Agent agent = agentFactory.createWith(config.getUnderseaRuntimeConfig(), name, serviceManager,
                     new AgentStatus(name, new ArrayList<>()));
 
-            raftNode.initialise(agent);
-            serviceManager.registerService(services);
+            serviceManager.registerService(raftNode);
+            serviceManager.registerServices(services);
+
+            if (withVisualiser) {
+                Monitor monitor = new MonitorImpl();
+                VisualiserClient client = new VisualiserClientImpl();
+                monitor.setVisualiser(client);
+                client.initialise(agent);
+
+                serviceManager.registerService(monitor);
+            }
+
             serviceManager.startServices();
 
             raftNodes[i] = raftNode;
@@ -74,6 +87,10 @@ public class LocalAgentGroup implements Closeable {
 
         MissionParameters missionParameters = new MissionParametersImpl(0, area, 40);
         config.getUnderseaRuntimeConfig().missionParameters(missionParameters);
+    }
+
+    public LocalAgentGroup(int size, Set<AgentService> services) {
+        this(size, services, false);
     }
 
     public LocalAgentGroup(int size) {
@@ -118,7 +135,7 @@ public class LocalAgentGroup implements Closeable {
 
     public void start() {
         for (RaftNodeImpl node : raftNodes) {
-            node.run();
+//            node.run();
         }
     }
 

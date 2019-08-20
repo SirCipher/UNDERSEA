@@ -1,8 +1,9 @@
-package com.type2labs.undersea.monitor;
+package com.type2labs.undersea.common.monitor;
 
 
 import com.type2labs.undersea.common.agent.Agent;
-import com.type2labs.undersea.common.monitor.Monitor;
+import com.type2labs.undersea.common.monitor.impl.VisualiserClientImpl;
+import com.type2labs.undersea.common.monitor.model.Monitor;
 import com.type2labs.undersea.common.service.ServiceManager;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -18,7 +19,7 @@ public class VisualiserConnectionTask implements Runnable {
 
     @Override
     public void run() {
-        VisualiserClientImpl visualiserClient = new VisualiserClientImpl(parent);
+        VisualiserClientImpl visualiserClient = new VisualiserClientImpl();
         ServiceManager serviceManager = parent.services();
         Monitor monitor = (Monitor) serviceManager.getService(Monitor.class);
 

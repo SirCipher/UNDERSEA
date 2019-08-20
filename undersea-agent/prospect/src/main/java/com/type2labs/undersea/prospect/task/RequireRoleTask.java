@@ -1,5 +1,6 @@
 package com.type2labs.undersea.prospect.task;
 
+import com.type2labs.undersea.common.consensus.RaftRole;
 import com.type2labs.undersea.prospect.impl.RaftNodeImpl;
 import com.type2labs.undersea.prospect.model.RaftNode;
 import org.apache.logging.log4j.LogManager;
@@ -9,9 +10,9 @@ public abstract class RequireRoleTask implements Runnable {
 
     private final Logger logger = LogManager.getLogger(RequireRoleTask.class);
     private final RaftNode raftNode;
-    private final RaftNodeImpl.RaftRole requestedRole;
+    private final RaftRole requestedRole;
 
-    public RequireRoleTask(RaftNode raftNode, RaftNodeImpl.RaftRole requestedRole) {
+    public RequireRoleTask(RaftNode raftNode, RaftRole requestedRole) {
         this.raftNode = raftNode;
         this.requestedRole = requestedRole;
     }
