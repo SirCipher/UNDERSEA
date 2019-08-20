@@ -1,23 +1,23 @@
 package com.type2labs.undersea.prospect.impl;
 
+import com.type2labs.undersea.common.cluster.Client;
+import com.type2labs.undersea.common.cluster.PeerId;
 import com.type2labs.undersea.prospect.NodeLog;
 import com.type2labs.undersea.prospect.model.RaftNode;
-import com.type2labs.undersea.prospect.networking.Client;
-import com.type2labs.undersea.prospect.networking.ClientImpl;
+import com.type2labs.undersea.prospect.networking.RaftClientImpl;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.net.InetSocketAddress;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 public class RaftState {
 
     private static final Logger logger = LogManager.getLogger(RaftState.class);
 
-    private final ConcurrentMap<RaftPeerId, Client> localNodes = new ConcurrentHashMap<>();
+    private final ConcurrentMap<PeerId, Client> localNodes;
     /**
      * Endpoint voted for during last term
      */
@@ -30,6 +30,7 @@ public class RaftState {
 
     public RaftState(RaftNode parent) {
         this.parent = parent;
+        this.localNodes = parent.agent().clusterClients();
         this.clusterState = new ClusterState(parent, term);
     }
 
@@ -59,14 +60,14 @@ public class RaftState {
      */
     public void discoverNode(RaftNode node) {
         InetSocketAddress address = node.server().getSocketAddress();
-        localNodes.computeIfAbsent(node.peerId(), n -> new ClientImpl(parent, address, node.peerId()));
+        localNodes.computeIfAbsent(node.peerId(), n -> new RaftClientImpl(parent, address, node.peerId()));
     }
 
-    public ConcurrentMap<RaftPeerId, Client> localNodes() {
+    public ConcurrentMap<PeerId, Client> localNodes() {
         return localNodes;
     }
 
-    public Client getClient(RaftPeerId peerId) {
+    public Client getClient(PeerId peerId) {
         return localNodes.get(peerId);
     }
 

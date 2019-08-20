@@ -8,19 +8,41 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 
+/**
+ * A transportable object which
+ */
 public class Transaction {
+
+    private static final Object NO_DATA = new Object();
 
     private final Agent agent;
     private final Collection<Class<? extends AgentService>> destinationServices;
     private final StatusCode statusCode;
+    private Object data;
     private CompletableFuture<?> future;
 
     private Transaction(Agent agent, Collection<Class<? extends AgentService>> destinationServices,
-                        CompletableFuture<?> task, StatusCode code) {
+                        CompletableFuture<?> task, StatusCode code, Object data) {
         this.agent = agent;
         this.future = task;
         this.destinationServices = destinationServices;
         this.statusCode = code;
+        this.data = data;
+    }
+
+    @Override
+    public String toString() {
+        return "Transaction{" +
+                "agent=" + agent +
+                ", destinationServices=" + destinationServices +
+                ", statusCode=" + statusCode +
+                ", data=" + data +
+                ", future=" + future +
+                '}';
+    }
+
+    public boolean hasData() {
+        return data == Transaction.NO_DATA;
     }
 
     public Agent getAgent() {
@@ -51,6 +73,7 @@ public class Transaction {
         private CompletableFuture<?> task;
         private Collection<Class<? extends AgentService>> services = new HashSet<>();
         private StatusCode statusCode;
+        private Object data = NO_DATA;
 
         public Builder(Agent agent) {
             this.agent = agent;
@@ -81,9 +104,14 @@ public class Transaction {
             return this;
         }
 
+        public Builder withData(Object data) {
+            this.data = data;
+            return this;
+        }
+
         public Transaction build() {
             validate();
-            return new Transaction(agent, services, task, statusCode);
+            return new Transaction(agent, services, task, statusCode, data);
         }
 
         private void validate() {

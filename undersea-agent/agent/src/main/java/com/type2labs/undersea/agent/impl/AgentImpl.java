@@ -2,16 +2,17 @@ package com.type2labs.undersea.agent.impl;
 
 
 import com.type2labs.undersea.common.agent.Agent;
+import com.type2labs.undersea.common.cluster.Client;
+import com.type2labs.undersea.common.cluster.PeerId;
 import com.type2labs.undersea.common.config.UnderseaRuntimeConfig;
 import com.type2labs.undersea.common.service.ServiceManager;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
@@ -172,6 +173,11 @@ public class AgentImpl implements Agent {
     @Override
     public void shutdown() {
 
+    }
+
+    @Override
+    public ConcurrentMap<PeerId, Client> clusterClients() {
+        return new ConcurrentHashMap<>();
     }
 
     public String getHost() {

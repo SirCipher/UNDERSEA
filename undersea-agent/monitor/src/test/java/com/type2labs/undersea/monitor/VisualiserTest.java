@@ -47,7 +47,7 @@ public class VisualiserTest {
         monitor.setVisualiser(visualiserClient);
 
 
-        raftNode.setAgent(underseaAgent);
+        raftNode.initialise(underseaAgent);
 
         serviceManager.registerService(monitor);
 

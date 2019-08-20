@@ -2,6 +2,8 @@ package com.type2labs.undersea.common.agent;
 
 
 import com.type2labs.undersea.common.blockchain.BlockchainNetwork;
+import com.type2labs.undersea.common.cluster.Client;
+import com.type2labs.undersea.common.cluster.PeerId;
 import com.type2labs.undersea.common.config.UnderseaRuntimeConfig;
 import com.type2labs.undersea.common.consensus.ConsensusAlgorithm;
 import com.type2labs.undersea.common.controller.Controller;
@@ -12,9 +14,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.Iterator;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 
 public abstract class AbstractAgent implements Agent {
 
@@ -25,7 +25,13 @@ public abstract class AbstractAgent implements Agent {
     private final ServiceManager services;
     private final AgentStatus status;
     private final UnderseaRuntimeConfig config;
+    private final ConcurrentHashMap<PeerId, Client> clusterClients = new ConcurrentHashMap<>();
     private String name;
+
+    @Override
+    public ConcurrentMap<PeerId, Client> clusterClients() {
+        return clusterClients;
+    }
 
     public AbstractAgent(UnderseaRuntimeConfig config, String name, ServiceManager serviceManager, AgentStatus status) {
         // Avoided using javax validation for minimal reliance on reflection

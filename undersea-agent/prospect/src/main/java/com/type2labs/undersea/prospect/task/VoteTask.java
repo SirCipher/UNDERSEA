@@ -1,16 +1,18 @@
 package com.type2labs.undersea.prospect.task;
 
 import com.google.common.util.concurrent.FutureCallback;
+import com.type2labs.undersea.common.cluster.Client;
+import com.type2labs.undersea.common.cluster.PeerId;
 import com.type2labs.undersea.prospect.RaftProtos;
-import com.type2labs.undersea.prospect.impl.RaftPeerId;
 import com.type2labs.undersea.prospect.impl.RaftState;
 import com.type2labs.undersea.prospect.model.RaftNode;
-import com.type2labs.undersea.prospect.networking.Client;
+import com.type2labs.undersea.prospect.networking.RaftClient;
 import com.type2labs.undersea.prospect.util.GrpcUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.Collection;
+import java.util.concurrent.ConcurrentMap;
 
 public class VoteTask implements Runnable {
 
@@ -37,23 +39,26 @@ public class VoteTask implements Runnable {
         logger.info(raftNode.name() + " starting voting", raftNode.agent());
 
         raftNode.toCandidate();
-        Collection<Client> localNodes = raftNode.state().localNodes().values();
+
+        ConcurrentMap<PeerId, Client> localNodes = raftNode.agent().clusterClients();
 
         if (localNodes.size() == 0) {
             logger.warn(raftNode.name() + " has no peers", raftNode.agent());
         }
 
-        for (Client client : localNodes) {
+        for (Client client : localNodes.values()) {
+            RaftClient raftClient = (RaftClient) client;
+
             RaftProtos.VoteRequest request = RaftProtos.VoteRequest.newBuilder()
                     .setClient(GrpcUtil.toProtoClient(raftNode))
                     .setTerm(raftNode.state().getTerm() + 1)
                     .build();
 
-            client.requestVote(request, new FutureCallback<RaftProtos.VoteResponse>() {
+            raftClient.requestVote(request, new FutureCallback<RaftProtos.VoteResponse>() {
                 @Override
                 public void onSuccess(RaftProtos.VoteResponse result) {
-                    RaftPeerId nomineeId = RaftPeerId.valueOf(result.getNominee().getRaftPeerId());
-                    RaftPeerId responderId = RaftPeerId.valueOf(result.getClient().getRaftPeerId());
+                    PeerId nomineeId = PeerId.valueOf(result.getNominee().getRaftPeerId());
+                    PeerId responderId = PeerId.valueOf(result.getClient().getRaftPeerId());
                     RaftState.Candidate candidate = raftNode.state().getCandidate();
 
                     // Grant vote if we were nominated

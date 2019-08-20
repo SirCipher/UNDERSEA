@@ -1,6 +1,7 @@
 package com.type2labs.undersea.prospect.impl;
 
 import com.type2labs.undersea.common.agent.Agent;
+import com.type2labs.undersea.common.cluster.PeerId;
 import com.type2labs.undersea.common.missionplanner.MissionPlanner;
 import com.type2labs.undersea.common.monitor.Monitor;
 import com.type2labs.undersea.common.service.Transaction;
@@ -9,7 +10,7 @@ import com.type2labs.undersea.prospect.RaftClusterConfig;
 import com.type2labs.undersea.prospect.RaftProtos;
 import com.type2labs.undersea.prospect.model.RaftIntegration;
 import com.type2labs.undersea.prospect.model.RaftNode;
-import com.type2labs.undersea.prospect.networking.Client;
+import com.type2labs.undersea.common.cluster.Client;
 import com.type2labs.undersea.prospect.task.AcquireStatusTask;
 import com.type2labs.undersea.prospect.task.RequireRoleTask;
 import com.type2labs.undersea.prospect.task.VoteTask;
@@ -32,7 +33,7 @@ public class RaftNodeImpl implements RaftNode {
     private final ScheduledExecutorService scheduledThreadPool = Executors.newScheduledThreadPool(4);
 
     private final String name;
-    private final RaftState raftState;
+    private RaftState raftState;
     private final GrpcServer server;
     private final RaftIntegration integration;
     private final RaftClusterConfig raftClusterConfig;
@@ -42,12 +43,12 @@ public class RaftNodeImpl implements RaftNode {
     private boolean started = false;
 
     private long lastHeartbeatTime;
-    private RaftPeerId peerId;
+    private PeerId peerId;
 
     public RaftNodeImpl(RaftClusterConfig raftClusterConfig,
                         String name,
                         RaftIntegration integration) {
-        this.peerId = RaftPeerId.newId();
+        this.peerId = PeerId.newId();
         this.raftClusterConfig = raftClusterConfig;
         this.name = name;
         this.integration = integration;
@@ -57,20 +58,18 @@ public class RaftNodeImpl implements RaftNode {
         }
 
         this.server = new GrpcServer(this, new InetSocketAddress(0));
-        this.raftState = new RaftState(this);
     }
 
     public RaftNodeImpl(RaftClusterConfig raftClusterConfig,
                         String name,
                         RaftIntegration integration,
                         InetSocketAddress address,
-                        RaftPeerId peerId) {
+                        PeerId peerId) {
         this.peerId = peerId;
         this.raftClusterConfig = raftClusterConfig;
         this.name = name;
         this.integration = integration;
         this.server = new GrpcServer(this, address);
-        this.raftState = new RaftState(this);
     }
 
     public GrpcServer getServer() {
@@ -168,12 +167,10 @@ public class RaftNodeImpl implements RaftNode {
         schedule(new HeartbeatTask(), 500);
     }
 
-    public void setAgent(Agent agent) {
-        if (this.agent != null) {
-            throw new RuntimeException("Cannot set agent again: " + name);
-        }
-
-        this.agent = agent;
+    @Override
+    public void initialise(Agent parentAgent) {
+        this.agent = parentAgent;
+        this.raftState = new RaftState(this);
     }
 
     public void shutdown() {
@@ -185,7 +182,6 @@ public class RaftNodeImpl implements RaftNode {
     public ScheduledFuture<?> executeTransaction(Transaction transaction) {
         return null;
     }
-
 
     public void toCandidate() {
         role = RaftRole.CANDIDATE;
@@ -201,7 +197,7 @@ public class RaftNodeImpl implements RaftNode {
     }
 
     @Override
-    public RaftPeerId peerId() {
+    public PeerId peerId() {
         return peerId;
     }
 

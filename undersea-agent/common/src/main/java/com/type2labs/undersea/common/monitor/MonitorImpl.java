@@ -1,5 +1,6 @@
 package com.type2labs.undersea.common.monitor;
 
+import com.type2labs.undersea.common.agent.Agent;
 import com.type2labs.undersea.common.service.Transaction;
 
 import java.util.concurrent.ScheduledFuture;
@@ -31,6 +32,11 @@ public class MonitorImpl implements Monitor {
     @Override
     public ScheduledFuture<?> executeTransaction(Transaction transaction) {
         return null;
+    }
+
+    @Override
+    public void initialise(Agent parentAgent) {
+
     }
 
     @Override

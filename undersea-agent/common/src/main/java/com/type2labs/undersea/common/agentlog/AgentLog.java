@@ -1,5 +1,6 @@
 package com.type2labs.undersea.common.agentlog;
 
+import com.type2labs.undersea.common.agent.Agent;
 import com.type2labs.undersea.common.service.AgentService;
 import com.type2labs.undersea.common.service.Transaction;
 
@@ -17,6 +18,11 @@ public class AgentLog implements AgentService {
     @Override
     public ScheduledFuture<?> executeTransaction(Transaction transaction) {
         return null;
+    }
+
+    @Override
+    public void initialise(Agent parentAgent) {
+
     }
 
     @Override

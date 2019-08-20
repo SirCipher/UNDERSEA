@@ -1,5 +1,6 @@
 package com.type2labs.undersea.seachain;
 
+import com.type2labs.undersea.common.agent.Agent;
 import com.type2labs.undersea.common.blockchain.BlockchainNetwork;
 import com.type2labs.undersea.common.service.Transaction;
 
@@ -15,6 +16,11 @@ public class BlockchainNetworkImpl implements BlockchainNetwork {
     @Override
     public ScheduledFuture<?> executeTransaction(Transaction transaction) {
         return null;
+    }
+
+    @Override
+    public void initialise(Agent parentAgent) {
+
     }
 
 

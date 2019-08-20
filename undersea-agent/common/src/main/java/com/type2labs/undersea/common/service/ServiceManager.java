@@ -117,6 +117,8 @@ public class ServiceManager {
 
     private void startService(Class<? extends AgentService> service) {
         AgentService agentService = getService(service);
+        agentService.initialise(agent);
+
         logger.info("Agent " + agent.name() + " starting service: " + agentService.getClass().getSimpleName(), agent);
 
         ScheduledFuture<?> future = scheduledExecutor.schedule(agentService, 1, TimeUnit.MILLISECONDS);

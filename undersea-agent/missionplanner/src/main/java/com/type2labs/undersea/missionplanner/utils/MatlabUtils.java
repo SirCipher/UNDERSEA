@@ -1,4 +1,4 @@
-package com.type2labs.undersea.missionplanner;
+package com.type2labs.undersea.missionplanner.utils;
 
 import com.mathworks.toolbox.javabuilder.MWApplication;
 import com.mathworks.toolbox.javabuilder.MWArray;

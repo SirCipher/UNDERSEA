@@ -2,7 +2,7 @@ package com.type2labs.undersea.prospect.util;
 
 import com.type2labs.undersea.prospect.RaftProtos;
 import com.type2labs.undersea.prospect.model.RaftNode;
-import com.type2labs.undersea.prospect.networking.Client;
+import com.type2labs.undersea.common.cluster.Client;
 
 public class GrpcUtil {
 

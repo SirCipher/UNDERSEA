@@ -1,6 +1,7 @@
 package com.type2labs.undersea.agent.service;
 
 import com.type2labs.undersea.agent.impl.UnderseaAgent;
+import com.type2labs.undersea.common.agent.Agent;
 import com.type2labs.undersea.common.agent.AgentStatus;
 import com.type2labs.undersea.common.config.UnderseaRuntimeConfig;
 import com.type2labs.undersea.common.monitor.Monitor;
@@ -77,6 +78,11 @@ public class ServiceManagerTest {
         @Override
         public ScheduledFuture<?> executeTransaction(Transaction transaction) {
             return null;
+        }
+
+        @Override
+        public void initialise(Agent parentAgent) {
+
         }
 
 

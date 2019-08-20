@@ -3,8 +3,8 @@ package com.type2labs.undersea.prospect.impl;
 import com.type2labs.undersea.prospect.RaftClusterConfig;
 import com.type2labs.undersea.prospect.RaftProtos;
 import com.type2labs.undersea.prospect.model.RaftNode;
-import com.type2labs.undersea.prospect.networking.Client;
-import com.type2labs.undersea.prospect.networking.ClientImpl;
+import com.type2labs.undersea.common.cluster.Client;
+import com.type2labs.undersea.prospect.networking.RaftClientImpl;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.*;
@@ -26,7 +26,7 @@ public class ClusterState {
     }
 
     private void addSelf() {
-        Client self = ClientImpl.ofSelf(parent);
+        Client self = RaftClientImpl.ofSelf(parent);
         ClientState agentInfo = new ClientState(self);
         List<Pair<String, String>> status = parent.agent().status();
 

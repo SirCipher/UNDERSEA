@@ -74,6 +74,11 @@ public class ControllerImpl implements Controller {
     }
 
     @Override
+    public void initialise(Agent parentAgent) {
+
+    }
+
+    @Override
     public void run() {
         double initTime = (System.currentTimeMillis() - start) / 1000.0 * SIMULATION_SPEED;
         Knowledge.getInstance().addToInitTimeList(initTime);

@@ -1,20 +1,13 @@
 package com.type2labs.undersea.prospect.networking;
 
+
 import com.google.common.util.concurrent.FutureCallback;
+import com.type2labs.undersea.common.cluster.Client;
 import com.type2labs.undersea.prospect.RaftProtos;
-import com.type2labs.undersea.prospect.impl.RaftPeerId;
 import io.grpc.Deadline;
 import io.grpc.StatusRuntimeException;
 
-import java.net.InetSocketAddress;
-
-public interface Client {
-
-    RaftPeerId peerId();
-
-    InetSocketAddress socketAddress();
-
-    void shutdown();
+public interface RaftClient extends Client {
 
     /**
      * Acquires the status of the pool so that an agent can make informed decisions. Each request is performed as a

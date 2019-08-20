@@ -17,7 +17,7 @@ import com.type2labs.undersea.monitor.VisualiserClientImpl;
 import com.type2labs.undersea.prospect.RaftClusterConfig;
 import com.type2labs.undersea.prospect.impl.RaftIntegrationImpl;
 import com.type2labs.undersea.prospect.impl.RaftNodeImpl;
-import com.type2labs.undersea.prospect.impl.RaftPeerId;
+import com.type2labs.undersea.common.cluster.PeerId;
 import com.type2labs.undersea.seachain.BlockchainNetworkImpl;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -59,7 +59,7 @@ public class AgentInitialiser {
                     value.getName(),
                     new RaftIntegrationImpl(value.getName()),
                     new InetSocketAddress("localhost", value.getServerPort()),
-                    RaftPeerId.newId()
+                    PeerId.newId()
             );
 
             ServiceManager serviceManager = new ServiceManager();
@@ -85,8 +85,6 @@ public class AgentInitialiser {
 
             VisualiserClientImpl visualiser = new VisualiserClientImpl(underseaAgent);
             monitor.setVisualiser(visualiser);
-
-            raftNode.setAgent(underseaAgent);
 
             serviceManager.startServices();
 

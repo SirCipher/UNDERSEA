@@ -15,7 +15,7 @@ import com.type2labs.undersea.missionplanner.planner.vrp.VehicleRoutingOptimiser
 import com.type2labs.undersea.prospect.RaftClusterConfig;
 import com.type2labs.undersea.prospect.impl.RaftIntegrationImpl;
 import com.type2labs.undersea.prospect.impl.RaftNodeImpl;
-import com.type2labs.undersea.prospect.impl.RaftPeerId;
+import com.type2labs.undersea.common.cluster.PeerId;
 import com.type2labs.undersea.seachain.BlockchainNetworkImpl;
 import org.junit.Test;
 
@@ -36,7 +36,7 @@ public class UnderseaAgentTest {
                 "test",
                 new RaftIntegrationImpl("test"),
                 new InetSocketAddress("localhost", 5000),
-                RaftPeerId.newId()
+                PeerId.newId()
         );
 
         ServiceManager serviceManager = new ServiceManager();

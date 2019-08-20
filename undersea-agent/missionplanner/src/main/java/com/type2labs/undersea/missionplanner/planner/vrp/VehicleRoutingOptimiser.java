@@ -8,11 +8,11 @@ import com.mathworks.toolbox.javabuilder.MWNumericArray;
 import com.type2labs.undersea.common.agent.Agent;
 import com.type2labs.undersea.common.missionplanner.*;
 import com.type2labs.undersea.common.service.Transaction;
-import com.type2labs.undersea.missionplanner.MatlabUtils;
 import com.type2labs.undersea.missionplanner.decomposer.delaunay.DelaunayDecomposer;
 import com.type2labs.undersea.missionplanner.model.MissionImpl;
 import com.type2labs.undersea.missionplanner.model.MissionParametersImpl;
 import com.type2labs.undersea.missionplanner.model.PlanDataModel;
+import com.type2labs.undersea.missionplanner.utils.MatlabUtils;
 import com.type2labs.undersea.utilities.PlannerUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -202,8 +202,20 @@ public class VehicleRoutingOptimiser implements MissionPlanner {
 
     @Override
     public ScheduledFuture<?> executeTransaction(Transaction transaction) {
-        // TODO: 20/08/2019 handle on leader status change
+        logger.info("Received transaction: " + transaction);
+        Agent agent = transaction.getAgent();
+        Transaction.StatusCode statusCode = transaction.getStatusCode();
+
+        if(statusCode== Transaction.StatusCode.ELECTED_LEADER){
+            // TODO: 20/08/2019 Need to pull clients from agent. Move from RaftImpl
+        }
+
         return null;
+    }
+
+    @Override
+    public void initialise(Agent parentAgent) {
+
     }
 
 

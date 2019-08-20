@@ -11,10 +11,10 @@ import com.type2labs.undersea.common.service.ServiceManager;
 import com.type2labs.undersea.prospect.impl.ClusterState;
 import com.type2labs.undersea.prospect.impl.RaftIntegrationImpl;
 import com.type2labs.undersea.prospect.impl.RaftNodeImpl;
-import com.type2labs.undersea.prospect.impl.RaftPeerId;
+import com.type2labs.undersea.common.cluster.PeerId;
 import com.type2labs.undersea.prospect.model.RaftNode;
-import com.type2labs.undersea.prospect.networking.Client;
-import com.type2labs.undersea.prospect.networking.ClientImpl;
+import com.type2labs.undersea.common.cluster.Client;
+import com.type2labs.undersea.prospect.networking.RaftClientImpl;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -33,7 +33,7 @@ class LocalAgentGroup implements Closeable {
 
     LocalAgentGroup(int size) {
         raftNodes = new RaftNodeImpl[size];
-        clients = new ClientImpl[size];
+        clients = new RaftClientImpl[size];
         integrations = new RaftIntegrationImpl[size];
 
         RaftClusterConfig config = defaultConfig();
@@ -48,7 +48,7 @@ class LocalAgentGroup implements Closeable {
                     "agent:" + i,
                     integration,
                     new InetSocketAddress("localhost", 0),
-                    RaftPeerId.newId()
+                    PeerId.newId()
             );
 
             Monitor monitor = new MonitorImpl();
@@ -58,7 +58,7 @@ class LocalAgentGroup implements Closeable {
                     new AgentStatus(name, new ArrayList<>()));
 
             serviceManager.registerService(new NoMissionPlanner());
-            raftNode.setAgent(agent);
+            raftNode.initialise(agent);
 
             serviceManager.registerService(monitor);
             serviceManager.startServices();

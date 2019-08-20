@@ -4,9 +4,10 @@ import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
+import com.type2labs.undersea.common.cluster.Client;
 import com.type2labs.undersea.prospect.RaftProtocolServiceGrpc;
 import com.type2labs.undersea.prospect.RaftProtos;
-import com.type2labs.undersea.prospect.impl.RaftPeerId;
+import com.type2labs.undersea.common.cluster.PeerId;
 import com.type2labs.undersea.prospect.model.RaftNode;
 import io.grpc.Deadline;
 import io.grpc.ManagedChannel;
@@ -20,20 +21,20 @@ import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class ClientImpl implements Client {
+public class RaftClientImpl implements RaftClient {
 
-    private static final Logger logger = LogManager.getLogger(ClientImpl.class);
+    private static final Logger logger = LogManager.getLogger(RaftClientImpl.class);
 
     private final InetSocketAddress socketAddress;
     private final ManagedChannel channel;
     private final RaftProtocolServiceGrpc.RaftProtocolServiceFutureStub futureStub;
     private final RaftProtocolServiceGrpc.RaftProtocolServiceBlockingStub blockingStub;
     private final ExecutorService clientExecutor;
-    private final RaftPeerId clientId;
+    private final PeerId clientId;
     private boolean isSelf = false;
 
-    public ClientImpl(RaftNode parent, InetSocketAddress socketAddress, RaftPeerId raftPeerId) {
-        this.clientId = raftPeerId;
+    public RaftClientImpl(RaftNode parent, InetSocketAddress socketAddress, PeerId peerId) {
+        this.clientId = peerId;
         this.socketAddress = socketAddress;
         this.channel =
                 ManagedChannelBuilder.forAddress(socketAddress.getHostString(), socketAddress.getPort()).usePlaintext().build();
@@ -46,13 +47,13 @@ public class ClientImpl implements Client {
     }
 
     public static Client ofSelf(RaftNode raftNode) {
-        ClientImpl self = new ClientImpl(raftNode, new InetSocketAddress(0), raftNode.peerId());
+        RaftClientImpl self = new RaftClientImpl(raftNode, new InetSocketAddress(0), raftNode.peerId());
         self.isSelf = true;
         return self;
     }
 
     @Override
-    public RaftPeerId peerId() {
+    public PeerId peerId() {
         return clientId;
     }
 
@@ -101,7 +102,7 @@ public class ClientImpl implements Client {
             return false;
         }
 
-        ClientImpl client = (ClientImpl) o;
+        RaftClientImpl client = (RaftClientImpl) o;
 
         return clientId.equals(client.clientId);
     }
