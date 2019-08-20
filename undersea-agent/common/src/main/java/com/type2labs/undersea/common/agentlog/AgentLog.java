@@ -1,10 +1,11 @@
 package com.type2labs.undersea.common.agentlog;
 
+import com.google.common.util.concurrent.ListenableFuture;
 import com.type2labs.undersea.common.agent.Agent;
 import com.type2labs.undersea.common.service.AgentService;
 import com.type2labs.undersea.common.service.Transaction;
 
-import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.Future;
 
 // TODO: 20/08/2019 implement ring buffer
 public class AgentLog implements AgentService {
@@ -16,7 +17,7 @@ public class AgentLog implements AgentService {
     }
 
     @Override
-    public ScheduledFuture<?> executeTransaction(Transaction transaction) {
+    public ListenableFuture<?> executeTransaction(Transaction transaction) {
         return null;
     }
 

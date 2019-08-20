@@ -1,6 +1,7 @@
 package com.type2labs.undersea.common.cluster;
 
 import java.net.InetSocketAddress;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 public interface Client {
@@ -12,10 +13,7 @@ public interface Client {
     void shutdown();
 
     default ConcurrentMap<PeerId, Client> localNodes() {
-        return null;
+        return new ConcurrentHashMap<>();
     }
-
-    ;
-
 
 }

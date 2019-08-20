@@ -2,7 +2,7 @@ package com.type2labs.undersea.prospect.impl;
 
 import com.type2labs.undersea.prospect.model.RaftNode;
 import com.type2labs.undersea.prospect.service.RaftProtocolServiceImpl;
-import com.type2labs.undersea.utilities.ExecutorUtils;
+import com.type2labs.undersea.utilities.executor.ExecutorUtils;
 import io.grpc.Server;
 import io.grpc.ServerBuilder;
 import io.grpc.netty.shaded.io.grpc.netty.NettyServerBuilder;

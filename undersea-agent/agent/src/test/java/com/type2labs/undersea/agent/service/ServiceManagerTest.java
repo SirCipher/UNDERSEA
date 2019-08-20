@@ -1,5 +1,6 @@
 package com.type2labs.undersea.agent.service;
 
+import com.google.common.util.concurrent.ListenableFuture;
 import com.type2labs.undersea.agent.impl.UnderseaAgent;
 import com.type2labs.undersea.common.agent.Agent;
 import com.type2labs.undersea.common.agent.AgentStatus;
@@ -12,7 +13,7 @@ import com.type2labs.undersea.common.service.Transaction;
 import org.junit.Test;
 
 import java.util.ArrayList;
-import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.Future;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -76,7 +77,7 @@ public class ServiceManagerTest {
         }
 
         @Override
-        public ScheduledFuture<?> executeTransaction(Transaction transaction) {
+        public ListenableFuture<?> executeTransaction(Transaction transaction) {
             return null;
         }
 

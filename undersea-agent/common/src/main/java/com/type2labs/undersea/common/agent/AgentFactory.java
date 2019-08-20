@@ -3,7 +3,7 @@ package com.type2labs.undersea.common.agent;
 
 import com.type2labs.undersea.common.config.UnderseaRuntimeConfig;
 import com.type2labs.undersea.common.service.ServiceManager;
-import com.type2labs.undersea.utilities.AbstractFactory;
+import com.type2labs.undersea.utilities.factory.AbstractFactory;
 import org.apache.commons.lang3.NotImplementedException;
 import org.apache.commons.lang3.tuple.Pair;
 

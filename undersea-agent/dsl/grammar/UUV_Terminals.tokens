@@ -20,7 +20,7 @@ ID=19
 WS=20
 ErrorCharacter=21
 '='=1
-'mission name'=2
+'generatedMission name'=2
 'name'=3
 'time window'=4
 'host'=5

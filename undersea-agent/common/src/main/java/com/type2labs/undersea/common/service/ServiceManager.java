@@ -1,6 +1,9 @@
 package com.type2labs.undersea.common.service;
 
+import com.google.common.util.concurrent.ListenableFuture;
 import com.type2labs.undersea.common.agent.Agent;
+import com.type2labs.undersea.utilities.executor.ScheduledThrowableExecutor;
+import com.type2labs.undersea.utilities.executor.ThrowableExecutor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -15,9 +18,9 @@ public class ServiceManager {
     private static final Logger logger = LogManager.getLogger(ServiceManager.class);
 
     private final Map<Class<? extends AgentService>, AgentService> services = new ConcurrentHashMap<>();
-
-    private final ScheduledExecutorService scheduledExecutor = Executors.newSingleThreadScheduledExecutor();
     private final Map<Class<? extends AgentService>, ScheduledFuture<?>> scheduledFutures = new ConcurrentHashMap<>();
+
+    private final ScheduledExecutorService scheduledExecutor = ScheduledThrowableExecutor.newSingleThreadExecutor();
 
     private Agent agent;
     private boolean autoLogTransactions;
@@ -54,15 +57,16 @@ public class ServiceManager {
         return services.keySet();
     }
 
-    public Set<ScheduledFuture<?>> commitTransaction(Transaction transaction) {
+    public Set<ListenableFuture<?>> commitTransaction(Transaction transaction) {
         Collection<Class<? extends AgentService>> destinationServices = transaction.getDestinationServices();
-        Set<ScheduledFuture<?>> futures = new HashSet<>(destinationServices.size());
+        Set<ListenableFuture<?>> futures = new HashSet<>(destinationServices.size());
 
         for (Class<? extends AgentService> service : destinationServices) {
             AgentService _registeredService = Objects.requireNonNull(getService(service),
                     "Service not registered: " + service.getSimpleName());
-            ScheduledFuture<?> future = _registeredService.executeTransaction(transaction);
+            ListenableFuture<?> future = _registeredService.executeTransaction(transaction);
             futures.add(future);
+
         }
 
         return Collections.unmodifiableSet(futures);
@@ -136,4 +140,9 @@ public class ServiceManager {
         }
     }
 
+    public void registerService(Set<AgentService> services) {
+        for(AgentService as: services){
+            registerService(as);
+        }
+    }
 }

@@ -1,4 +1,4 @@
-package com.type2labs.undersea.utilities;
+package com.type2labs.undersea.utilities.executor;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 

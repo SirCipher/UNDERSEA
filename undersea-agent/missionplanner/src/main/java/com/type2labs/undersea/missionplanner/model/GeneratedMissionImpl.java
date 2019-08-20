@@ -3,7 +3,8 @@ package com.type2labs.undersea.missionplanner.model;
 import com.google.ortools.constraintsolver.Assignment;
 import com.google.ortools.constraintsolver.RoutingIndexManager;
 import com.google.ortools.constraintsolver.RoutingModel;
-import com.type2labs.undersea.common.missionplanner.Mission;
+import com.type2labs.undersea.common.missionplanner.GeneratedMission;
+import com.type2labs.undersea.common.missionplanner.MissionParameters;
 import com.type2labs.undersea.common.missionplanner.Task;
 import com.type2labs.undersea.common.missionplanner.TaskStatus;
 
@@ -12,7 +13,7 @@ import java.util.List;
 /**
  * Created by Thomas Klapwijk on 2019-07-22.
  */
-public class MissionImpl implements Mission {
+public class GeneratedMissionImpl implements GeneratedMission {
 
     private final PlanDataModel planDataModel;
     private final Assignment assignment;
@@ -21,22 +22,22 @@ public class MissionImpl implements Mission {
     // TODO: Add node type
     // Each node should have an assignee, coordinates, and state (visited, POI, etc)
     private final List<Task> tasks;
-    private final MissionParametersImpl missionParametersImpl;
+    private final MissionParameters missionParameters;
 
 
-    public MissionImpl(PlanDataModel planDataModel, Assignment assignment, RoutingModel routingModel,
-                       RoutingIndexManager routingIndexManager, List<Task> tasks,
-                       MissionParametersImpl missionParametersImpl) {
+    public GeneratedMissionImpl(PlanDataModel planDataModel, Assignment assignment, RoutingModel routingModel,
+                                RoutingIndexManager routingIndexManager, List<Task> tasks,
+                                MissionParameters missionParameters) {
         this.planDataModel = planDataModel;
         this.assignment = assignment;
         this.routingModel = routingModel;
         this.routingIndexManager = routingIndexManager;
         this.tasks = tasks;
-        this.missionParametersImpl = missionParametersImpl;
+        this.missionParameters = missionParameters;
     }
 
-    public MissionParametersImpl getMissionParametersImpl() {
-        return missionParametersImpl;
+    public MissionParameters getMissionParameters() {
+        return missionParameters;
     }
 
     public Assignment getAssignment() {

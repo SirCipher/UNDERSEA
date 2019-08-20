@@ -1,4 +1,4 @@
-package com.type2labs.undersea.utilities;
+package com.type2labs.undersea.utilities.factory;
 
 import java.util.List;
 

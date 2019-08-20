@@ -4,7 +4,7 @@ package com.type2labs.undersea.dsl.uuv.factory;
 import com.type2labs.undersea.agent.impl.Range;
 import com.type2labs.undersea.agent.impl.Sensor;
 import com.type2labs.undersea.dsl.uuv.gen.SensorsParser;
-import com.type2labs.undersea.utilities.UnderseaException;
+import com.type2labs.undersea.utilities.exception.UnderseaException;
 import org.antlr.v4.runtime.ParserRuleContext;
 
 import java.util.HashMap;

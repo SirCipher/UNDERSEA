@@ -20,16 +20,16 @@ Also, the repository comprises the following shell scripts:
 * **build-dsl.sh**: Script for building UNDERSEA_DSL.jar.
 <br /> Run ```./build-dsl.sh```
 
-* **build-mission.sh**: Script for building the necessary mission files.
-<br /> Run ```./build-mission.sh missionPath```
+* **build-generatedMission.sh**: Script for building the necessary generatedMission files.
+<br /> Run ```./build-generatedMission.sh missionPath```
 
 * **build-missionParser.sh**: Script for building the UNDERSEA DSL. Execute this script only when you modify UNDERSEA DSL.
-<br /> Run ```./build-mission.sh missionPath```
+<br /> Run ```./build-generatedMission.sh missionPath```
 
 * **clean.sh**: Script for cleaning either the build directory (using flag `-r`) or any pending MOOS-IvP processes (using flag `-k`).
 <br /> Run ```./clean.sh -r``` or ```./clean.sh -k```
 
-* **launch.sh**: Script for launching a mission (including the controller and the controlled system)
+* **launch.sh**: Script for launching a generatedMission (including the controller and the controlled system)
 <br /> Run ```./launch.sh```
 
 * **memoryMonitor.sh**: Script for launching visualvm and connecting the UNDERSEA_Controller process with the memory monitoring tool)

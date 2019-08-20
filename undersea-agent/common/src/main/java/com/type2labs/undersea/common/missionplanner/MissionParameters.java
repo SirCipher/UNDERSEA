@@ -16,4 +16,6 @@ public interface MissionParameters {
 
     double[][] getCentroids();
 
+    void setCentroids(double[][] centroids);
+
 }

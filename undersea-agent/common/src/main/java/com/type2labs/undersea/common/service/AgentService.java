@@ -1,8 +1,9 @@
 package com.type2labs.undersea.common.service;
 
+import com.google.common.util.concurrent.ListenableFuture;
 import com.type2labs.undersea.common.agent.Agent;
 
-import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.Future;
 
 /**
  * Created by Thomas Klapwijk on 2019-08-08.
@@ -20,7 +21,7 @@ public interface AgentService extends Runnable {
      * @param transaction to execute
      * @return scheduled future
      */
-    ScheduledFuture<?> executeTransaction(Transaction transaction);
+    ListenableFuture<?> executeTransaction(Transaction transaction);
 
     /**
      * Sets the parent agent that this service belongs to and invokes initialisation on the service. Some services

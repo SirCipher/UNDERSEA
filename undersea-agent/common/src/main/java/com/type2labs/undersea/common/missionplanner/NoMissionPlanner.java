@@ -1,5 +1,6 @@
 package com.type2labs.undersea.common.missionplanner;
 
+import com.google.common.util.concurrent.ListenableFuture;
 import com.type2labs.undersea.common.agent.Agent;
 import com.type2labs.undersea.common.service.Transaction;
 import org.apache.logging.log4j.LogManager;
@@ -7,19 +8,21 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.Future;
 
 public class NoMissionPlanner implements MissionPlanner {
 
     private static final Logger logger = LogManager.getLogger(NoMissionPlanner.class);
 
+
+
     @Override
-    public Mission generate(MissionParameters missionParameters) throws PlannerException {
+    public GeneratedMission generate() throws PlannerException {
         return null;
     }
 
     @Override
-    public void print(Mission mission) {
+    public void print(GeneratedMission generatedMission) {
 
     }
 
@@ -34,7 +37,7 @@ public class NoMissionPlanner implements MissionPlanner {
     }
 
     @Override
-    public ScheduledFuture<?> executeTransaction(Transaction transaction) {
+    public ListenableFuture<?> executeTransaction(Transaction transaction) {
         logger.info("Received transaction: " + transaction);
         return null;
     }

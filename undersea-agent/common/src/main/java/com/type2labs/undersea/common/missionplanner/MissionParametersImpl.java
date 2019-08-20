@@ -1,4 +1,4 @@
-package com.type2labs.undersea.missionplanner.model;
+package com.type2labs.undersea.common.missionplanner;
 
 import com.type2labs.undersea.common.agent.Agent;
 import com.type2labs.undersea.common.missionplanner.MissionParameters;

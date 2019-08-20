@@ -1,27 +1,33 @@
 package com.type2labs.undersea.prospect.impl;
 
+import com.google.common.util.concurrent.Futures;
+import com.google.common.util.concurrent.ListenableFuture;
+import com.google.common.util.concurrent.ListeningExecutorService;
+import com.google.common.util.concurrent.MoreExecutors;
 import com.type2labs.undersea.common.agent.Agent;
+import com.type2labs.undersea.common.cluster.Client;
 import com.type2labs.undersea.common.cluster.PeerId;
 import com.type2labs.undersea.common.missionplanner.MissionPlanner;
 import com.type2labs.undersea.common.monitor.Monitor;
 import com.type2labs.undersea.common.service.Transaction;
+import com.type2labs.undersea.common.service.TransactionStatusCode;
 import com.type2labs.undersea.prospect.NodeLog;
 import com.type2labs.undersea.prospect.RaftClusterConfig;
 import com.type2labs.undersea.prospect.RaftProtos;
 import com.type2labs.undersea.prospect.model.RaftIntegration;
 import com.type2labs.undersea.prospect.model.RaftNode;
-import com.type2labs.undersea.common.cluster.Client;
 import com.type2labs.undersea.prospect.task.AcquireStatusTask;
 import com.type2labs.undersea.prospect.task.RequireRoleTask;
 import com.type2labs.undersea.prospect.task.VoteTask;
+import com.type2labs.undersea.utilities.concurrent.SimpleFutureCallback;
+import com.type2labs.undersea.utilities.executor.ThrowableExecutor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.net.InetSocketAddress;
-import java.util.concurrent.Executors;
+import java.util.Set;
 import java.util.concurrent.RejectedExecutionException;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledFuture;
 
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 
@@ -29,8 +35,9 @@ public class RaftNodeImpl implements RaftNode {
 
     private static final Logger logger = LogManager.getLogger(RaftNodeImpl.class);
 
-    private final ScheduledExecutorService singleThreadScheduledExecutor = Executors.newSingleThreadScheduledExecutor();
-    private final ScheduledExecutorService scheduledThreadPool = Executors.newScheduledThreadPool(4);
+    private final ThrowableExecutor singleThreadScheduledExecutor = ThrowableExecutor.newSingleThreadExecutor();
+    private final ListeningExecutorService listeningExecutorService =
+            MoreExecutors.listeningDecorator(ThrowableExecutor.newExecutor(4));
 
     private final String name;
     private RaftState raftState;
@@ -179,7 +186,7 @@ public class RaftNodeImpl implements RaftNode {
     }
 
     @Override
-    public ScheduledFuture<?> executeTransaction(Transaction transaction) {
+    public ListenableFuture<?> executeTransaction(Transaction transaction) {
         return null;
     }
 
@@ -226,10 +233,21 @@ public class RaftNodeImpl implements RaftNode {
 
         Transaction transaction = new Transaction.Builder(agent)
                 .forService(MissionPlanner.class)
-                .withStatus(Transaction.StatusCode.ELECTED_LEADER)
+                .withStatus(TransactionStatusCode.ELECTED_LEADER)
+                .forExecutorService(listeningExecutorService)
                 .build();
 
-        agent.services().commitTransaction(transaction);
+        Set<ListenableFuture<?>> futures = agent.services().commitTransaction(transaction);
+
+        for (ListenableFuture<?> future : futures) {
+            Futures.addCallback(future, new SimpleFutureCallback<Object>() {
+                @Override
+                public void onSuccess(@Nullable Object result) {
+                    System.out.println(result);
+                }
+
+            }, singleThreadScheduledExecutor);
+        }
 
         getMonitor().update();
         scheduleHeartbeat();

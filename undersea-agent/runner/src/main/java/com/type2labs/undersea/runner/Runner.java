@@ -11,8 +11,8 @@ import com.type2labs.undersea.common.missionplanner.MissionPlanner;
 import com.type2labs.undersea.common.missionplanner.PlannerException;
 import com.type2labs.undersea.dsl.EnvironmentProperties;
 import com.type2labs.undersea.dsl.ParserEngine;
-import com.type2labs.undersea.missionplanner.model.MissionImpl;
-import com.type2labs.undersea.missionplanner.model.MissionParametersImpl;
+import com.type2labs.undersea.missionplanner.model.GeneratedMissionImpl;
+import com.type2labs.undersea.common.missionplanner.MissionParametersImpl;
 import com.type2labs.undersea.missionplanner.planner.vrp.VehicleRoutingOptimiser;
 import com.type2labs.undersea.prospect.RaftClusterConfig;
 import com.type2labs.undersea.utilities.Utility;
@@ -44,7 +44,7 @@ public class Runner {
         runner.init(args[0]);
     }
 
-    private static MissionImpl planMission() {
+    private static GeneratedMissionImpl planMission() {
         MissionPlanner missionPlanner = new VehicleRoutingOptimiser();
         double[][] area = Utility.propertyKeyTo2dDoubleArray(properties, "environment.area");
 
@@ -52,7 +52,7 @@ public class Runner {
         MissionParametersImpl missionParametersImpl = new MissionParametersImpl(dslAgents, 0, area, 20);
 
         try {
-            MissionImpl mission = (MissionImpl) missionPlanner.generate(missionParametersImpl);
+            GeneratedMissionImpl mission = (GeneratedMissionImpl) missionPlanner.generate();
             missionPlanner.print(mission);
 
             return mission;
@@ -77,7 +77,7 @@ public class Runner {
 
         agentInitialiser.initialise(environmentProperties.getAgents());
 
-        MissionImpl mission = planMission();
+        GeneratedMissionImpl mission = planMission();
         RoutingModel routingModel = mission.getRoutingModel();
         Assignment assignment = mission.getAssignment();
         RoutingIndexManager manager = mission.getRoutingIndexManager();
@@ -92,7 +92,7 @@ public class Runner {
                 int centroidIndex = manager.indexToNode(index);
                 index = assignment.value(routingModel.nextVar(index));
 
-                double[] centroid = mission.getMissionParametersImpl().getCentroid(centroidIndex);
+                double[] centroid = mission.getMissionParameters().getCentroids()[centroidIndex];
 
                 Node node = new Node(centroid[0], centroid[1]);
                 dslAgent.assignNode(node);

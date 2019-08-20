@@ -1,5 +1,6 @@
 package com.type2labs.undersea.controller;
 
+import com.google.common.util.concurrent.ListenableFuture;
 import com.type2labs.undersea.common.agent.Agent;
 import com.type2labs.undersea.common.controller.Controller;
 import com.type2labs.undersea.common.service.Transaction;
@@ -10,7 +11,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.util.Properties;
-import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.Future;
 
 @SuppressWarnings("DuplicatedCode")
 public class ControllerImpl implements Controller {
@@ -69,7 +70,7 @@ public class ControllerImpl implements Controller {
     }
 
     @Override
-    public ScheduledFuture<?> executeTransaction(Transaction transaction) {
+    public ListenableFuture<?> executeTransaction(Transaction transaction) {
         return null;
     }
 

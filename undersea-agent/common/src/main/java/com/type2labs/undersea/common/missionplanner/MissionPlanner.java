@@ -7,20 +7,20 @@ import java.util.List;
 public interface MissionPlanner extends AgentService {
 
     /**
-     * Generates a mission meeting the given criteria
+     * Generates a mission meeting the given criteria. Mission parameters are retrieved from the
+     * {@link com.type2labs.undersea.common.config.UnderseaRuntimeConfig}
      *
-     * @param missionParameters that the mission must conform to
      * @return a generated mission
      * @throws PlannerException if the arguments do not match the expected MATLAB parameters
      */
-    Mission generate(MissionParameters missionParameters) throws PlannerException;
+    GeneratedMission generate() throws PlannerException;
 
     /**
      * Print a given mission
      *
-     * @param mission to print
+     * @param generatedMission to print
      */
-    void print(Mission mission);
+    void print(GeneratedMission generatedMission);
 
     List<Task> getTasks();
 

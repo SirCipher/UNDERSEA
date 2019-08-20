@@ -1,7 +1,7 @@
 package com.type2labs.undersea.dsl;
 
 import com.type2labs.undersea.dsl.uuv.model.DslAgentProxy;
-import com.type2labs.undersea.utilities.UnderseaException;
+import com.type2labs.undersea.utilities.exception.UnderseaException;
 import com.type2labs.undersea.utilities.Utility;
 import org.apache.commons.io.IOUtils;
 import org.apache.logging.log4j.LogManager;

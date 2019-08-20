@@ -1,7 +1,7 @@
 package com.type2labs.undersea.dsl;
 
 import com.type2labs.undersea.dsl.uuv.model.DslAgentProxy;
-import com.type2labs.undersea.utilities.UnderseaException;
+import com.type2labs.undersea.utilities.exception.UnderseaException;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -84,7 +84,7 @@ public class EnvironmentProperties {
     }
 
     public enum EnvironmentValue {
-        MISSION_NAME("(e.g., mission name = reconnaissance"),
+        MISSION_NAME("(e.g., mission name = reconnaissance)"),
         SIMULATION_TIME("(e.g., simulation time = 10)"),
         SIMULATION_SPEED("(e.g., simulation speed = 2)"),
         HOST("(e.g., host = localhost)"),

@@ -1,4 +1,4 @@
-package com.type2labs.undersea.prospect.util;
+package com.type2labs.undersea.utilities.testing;
 
 public class TestUtil {
 

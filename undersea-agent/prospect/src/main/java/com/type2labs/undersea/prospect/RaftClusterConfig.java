@@ -7,7 +7,8 @@ import io.grpc.Deadline;
 
 import java.util.concurrent.TimeUnit;
 
-import static com.type2labs.undersea.utilities.Preconditions.isNotNull;
+import static com.type2labs.undersea.utilities.preconditions.Preconditions.isNotNull;
+
 
 public class RaftClusterConfig implements UnderseaConfig {
 

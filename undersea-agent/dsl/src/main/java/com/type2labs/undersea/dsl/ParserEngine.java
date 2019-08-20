@@ -7,7 +7,7 @@ import com.type2labs.undersea.dsl.uuv.gen.UUVLexer;
 import com.type2labs.undersea.dsl.uuv.gen.UUVParser;
 import com.type2labs.undersea.dsl.uuv.listener.SensorListener;
 import com.type2labs.undersea.dsl.uuv.listener.UUVListener;
-import com.type2labs.undersea.utilities.UnderseaException;
+import com.type2labs.undersea.utilities.exception.UnderseaException;
 import com.type2labs.undersea.utilities.Utility;
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.ParseTree;
@@ -69,8 +69,8 @@ public class ParserEngine {
 
     private UUVParser createUUVParser() throws IOException {
         // create a CharStream that reads from standard input
-        String sensorsFile = Utility.getProperty(ParserEngine.properties, "config.mission");
-        CharStream codePointCharStream = CharStreams.fromFileName(sensorsFile);
+        String missionFile = Utility.getProperty(ParserEngine.properties, "config.mission");
+        CharStream codePointCharStream = CharStreams.fromFileName(missionFile);
 
         // create a lexer that feeds off of input CharStream
         UUVLexer lexer = new UUVLexer(codePointCharStream);

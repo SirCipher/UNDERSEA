@@ -1,4 +1,4 @@
-package com.type2labs.undersea.utilities;
+package com.type2labs.undersea.utilities.executor;
 
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -13,7 +13,11 @@ public class ThrowableExecutor extends ThreadPoolExecutor {
     }
 
     public static ThrowableExecutor newSingleThreadExecutor() {
-        return new ThrowableExecutor(1, 1, 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<>());
+        return newExecutor(1);
+    }
+
+    public static ThrowableExecutor newExecutor(int threads) {
+        return new ThrowableExecutor(threads, threads, 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<>());
     }
 
     protected void afterExecute(Runnable r, Throwable t) {

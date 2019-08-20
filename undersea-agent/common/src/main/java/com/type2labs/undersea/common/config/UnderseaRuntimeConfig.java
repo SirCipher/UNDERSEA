@@ -1,5 +1,6 @@
 package com.type2labs.undersea.common.config;
 
+import com.type2labs.undersea.common.missionplanner.MissionParameters;
 import com.type2labs.undersea.common.monitor.VisualiserClient;
 
 public class UnderseaRuntimeConfig {
@@ -7,6 +8,16 @@ public class UnderseaRuntimeConfig {
     private VisualiserClient visualiser;
     private boolean visualiserEnabled = false;
     private boolean autoLogTransactions = true;
+    private MissionParameters missionParameters;
+
+    public UnderseaRuntimeConfig missionParameters(MissionParameters missionParameters){
+        this.missionParameters = missionParameters;
+        return this;
+    }
+
+    public MissionParameters missionParameters() {
+        return missionParameters;
+    }
 
     public UnderseaRuntimeConfig autoLogTransactions(boolean autoLogTransactions) {
         this.autoLogTransactions = autoLogTransactions;
