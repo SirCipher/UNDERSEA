@@ -62,7 +62,7 @@ public class VisualiserTest {
         return underseaAgent;
     }
 
-    @Test
+//    @Test
     public void testDataUpdate() throws InterruptedException {
         new Visualiser();
 
