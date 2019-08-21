@@ -3,7 +3,7 @@ package com.type2labs.undersea.prospect.model;
 import com.type2labs.undersea.common.cluster.Client;
 
 /**
- * Contains an agent's multi-role state. A node that is in a {@link MultiRoleStatus#LEADER_FOLLOWER} is leading one
+ * Contains an agent's multi-role state. A node that is in a {@link Status#LEADER_FOLLOWER} is leading one
  * cluster and a follower in another.
  */
 public class MultiRoleState {
@@ -12,7 +12,16 @@ public class MultiRoleState {
      * The leader of the parent cluster
      */
     private Client leader;
-    private MultiRoleStatus multiRoleStatus = MultiRoleStatus.NOT_APPLIED;
+    private Status status = Status.NOT_APPLIED;
+    private Cluster assignedCluster;
+
+    public Cluster getAssignedCluster() {
+        return assignedCluster;
+    }
+
+    public void setAssignedCluster(Cluster assignedCluster) {
+        this.assignedCluster = assignedCluster;
+    }
 
     public Client getLeader() {
         return leader;
@@ -22,11 +31,15 @@ public class MultiRoleState {
         this.leader = leader;
     }
 
-    public MultiRoleStatus getMultiRoleStatus() {
-        return multiRoleStatus;
+    public Status getStatus() {
+        return status;
     }
 
-    public enum MultiRoleStatus {
+    public void setStatus(Status status) {
+        this.status = status;
+    }
+
+    public enum Status {
         /**
          * Denotes that this node is a leader of one cluster and a follower in another
          */
