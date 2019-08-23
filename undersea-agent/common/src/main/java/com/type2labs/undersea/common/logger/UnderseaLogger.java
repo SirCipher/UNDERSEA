@@ -52,7 +52,7 @@ public class UnderseaLogger extends AbstractAppender {
         LogMessage logMessage = new LogMessage(agent.peerId().toString(), message);
 
         ServiceManager serviceManager = agent.services();
-        Monitor monitor = (Monitor) serviceManager.getService(Monitor.class);
+        Monitor monitor = serviceManager.getService(Monitor.class);
 
         if (monitor == null) {
             return;

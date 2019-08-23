@@ -2,6 +2,7 @@ package com.type2labs.undersea.common.service;
 
 import com.google.common.util.concurrent.ListenableFuture;
 import com.type2labs.undersea.common.agent.Agent;
+import com.type2labs.undersea.common.service.transaction.Transaction;
 import com.type2labs.undersea.utilities.executor.ScheduledThrowableExecutor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -62,10 +63,10 @@ public class ServiceManager {
             }
         }
 
-        throw new NullPointerException(s + " is not registered");
+        return null;
     }
 
-    Collection<Class<? extends AgentService>> getServiceClasses() {
+    public Collection<Class<? extends AgentService>> getServiceClasses() {
         return services.keySet();
     }
 

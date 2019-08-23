@@ -2,6 +2,7 @@ package com.type2labs.undersea.common.service;
 
 import com.google.common.util.concurrent.ListenableFuture;
 import com.type2labs.undersea.common.agent.Agent;
+import com.type2labs.undersea.common.service.transaction.Transaction;
 
 /**
  * Created by Thomas Klapwijk on 2019-08-08.

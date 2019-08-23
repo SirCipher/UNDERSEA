@@ -3,7 +3,7 @@ package com.type2labs.undersea.controller;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.type2labs.undersea.common.agent.Agent;
 import com.type2labs.undersea.common.controller.Controller;
-import com.type2labs.undersea.common.service.Transaction;
+import com.type2labs.undersea.common.service.transaction.Transaction;
 import com.type2labs.undersea.controller.controller.*;
 import com.type2labs.undersea.controller.controller.comms.Client;
 import org.apache.logging.log4j.LogManager;
@@ -11,7 +11,6 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.util.Properties;
-import java.util.concurrent.Future;
 
 @SuppressWarnings("DuplicatedCode")
 public class ControllerImpl implements Controller {

@@ -1,8 +1,8 @@
 package com.type2labs.undersea.dsl.uuv.listener;
 
 
-import com.type2labs.undersea.agent.impl.Range;
-import com.type2labs.undersea.agent.impl.Sensor;
+import com.type2labs.undersea.agent.model.Range;
+import com.type2labs.undersea.agent.model.Sensor;
 import com.type2labs.undersea.dsl.EnvironmentProperties;
 import com.type2labs.undersea.dsl.uuv.factory.AbstractFactory;
 import com.type2labs.undersea.dsl.uuv.factory.FactoryProvider;

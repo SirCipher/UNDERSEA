@@ -6,7 +6,7 @@ repositories {
 
 dependencies {
     compile project(":agent")
-    compile project(":missionplanner")
+    compile project(":missionmanager")
     compile project(":prospect")
     compile project(":utilities")
 }

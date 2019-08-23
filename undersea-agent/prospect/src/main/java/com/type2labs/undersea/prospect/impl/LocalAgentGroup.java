@@ -10,8 +10,8 @@ import com.type2labs.undersea.common.cluster.PeerId;
 import com.type2labs.undersea.common.config.UnderseaRuntimeConfig;
 import com.type2labs.undersea.common.cost.CostConfiguration;
 import com.type2labs.undersea.common.cost.CostConfigurationImpl;
-import com.type2labs.undersea.common.missions.NoMissionPlanner;
 import com.type2labs.undersea.common.missions.planner.impl.MissionParametersImpl;
+import com.type2labs.undersea.common.missions.planner.impl.NoMissionManager;
 import com.type2labs.undersea.common.missions.planner.model.MissionParameters;
 import com.type2labs.undersea.common.monitor.impl.MonitorImpl;
 import com.type2labs.undersea.common.monitor.impl.VisualiserClientImpl;
@@ -76,7 +76,7 @@ public class LocalAgentGroup implements Closeable {
                 serviceManager.registerService(monitor);
             }
 
-            serviceManager.startServices();
+            raftNode.initialise(agent);
 
             raftNodes[i] = raftNode;
             agents.add(agent);
@@ -94,11 +94,17 @@ public class LocalAgentGroup implements Closeable {
     }
 
     public LocalAgentGroup(int size) {
-        this(size, Sets.newHashSet(new MonitorImpl(), new NoMissionPlanner()));
+        this(size, Sets.newHashSet(new MonitorImpl(), new NoMissionManager()));
     }
 
-    public RaftNodeImpl[] getRaftNodes() {
-        return raftNodes;
+    @Override
+    public void close() {
+        logger.info("Shutting down local agent group");
+
+        for (RaftNodeImpl node : raftNodes) {
+            node.shutdown();
+            node.agent().shutdown();
+        }
     }
 
     private RaftClusterConfig defaultConfig() {
@@ -132,13 +138,6 @@ public class LocalAgentGroup implements Closeable {
         return config;
     }
 
-
-    public void start() {
-        for (RaftNodeImpl node : raftNodes) {
-//            node.run();
-        }
-    }
-
     public void doManualDiscovery() {
         for (RaftNodeImpl raftNode : raftNodes) {
             for (int j = raftNodes.length - 1; j >= 0; j--) {
@@ -148,6 +147,8 @@ public class LocalAgentGroup implements Closeable {
                     raftNode.state().discoverNode(nodeB);
                 }
             }
+
+            System.out.println(raftNode.parent().clusterClients().size());
         }
     }
 
@@ -156,13 +157,13 @@ public class LocalAgentGroup implements Closeable {
         return raftNodes[0];
     }
 
-    @Override
-    public void close() {
-        logger.info("Shutting down local agent group");
+    public RaftNodeImpl[] getRaftNodes() {
+        return raftNodes;
+    }
 
+    public void start() {
         for (RaftNodeImpl node : raftNodes) {
-            node.shutdown();
-            node.agent().shutdown();
+            node.parent().services().startServices();
         }
     }
 }

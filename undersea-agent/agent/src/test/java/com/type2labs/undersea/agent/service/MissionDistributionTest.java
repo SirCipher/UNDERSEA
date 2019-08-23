@@ -2,6 +2,8 @@ package com.type2labs.undersea.agent.service;
 
 import com.google.common.collect.Sets;
 import com.type2labs.undersea.common.cluster.ClusterState;
+import com.type2labs.undersea.common.missions.planner.impl.MissionManagerImpl;
+import com.type2labs.undersea.common.missions.planner.model.MissionManager;
 import com.type2labs.undersea.common.monitor.impl.MonitorImpl;
 import com.type2labs.undersea.common.monitor.impl.VisualiserClientImpl;
 import com.type2labs.undersea.common.monitor.model.Monitor;
@@ -21,9 +23,9 @@ public class MissionDistributionTest {
     @Test
     public void test() {
 
-        int count = 3;
+        int count = 5;
         Set<AgentService> services = Sets.newHashSet(
-                new VehicleRoutingOptimiser()
+                new MissionManagerImpl(new VehicleRoutingOptimiser())
         );
 
         try (LocalAgentGroup localAgentGroup = new LocalAgentGroup(count, services, true)) {

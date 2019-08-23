@@ -1,6 +1,5 @@
 package com.type2labs.undersea.common.missions.planner.model;
 
-
 import java.util.List;
 
 public interface GeneratedMission {

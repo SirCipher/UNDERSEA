@@ -10,13 +10,13 @@ import com.type2labs.undersea.common.agent.Agent;
 import com.type2labs.undersea.common.cluster.Client;
 import com.type2labs.undersea.common.cluster.PeerId;
 import com.type2labs.undersea.common.consensus.RaftRole;
+import com.type2labs.undersea.common.missions.planner.model.MissionManager;
 import com.type2labs.undersea.common.missions.planner.model.AgentMission;
 import com.type2labs.undersea.common.missions.planner.model.GeneratedMission;
 import com.type2labs.undersea.common.missions.planner.model.MissionParameters;
-import com.type2labs.undersea.common.missions.planner.model.MissionPlanner;
 import com.type2labs.undersea.common.monitor.model.Monitor;
-import com.type2labs.undersea.common.service.Transaction;
-import com.type2labs.undersea.common.service.TransactionStatusCode;
+import com.type2labs.undersea.common.service.transaction.Transaction;
+import com.type2labs.undersea.common.service.transaction.TransactionStatusCode;
 import com.type2labs.undersea.prospect.NodeLog;
 import com.type2labs.undersea.prospect.RaftClusterConfig;
 import com.type2labs.undersea.prospect.RaftProtos;
@@ -143,7 +143,7 @@ public class RaftNodeImpl implements RaftNode {
         parameters.setClients(new ArrayList<>(parent().clusterClients().values()));
 
         Transaction transaction = new Transaction.Builder(agent)
-                .forService(MissionPlanner.class)
+                .forService(MissionManager.class)
                 .withStatus(TransactionStatusCode.ELECTED_LEADER)
                 .forExecutorService(listeningExecutorService)
                 .build();

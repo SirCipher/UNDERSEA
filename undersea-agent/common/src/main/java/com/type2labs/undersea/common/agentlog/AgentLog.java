@@ -3,9 +3,7 @@ package com.type2labs.undersea.common.agentlog;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.type2labs.undersea.common.agent.Agent;
 import com.type2labs.undersea.common.service.AgentService;
-import com.type2labs.undersea.common.service.Transaction;
-
-import java.util.concurrent.Future;
+import com.type2labs.undersea.common.service.transaction.Transaction;
 
 // TODO: 20/08/2019 implement ring buffer
 public class AgentLog implements AgentService {

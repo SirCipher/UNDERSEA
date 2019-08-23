@@ -1,6 +1,9 @@
 package com.type2labs.undersea.agent.impl;
 
 
+import com.type2labs.undersea.agent.model.Node;
+import com.type2labs.undersea.agent.model.Range;
+import com.type2labs.undersea.agent.model.Sensor;
 import com.type2labs.undersea.common.agent.Agent;
 import com.type2labs.undersea.common.cluster.Client;
 import com.type2labs.undersea.common.cluster.PeerId;

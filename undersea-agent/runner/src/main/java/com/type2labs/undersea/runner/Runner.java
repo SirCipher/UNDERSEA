@@ -4,7 +4,7 @@ import com.google.ortools.constraintsolver.Assignment;
 import com.google.ortools.constraintsolver.RoutingIndexManager;
 import com.google.ortools.constraintsolver.RoutingModel;
 import com.type2labs.undersea.agent.impl.AgentImpl;
-import com.type2labs.undersea.agent.impl.Node;
+import com.type2labs.undersea.agent.model.Node;
 import com.type2labs.undersea.common.agent.Agent;
 import com.type2labs.undersea.common.config.UnderseaRuntimeConfig;
 import com.type2labs.undersea.common.missions.planner.model.MissionPlanner;

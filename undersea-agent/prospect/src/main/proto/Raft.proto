@@ -63,7 +63,7 @@ message AppendEntryResponse {
 }
 
 message LogEntryProto {
-    string data = 1;
+    string transactionData = 1;
 }
 
 message VoteRequest {

@@ -1,8 +1,8 @@
 package com.type2labs.undersea.common.config;
 
+import com.type2labs.undersea.common.missions.planner.model.MissionParameters;
 import com.type2labs.undersea.common.cost.CostCalculator;
 import com.type2labs.undersea.common.cost.CostConfiguration;
-import com.type2labs.undersea.common.missions.planner.model.MissionParameters;
 import com.type2labs.undersea.common.monitor.model.VisualiserClient;
 
 import java.util.HashMap;

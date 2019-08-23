@@ -10,7 +10,7 @@ import com.type2labs.undersea.common.monitor.model.Monitor;
 import com.type2labs.undersea.common.monitor.impl.MonitorImpl;
 import com.type2labs.undersea.common.service.AgentService;
 import com.type2labs.undersea.common.service.ServiceManager;
-import com.type2labs.undersea.common.service.Transaction;
+import com.type2labs.undersea.common.service.transaction.Transaction;
 import org.junit.Test;
 
 import java.util.ArrayList;

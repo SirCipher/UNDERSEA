@@ -1,12 +1,9 @@
 package com.type2labs.undersea.common.missions.planner.model;
 
+import com.type2labs.undersea.common.agent.Agent;
 import com.type2labs.undersea.common.missions.PlannerException;
-import com.type2labs.undersea.common.missions.task.model.Task;
-import com.type2labs.undersea.common.service.AgentService;
 
-import java.util.List;
-
-public interface MissionPlanner extends AgentService {
+public interface MissionPlanner {
 
     /**
      * Generates a mission meeting the given criteria. Mission parameters are retrieved from the
@@ -24,6 +21,6 @@ public interface MissionPlanner extends AgentService {
      */
     void print(GeneratedMission generatedMission);
 
-    List<Task> getTasks();
+    void initialise(Agent parentAgent);
 
 }

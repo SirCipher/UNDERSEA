@@ -4,7 +4,7 @@ import com.google.common.util.concurrent.ListenableFuture;
 import com.type2labs.undersea.common.agent.Agent;
 import com.type2labs.undersea.common.monitor.model.Monitor;
 import com.type2labs.undersea.common.monitor.model.VisualiserClient;
-import com.type2labs.undersea.common.service.Transaction;
+import com.type2labs.undersea.common.service.transaction.Transaction;
 
 public class NoMonitor implements Monitor {
 

@@ -3,9 +3,7 @@ package com.type2labs.undersea.seachain;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.type2labs.undersea.common.agent.Agent;
 import com.type2labs.undersea.common.blockchain.BlockchainNetwork;
-import com.type2labs.undersea.common.service.Transaction;
-
-import java.util.concurrent.Future;
+import com.type2labs.undersea.common.service.transaction.Transaction;
 
 public class BlockchainNetworkImpl implements BlockchainNetwork {
 

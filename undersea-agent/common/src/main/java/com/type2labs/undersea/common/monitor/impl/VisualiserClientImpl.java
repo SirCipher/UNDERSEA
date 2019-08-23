@@ -4,10 +4,10 @@ import com.google.common.util.concurrent.ListenableFuture;
 import com.type2labs.undersea.common.agent.Agent;
 import com.type2labs.undersea.common.consensus.ConsensusAlgorithm;
 import com.type2labs.undersea.common.logger.LogMessage;
-import com.type2labs.undersea.common.missions.planner.model.MissionPlanner;
+import com.type2labs.undersea.common.missions.planner.model.MissionManager;
 import com.type2labs.undersea.common.monitor.VisualiserData;
 import com.type2labs.undersea.common.monitor.model.VisualiserClient;
-import com.type2labs.undersea.common.service.Transaction;
+import com.type2labs.undersea.common.service.transaction.Transaction;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -81,7 +81,7 @@ public class VisualiserClientImpl implements VisualiserClient {
         ConsensusAlgorithm raftNode = parent.services().getService(ConsensusAlgorithm.class);
         String raftRole = String.valueOf(raftNode.getRaftRole());
 
-        MissionPlanner missionPlanner = parent.services().getService(MissionPlanner.class);
+        MissionManager missionPlanner = parent.services().getService(MissionManager.class);
         int noTasks = missionPlanner.getTasks().size();
 
         return new VisualiserData(parent.name(), parent.peerId().toString(), raftRole, noTasks,

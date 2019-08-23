@@ -1,4 +1,4 @@
-package com.type2labs.undersea.common.missions.planner.model;
+    package com.type2labs.undersea.common.missions.planner.model;
 
 import com.type2labs.undersea.common.cluster.Client;
 

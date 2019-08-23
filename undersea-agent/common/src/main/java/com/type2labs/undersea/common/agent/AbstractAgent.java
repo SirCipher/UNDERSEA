@@ -7,6 +7,7 @@ import com.type2labs.undersea.common.cluster.PeerId;
 import com.type2labs.undersea.common.config.UnderseaRuntimeConfig;
 import com.type2labs.undersea.common.consensus.ConsensusAlgorithm;
 import com.type2labs.undersea.common.controller.Controller;
+import com.type2labs.undersea.common.missions.planner.model.MissionManager;
 import com.type2labs.undersea.common.missions.planner.model.MissionPlanner;
 import com.type2labs.undersea.common.service.AgentService;
 import com.type2labs.undersea.common.service.ServiceManager;
@@ -61,10 +62,10 @@ public abstract class AbstractAgent implements Agent {
         this.config = config;
         this.name = name;
         this.services = serviceManager;
-        serviceManager.setAgent(this);
         this.status = status;
         this.peerId = peerId;
 
+        serviceManager.setAgent(this);
         logServices();
     }
 
@@ -73,19 +74,19 @@ public abstract class AbstractAgent implements Agent {
     }
 
     public BlockchainNetwork getBlockchainNetwork() {
-        return (BlockchainNetwork) services.getService(BlockchainNetwork.class);
+        return services.getService(BlockchainNetwork.class);
     }
 
     public Controller getController() {
-        return (Controller) services.getService(Controller.class);
+        return services.getService(Controller.class);
     }
 
-    public MissionPlanner getMissionPlanner() {
-        return (MissionPlanner) services.getService(MissionPlanner.class);
+    public MissionManager getMissionManager() {
+        return services.getService(MissionManager.class);
     }
 
     public ConsensusAlgorithm getConsensusAlgorithm() {
-        return (ConsensusAlgorithm) services.getService(ConsensusAlgorithm.class);
+        return services.getService(ConsensusAlgorithm.class);
     }
 
     public ServiceManager getServices() {

@@ -5,7 +5,7 @@ if (!JavaVersion.current().java8Compatible) {
 include 'dsl'
 include 'utilities'
 include 'agent'
-include 'missionplanner'
+include 'missionmanager'
 include 'runner'
 include 'seachain'
 include 'controller'
