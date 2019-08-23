@@ -4,7 +4,7 @@ import com.type2labs.undersea.agent.impl.UnderseaAgent;
 import com.type2labs.undersea.common.agent.AgentStatus;
 import com.type2labs.undersea.common.cluster.PeerId;
 import com.type2labs.undersea.common.config.UnderseaRuntimeConfig;
-import com.type2labs.undersea.common.missions.planner.impl.MissionManagerImpl;
+import com.type2labs.undersea.missionplanner.manager.MissionManagerImpl;
 import com.type2labs.undersea.common.missions.planner.impl.MissionParametersImpl;
 import com.type2labs.undersea.common.missions.planner.model.MissionManager;
 import com.type2labs.undersea.common.monitor.impl.MonitorImpl;

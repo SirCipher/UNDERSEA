@@ -18,6 +18,11 @@ public interface MissionManager extends AgentService {
     void addTasks(List<Task> tasks);
 
     /**
+     * Cancles all active tasks that the manager is currently processing and has to do. This includes running tasks.
+     */
+    void cancelAllTasks();
+
+    /**
      * Returns all tasks that have been assigned to this agent
      *
      * @return the {@link Task}s assigned to the {@link com.type2labs.undersea.common.agent.Agent}
@@ -27,7 +32,7 @@ public interface MissionManager extends AgentService {
     /**
      * Checks whether or not the agent has been assigned a mission
      *
-     * @return
+     * @return whether or not the agent has been assigned a mission
      */
     boolean missionHasBeenAssigned();
 

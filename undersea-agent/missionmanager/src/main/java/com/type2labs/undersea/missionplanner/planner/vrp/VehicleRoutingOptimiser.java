@@ -15,6 +15,7 @@ import com.type2labs.undersea.common.missions.planner.model.GeneratedMission;
 import com.type2labs.undersea.common.missions.planner.model.MissionParameters;
 import com.type2labs.undersea.common.missions.planner.model.MissionPlanner;
 import com.type2labs.undersea.common.missions.task.impl.TaskImpl;
+import com.type2labs.undersea.common.missions.task.model.Task;
 import com.type2labs.undersea.common.missions.task.model.TaskType;
 import com.type2labs.undersea.missionplanner.decomposer.delaunay.DelaunayDecomposer;
 import com.type2labs.undersea.missionplanner.model.GeneratedMissionImpl;
@@ -84,7 +85,7 @@ public class VehicleRoutingOptimiser implements MissionPlanner {
             long index = routing.start(i);
             Client client = missionParameters.getClients().get(i);
             ClusterState.ClientState clientState = client.state();
-            List<TaskImpl> tasks = new ArrayList<>();
+            List<Task> tasks = new ArrayList<>();
 
             while (!routing.isEnd(index)) {
                 index = assignment.value(routing.nextVar(index));

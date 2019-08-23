@@ -3,7 +3,7 @@ package com.type2labs.undersea.runner;
 import com.type2labs.undersea.common.agent.Agent;
 import com.type2labs.undersea.common.agent.AgentFactory;
 import com.type2labs.undersea.common.agent.AgentStatus;
-import com.type2labs.undersea.common.missions.planner.impl.MissionManagerImpl;
+import com.type2labs.undersea.missionplanner.manager.MissionManagerImpl;
 import com.type2labs.undersea.common.missions.planner.model.MissionManager;
 import com.type2labs.undersea.common.monitor.model.Monitor;
 import com.type2labs.undersea.common.monitor.impl.MonitorImpl;

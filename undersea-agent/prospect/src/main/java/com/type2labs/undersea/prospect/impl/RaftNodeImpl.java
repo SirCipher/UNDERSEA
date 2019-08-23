@@ -213,6 +213,13 @@ public class RaftNodeImpl implements RaftNode {
             }
 
             RaftClient raftClient = (RaftClient) agentMission.getAssignee();
+
+            if (raftClient.isSelf()) {
+                MissionManager manager = agent.services().getService(MissionManager.class);
+                manager.addTasks(agentMission.getTasks());
+                continue;
+            }
+
             RaftProtos.DistributeMissionRequest request = RaftProtos.DistributeMissionRequest.newBuilder()
                     .setClient(GrpcUtil.toProtoClient(this))
                     .setMission(mission)

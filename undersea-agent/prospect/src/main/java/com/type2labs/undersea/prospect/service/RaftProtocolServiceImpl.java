@@ -7,6 +7,7 @@ import com.type2labs.undersea.common.cluster.Client;
 import com.type2labs.undersea.common.cluster.ClusterState;
 import com.type2labs.undersea.common.missions.planner.impl.AgentMissionImpl;
 import com.type2labs.undersea.common.missions.planner.model.AgentMission;
+import com.type2labs.undersea.common.missions.planner.model.MissionManager;
 import com.type2labs.undersea.prospect.NodeLog;
 import com.type2labs.undersea.prospect.RaftProtocolServiceGrpc;
 import com.type2labs.undersea.prospect.RaftProtos;
@@ -73,20 +74,6 @@ public class RaftProtocolServiceImpl extends RaftProtocolServiceGrpc.RaftProtoco
         });
     }
 
-    private <U extends AbstractMessage> void sendAbstractAsyncMessage(StreamObserver<U> responseObserver,
-                                                                      Supplier<U> supplier) {
-        final CompletableFuture<U> future = CompletableFuture.supplyAsync(supplier, executor);
-
-        future.whenComplete((result, e) -> {
-            if (e == null) {
-                responseObserver.onNext(result);
-                responseObserver.onCompleted();
-            } else {
-                responseObserver.onError(e);
-            }
-        });
-    }
-
     @Override
     public void requestVote(RaftProtos.VoteRequest request, StreamObserver<RaftProtos.VoteResponse> responseObserver) {
         logger.info(raftNode.name() + " processing vote request: " + request, raftNode.agent());
@@ -125,6 +112,23 @@ public class RaftProtocolServiceImpl extends RaftProtocolServiceGrpc.RaftProtoco
                 .setClient(GrpcUtil.toProtoClient(raftNode))
                 .setResponse(1)
                 .build());
+
+        MissionManager manager = raftNode.agent().services().getService(MissionManager.class);
+        manager.addTasks(agentMission.getTasks());
+    }
+
+    private <U extends AbstractMessage> void sendAbstractAsyncMessage(StreamObserver<U> responseObserver,
+                                                                      Supplier<U> supplier) {
+        final CompletableFuture<U> future = CompletableFuture.supplyAsync(supplier, executor);
+
+        future.whenComplete((result, e) -> {
+            if (e == null) {
+                responseObserver.onNext(result);
+                responseObserver.onCompleted();
+            } else {
+                responseObserver.onError(e);
+            }
+        });
     }
 
 

@@ -22,4 +22,6 @@ public interface Client {
         return new ConcurrentHashMap<>();
     }
 
+    boolean isSelf();
+
 }

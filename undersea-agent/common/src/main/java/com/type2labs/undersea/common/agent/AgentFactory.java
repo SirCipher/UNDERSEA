@@ -35,6 +35,11 @@ public class AgentFactory implements AbstractFactory<Agent> {
                 public void shutdown() {
 
                 }
+
+                @Override
+                public boolean isSelf() {
+                    return false;
+                }
             });
         }
     }

@@ -4,7 +4,7 @@ import com.type2labs.undersea.common.agent.Agent;
 import com.type2labs.undersea.common.agent.AgentFactory;
 import com.type2labs.undersea.common.config.UnderseaRuntimeConfig;
 import com.type2labs.undersea.common.missions.PlannerException;
-import com.type2labs.undersea.common.missions.planner.impl.MissionManagerImpl;
+import com.type2labs.undersea.missionplanner.manager.MissionManagerImpl;
 import com.type2labs.undersea.common.missions.planner.impl.MissionParametersImpl;
 import com.type2labs.undersea.common.missions.planner.model.MissionManager;
 import com.type2labs.undersea.common.missions.planner.model.MissionParameters;

@@ -77,6 +77,11 @@ public class RaftClientImpl implements RaftClient {
     }
 
     @Override
+    public boolean isSelf() {
+        return isSelf;
+    }
+
+    @Override
     public RaftProtos.AcquireStatusResponse getStatus(RaftProtos.AcquireStatusRequest request, Deadline deadline) throws StatusRuntimeException {
         try {
             return blockingStub.withDeadline(deadline).getStatus(request);

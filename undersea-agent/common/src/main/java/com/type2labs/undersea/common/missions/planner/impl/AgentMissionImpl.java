@@ -4,13 +4,14 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.type2labs.undersea.common.cluster.Client;
 import com.type2labs.undersea.common.missions.planner.model.AgentMission;
 import com.type2labs.undersea.common.missions.task.impl.TaskImpl;
+import com.type2labs.undersea.common.missions.task.model.Task;
 
 import java.util.Arrays;
 import java.util.List;
 
 public class AgentMissionImpl implements AgentMission {
 
-    private List<TaskImpl> tasks;
+    private List<Task> tasks;
     @JsonIgnore
     private Client assignee;
     private double progress = 0;
@@ -19,7 +20,7 @@ public class AgentMissionImpl implements AgentMission {
 
     }
 
-    public AgentMissionImpl(Client assignee, List<TaskImpl> tasks) {
+    public AgentMissionImpl(Client assignee, List<Task> tasks) {
         this.assignee = assignee;
         this.tasks = tasks;
     }
@@ -34,11 +35,11 @@ public class AgentMissionImpl implements AgentMission {
     }
 
     @Override
-    public List<TaskImpl> getTasks() {
+    public List<Task> getTasks() {
         return tasks;
     }
 
-    public void setTasks(List<TaskImpl> tasks) {
+    public void setTasks(List<Task> tasks) {
         this.tasks = tasks;
     }
 

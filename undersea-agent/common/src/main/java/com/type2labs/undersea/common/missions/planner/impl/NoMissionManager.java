@@ -36,6 +36,11 @@ public class NoMissionManager implements MissionManager {
     }
 
     @Override
+    public void cancelAllTasks() {
+
+    }
+
+    @Override
     public void run() {
 
     }
