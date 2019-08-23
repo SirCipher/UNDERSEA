@@ -7,7 +7,7 @@ import com.type2labs.undersea.common.cluster.PeerId;
 import com.type2labs.undersea.common.config.UnderseaRuntimeConfig;
 import com.type2labs.undersea.common.consensus.ConsensusAlgorithm;
 import com.type2labs.undersea.common.controller.Controller;
-import com.type2labs.undersea.common.missionplanner.models.MissionPlanner;
+import com.type2labs.undersea.common.missions.planner.model.MissionPlanner;
 import com.type2labs.undersea.common.service.AgentService;
 import com.type2labs.undersea.common.service.ServiceManager;
 import org.apache.logging.log4j.LogManager;

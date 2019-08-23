@@ -1,8 +1,8 @@
-package com.type2labs.undersea.common.missionplanner.impl;
+package com.type2labs.undersea.common.missions.task.impl;
 
-import com.type2labs.undersea.common.missionplanner.models.Task;
-import com.type2labs.undersea.common.missionplanner.models.TaskStatus;
-import com.type2labs.undersea.common.missionplanner.models.TaskType;
+import com.type2labs.undersea.common.missions.task.model.Task;
+import com.type2labs.undersea.common.missions.task.model.TaskStatus;
+import com.type2labs.undersea.common.missions.task.model.TaskType;
 
 import java.util.Arrays;
 

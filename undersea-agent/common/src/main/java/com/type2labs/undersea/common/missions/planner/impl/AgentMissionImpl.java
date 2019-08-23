@@ -1,9 +1,9 @@
-package com.type2labs.undersea.common.missionplanner.impl;
+package com.type2labs.undersea.common.missions.planner.impl;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.type2labs.undersea.common.cluster.Client;
-import com.type2labs.undersea.common.missionplanner.models.AgentMission;
-import com.type2labs.undersea.common.missionplanner.models.Task;
+import com.type2labs.undersea.common.missions.planner.model.AgentMission;
+import com.type2labs.undersea.common.missions.task.model.impl.TaskImpl;
 
 import java.util.Arrays;
 import java.util.List;

@@ -47,4 +47,4 @@ gradle-app.setting
 .gradletasknamecache
 
 # MOOS files
-missions/
+/missions/

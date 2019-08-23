@@ -1,9 +1,8 @@
-package com.type2labs.undersea.common.missionplanner.impl;
+package com.type2labs.undersea.common.missions.planner.impl;
 
 import com.type2labs.undersea.common.cluster.Client;
-import com.type2labs.undersea.common.missionplanner.models.MissionParameters;
+import com.type2labs.undersea.common.missions.planner.model.MissionParameters;
 
-import java.util.Collection;
 import java.util.List;
 
 /**

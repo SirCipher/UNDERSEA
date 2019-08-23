@@ -4,7 +4,7 @@ import com.google.common.util.concurrent.ListenableFuture;
 import com.type2labs.undersea.common.agent.Agent;
 import com.type2labs.undersea.common.consensus.ConsensusAlgorithm;
 import com.type2labs.undersea.common.logger.LogMessage;
-import com.type2labs.undersea.common.missionplanner.models.MissionPlanner;
+import com.type2labs.undersea.common.missions.planner.model.MissionPlanner;
 import com.type2labs.undersea.common.monitor.VisualiserData;
 import com.type2labs.undersea.common.monitor.model.VisualiserClient;
 import com.type2labs.undersea.common.service.Transaction;

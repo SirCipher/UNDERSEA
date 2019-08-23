@@ -1,6 +1,4 @@
-package com.type2labs.undersea.common.missionplanner.models;
-
-import com.type2labs.undersea.common.cluster.Client;
+package com.type2labs.undersea.common.missions.task.model;
 
 public interface Task {
 

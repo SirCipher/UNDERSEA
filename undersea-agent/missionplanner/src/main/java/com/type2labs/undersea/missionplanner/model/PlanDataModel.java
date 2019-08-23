@@ -1,6 +1,6 @@
 package com.type2labs.undersea.missionplanner.model;
 
-import com.type2labs.undersea.common.missionplanner.models.MissionParameters;
+import com.type2labs.undersea.common.missions.planner.model.MissionParameters;
 
 /**
  * Created by Thomas Klapwijk on 2019-07-22.

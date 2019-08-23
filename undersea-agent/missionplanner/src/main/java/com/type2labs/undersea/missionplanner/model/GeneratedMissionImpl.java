@@ -3,9 +3,9 @@ package com.type2labs.undersea.missionplanner.model;
 import com.google.ortools.constraintsolver.Assignment;
 import com.google.ortools.constraintsolver.RoutingIndexManager;
 import com.google.ortools.constraintsolver.RoutingModel;
-import com.type2labs.undersea.common.missionplanner.models.AgentMission;
-import com.type2labs.undersea.common.missionplanner.models.GeneratedMission;
-import com.type2labs.undersea.common.missionplanner.models.MissionParameters;
+import com.type2labs.undersea.common.missions.planner.model.AgentMission;
+import com.type2labs.undersea.common.missions.planner.model.GeneratedMission;
+import com.type2labs.undersea.common.missions.planner.model.MissionParameters;
 
 import java.util.ArrayList;
 import java.util.List;

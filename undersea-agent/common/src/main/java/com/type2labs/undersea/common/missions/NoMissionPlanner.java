@@ -1,10 +1,10 @@
-package com.type2labs.undersea.common.missionplanner;
+package com.type2labs.undersea.common.missions;
 
 import com.google.common.util.concurrent.ListenableFuture;
 import com.type2labs.undersea.common.agent.Agent;
-import com.type2labs.undersea.common.missionplanner.models.GeneratedMission;
-import com.type2labs.undersea.common.missionplanner.models.MissionPlanner;
-import com.type2labs.undersea.common.missionplanner.models.Task;
+import com.type2labs.undersea.common.missions.planner.model.GeneratedMission;
+import com.type2labs.undersea.common.missions.planner.model.MissionPlanner;
+import com.type2labs.undersea.common.missions.task.model.Task;
 import com.type2labs.undersea.common.service.Transaction;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

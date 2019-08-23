@@ -1,4 +1,4 @@
-package com.type2labs.undersea.common.missionplanner.models;
+package com.type2labs.undersea.common.missions.planner.model;
 
 
 import java.util.List;

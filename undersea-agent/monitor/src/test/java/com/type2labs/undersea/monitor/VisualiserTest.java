@@ -4,7 +4,7 @@ import com.type2labs.undersea.agent.impl.UnderseaAgent;
 import com.type2labs.undersea.common.agent.AgentStatus;
 import com.type2labs.undersea.common.cluster.PeerId;
 import com.type2labs.undersea.common.config.UnderseaRuntimeConfig;
-import com.type2labs.undersea.common.missionplanner.impl.MissionParametersImpl;
+import com.type2labs.undersea.common.missions.planner.impl.MissionParametersImpl;
 import com.type2labs.undersea.common.monitor.impl.MonitorImpl;
 import com.type2labs.undersea.common.monitor.impl.VisualiserClientImpl;
 import com.type2labs.undersea.common.monitor.model.Monitor;
@@ -14,7 +14,6 @@ import com.type2labs.undersea.prospect.RaftClusterConfig;
 import com.type2labs.undersea.prospect.impl.RaftIntegrationImpl;
 import com.type2labs.undersea.prospect.impl.RaftNodeImpl;
 import com.type2labs.undersea.prospect.model.RaftNode;
-import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;

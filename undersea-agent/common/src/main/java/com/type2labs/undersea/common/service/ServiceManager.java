@@ -21,42 +21,13 @@ public class ServiceManager {
 
     private final Map<Class<? extends AgentService>, AgentService> services = new ConcurrentHashMap<>();
     private final Map<Class<? extends AgentService>, ScheduledFuture<?>> scheduledFutures = new ConcurrentHashMap<>();
-
-    private final ScheduledExecutorService scheduledExecutor = ScheduledThrowableExecutor.newSingleThreadExecutor();
+    private final ScheduledExecutorService scheduledExecutor;
 
     private Agent agent;
     private boolean autoLogTransactions;
 
-    public void setAgent(Agent agent) {
-        this.agent = agent;
-        this.autoLogTransactions = agent.config().autoLogTransactions();
-        logger.info("Agent " + agent.name() + " service manager assigned", agent);
-    }
-
-    public synchronized <T extends AgentService> T getService(Class<T> s) {
-        for (Map.Entry<Class<? extends AgentService>, AgentService> e : services.entrySet()) {
-            if (s.isAssignableFrom(e.getKey())) {
-                return (T) e.getValue();
-            }
-        }
-
-        throw new NullPointerException(s + " is not registered");
-    }
-
-    public synchronized Collection<AgentService> getServices() {
-        return services.values();
-    }
-
-    public synchronized void registerService(AgentService service) {
-        if (services.containsKey(service.getClass())) {
-            throw new IllegalArgumentException("Service already exists");
-        }
-
-        services.put(service.getClass(), service);
-    }
-
-    Collection<Class<? extends AgentService>> getServiceClasses() {
-        return services.keySet();
+    public ServiceManager() {
+        this.scheduledExecutor = ScheduledThrowableExecutor.newSingleThreadExecutor(logger);
     }
 
     public Set<ListenableFuture<?>> commitTransaction(Transaction transaction) {
@@ -74,6 +45,79 @@ public class ServiceManager {
         return Collections.unmodifiableSet(futures);
     }
 
+    private ScheduledFuture<?> getScheduledFuture(Class<? extends AgentService> service) {
+        for (Map.Entry<Class<? extends AgentService>, ScheduledFuture<?>> e : scheduledFutures.entrySet()) {
+            if (service.isAssignableFrom(e.getKey())) {
+                return e.getValue();
+            }
+        }
+
+        return null;
+    }
+
+    public synchronized <T extends AgentService> T getService(Class<T> s) {
+        for (Map.Entry<Class<? extends AgentService>, AgentService> e : services.entrySet()) {
+            if (s.isAssignableFrom(e.getKey())) {
+                return (T) e.getValue();
+            }
+        }
+
+        throw new NullPointerException(s + " is not registered");
+    }
+
+    Collection<Class<? extends AgentService>> getServiceClasses() {
+        return services.keySet();
+    }
+
+    public synchronized Collection<AgentService> getServices() {
+        return services.values();
+    }
+
+    public synchronized void registerService(AgentService service) {
+        if (services.containsKey(service.getClass())) {
+            throw new IllegalArgumentException("Service already exists");
+        }
+
+        services.put(service.getClass(), service);
+    }
+
+    public void registerServices(Set<AgentService> services) {
+        for (AgentService as : services) {
+            registerService(as);
+        }
+    }
+
+    public synchronized boolean serviceRunning(Class<? extends AgentService> service) {
+        ScheduledFuture<?> scheduledFuture = getScheduledFuture(service);
+
+        if (scheduledFuture == null) {
+            return false;
+        } else {
+            return !scheduledFuture.isDone();
+        }
+    }
+
+    public void setAgent(Agent agent) {
+        this.agent = agent;
+        this.autoLogTransactions = agent.config().autoLogTransactions();
+        logger.info("Agent " + agent.name() + " service manager assigned", agent);
+    }
+
+    public void shutdownService(Class<? extends AgentService> service) {
+        ScheduledFuture<?> scheduledFuture = getScheduledFuture(service);
+
+        if (scheduledFuture != null) {
+            scheduledFuture.cancel(true);
+            scheduledFutures.remove(service);
+        }
+    }
+
+    public void shutdownServices() {
+        for (Map.Entry<Class<? extends AgentService>, AgentService> e : services.entrySet()) {
+            shutdownService(e.getKey());
+        }
+    }
+
     /**
      * Starts a repeating service for a given period. Repeating services will not return for the
      * {@link ServiceManager#getService} method
@@ -89,38 +133,6 @@ public class ServiceManager {
         logger.info("Agent: " + agent.name() + ", started repeating service: " + service.getClass().getSimpleName() + " at period: " + period, agent);
     }
 
-    public void shutdownServices() {
-        for (Map.Entry<Class<? extends AgentService>, AgentService> e : services.entrySet()) {
-            shutdownService(e.getKey());
-        }
-    }
-
-    public void startServices() {
-        for (Map.Entry<Class<? extends AgentService>, AgentService> e : services.entrySet()) {
-            startService(e.getKey());
-        }
-    }
-
-    private ScheduledFuture<?> getScheduledFuture(Class<? extends AgentService> service) {
-        for (Map.Entry<Class<? extends AgentService>, ScheduledFuture<?>> e : scheduledFutures.entrySet()) {
-            if (service.isAssignableFrom(e.getKey())) {
-                return e.getValue();
-            }
-        }
-
-        return null;
-    }
-
-    public synchronized boolean serviceRunning(Class<? extends AgentService> service) {
-        ScheduledFuture<?> scheduledFuture = getScheduledFuture(service);
-
-        if (scheduledFuture == null) {
-            return false;
-        } else {
-            return !scheduledFuture.isDone();
-        }
-    }
-
     private void startService(Class<? extends AgentService> service) {
         AgentService agentService = getService(service);
         agentService.initialise(agent);
@@ -133,18 +145,9 @@ public class ServiceManager {
         logger.info("Agent " + agent.name() + " started service: " + agentService.getClass().getSimpleName(), agent);
     }
 
-    public void shutdownService(Class<? extends AgentService> service) {
-        ScheduledFuture<?> scheduledFuture = getScheduledFuture(service);
-
-        if (scheduledFuture != null) {
-            scheduledFuture.cancel(true);
-            scheduledFutures.remove(service);
-        }
-    }
-
-    public void registerServices(Set<AgentService> services) {
-        for (AgentService as : services) {
-            registerService(as);
+    public void startServices() {
+        for (Map.Entry<Class<? extends AgentService>, AgentService> e : services.entrySet()) {
+            startService(e.getKey());
         }
     }
 }

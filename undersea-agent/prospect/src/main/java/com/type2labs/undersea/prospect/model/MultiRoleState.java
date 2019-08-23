@@ -40,6 +40,12 @@ public class MultiRoleState {
     }
 
     public enum Status {
+
+        /*
+         * Denotes that this node is the leader of all groups. It's leader (client) will also be null
+         */
+        LEADER,
+
         /**
          * Denotes that this node is a leader of one cluster and a follower in another
          */
