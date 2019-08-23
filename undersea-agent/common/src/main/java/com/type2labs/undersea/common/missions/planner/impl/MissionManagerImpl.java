@@ -25,14 +25,15 @@ public class MissionManagerImpl implements MissionManager {
     private final MissionPlanner missionPlanner;
     private Agent agent;
     private List<Task> tasks = new ArrayList<>();
+    private GeneratedMission missionAssigned;
 
     public MissionManagerImpl(MissionPlanner missionPlanner) {
         this.missionPlanner = missionPlanner;
     }
 
     @Override
-    public MissionPlanner missionPlanner() {
-        return missionPlanner;
+    public void addTasks(List<Task> tasks) {
+        this.tasks.addAll(tasks);
     }
 
     @Override
@@ -41,8 +42,13 @@ public class MissionManagerImpl implements MissionManager {
     }
 
     @Override
-    public void addTasks(List<Task> tasks) {
-        this.tasks.addAll(tasks);
+    public boolean missionHasBeenAssigned() {
+        return tasks != null && tasks.size() > 0;
+    }
+
+    @Override
+    public MissionPlanner missionPlanner() {
+        return missionPlanner;
     }
 
     @Override
@@ -55,6 +61,14 @@ public class MissionManagerImpl implements MissionManager {
 
     }
 
+    /**
+     * Execues a given {@link Transaction} on the mission planner. Supported {@link TransactionStatusCode}s are:
+     * {@link TransactionStatusCode#ELECTED_LEADER} - which will generate a mission in accordance with the current
+     * cluster state.
+     *
+     * @param transaction to execute on the mission planner
+     * @return a {@link ListenableFuture} returned by the provided {@link java.util.concurrent.ExecutorService}
+     */
     @Override
     public ListenableFuture<?> executeTransaction(Transaction transaction) {
         logger.info("Received transaction: " + transaction);
@@ -63,9 +77,9 @@ public class MissionManagerImpl implements MissionManager {
         if (statusCode == TransactionStatusCode.ELECTED_LEADER) {
             return transaction.getExecutorService().submit(() -> {
                 try {
-                    GeneratedMission mission = missionPlanner.generate();
-                    missionPlanner.print(mission);
-                    return mission;
+                    GeneratedMission generatedMission = missionPlanner.generate();
+                    missionPlanner.print(generatedMission);
+                    return generatedMission;
                 } catch (PlannerException e) {
                     throw new RuntimeException(e);
                 }

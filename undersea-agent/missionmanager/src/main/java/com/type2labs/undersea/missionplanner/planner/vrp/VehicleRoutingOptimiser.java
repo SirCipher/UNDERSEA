@@ -162,7 +162,7 @@ public class VehicleRoutingOptimiser implements MissionPlanner {
     }
 
     private GeneratedMission solve(PlanDataModel model, MissionParameters missionParameters) {
-        int clusterSize = parentAgent.clusterClients().size();
+        int clusterSize = parentAgent.clusterClients().size() + 1;
 
         logger.info("Generating solution");
         // Create Routing Index Manager
@@ -229,26 +229,6 @@ public class VehicleRoutingOptimiser implements MissionPlanner {
 
         // Solve the problem.
         Assignment assignment = routing.solveWithParameters(searchParameters);
-        long maxRouteDistance = 0;
-
-        for (int i = 0; i < manager.getNumberOfVehicles(); ++i) {
-            long index = routing.start(i);
-            logger.info("Route for Vehicle " + (i + 1) + ":");
-            long routeDistance = 0;
-            String route = "";
-
-            while (!routing.isEnd(index)) {
-                route += manager.indexToNode(index) + " -> ";
-                long previousIndex = index;
-                index = assignment.value(routing.nextVar(index));
-                routeDistance += routing.getArcCostForVehicle(previousIndex, index, i) / VehicleRoutingOptimiser.SPEED_SCALAR;
-            }
-
-            logger.info(route + manager.indexToNode(index));
-            logger.info("Distance of the route: " + routeDistance + "m");
-            maxRouteDistance = Math.max(routeDistance, maxRouteDistance);
-        }
-        logger.info("Maximum of the route distances: " + maxRouteDistance + "m");
 
         return distributeMission(model, assignment, routing, manager, missionParameters);
     }

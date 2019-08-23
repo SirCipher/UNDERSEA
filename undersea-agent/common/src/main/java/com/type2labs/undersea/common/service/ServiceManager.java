@@ -40,7 +40,6 @@ public class ServiceManager {
                     "Service not registered: " + service.getSimpleName());
             ListenableFuture<?> future = _registeredService.executeTransaction(transaction);
             futures.add(future);
-
         }
 
         return Collections.unmodifiableSet(futures);

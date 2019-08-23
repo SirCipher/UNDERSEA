@@ -26,6 +26,11 @@ public class NoMissionManager implements MissionManager {
     }
 
     @Override
+    public boolean missionHasBeenAssigned() {
+        return false;
+    }
+
+    @Override
     public void addTasks(List<Task> tasks) {
 
     }

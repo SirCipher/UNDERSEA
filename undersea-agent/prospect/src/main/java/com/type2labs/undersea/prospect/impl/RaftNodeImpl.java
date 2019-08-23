@@ -10,9 +10,9 @@ import com.type2labs.undersea.common.agent.Agent;
 import com.type2labs.undersea.common.cluster.Client;
 import com.type2labs.undersea.common.cluster.PeerId;
 import com.type2labs.undersea.common.consensus.RaftRole;
-import com.type2labs.undersea.common.missions.planner.model.MissionManager;
 import com.type2labs.undersea.common.missions.planner.model.AgentMission;
 import com.type2labs.undersea.common.missions.planner.model.GeneratedMission;
+import com.type2labs.undersea.common.missions.planner.model.MissionManager;
 import com.type2labs.undersea.common.missions.planner.model.MissionParameters;
 import com.type2labs.undersea.common.monitor.model.Monitor;
 import com.type2labs.undersea.common.service.transaction.Transaction;
@@ -24,6 +24,7 @@ import com.type2labs.undersea.prospect.model.MultiRoleState;
 import com.type2labs.undersea.prospect.model.RaftIntegration;
 import com.type2labs.undersea.prospect.model.RaftNode;
 import com.type2labs.undersea.prospect.networking.RaftClient;
+import com.type2labs.undersea.prospect.networking.RaftClientImpl;
 import com.type2labs.undersea.prospect.task.AcquireStatusTask;
 import com.type2labs.undersea.prospect.task.RequireRoleTask;
 import com.type2labs.undersea.prospect.task.VoteTask;
@@ -129,7 +130,7 @@ public class RaftNodeImpl implements RaftNode {
     }
 
     @Override
-    public void toLeader() {
+    public synchronized void toLeader() {
         // Prevent reassigning the role
         if (role == RaftRole.LEADER) {
             return;
@@ -141,6 +142,7 @@ public class RaftNodeImpl implements RaftNode {
         MissionParameters parameters = config().getUnderseaRuntimeConfig().missionParameters();
 
         parameters.setClients(new ArrayList<>(parent().clusterClients().values()));
+        parameters.getClients().add(RaftClientImpl.ofSelf(this));
 
         Transaction transaction = new Transaction.Builder(agent)
                 .forService(MissionManager.class)
