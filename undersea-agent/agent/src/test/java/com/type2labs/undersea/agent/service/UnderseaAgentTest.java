@@ -1,4 +1,4 @@
-package com.type2labs.undersea.runner;
+package com.type2labs.undersea.agent.service;
 
 import com.type2labs.undersea.agent.impl.UnderseaAgent;
 import com.type2labs.undersea.common.agent.AgentStatus;

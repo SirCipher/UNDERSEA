@@ -1,7 +1,7 @@
 package com.type2labs.undersea.dsl;
 
 
-import com.type2labs.undersea.agent.model.Sensor;
+import com.type2labs.undersea.common.agent.Sensor;
 import com.type2labs.undersea.dsl.uuv.factory.FactoryProvider;
 import com.type2labs.undersea.dsl.uuv.factory.SensorFactory;
 import com.type2labs.undersea.dsl.uuv.model.DslAgentProxy;
@@ -18,13 +18,6 @@ class MoosConfigurationWriter {
     private static final SensorFactory sensorFactory = FactoryProvider.getSensorFactory();
     private static EnvironmentProperties environmentProperties;
     private static String buildDir;
-
-
-    public static void init(EnvironmentProperties environmentProperties) {
-        MoosConfigurationWriter.environmentProperties = environmentProperties;
-
-        buildDir = Utility.getProperty(environmentProperties.getRunnerProperties(), "config.output");
-    }
 
     private static void generateIvPHelmBlock(DslAgentProxy agent) {
         StringBuilder ivpBlock = new StringBuilder();
@@ -254,6 +247,12 @@ class MoosConfigurationWriter {
                 false);
     }
 
+    public static void init(EnvironmentProperties environmentProperties) {
+        MoosConfigurationWriter.environmentProperties = environmentProperties;
+
+        buildDir = Utility.getProperty(environmentProperties.getRunnerProperties(), "config.output");
+    }
+
     static void run() {
         generateShoreside();
         generateSensors();
@@ -277,17 +276,6 @@ class MoosConfigurationWriter {
         writePortListFile();
     }
 
-    private static void writePortListFile() {
-        StringBuilder ports = new StringBuilder();
-
-        String s = "";
-
-        environmentProperties.getAllAgents().values().forEach(a -> ports.append(a.getServerPort() + "\n"));
-
-        Utility.exportToFile(MoosConfigurationWriter.buildDir + File.separator + "agents.ports", ports.toString(),
-                false);
-    }
-
     private static void writeHostInfo(StringBuilder vehicleBlock) {
         vehicleBlock.append("//------------------------------\n");
         vehicleBlock.append("// pHostInfo configuration block\n");
@@ -299,6 +287,17 @@ class MoosConfigurationWriter {
         vehicleBlock.append("\n");
         vehicleBlock.append("\tDEFAULT_HOSTIP_FORCE = localhost\n");
         vehicleBlock.append("}\n");
+    }
+
+    private static void writePortListFile() {
+        StringBuilder ports = new StringBuilder();
+
+        String s = "";
+
+        environmentProperties.getAllAgents().values().forEach(a -> ports.append(a.getServerPort() + "\n"));
+
+        Utility.exportToFile(MoosConfigurationWriter.buildDir + File.separator + "agents.ports", ports.toString(),
+                false);
     }
 
 }

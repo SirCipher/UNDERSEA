@@ -1,5 +1,6 @@
-package com.type2labs.undersea.runner;
+package com.type2labs.undersea.agent.runner;
 
+import com.type2labs.undersea.agent.Runner;
 import org.junit.Assert;
 import org.junit.Test;
 

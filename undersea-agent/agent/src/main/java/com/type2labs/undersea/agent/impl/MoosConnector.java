@@ -6,6 +6,7 @@ import com.type2labs.undersea.common.service.AgentService;
 import com.type2labs.undersea.common.service.NetworkInterface;
 import com.type2labs.undersea.common.service.transaction.Transaction;
 import com.type2labs.undersea.common.service.transaction.TransactionData;
+import com.type2labs.undersea.utilities.exception.NotSupportedException;
 
 import java.util.Objects;
 
@@ -28,15 +29,7 @@ public class MoosConnector implements NetworkInterface {
 
     @Override
     public ListenableFuture<?> executeTransaction(Transaction transaction) {
-        Objects.requireNonNull(transaction);
-
-        TransactionData transactionData;
-
-        if(transaction.hasTransactionData()){
-            transactionData = transaction.getTransactionData();
-        }
-
-        return null;
+        throw new NotSupportedException();
     }
 
     @Override

@@ -5,7 +5,7 @@ import com.type2labs.undersea.common.missions.task.model.Task;
 import com.type2labs.undersea.common.missions.task.model.TaskExecutor;
 import com.type2labs.undersea.common.missions.task.model.TaskType;
 import com.type2labs.undersea.common.service.NetworkInterface;
-import com.type2labs.undersea.missionplanner.manager.MissionManagerImpl;
+import com.type2labs.undersea.utilities.exception.ServiceNotRegisteredException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -15,9 +15,9 @@ import org.apache.logging.log4j.Logger;
 public class WaypointExecutor implements TaskExecutor {
 
     private static final Logger logger = LogManager.getLogger(WaypointExecutor.class);
+    private final Task task;
     private Agent agent;
     private NetworkInterface networkInterface;
-    private final Task task;
 
     public WaypointExecutor(Task task) {
         if (task.getTaskType() != TaskType.WAYPOINT) {
@@ -31,6 +31,10 @@ public class WaypointExecutor implements TaskExecutor {
     public void initialise(Agent parentAgent) {
         this.agent = parentAgent;
         this.networkInterface = agent.services().getService(NetworkInterface.class);
+
+        if (networkInterface == null) {
+            throw new ServiceNotRegisteredException(NetworkInterface.class, WaypointExecutor.class);
+        }
     }
 
     @Override
@@ -40,7 +44,7 @@ public class WaypointExecutor implements TaskExecutor {
 
     @Override
     public void run() {
-        logger.info("Runing task: "+ task);
+        logger.info("Runing task: " + task);
 
         networkInterface.write("UPDATES=");
     }

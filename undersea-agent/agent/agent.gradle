@@ -11,6 +11,7 @@ repositories {
 }
 
 dependencies {
+    compile project(":dsl")
     compile project(":common")
     compile project(":prospect")
     compile project(":missionmanager")

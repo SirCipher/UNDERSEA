@@ -1,7 +1,5 @@
-package com.type2labs.undersea.agent.model;
+package com.type2labs.undersea.common.agent;
 
-
-import com.type2labs.undersea.common.agent.Subsystem;
 
 import java.util.ArrayList;
 import java.util.List;
