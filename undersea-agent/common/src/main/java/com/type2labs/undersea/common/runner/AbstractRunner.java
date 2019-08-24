@@ -29,9 +29,8 @@ public abstract class AbstractRunner {
     }
 
     private void _run() {
-        for (Agent agent : agents) {
-            agent.services().startServices();
-        }
+        agents.stream().filter(a -> a.metadata().isMaster()).forEach(a -> a.services().startServices());
+        agents.stream().filter(a -> !a.metadata().isMaster()).forEach(a -> a.services().startServices());
     }
 
     protected abstract void generateFiles();

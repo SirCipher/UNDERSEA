@@ -29,6 +29,10 @@ public class HardwareInterface implements AgentService {
     private MoosConnector moosConnector;
     private Process process;
 
+    public HardwareInterface() {
+        Runtime.getRuntime().addShutdownHook(new Thread(this::shutdown));
+    }
+
     @Override
     public void initialise(Agent parentAgent) {
         this.agent = parentAgent;
@@ -47,9 +51,12 @@ public class HardwareInterface implements AgentService {
     @Override
     public void run() {
         AgentMetaData metaData = agent.metadata();
+
         if (metaData.isMaster()) {
+            logger.info(agent.name() + ": starting shoreside server", agent);
             runShoreside();
         } else {
+            logger.info(agent.name() + ": starting agent server", agent);
             runAgent();
         }
     }
@@ -82,7 +89,7 @@ public class HardwareInterface implements AgentService {
         pb.directory(metaData.getMissionDirectory());
 
         try {
-            pb.start();
+            process = pb.start();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -93,7 +100,20 @@ public class HardwareInterface implements AgentService {
         if (process != null) {
             logger.info(agent.name() + ": shutting down MOOS process", agent);
             process.destroy();
-            logger.info(agent.name() + ": shut down MOOS process", agent);
+
+            try {
+                Thread.sleep(10000);
+            } catch (InterruptedException e) {
+                logger.error(agent + ": attempted to cleanly kill interface but failed", agent);
+                return;
+            }
+
+            if (process.isAlive()) {
+                logger.error(agent + ": attempted to cleanly kill interface but failed. Forcibily destorying", agent);
+                process.destroyForcibly();
+            } else {
+                logger.info(agent.name() + ": shut down MOOS process", agent);
+            }
         }
     }
 

@@ -46,7 +46,7 @@ public class RunnerTest {
         Runner runner = new Runner(testProperties);
         runner.run();
 
-        Thread.sleep(10000);
+//        Thread.sleep(10000);
 
         runner.shutdown();
     }
