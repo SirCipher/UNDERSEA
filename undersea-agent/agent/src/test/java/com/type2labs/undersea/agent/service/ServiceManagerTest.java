@@ -46,7 +46,7 @@ public class ServiceManagerTest {
 
         Thread.sleep(100);
 
-        serviceManager.shutdownService(ServiceSample.class);
+        serviceManager.shutdownService(ServiceSample.class, null);
 
         assertFalse(serviceManager.serviceRunning(ServiceSample.class));
     }

@@ -55,8 +55,9 @@ public class PrismAPI {
             mainLog = new PrismFileLog(PRISMOUTPUTFILENAME, false);
             prism = new Prism(mainLog, mainLog);
             prism.initialise();
-            prism.setLinEqMethod(1);
-            prism.setMaxIters(100000);
+            // TODO: 2019-08-24 Below is throwing an exception
+//            prism.setMaxIters(100000);
+//            prism.setLinEqMethod(1);
 
         } catch (Exception e) {
             System.out.println("Error: " + e.getMessage());

@@ -4,6 +4,7 @@ import com.google.common.util.concurrent.ListenableFuture;
 import com.type2labs.undersea.common.agent.Agent;
 import com.type2labs.undersea.common.service.transaction.Transaction;
 import com.type2labs.undersea.utilities.executor.ScheduledThrowableExecutor;
+import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -20,7 +21,8 @@ public class ServiceManager {
 
     private static final Logger logger = LogManager.getLogger(ServiceManager.class);
 
-    private final Map<Class<? extends AgentService>, AgentService> services = new ConcurrentHashMap<>();
+    private final Map<Class<? extends AgentService>, Pair<AgentService, ServiceExecutionPriority>> services =
+            new ConcurrentHashMap<>();
     private final Map<Class<? extends AgentService>, ScheduledFuture<?>> scheduledFutures = new ConcurrentHashMap<>();
     private final ScheduledExecutorService scheduledExecutor;
 
@@ -29,6 +31,8 @@ public class ServiceManager {
 
     public ServiceManager() {
         this.scheduledExecutor = ScheduledThrowableExecutor.newSingleThreadExecutor(logger);
+
+        Runtime.getRuntime().addShutdownHook(new Thread(this::shutdownServices));
     }
 
     public Set<ListenableFuture<?>> commitTransaction(Transaction transaction) {
@@ -56,9 +60,10 @@ public class ServiceManager {
     }
 
     public synchronized <T extends AgentService> T getService(Class<T> s) {
-        for (Map.Entry<Class<? extends AgentService>, AgentService> e : services.entrySet()) {
+        for (Map.Entry<Class<? extends AgentService>, Pair<AgentService, ServiceExecutionPriority>> e :
+                services.entrySet()) {
             if (s.isAssignableFrom(e.getKey())) {
-                return (T) e.getValue();
+                return (T) e.getValue().getKey();
             }
         }
 
@@ -70,7 +75,28 @@ public class ServiceManager {
     }
 
     public synchronized Collection<AgentService> getServices() {
-        return services.values();
+        List<AgentService> s = new ArrayList<>(services.size());
+
+        for (Map.Entry<Class<? extends AgentService>, Pair<AgentService, ServiceExecutionPriority>> e :
+                services.entrySet()) {
+            s.add(e.getValue().getKey());
+        }
+
+        return s;
+    }
+
+    /**
+     * Sorts the registered services by {@link ServiceExecutionPriority} descending
+     *
+     * @return the sorted list
+     */
+    private List<Map.Entry<Class<? extends AgentService>, Pair<AgentService, ServiceExecutionPriority>>> prioritySorted() {
+        List<Map.Entry<Class<? extends AgentService>, Pair<AgentService, ServiceExecutionPriority>>> sorted =
+                new LinkedList<>(services.entrySet());
+        sorted.sort(Comparator.comparingInt(o -> o.getValue().getValue().priority));
+        Collections.reverse(sorted);
+
+        return sorted;
     }
 
     public synchronized void registerService(AgentService service) {
@@ -78,7 +104,15 @@ public class ServiceManager {
             throw new IllegalArgumentException("Service already exists");
         }
 
-        services.put(service.getClass(), service);
+        registerService(service, ServiceExecutionPriority.LOW);
+    }
+
+    public synchronized void registerService(AgentService service, ServiceExecutionPriority priority) {
+        if (services.containsKey(service.getClass())) {
+            throw new IllegalArgumentException("Service already exists");
+        }
+
+        services.put(service.getClass(), Pair.of(service, priority));
     }
 
     public void registerServices(Set<AgentService> services) {
@@ -103,21 +137,27 @@ public class ServiceManager {
         logger.info("Agent " + agent.name() + " service manager assigned", agent);
     }
 
-    public void shutdownService(Class<? extends AgentService> service) {
+    public void shutdownService(Class<? extends AgentService> service, AgentService key) {
         ScheduledFuture<?> scheduledFuture = getScheduledFuture(service);
 
         if (scheduledFuture != null) {
             scheduledFuture.cancel(true);
             scheduledFutures.remove(service);
         }
+
+        if (key != null) {
+            key.shutdown();
+        }
+
+        logger.info("Agent: " + agent.name() + " shutting down service: " + service.getSimpleName(), agent);
     }
 
     public void shutdownServices() {
-        for (Map.Entry<Class<? extends AgentService>, AgentService> e : services.entrySet()) {
-            shutdownService(e.getKey());
+        for (Map.Entry<Class<? extends AgentService>, Pair<AgentService, ServiceExecutionPriority>> e :
+                prioritySorted()) {
+            shutdownService(e.getKey(), e.getValue().getKey());
         }
     }
-
 
     /**
      * Starts a repeating service for a given period. Repeating services will not return for the
@@ -147,8 +187,31 @@ public class ServiceManager {
     }
 
     public void startServices() {
-        for (Map.Entry<Class<? extends AgentService>, AgentService> e : services.entrySet()) {
+        for (Map.Entry<Class<? extends AgentService>, Pair<AgentService, ServiceExecutionPriority>> e :
+                prioritySorted()) {
             startService(e.getKey());
+        }
+    }
+
+    /**
+     * Specifies the order that services should start/stop in
+     */
+    public enum ServiceExecutionPriority {
+
+        /**
+         * Indicates that a service should start last
+         */
+        LOW(0),
+
+        /**
+         * Indicates that a service should start first.
+         */
+        HIGH(5);
+
+        private int priority = 0;
+
+        ServiceExecutionPriority(int priority) {
+            this.priority = priority;
         }
     }
 }

@@ -36,7 +36,7 @@ public class ControllerImpl implements Controller {
         //init comms client
         host = "localhost";
 
-        Client client = new Client();
+        client = new Client();
 
         //init MAPE
         sensor = new Sensor(client);
@@ -52,25 +52,8 @@ public class ControllerImpl implements Controller {
     }
 
     @Override
-    public void shutdown() {
-        boolean closed = false;
-
-        try {
-            closed = client.shutDown();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            if (closed) {
-                System.out.println("Comms terminated correctly!");
-            } else {
-                System.out.println("Something was wrong with terminating comms!");
-            }
-        }
-    }
-
-    @Override
-    public ListenableFuture<?> executeTransaction(Transaction transaction) {
-        return null;
+    public Agent agent() {
+        return agent;
     }
 
     @Override
@@ -110,7 +93,24 @@ public class ControllerImpl implements Controller {
     }
 
     @Override
-    public Agent agent() {
-        return agent;
+    public void shutdown() {
+        boolean closed = false;
+
+        try {
+            closed = client.shutDown();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (closed) {
+                System.out.println("Comms terminated correctly!");
+            } else {
+                System.out.println("Something was wrong with terminating comms!");
+            }
+        }
+    }
+
+    @Override
+    public ListenableFuture<?> executeTransaction(Transaction transaction) {
+        return null;
     }
 }

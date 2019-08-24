@@ -16,5 +16,5 @@ install: |
   cd undersea-agent
 
 script: 
-  - ./gradlew build test
+  - ./gradlew build test -Pbuildserver=true
 

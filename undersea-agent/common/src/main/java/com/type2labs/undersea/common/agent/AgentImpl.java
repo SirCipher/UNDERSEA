@@ -42,6 +42,15 @@ public class AgentImpl implements Agent {
         this.name = name;
     }
 
+    @Override
+    public AgentMetaData metadata() {
+        return null;
+    }
+
+    @Override
+    public void setMetadata(AgentMetaData metaData) {
+
+    }
 
     @Override
     public ServiceManager services() {

@@ -35,6 +35,7 @@ public class EnvironmentProperties {
     }
 
     public Map<String, DslAgentProxy> getAgents() {
+        // TODO: 2019-08-24 Remove shoreside name and set a flag
         return agents.entrySet().stream()
                 .filter(a -> !a.getValue().getName().equals("shoreside"))
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));

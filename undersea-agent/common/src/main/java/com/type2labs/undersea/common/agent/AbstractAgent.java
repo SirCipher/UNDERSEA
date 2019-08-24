@@ -8,7 +8,6 @@ import com.type2labs.undersea.common.config.UnderseaRuntimeConfig;
 import com.type2labs.undersea.common.consensus.ConsensusAlgorithm;
 import com.type2labs.undersea.common.controller.Controller;
 import com.type2labs.undersea.common.missions.planner.model.MissionManager;
-import com.type2labs.undersea.common.missions.planner.model.MissionPlanner;
 import com.type2labs.undersea.common.service.AgentService;
 import com.type2labs.undersea.common.service.ServiceManager;
 import org.apache.logging.log4j.LogManager;
@@ -28,16 +27,13 @@ public abstract class AbstractAgent implements Agent {
     private final UnderseaRuntimeConfig config;
     private final ConcurrentHashMap<PeerId, Client> clusterClients = new ConcurrentHashMap<>();
     private final PeerId peerId;
+    private AgentMetaData metaData;
+    private String metaFileName;
     private String name;
 
     @Override
-    public ConcurrentMap<PeerId, Client> clusterClients() {
-        return clusterClients;
-    }
-
-    @Override
-    public PeerId peerId() {
-        return peerId;
+    public void setMetadata(AgentMetaData metaData) {
+        this.metaData = metaData;
     }
 
     public AbstractAgent(UnderseaRuntimeConfig config, String name, ServiceManager serviceManager, AgentStatus status
@@ -77,6 +73,10 @@ public abstract class AbstractAgent implements Agent {
         return services.getService(BlockchainNetwork.class);
     }
 
+    public ConsensusAlgorithm getConsensusAlgorithm() {
+        return services.getService(ConsensusAlgorithm.class);
+    }
+
     public Controller getController() {
         return services.getService(Controller.class);
     }
@@ -85,8 +85,8 @@ public abstract class AbstractAgent implements Agent {
         return services.getService(MissionManager.class);
     }
 
-    public ConsensusAlgorithm getConsensusAlgorithm() {
-        return services.getService(ConsensusAlgorithm.class);
+    public String getName() {
+        return name;
     }
 
     public ServiceManager getServices() {
@@ -95,16 +95,6 @@ public abstract class AbstractAgent implements Agent {
 
     public AgentStatus getStatus() {
         return status;
-    }
-
-
-    public String getName() {
-        return name;
-    }
-
-    @Override
-    public UnderseaRuntimeConfig config() {
-        return config;
     }
 
     private void logServices() {
@@ -123,6 +113,11 @@ public abstract class AbstractAgent implements Agent {
     }
 
     @Override
+    public AgentMetaData metadata() {
+        return metaData;
+    }
+
+    @Override
     public ServiceManager services() {
         return services;
     }
@@ -138,7 +133,22 @@ public abstract class AbstractAgent implements Agent {
     }
 
     @Override
+    public UnderseaRuntimeConfig config() {
+        return config;
+    }
+
+    @Override
     public void shutdown() {
         services.shutdownServices();
+    }
+
+    @Override
+    public ConcurrentMap<PeerId, Client> clusterClients() {
+        return clusterClients;
+    }
+
+    @Override
+    public PeerId peerId() {
+        return peerId;
     }
 }

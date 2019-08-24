@@ -26,25 +26,37 @@ public abstract class AbstractRunner {
 
         this.configurationFileLocation = configurationFileLocation;
         this.agentInitialiser = Objects.requireNonNull(agentInitialiser);
-
-        setup();
-        run();
     }
 
-    protected abstract void generateFiles();
-
-    protected abstract Map<String, ? extends Agent> parseDsl(String configurationFileLocation);
-
-    private void run() {
+    private void _run() {
         for (Agent agent : agents) {
             agent.services().startServices();
         }
     }
 
-    public void setup() {
+    protected abstract void generateFiles();
+
+    protected AgentInitialiser getAgentInitialiser() {
+        return agentInitialiser;
+    }
+
+    protected abstract Map<String, ? extends Agent> parseDsl(String configurationFileLocation);
+
+    public void run() {
+        setup();
+        _run();
+    }
+
+    private void setup() {
         Map<String, ? extends Agent> proxies = parseDsl(configurationFileLocation);
         agents = agentInitialiser.initialise(proxies);
         generateFiles();
+    }
+
+    public void shutdown() {
+        for (Agent agent : agents) {
+            agent.shutdown();
+        }
     }
 
 }

@@ -23,6 +23,10 @@ repositories {
     jcenter()
 }
 
+ext {
+    isBuildServer = findProperty('buildserver') ?: 'false'
+}
+
 allprojects {
     apply plugin: 'java-library'
     apply plugin: 'jacoco'
@@ -32,8 +36,8 @@ allprojects {
 
     jacocoTestReport {
         reports {
-            xml.enabled true
-            csv.enabled false
+            xml.enabled = true
+            csv.enabled = false
             html.destination file("${buildDir}/jacocoHtml")
         }
     }
@@ -88,17 +92,18 @@ allprojects {
     tasks.withType(Test) {
         String path = "${rootProject.projectDir}/../libraries/repo/ortools/:";
 
-        if (Os.isFamily(Os.FAMILY_UNIX)) {
-            path += "${rootProject.projectDir}/repo/prism/linux/";
-            environment "LD_LIBRARY_PATH", "${rootProject.projectDir}/../libraries/MATLAB/v95/sys/os/glnxa64/:${rootProject.projectDir}/../libraries/MATLAB/v95/bin/glnxa64/:${rootProject.projectDir}/../libraries/MATLAB/v95/runtime/glnxa64/:${rootProject.projectDir}/repo/prism/linux/"
-        } else if (Os.isFamily(Os.FAMILY_MAC)) {
-            path += "${rootProject.projectDir}/repo/prism/osx/";
-            environment "DYLD_LIBRARY_PATH", "${rootProject.projectDir}/../libraries/MATLAB/v95/sys/os/maci64/:${rootProject.projectDir}/../libraries/MATLAB/v95/bin/maci64/:${rootProject.projectDir}/../libraries/MATLAB/v95/extern/bin/maci64/:${rootProject.projectDir}/repo/prism/osx/"
+        if (Os.isFamily(Os.FAMILY_MAC)) {
+            path += "${rootProject.projectDir}/../libraries/repo/prism/osx";
+            environment "DYLD_LIBRARY_PATH", "${rootProject.projectDir}/../libraries/MATLAB/v95/sys/os/maci64/:${rootProject.projectDir}/../libraries/MATLAB/v95/bin/maci64/:${rootProject.projectDir}/../libraries/MATLAB/v95/extern/bin/maci64/:${rootProject.projectDir}/../libraries/repo/prism/osx/"
+        } else if (Os.isFamily(Os.FAMILY_UNIX)) {
+            path += "${rootProject.projectDir}/../libraries/repo/prism/linux";
+            environment "LD_LIBRARY_PATH", "${rootProject.projectDir}/../libraries/MATLAB/v95/sys/os/glnxa64/:${rootProject.projectDir}/../libraries/MATLAB/v95/bin/glnxa64/:${rootProject.projectDir}/../libraries/MATLAB/v95/runtime/glnxa64/:${rootProject.projectDir}/../libraries/repo/prism/linux/"
         } else {
             throw new GradleException("Unsupported operating system")
         }
 
         systemProperty "java.library.path", path
+        systemProperty "buildserver", isBuildServer
     }
 
 }

@@ -14,6 +14,10 @@ import java.util.concurrent.ConcurrentMap;
 
 public interface Agent extends Serializable {
 
+    AgentMetaData metadata();
+
+    void setMetadata(AgentMetaData metaData);
+
     ServiceManager services();
 
     List<Pair<String, String>> status();

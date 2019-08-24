@@ -29,41 +29,8 @@ public class VisualiserClientImpl implements VisualiserClient {
 
     }
 
-    private boolean openConnection() {
-        try {
-            channel = SocketChannel.open();
-            channel.configureBlocking(true);
-            channel.socket().setKeepAlive(true);
-            channel.connect(visualiserAddress);
-
-            while (!channel.finishConnect()) {
-                // TODO: Set timeout
-            }
-
-            return true;
-        } catch (IOException e) {
-            // TODO
-            return false;
-        }
-    }
-
-    @Override
-    public void write(String data) {
-        LogMessage logMessage = new LogMessage(parent.name(), data + "\n");
-        write(logMessage);
-    }
-
-    @Override
-    public void write(LogMessage data) {
-        if (!enabled) {
-            return;
-        }
-
-        _write(data);
-    }
-
     private void _write(Object data) {
-        if(!openConnection()){
+        if (!openConnection()) {
             return;
         }
 
@@ -88,40 +55,6 @@ public class VisualiserClientImpl implements VisualiserClient {
                 new double[]{0, 0});
     }
 
-    private void sendVisualiserData() {
-        if (parent == null) {
-            throw new IllegalStateException("Cannot start connection to monitor without a parent");
-        }
-
-        if (!enabled) {
-            return;
-        }
-
-
-        _write(agentState());
-    }
-
-    @Override
-    public void closeConnection() throws IOException {
-        channel.close();
-    }
-
-    @Override
-    public void update() {
-        sendVisualiserData();
-    }
-
-
-    @Override
-    public void shutdown() {
-
-    }
-
-    @Override
-    public ListenableFuture<?> executeTransaction(Transaction transaction) {
-        return null;
-    }
-
     @Override
     public void initialise(Agent parentAgent) {
         this.parent = parentAgent;
@@ -134,12 +67,78 @@ public class VisualiserClientImpl implements VisualiserClient {
         return parent;
     }
 
+    private boolean openConnection() {
+        try {
+            channel = SocketChannel.open();
+            channel.configureBlocking(true);
+            channel.socket().setKeepAlive(true);
+            channel.connect(visualiserAddress);
+
+            while (!channel.finishConnect()) {
+                // TODO: Set timeout
+            }
+
+            return true;
+        } catch (IOException e) {
+            // TODO
+            return false;
+        }
+    }
+
     @Override
     public void run() {
         if (!enabled) {
             return;
         }
 
+        sendVisualiserData();
+    }
+
+    private void sendVisualiserData() {
+        if (!enabled) {
+            return;
+        }
+
+        if (parent == null) {
+            logger.error("Cannot start connection to monitor without a parent");
+            return;
+        }
+
+        _write(agentState());
+    }
+
+    @Override
+    public void shutdown() {
+
+    }
+
+    @Override
+    public ListenableFuture<?> executeTransaction(Transaction transaction) {
+        return null;
+    }
+
+    @Override
+    public void write(String data) {
+        LogMessage logMessage = new LogMessage(parent.name(), data + "\n");
+        write(logMessage);
+    }
+
+    @Override
+    public void write(LogMessage data) {
+        if (!enabled) {
+            return;
+        }
+
+        _write(data);
+    }
+
+    @Override
+    public void closeConnection() throws IOException {
+        channel.close();
+    }
+
+    @Override
+    public void update() {
         sendVisualiserData();
     }
 }
