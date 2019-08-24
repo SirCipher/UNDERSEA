@@ -1,10 +1,11 @@
 package com.type2labs.undersea.agent;
 
+import com.type2labs.undersea.agent.impl.HardwareInterface;
+import com.type2labs.undersea.agent.impl.MoosConnector;
 import com.type2labs.undersea.common.agent.Agent;
 import com.type2labs.undersea.common.agent.AgentFactory;
 import com.type2labs.undersea.common.agent.AgentStatus;
 import com.type2labs.undersea.common.cluster.PeerId;
-import com.type2labs.undersea.common.missions.planner.model.MissionManager;
 import com.type2labs.undersea.common.monitor.impl.MonitorImpl;
 import com.type2labs.undersea.common.monitor.impl.VisualiserClientImpl;
 import com.type2labs.undersea.common.monitor.model.Monitor;
@@ -57,10 +58,12 @@ public class AgentInitialiserImpl implements AgentInitialiser {
             );
 
             ServiceManager serviceManager = new ServiceManager();
+
             serviceManager.registerService(raftNode);
             serviceManager.registerService(new BlockchainNetworkImpl());
-            MissionManager missionManager = new MissionManagerImpl(new VehicleRoutingOptimiser());
-            serviceManager.registerService(missionManager);
+            serviceManager.registerService(new MissionManagerImpl(new VehicleRoutingOptimiser()));
+            serviceManager.registerService(new HardwareInterface());
+            serviceManager.registerService(new MoosConnector());
 
             Monitor monitor = new MonitorImpl();
             serviceManager.registerService(monitor);

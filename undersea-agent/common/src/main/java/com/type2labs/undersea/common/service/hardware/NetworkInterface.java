@@ -1,4 +1,6 @@
-package com.type2labs.undersea.common.service;
+package com.type2labs.undersea.common.service.hardware;
+
+import com.type2labs.undersea.common.service.AgentService;
 
 /**
  * Created by Thomas Klapwijk on 2019-08-24.

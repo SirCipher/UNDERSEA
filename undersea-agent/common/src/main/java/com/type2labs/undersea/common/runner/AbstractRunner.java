@@ -36,7 +36,9 @@ public abstract class AbstractRunner {
     protected abstract Map<String, ? extends Agent> parseDsl(String configurationFileLocation);
 
     private void run() {
-
+        for (Agent agent : agents) {
+            agent.services().startServices();
+        }
     }
 
     public void setup() {

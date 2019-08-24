@@ -118,6 +118,7 @@ public class ServiceManager {
         }
     }
 
+
     /**
      * Starts a repeating service for a given period. Repeating services will not return for the
      * {@link ServiceManager#getService} method
