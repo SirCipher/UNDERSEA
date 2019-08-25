@@ -1,0 +1,826 @@
+[32muSimMarine launching as uSimMarine
+[0m
+
+-------------- moos connect ----------------------
+  contacting a MOOS server localhost:9002 -  try 00001 
+  Handshaking as uSimMarine             [1;32m[ok]
+[0m  DB reports async support is           [1;32m[on]
+[0m  DB is running on                      [1;32mThomass-MacBook-Pro-3.local
+[0m  Timing skew estimation is             [33m[off] (not needed)
+[0m--------------------------------------------------
+
+Sim connected
+***************************************************
+*  uSimMarine starting ...
+***************************************************
++++++++++++++++++++++++++++++++++++++++++++++++++
+param =  PREFIX
++++++++++++++++++++++++++++++++++++++++++++++++++
++++++++++++++++++++++++++++++++++++++++++++++++++
+param =  START_HEADING
++++++++++++++++++++++++++++++++++++++++++++++++++
++++++++++++++++++++++++++++++++++++++++++++++++++
+param =  START_SPEED
++++++++++++++++++++++++++++++++++++++++++++++++++
++++++++++++++++++++++++++++++++++++++++++++++++++
+param =  START_Y
++++++++++++++++++++++++++++++++++++++++++++++++++
++++++++++++++++++++++++++++++++++++++++++++++++++
+param =  START_X
++++++++++++++++++++++++++++++++++++++++++++++++++
++++++++++++++++++++++++++++++++++++++++++++++++++
+param =  COMMSTICK
++++++++++++++++++++++++++++++++++++++++++++++++++
++++++++++++++++++++++++++++++++++++++++++++++++++
+param =  APPTICK
++++++++++++++++++++++++++++++++++++++++++++++++++
+[32mpNodeReporter launching as pNodeReporter
+[0m
+------------------- MOOSDB V10 -------------------
+  Hosting  community                [1;32m"alpha"
+[0m  Name look up is                   [31moff
+[0m  Asynchronous support is           [1;32mon
+[0m  Connect to this server on port    [32m9002[0m
+--------------------------------------------------
+[1;33mnetwork performance data published on localhost:9020
+listen with "nc -u -lk 9020"
+[0m
+------------[1;32mCONNECT[0m-------------
+  Handshaking   :  [32mOK
+[0m  Client's name :  [32muSimMarine[0m
+  Type          :  [1;33mAsynchronous[0m
+  Priority      :  [32mnormal[0m
+  Total Clients :  [32m1[0m
+--------------------------------
+
+------------[1;32mCONNECT[0m-------------
+  Handshaking   :  [32mOK
+[0m  Client's name :  [32mpLogger[0m
+  Type          :  [1;33mAsynchronous[0m
+  Priority      :  [32mnormal[0m
+  Total Clients :  [32m2[0m
+--------------------------------
+
+------------[1;32mCONNECT[0m-------------
+  Handshaking   :  [32mOK
+[0m  Client's name :  [32mpNodeReporter[0m
+  Type          :  [1;33mAsynchronous[0m
+  Priority      :  [32mnormal[0m
+  Total Clients :  [32m3[0m
+--------------------------------
+[33m+ subs of "pNodeReporter" to variables matching "NAV_*:*"[0m
+[33m+ subs of "pNodeReporter" to variables matching "NAV_*:*"[0m
+[33m+ subs of "pNodeReporter" to variables matching "NAV_*:*"[0m
+[33m+ subs of "pNodeReporter" to variables matching "NAV_*:*"[0m
+[33m+ subs of "pNodeReporter" to variables matching "NAV_*:*"[0m
+[33m+ subs of "pNodeReporter" to variables matching "NAV_*:*"[0m
+[33m+ subs of "pNodeReporter" to variables matching "NAV_*:*"[0m
+[33m+ subs of "pNodeReporter" to variables matching "NAV_*:*"[0m
+[33m+ subs of "pNodeReporter" to variables matching "NAV_*:*"[0m
+[33m+ subs of "pNodeReporter" to variables matching "NAV_*:*"[0m
+[33m+ subs of "pNodeReporter" to variables matching "NAV_*:*"[0m
+[33m+ subs of "pNodeReporter" to variables matching "NAV_*:*"[0m
+
+-------------- moos connect ----------------------
+  contacting a MOOS server localhost:9002 -  try 00001 
+  Handshaking as pNodeReporter          [1;32m[ok]
+[0m  DB reports async support is           [1;32m[on]
+[0m  DB is running on                      [1;32mThomass-MacBook-Pro-3.local
+[0m  Timing skew estimation is             [33m[off] (not needed)
+[0m--------------------------------------------------
+
+***************************************************
+*  pNodeReporter starting ...
+***************************************************
++++++++++++++++++++++++++++++++++++++++++++++++++
+param =  VESSEL_TYPE
++++++++++++++++++++++++++++++++++++++++++++++++++
++++++++++++++++++++++++++++++++++++++++++++++++++
+param =  COMMSTICK
++++++++++++++++++++++++++++++++++++++++++++++++++
++++++++++++++++++++++++++++++++++++++++++++++++++
+param =  APPTICK
++++++++++++++++++++++++++++++++++++++++++++++++++
+[33m+ subs of "pNodeReporter" to variables matching "NAV_*:*"[0m
+[33m+ subs of "pNodeReporter" to variables matching "NAV_*:*"[0m
+[33m+ subs of "pNodeReporter" to variables matching "NAV_*:*"[0m
+[33m+ subs of "pNodeReporter" to variables matching "NAV_*:*"[0m
+[33m+ subs of "pNodeReporter" to variables matching "NAV_*:*"[0m
+[33m+ subs of "pNodeReporter" to variables matching "NAV_*:*"[0m
+[33m+ subs of "pNodeReporter" to variables matching "NAV_*:*"[0m
+[33m+ subs of "pNodeReporter" to variables matching "NAV_*:*"[0m
+[33m+ subs of "pNodeReporter" to variables matching "NAV_*:*"[0m
+[33m+ subs of "pNodeReporter" to variables matching "NAV_*:*"[0m
+[33m+ subs of "pNodeReporter" to variables matching "NAV_*:*"[0m
+[33m+ subs of "pNodeReporter" to variables matching "NAV_*:*"[0m
+[33m+ subs of "pNodeReporter" to variables matching "NAV_*:*"[0m
+[32mpMarinePID launching as pMarinePID
+[0m
+
+-------------- moos connect ----------------------
+  contacting a MOOS server localhost:9002 -  try 00001 
+  Handshaking as pMarinePID             [1;32m[ok]
+[0m  DB reports async support is           [1;32m[on]
+[0m  DB is running on                      [1;32mThomass-MacBook-Pro-3.local
+[0m  Timing skew estimation is             [33m[off] (not needed)
+[0m--------------------------------------------------
+
+pMarinePID starting....
+ pMarinePID says: ** NEW CONTROLLER GAINS ARE **
+ pMarinePID says: YAW_PID_KP             = 0.400
+ pMarinePID says: YAW_PID_KD             = 0.100
+ pMarinePID says: YAW_PID_KI             = 0.000
+ pMarinePID says: YAW_PID_INTEGRAL_LIMIT = 0.070
+ pMarinePID says: MAXRUDDER              = 100.000
+ pMarinePID says: SPEED_PID_KP           = 1.000
+ pMarinePID says: SPEED_PID_KD           = 0.000
+ pMarinePID says: SPEED_PID_KI           = 0.000
+ pMarinePID says: SPEED_PID_INTEGRAL_LIMIT = 0.070
+ pMarinePID says: MAXTHRUST              = 100.000
+Depth Control is OFF
+pMarinePID is Running:
+ |-Baseline AppTick   @ 10.0 Hz
+ |--Comms is Full Duplex and Asynchronous
+ -Iterate Mode 0 :
+   |-Regular iterate and message delivery at 10 Hz
+	|-Time Warp @ 5.0 
+	|-Time Warp delay @ 2.0 ms 
+
+
+
+
+
+PID REPORT: (1)(8.48356/sec)
+ pMarinePID says: Paused Due To Tardy HELM Input: THRUST=0
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (2)(8.97707/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (3)(8.83235/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (4)(9.04897/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (5)(9.16347/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (6)(8.95476/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (7)(9.06684/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (8)(8.94519/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (9)(8.9612/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (10)(8.96784/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (11)(8.90883/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (12)(8.97465/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (13)(9.02966/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (14)(8.97885/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (15)(8.97575/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (16)(8.98427/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (17)(8.91976/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (18)(8.91422/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (19)(8.91613/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (20)(8.89094/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (21)(8.92546/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (22)(8.89817/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (23)(8.93608/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (24)(8.95098/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (25)(8.98675/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (26)(8.99673/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (27)(9.0214/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (28)(9.0352/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (29)(9.06352/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (30)(9.07198/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (31)(9.06282/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (32)(9.05794/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (33)(9.06796/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (34)(9.09152/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (35)(9.08169/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (36)(9.08512/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (37)(9.05532/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (38)(9.05845/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (39)(9.03133/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (40)(9.05066/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+[32muProcessWatch launching as uProcessWatch
+[0m
+[32mpHostInfo launching as pHostInfo
+[0m
+
+
+
+PID REPORT: (41)(9.03691/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+[32muTimerScript launching as uTimerScript
+[0m
+
+
+
+PID REPORT: (42)(9.04122/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (43)(9.05404/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (44)(9.06948/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (45)(9.07597/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+-------------- moos connect ----------------------
+  contacting a MOOS server localhost:9002 -  try 00001 
+  Handshaking as pShare                 [1;32m[ok]
+[0m  DB reports async support is           [1;32m[on]
+[0m  DB is running on                      [1;32mThomass-MacBook-Pro-3.local
+[0m  Timing skew estimation is             [33m[off] (not needed)
+[0m--------------------------------------------------
+
+---------------------- [1;33mROUTING INFORMATION[0m ------------------------------------
+[1;32mStandard Routes:
+[0m   none
+[1;32mWildcard Routes:
+[0m   none
+[1;32mListening on:
+[0m  <-- localhost:9303      [udp]
+-------------------------------------------------------------------------------
+
+
+
+PID REPORT: (46)(9.04907/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (47)(9.06539/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+-------------- moos connect ----------------------
+  contacting a MOOS server localhost:9002 -  try 00001 
+  Handshaking as uProcessWatch          [1;32m[ok]
+[0m  DB reports async support is           [1;32m[on]
+[0m  DB is running on                      [1;32mThomass-MacBook-Pro-3.local
+[0m  Timing skew estimation is             [33m[off] (not needed)
+[0m--------------------------------------------------
+
+***************************************************
+*  uProcessWatch starting ...
+***************************************************
++++++++++++++++++++++++++++++++++++++++++++++++++
+param =  NOWATCH
++++++++++++++++++++++++++++++++++++++++++++++++++
++++++++++++++++++++++++++++++++++++++++++++++++++
+param =  NOWATCH
++++++++++++++++++++++++++++++++++++++++++++++++++
++++++++++++++++++++++++++++++++++++++++++++++++++
+param =  WATCH
++++++++++++++++++++++++++++++++++++++++++++++++++
++++++++++++++++++++++++++++++++++++++++++++++++++
+param =  WATCH
++++++++++++++++++++++++++++++++++++++++++++++++++
++++++++++++++++++++++++++++++++++++++++++++++++++
+param =  WATCH
++++++++++++++++++++++++++++++++++++++++++++++++++
++++++++++++++++++++++++++++++++++++++++++++++++++
+param =  WATCH
++++++++++++++++++++++++++++++++++++++++++++++++++
++++++++++++++++++++++++++++++++++++++++++++++++++
+param =  WATCH
++++++++++++++++++++++++++++++++++++++++++++++++++
++++++++++++++++++++++++++++++++++++++++++++++++++
+param =  COMMSTICK
++++++++++++++++++++++++++++++++++++++++++++++++++
++++++++++++++++++++++++++++++++++++++++++++++++++
+param =  APPTICK
++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+
+PID REPORT: (48)(9.05684/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+-------------- moos connect ----------------------
+  contacting a MOOS server localhost:9002 -  try 00001 
+  Handshaking as pHostInfo              [1;32m[ok]
+[0m  DB reports async support is           [1;32m[on]
+[0m  DB is running on                      [1;32mThomass-MacBook-Pro-3.local
+[0m  Timing skew estimation is             [33m[off] (not needed)
+[0m--------------------------------------------------
+
+***************************************************
+*  pHostInfo starting ...
+***************************************************
++++++++++++++++++++++++++++++++++++++++++++++++++
+param =  DEFAULT_HOSTIP_FORCE
++++++++++++++++++++++++++++++++++++++++++++++++++
++++++++++++++++++++++++++++++++++++++++++++++++++
+param =  COMMSTICK
++++++++++++++++++++++++++++++++++++++++++++++++++
++++++++++++++++++++++++++++++++++++++++++++++++++
+param =  APPTICK
++++++++++++++++++++++++++++++++++++++++++++++++++
+*************************************
+*  This is Antler, head of MOOS...  *
+*  P. Newman 2008                   *
+*************************************
+
+
+|****** Launch ******|
+
+Unless directed otherwise using system path to locate binaries 
+   [000] Process: MOOSDB          ~ MOOSDB          launched successfully
+   [001] Process: uSimMarine      ~ uSimMarine      launched successfully
+   [002] Process: pLogger         ~ pLogger         launched successfully
+   [003] Process: pNodeReporter   ~ pNodeReporter   launched successfully
+   [004] Process: pMarinePID      ~ pMarinePID      launched successfully
+   [005] Process: pHelmIvP        ~ pHelmIvP        launched successfully
+   [006] Process: uProcessWatch   ~ uProcessWatch   launched successfully
+   [007] Process: pShare          ~ pShare          launched successfully
+   [008] Process: uTimerScript    ~ uTimerScript    launched successfully
+   [009] Process: pHostInfo       ~ pHostInfo       launched successfully
+Failed exec - not good. Called exec as follows:
+
+
+
+PID REPORT: (49)(9.06463/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+-------------- moos connect ----------------------
+  contacting a MOOS server localhost:9002 -  try 00001 
+  Handshaking as uTimerScript           [1;32m[ok]
+[0m  DB reports async support is           [1;32m[on]
+[0m  DB is running on                      [1;32mThomass-MacBook-Pro-3.local
+[0m  Timing skew estimation is             [33m[off] (not needed)
+[0m--------------------------------------------------
+
+***************************************************
+*  uTimerScript starting ...
+***************************************************
++++++++++++++++++++++++++++++++++++++++++++++++++
+param =  EVENT
++++++++++++++++++++++++++++++++++++++++++++++++++
++++++++++++++++++++++++++++++++++++++++++++++++++
+param =  EVENT
++++++++++++++++++++++++++++++++++++++++++++++++++
++++++++++++++++++++++++++++++++++++++++++++++++++
+param =  EVENT
++++++++++++++++++++++++++++++++++++++++++++++++++
++++++++++++++++++++++++++++++++++++++++++++++++++
+param =  DELAY_START
++++++++++++++++++++++++++++++++++++++++++++++++++
++++++++++++++++++++++++++++++++++++++++++++++++++
+param =  COMMSTICK
++++++++++++++++++++++++++++++++++++++++++++++++++
++++++++++++++++++++++++++++++++++++++++++++++++++
+param =  APPTICK
++++++++++++++++++++++++++++++++++++++++++++++++++
+[34mRandom Variable configurations: 
+[34mRandom Pair configurations: 
+[0m
+[35m
+The Raw Script: ========================================
+Total Elements: 3
+[0] MOOS_MANUAL_OVERIDE=false, TIME:-1, RANGE=[0,0], POSTED=false
+[1] DEPLOY=true, TIME:-1, RANGE=[0,0], POSTED=false
+[2] EXITED_NORMALLY=uTimerScript, TIME:-1, RANGE=[10,20], POSTED=false
+====================================================
+[0m
+
+
+
+PID REPORT: (50)(9.05421/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+-------------- moos connect ----------------------
+  contacting a MOOS server localhost:9002 -  try 00001 
+  Handshaking as pHelmIvP               [1;32m[ok]
+[0m  DB reports async support is           [1;32m[on]
+[0m  DB is running on                      [1;32mThomass-MacBook-Pro-3.local
+[0m  Timing skew estimation is             [33m[off] (not needed)
+[0m--------------------------------------------------
+
+***************************************************
+*  pHelmIvP starting ...
+***************************************************
++++++++++++++++++++++++++++++++++++++++++++++++++
+param =  DOMAIN
++++++++++++++++++++++++++++++++++++++++++++++++++
++++++++++++++++++++++++++++++++++++++++++++++++++
+param =  DOMAIN
++++++++++++++++++++++++++++++++++++++++++++++++++
++++++++++++++++++++++++++++++++++++++++++++++++++
+param =  ACTIVE_START
++++++++++++++++++++++++++++++++++++++++++++++++++
++++++++++++++++++++++++++++++++++++++++++++++++++
+param =  OK_SKEW
++++++++++++++++++++++++++++++++++++++++++++++++++
++++++++++++++++++++++++++++++++++++++++++++++++++
+param =  VERBOSE
++++++++++++++++++++++++++++++++++++++++++++++++++
++++++++++++++++++++++++++++++++++++++++++++++++++
+param =  BEHAVIORS
++++++++++++++++++++++++++++++++++++++++++++++++++
++++++++++++++++++++++++++++++++++++++++++++++++++
+param =  COMMSTICK
++++++++++++++++++++++++++++++++++++++++++++++++++
++++++++++++++++++++++++++++++++++++++++++++++++++
+param =  APPTICK
++++++++++++++++++++++++++++++++++++++++++++++++++
+Number of behavior files: 1
+Processing Behavior File: meta_alpha.bhv  START
+    Successfully found file: meta_alpha.bhv
+
+
+
+PID REPORT: (51)(9.06206/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+Processing Behavior File: meta_alpha.bhv  END
+[32mLoading behavior dynamic libraries specified in IVP_BEHAVIOR_DIRS...
+[0m  Environment variable IVP_BEHAVIOR_DIRS not set.
+Loading behavior dynamic libraries specified in IVP_BEHAVIOR_DIRS skipped.
+BehaviorSet: Total # of specs: 2
+spec_build: 0  result:0
+spec_build: 1  result:1
+BehaviorSet: all_builds_ok: false
+Fatal Behavior Configuration Line 24
+  [24]: 
+
+
+
+PID REPORT: (52)(9.05972/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (53)(9.04475/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (54)(9.04613/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (55)(9.03341/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (56)(9.04587/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (57)(9.06015/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (58)(9.07233/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+[32muFldNodeBroker launching as: uFldNodeBroker
+[0m
+
+
+
+PID REPORT: (59)(9.07777/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (60)(9.09108/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (61)(9.09818/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (62)(9.10915/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (63)(9.10921/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (64)(9.09531/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (65)(9.10009/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+-------------- moos connect ----------------------
+  contacting a MOOS server localhost:9002 -  try 00001 
+  Handshaking as uFldNodeBroker         [1;32m[ok]
+[0m  DB reports async support is           [1;32m[on]
+[0m  DB is running on                      [1;32mThomass-MacBook-Pro-3.local
+[0m  Timing skew estimation is             [33m[off] (not needed)
+[0m--------------------------------------------------
+
+***************************************************
+*  uFldNodeBroker starting ...
+***************************************************
++++++++++++++++++++++++++++++++++++++++++++++++++
+param =  BRIDGE
++++++++++++++++++++++++++++++++++++++++++++++++++
++++++++++++++++++++++++++++++++++++++++++++++++++
+param =  BRIDGE
++++++++++++++++++++++++++++++++++++++++++++++++++
++++++++++++++++++++++++++++++++++++++++++++++++++
+param =  BRIDGE
++++++++++++++++++++++++++++++++++++++++++++++++++
++++++++++++++++++++++++++++++++++++++++++++++++++
+param =  BRIDGE
++++++++++++++++++++++++++++++++++++++++++++++++++
++++++++++++++++++++++++++++++++++++++++++++++++++
+param =  BRIDGE
++++++++++++++++++++++++++++++++++++++++++++++++++
++++++++++++++++++++++++++++++++++++++++++++++++++
+param =  BRIDGE
++++++++++++++++++++++++++++++++++++++++++++++++++
++++++++++++++++++++++++++++++++++++++++++++++++++
+param =  TRY_SHORE_HOST
++++++++++++++++++++++++++++++++++++++++++++++++++
++++++++++++++++++++++++++++++++++++++++++++++++++
+param =  COMMSTICK
++++++++++++++++++++++++++++++++++++++++++++++++++
++++++++++++++++++++++++++++++++++++++++++++++++++
+param =  APPTICK
++++++++++++++++++++++++++++++++++++++++++++++++++
+pShare is Running:
+ |-Baseline AppTick   @ 40.0 Hz
+ |--Comms is Full Duplex and Asynchronous
+ |--Iterate Mode 2 :
+   -Regular iterate at 40 Hz. 
+   |-Dynamic message delivery at an unlimited rate
+	|-Time Warp @ 5.0 
+	|-Time Warp delay @ 2.0 ms 
+
+
+---------------------- [1;33mROUTING INFORMATION[0m ------------------------------------
+[1;32mStandard Routes:
+[0m  routing for "NODE_BROKER_PING_0"
+  --> localhost:9300       as NODE_BROKER_PING [udp] every notification 
+[1;32mWildcard Routes:
+[0m   none
+[1;32mListening on:
+[0m  <-- localhost:9303      [udp]
+-------------------------------------------------------------------------------
+
+
+
+PID REPORT: (66)(9.10423/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (67)(9.09732/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+*************************************
+*  This is Antler, head of MOOS...  *
+*  P. Newman 2008                   *
+*************************************
+
+
+|****** Launch ******|
+
+Unless directed otherwise using system path to locate binaries 
+   [000] Process: MOOSDB          ~ MOOSDB          launched successfully
+   [001] Process: uSimMarine      ~ uSimMarine      launched successfully
+   [002] Process: pLogger         ~ pLogger         launched successfully
+   [003] Process: pNodeReporter   ~ pNodeReporter   launched successfully
+   [004] Process: pMarinePID      ~ pMarinePID      launched successfully
+   [005] Process: pHelmIvP        ~ pHelmIvP        launched successfully
+   [006] Process: uProcessWatch   ~ uProcessWatch   launched successfully
+   [007] Process: pShare          ~ pShare          launched successfully
+   [008] Process: uTimerScript    ~ uTimerScript    launched successfully
+   [009] Process: pHostInfo       ~ pHostInfo       launched successfully
+   [010] Process: sUUV            ~ sUUV            launched successfully
+   [011] Process: uFldNodeBroker  ~ uFldNodeBroker  launched successfully
+Failed exec - not good. Called exec as follows:
+
+
+
+PID REPORT: (68)(9.08652/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (69)(9.08909/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (70)(9.09233/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (71)(9.08739/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (72)(9.08792/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (73)(9.09789/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (74)(9.09798/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+---------------------- [1;33mROUTING INFORMATION[0m ------------------------------------
+[1;32mStandard Routes:
+[0m  routing for "NODE_BROKER_PING_0"
+  --> localhost:9300       as NODE_BROKER_PING [udp] every notification 
+[1;32mWildcard Routes:
+[0m   none
+[1;32mListening on:
+[0m  <-- localhost:9303      [udp]
+-------------------------------------------------------------------------------
+
+
+
+PID REPORT: (75)(9.08629/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (76)(9.09624/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+*************************************
+*  This is Antler, head of MOOS...  *
+*  P. Newman 2008                   *
+*************************************
+
+
+|****** Launch ******|
+
+Unless directed otherwise using system path to locate binaries 
+   [000] Process: MOOSDB          ~ MOOSDB          launched successfully
+   [001] Process: uSimMarine      ~ uSimMarine      launched successfully
+   [002] Process: pLogger  

@@ -12,7 +12,9 @@ import com.type2labs.undersea.utilities.process.ProcessBuilderUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.io.IOException;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -73,8 +75,18 @@ public class HardwareInterface implements AgentService {
 
         try {
             proc.directory(metaData.getMissionDirectory().getCanonicalFile());
-
             process = proc.start();
+
+            BufferedReader stdInput = new BufferedReader(new
+                    InputStreamReader(process.getInputStream()));
+            BufferedWriter writer = Files.newBufferedWriter(new File(agent.name() + ".txt").toPath(),
+                    StandardCharsets.UTF_8);
+
+            String s = null;
+            while ((s = stdInput.readLine()) != null) {
+                writer.write(s + "\n");
+            }
+
             process.waitFor();
         } catch (IOException | InterruptedException e) {
             throw new UnderseaException("Failed to start agent: " + parent().name(), e);
@@ -102,7 +114,7 @@ public class HardwareInterface implements AgentService {
             process.destroy();
 
             try {
-                Thread.sleep(10000);
+                Thread.sleep(5000);
             } catch (InterruptedException e) {
                 logger.error(agent + ": attempted to cleanly kill interface but failed", agent);
                 return;

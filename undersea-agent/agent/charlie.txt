@@ -1,0 +1,2763 @@
+[32muSimMarine launching as uSimMarine
+[0m
+
+-------------- moos connect ----------------------
+  contacting a MOOS server localhost:9003 -  try 00001 
+  Handshaking as uSimMarine             [1;32m[ok]
+[0m  DB reports async support is           [1;32m[on]
+[0m  DB is running on                      [1;32mThomass-MacBook-Pro-3.local
+[0m  Timing skew estimation is             [33m[off] (not needed)
+[0m--------------------------------------------------
+
+Sim connected
+***************************************************
+*  uSimMarine starting ...
+***************************************************
++++++++++++++++++++++++++++++++++++++++++++++++++
+param =  PREFIX
++++++++++++++++++++++++++++++++++++++++++++++++++
++++++++++++++++++++++++++++++++++++++++++++++++++
+param =  START_HEADING
++++++++++++++++++++++++++++++++++++++++++++++++++
++++++++++++++++++++++++++++++++++++++++++++++++++
+param =  START_SPEED
++++++++++++++++++++++++++++++++++++++++++++++++++
++++++++++++++++++++++++++++++++++++++++++++++++++
+param =  START_Y
++++++++++++++++++++++++++++++++++++++++++++++++++
++++++++++++++++++++++++++++++++++++++++++++++++++
+param =  START_X
++++++++++++++++++++++++++++++++++++++++++++++++++
++++++++++++++++++++++++++++++++++++++++++++++++++
+param =  COMMSTICK
++++++++++++++++++++++++++++++++++++++++++++++++++
++++++++++++++++++++++++++++++++++++++++++++++++++
+param =  APPTICK
++++++++++++++++++++++++++++++++++++++++++++++++++
+[32mpNodeReporter launching as pNodeReporter
+[0m
+------------------- MOOSDB V10 -------------------
+  Hosting  community                [1;32m"charlie"
+[0m  Name look up is                   [31moff
+[0m  Asynchronous support is           [1;32mon
+[0m  Connect to this server on port    [32m9003[0m
+--------------------------------------------------
+[1;33mnetwork performance data published on localhost:9020
+listen with "nc -u -lk 9020"
+[0m
+------------[1;32mCONNECT[0m-------------
+  Handshaking   :  [32mOK
+[0m  Client's name :  [32muSimMarine[0m
+  Type          :  [1;33mAsynchronous[0m
+  Priority      :  [32mnormal[0m
+  Total Clients :  [32m1[0m
+--------------------------------
+
+------------[1;32mCONNECT[0m-------------
+  Handshaking   :  [32mOK
+[0m  Client's name :  [32mpLogger[0m
+  Type          :  [1;33mAsynchronous[0m
+  Priority      :  [32mnormal[0m
+  Total Clients :  [32m2[0m
+--------------------------------
+
+------------[1;32mCONNECT[0m-------------
+  Handshaking   :  [32mOK
+[0m  Client's name :  [32mpNodeReporter[0m
+  Type          :  [1;33mAsynchronous[0m
+  Priority      :  [32mnormal[0m
+  Total Clients :  [32m3[0m
+--------------------------------
+[33m+ subs of "pNodeReporter" to variables matching "NAV_*:*"[0m
+[33m+ subs of "pNodeReporter" to variables matching "NAV_*:*"[0m
+[33m+ subs of "pNodeReporter" to variables matching "NAV_*:*"[0m
+[33m+ subs of "pNodeReporter" to variables matching "NAV_*:*"[0m
+[33m+ subs of "pNodeReporter" to variables matching "NAV_*:*"[0m
+[33m+ subs of "pNodeReporter" to variables matching "NAV_*:*"[0m
+[33m+ subs of "pNodeReporter" to variables matching "NAV_*:*"[0m
+[33m+ subs of "pNodeReporter" to variables matching "NAV_*:*"[0m
+[33m+ subs of "pNodeReporter" to variables matching "NAV_*:*"[0m
+[33m+ subs of "pNodeReporter" to variables matching "NAV_*:*"[0m
+[33m+ subs of "pNodeReporter" to variables matching "NAV_*:*"[0m
+[33m+ subs of "pNodeReporter" to variables matching "NAV_*:*"[0m
+
+-------------- moos connect ----------------------
+  contacting a MOOS server localhost:9003 -  try 00001 
+  Handshaking as pNodeReporter          [1;32m[ok]
+[0m  DB reports async support is           [1;32m[on]
+[0m  DB is running on                      [1;32mThomass-MacBook-Pro-3.local
+[0m  Timing skew estimation is             [33m[off] (not needed)
+[0m--------------------------------------------------
+
+***************************************************
+*  pNodeReporter starting ...
+***************************************************
++++++++++++++++++++++++++++++++++++++++++++++++++
+param =  VESSEL_TYPE
++++++++++++++++++++++++++++++++++++++++++++++++++
++++++++++++++++++++++++++++++++++++++++++++++++++
+param =  COMMSTICK
++++++++++++++++++++++++++++++++++++++++++++++++++
++++++++++++++++++++++++++++++++++++++++++++++++++
+param =  APPTICK
++++++++++++++++++++++++++++++++++++++++++++++++++
+[33m+ subs of "pNodeReporter" to variables matching "NAV_*:*"[0m
+[33m+ subs of "pNodeReporter" to variables matching "NAV_*:*"[0m
+[33m+ subs of "pNodeReporter" to variables matching "NAV_*:*"[0m
+[33m+ subs of "pNodeReporter" to variables matching "NAV_*:*"[0m
+[33m+ subs of "pNodeReporter" to variables matching "NAV_*:*"[0m
+[33m+ subs of "pNodeReporter" to variables matching "NAV_*:*"[0m
+[33m+ subs of "pNodeReporter" to variables matching "NAV_*:*"[0m
+[33m+ subs of "pNodeReporter" to variables matching "NAV_*:*"[0m
+[33m+ subs of "pNodeReporter" to variables matching "NAV_*:*"[0m
+[33m+ subs of "pNodeReporter" to variables matching "NAV_*:*"[0m
+[33m+ subs of "pNodeReporter" to variables matching "NAV_*:*"[0m
+[33m+ subs of "pNodeReporter" to variables matching "NAV_*:*"[0m
+[33m+ subs of "pNodeReporter" to variables matching "NAV_*:*"[0m
+[32mpMarinePID launching as pMarinePID
+[0m
+[32muProcessWatch launching as uProcessWatch
+[0m
+[32muTimerScript launching as uTimerScript
+[0m
+[32mpHostInfo launching as pHostInfo
+[0m
+
+-------------- moos connect ----------------------
+  contacting a MOOS server localhost:9003 -  try 00001 
+  Handshaking as pMarinePID             [1;32m[ok]
+[0m  DB reports async support is           [1;32m[on]
+[0m  DB is running on                      [1;32mThomass-MacBook-Pro-3.local
+[0m  Timing skew estimation is             [33m[off] (not needed)
+[0m--------------------------------------------------
+
+pMarinePID starting....
+ pMarinePID says: ** NEW CONTROLLER GAINS ARE **
+ pMarinePID says: YAW_PID_KP             = 0.400
+ pMarinePID says: YAW_PID_KD             = 0.100
+ pMarinePID says: YAW_PID_KI             = 0.000
+ pMarinePID says: YAW_PID_INTEGRAL_LIMIT = 0.070
+ pMarinePID says: MAXRUDDER              = 100.000
+ pMarinePID says: SPEED_PID_KP           = 1.000
+ pMarinePID says: SPEED_PID_KD           = 0.000
+ pMarinePID says: SPEED_PID_KI           = 0.000
+ pMarinePID says: SPEED_PID_INTEGRAL_LIMIT = 0.070
+ pMarinePID says: MAXTHRUST              = 100.000
+Depth Control is OFF
+pMarinePID is Running:
+ |-Baseline AppTick   @ 10.0 Hz
+ |--Comms is Full Duplex and Asynchronous
+ -Iterate Mode 0 :
+   |-Regular iterate and message delivery at 10 Hz
+	|-Time Warp @ 5.0 
+	|-Time Warp delay @ 2.0 ms 
+
+
+
+
+
+PID REPORT: (1)(8.7869/sec)
+ pMarinePID says: Paused Due To Tardy HELM Input: THRUST=0
+Paused Due To Tardy HELM Input: THRUST=0
+
+-------------- moos connect ----------------------
+  contacting a MOOS server localhost:9003 -  try 00001 
+  Handshaking as pShare                 [1;32m[ok]
+[0m  DB reports async support is           [1;32m[on]
+[0m  DB is running on                      [1;32mThomass-MacBook-Pro-3.local
+[0m  Timing skew estimation is             [33m[off] (not needed)
+[0m--------------------------------------------------
+
+---------------------- [1;33mROUTING INFORMATION[0m ------------------------------------
+[1;32mStandard Routes:
+[0m   none
+[1;32mWildcard Routes:
+[0m   none
+[1;32mListening on:
+[0m  <-- localhost:9304      [udp]
+-------------------------------------------------------------------------------
+
+-------------- moos connect ----------------------
+  contacting a MOOS server localhost:9003 -  try 00001 
+  Handshaking as uProcessWatch          [1;32m[ok]
+[0m  DB reports async support is           [1;32m[on]
+[0m  DB is running on                      [1;32mThomass-MacBook-Pro-3.local
+[0m  Timing skew estimation is             [33m[off] (not needed)
+[0m--------------------------------------------------
+
+***************************************************
+*  uProcessWatch starting ...
+***************************************************
+
+
+
+PID REPORT: (2)(9.1341/sec)
+Paused Due To Tardy HELM Input: THRUST=0
++++++++++++++++++++++++++++++++++++++++++++++++++
+param =  NOWATCH
++++++++++++++++++++++++++++++++++++++++++++++++++
++++++++++++++++++++++++++++++++++++++++++++++++++
+param =  NOWATCH
++++++++++++++++++++++++++++++++++++++++++++++++++
++++++++++++++++++++++++++++++++++++++++++++++++++
+param =  WATCH
++++++++++++++++++++++++++++++++++++++++++++++++++
++++++++++++++++++++++++++++++++++++++++++++++++++
+param =  WATCH
++++++++++++++++++++++++++++++++++++++++++++++++++
++++++++++++++++++++++++++++++++++++++++++++++++++
+param =  WATCH
++++++++++++++++++++++++++++++++++++++++++++++++++
++++++++++++++++++++++++++++++++++++++++++++++++++
+param =  WATCH
++++++++++++++++++++++++++++++++++++++++++++++++++
++++++++++++++++++++++++++++++++++++++++++++++++++
+param =  WATCH
++++++++++++++++++++++++++++++++++++++++++++++++++
++++++++++++++++++++++++++++++++++++++++++++++++++
+param =  COMMSTICK
++++++++++++++++++++++++++++++++++++++++++++++++++
++++++++++++++++++++++++++++++++++++++++++++++++++
+param =  APPTICK
++++++++++++++++++++++++++++++++++++++++++++++++++
+
+-------------- moos connect ----------------------
+  contacting a MOOS server localhost:9003 -  try 00001 
+  Handshaking as uTimerScript           [1;32m[ok]
+[0m  DB reports async support is           [1;32m[on]
+[0m  DB is running on                      [1;32mThomass-MacBook-Pro-3.local
+[0m  Timing skew estimation is             [33m[off] (not needed)
+[0m--------------------------------------------------
+
+***************************************************
+*  uTimerScript starting ...
+***************************************************
++++++++++++++++++++++++++++++++++++++++++++++++++
+param =  EVENT
++++++++++++++++++++++++++++++++++++++++++++++++++
++++++++++++++++++++++++++++++++++++++++++++++++++
+param =  EVENT
++++++++++++++++++++++++++++++++++++++++++++++++++
++++++++++++++++++++++++++++++++++++++++++++++++++
+param =  EVENT
++++++++++++++++++++++++++++++++++++++++++++++++++
++++++++++++++++++++++++++++++++++++++++++++++++++
+param =  DELAY_START
++++++++++++++++++++++++++++++++++++++++++++++++++
++++++++++++++++++++++++++++++++++++++++++++++++++
+param =  COMMSTICK
++++++++++++++++++++++++++++++++++++++++++++++++++
++++++++++++++++++++++++++++++++++++++++++++++++++
+param =  APPTICK
++++++++++++++++++++++++++++++++++++++++++++++++++
+[34mRandom Variable configurations: 
+[34mRandom Pair configurations: 
+[0m
+[35m
+The Raw Script: ========================================
+Total Elements: 3
+[0] MOOS_MANUAL_OVERIDE=false, TIME:-1, RANGE=[0,0], POSTED=false
+[1] DEPLOY=true, TIME:-1, RANGE=[0,0], POSTED=false
+[2] EXITED_NORMALLY=uTimerScript, TIME:-1, RANGE=[10,20], POSTED=false
+====================================================
+[0m
+
+
+
+PID REPORT: (3)(9.14911/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (4)(8.92956/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+-------------- moos connect ----------------------
+  contacting a MOOS server localhost:9003 -  try 00001 
+  Handshaking as pHostInfo              [1;32m[ok]
+[0m  DB reports async support is           [1;32m[on]
+[0m  DB is running on                      [1;32mThomass-MacBook-Pro-3.local
+[0m  Timing skew estimation is             [33m[off] (not needed)
+[0m--------------------------------------------------
+
+***************************************************
+*  pHostInfo starting ...
+***************************************************
++++++++++++++++++++++++++++++++++++++++++++++++++
+param =  DEFAULT_HOSTIP_FORCE
++++++++++++++++++++++++++++++++++++++++++++++++++
++++++++++++++++++++++++++++++++++++++++++++++++++
+param =  COMMSTICK
++++++++++++++++++++++++++++++++++++++++++++++++++
++++++++++++++++++++++++++++++++++++++++++++++++++
+param =  APPTICK
++++++++++++++++++++++++++++++++++++++++++++++++++
+*************************************
+*  This is Antler, head of MOOS...  *
+*  P. Newman 2008                   *
+*************************************
+
+
+|****** Launch ******|
+
+Unless directed otherwise using system path to locate binaries 
+   [000] Process: MOOSDB          ~ MOOSDB          launched successfully
+   [001] Process: uSimMarine      ~ uSimMarine      launched successfully
+   [002] Process: pLogger         ~ pLogger         launched successfully
+   [003] Process: pNodeReporter   ~ pNodeReporter   launched successfully
+   [004] Process: pMarinePID      ~ pMarinePID      launched successfully
+   [005] Process: pHelmIvP        ~ pHelmIvP        launched successfully
+   [006] Process: uProcessWatch   ~ uProcessWatch   launched successfully
+   [007] Process: pShare          ~ pShare          launched successfully
+   [008] Process: uTimerScript    ~ uTimerScript    launched successfully
+   [009] Process: pHostInfo       ~ pHostInfo       launched successfully
+Failed exec - not good. Called exec as follows:
+
+-------------- moos connect ----------------------
+  contacting a MOOS server localhost:9003 -  try 00001 
+  Handshaking as pHelmIvP               [1;32m[ok]
+[0m  DB reports async support is           [1;32m[on]
+[0m  DB is running on                      [1;32mThomass-MacBook-Pro-3.local
+[0m  Timing skew estimation is             [33m[off] (not needed)
+[0m--------------------------------------------------
+
+***************************************************
+*  pHelmIvP starting ...
+***************************************************
+
+
+
+PID REPORT: (5)(9.04536/sec)
+Paused Due To Tardy HELM Input: THRUST=0
++++++++++++++++++++++++++++++++++++++++++++++++++
+param =  DOMAIN
++++++++++++++++++++++++++++++++++++++++++++++++++
++++++++++++++++++++++++++++++++++++++++++++++++++
+param =  DOMAIN
++++++++++++++++++++++++++++++++++++++++++++++++++
++++++++++++++++++++++++++++++++++++++++++++++++++
+param =  ACTIVE_START
++++++++++++++++++++++++++++++++++++++++++++++++++
++++++++++++++++++++++++++++++++++++++++++++++++++
+param =  OK_SKEW
++++++++++++++++++++++++++++++++++++++++++++++++++
++++++++++++++++++++++++++++++++++++++++++++++++++
+param =  VERBOSE
++++++++++++++++++++++++++++++++++++++++++++++++++
++++++++++++++++++++++++++++++++++++++++++++++++++
+param =  BEHAVIORS
++++++++++++++++++++++++++++++++++++++++++++++++++
++++++++++++++++++++++++++++++++++++++++++++++++++
+param =  COMMSTICK
++++++++++++++++++++++++++++++++++++++++++++++++++
++++++++++++++++++++++++++++++++++++++++++++++++++
+param =  APPTICK
++++++++++++++++++++++++++++++++++++++++++++++++++
+Number of behavior files: 1
+Processing Behavior File: meta_charlie.bhv  START
+    Successfully found file: meta_charlie.bhv
+Processing Behavior File: meta_charlie.bhv  END
+[32mLoading behavior dynamic libraries specified in IVP_BEHAVIOR_DIRS...
+[0m  Environment variable IVP_BEHAVIOR_DIRS not set.
+Loading behavior dynamic libraries specified in IVP_BEHAVIOR_DIRS skipped.
+BehaviorSet: Total # of specs: 2
+spec_build: 0  result:0
+spec_build: 1  result:1
+BehaviorSet: all_builds_ok: false
+Fatal Behavior Configuration Line 24
+  [24]: 
+
+
+
+PID REPORT: (6)(9.13492/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (7)(8.95158/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (8)(8.89966/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (9)(8.89957/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (10)(8.97174/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (11)(8.90667/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (12)(8.84965/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (13)(8.89604/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+[32muFldNodeBroker launching as: uFldNodeBroker
+[0m
+
+
+
+PID REPORT: (14)(8.95857/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (15)(8.99343/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (16)(8.97191/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (17)(8.98788/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (18)(9.0305/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (19)(9.07174/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (20)(9.09845/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+-------------- moos connect ----------------------
+  contacting a MOOS server localhost:9003 -  try 00001 
+  Handshaking as uFldNodeBroker         [1;32m[ok]
+[0m  DB reports async support is           [1;32m[on]
+[0m  DB is running on                      [1;32mThomass-MacBook-Pro-3.local
+[0m  Timing skew estimation is             [33m[off] (not needed)
+[0m--------------------------------------------------
+
+***************************************************
+*  uFldNodeBroker starting ...
+***************************************************
++++++++++++++++++++++++++++++++++++++++++++++++++
+param =  BRIDGE
++++++++++++++++++++++++++++++++++++++++++++++++++
++++++++++++++++++++++++++++++++++++++++++++++++++
+param =  BRIDGE
++++++++++++++++++++++++++++++++++++++++++++++++++
++++++++++++++++++++++++++++++++++++++++++++++++++
+param =  BRIDGE
++++++++++++++++++++++++++++++++++++++++++++++++++
++++++++++++++++++++++++++++++++++++++++++++++++++
+param =  BRIDGE
++++++++++++++++++++++++++++++++++++++++++++++++++
++++++++++++++++++++++++++++++++++++++++++++++++++
+param =  BRIDGE
++++++++++++++++++++++++++++++++++++++++++++++++++
++++++++++++++++++++++++++++++++++++++++++++++++++
+param =  BRIDGE
++++++++++++++++++++++++++++++++++++++++++++++++++
++++++++++++++++++++++++++++++++++++++++++++++++++
+param =  TRY_SHORE_HOST
++++++++++++++++++++++++++++++++++++++++++++++++++
++++++++++++++++++++++++++++++++++++++++++++++++++
+param =  COMMSTICK
++++++++++++++++++++++++++++++++++++++++++++++++++
++++++++++++++++++++++++++++++++++++++++++++++++++
+param =  APPTICK
++++++++++++++++++++++++++++++++++++++++++++++++++
+pShare is Running:
+ |-Baseline AppTick   @ 40.0 Hz
+ |--Comms is Full Duplex and Asynchronous
+ |--Iterate Mode 2 :
+   -Regular iterate at 40 Hz. 
+   |-Dynamic message delivery at an unlimited rate
+	|-Time Warp @ 5.0 
+	|-Time Warp delay @ 2.0 ms 
+
+
+---------------------- [1;33mROUTING INFORMATION[0m ------------------------------------
+[1;32mStandard Routes:
+[0m  routing for "NODE_BROKER_PING_0"
+  --> localhost:9300       as NODE_BROKER_PING [udp] every notification 
+[1;32mWildcard Routes:
+[0m   none
+[1;32mListening on:
+[0m  <-- localhost:9304      [udp]
+-------------------------------------------------------------------------------
+
+
+
+PID REPORT: (21)(9.07827/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (22)(9.06243/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+*************************************
+*  This is Antler, head of MOOS...  *
+*  P. Newman 2008                   *
+*************************************
+
+
+|****** Launch ******|
+
+Unless directed otherwise using system path to locate binaries 
+   [000] Process: MOOSDB          ~ MOOSDB          launched successfully
+   [001] Process: uSimMarine      ~ uSimMarine      launched successfully
+   [002] Process: pLogger         ~ pLogger         launched successfully
+   [003] Process: pNodeReporter   ~ pNodeReporter   launched successfully
+   [004] Process: pMarinePID      ~ pMarinePID      launched successfully
+   [005] Process: pHelmIvP        ~ pHelmIvP        launched successfully
+   [006] Process: uProcessWatch   ~ uProcessWatch   launched successfully
+   [007] Process: pShare          ~ pShare          launched successfully
+   [008] Process: uTimerScript    ~ uTimerScript    launched successfully
+   [009] Process: pHostInfo       ~ pHostInfo       launched successfully
+   [010] Process: sUUV            ~ sUUV            launched successfully
+   [011] Process: uFldNodeBroker  ~ uFldNodeBroker  launched successfully
+Failed exec - not good. Called exec as follows:
+
+
+
+PID REPORT: (23)(9.0552/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (24)(9.06573/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (25)(9.05328/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (26)(9.05567/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (27)(9.06621/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (28)(9.04127/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (29)(9.02873/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+---------------------- [1;33mROUTING INFORMATION[0m ------------------------------------
+[1;32mStandard Routes:
+[0m  routing for "NODE_BROKER_PING_0"
+  --> localhost:9300       as NODE_BROKER_PING [udp] every notification 
+[1;32mWildcard Routes:
+[0m   none
+[1;32mListening on:
+[0m  <-- localhost:9304      [udp]
+-------------------------------------------------------------------------------
+
+
+
+PID REPORT: (30)(9.05151/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (31)(9.05551/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+*************************************
+*  This is Antler, head of MOOS...  *
+*  P. Newman 2008                   *
+*************************************
+
+
+|****** Launch ******|
+
+Unless directed otherwise using system path to locate binaries 
+   [000] Process: MOOSDB          ~ MOOSDB          launched successfully
+   [001] Process: uSimMarine      ~ uSimMarine      launched successfully
+   [002] Process: pLogger         ~ pLogger         launched successfully
+   [003] Process: pNodeReporter   ~ pNodeReporter   launched successfully
+   [004] Process: pMarinePID      ~ pMarinePID      launched successfully
+   [005] Process: pHelmIvP        ~ pHelmIvP        launched successfully
+   [006] Process: uProcessWatch   ~ uProcessWatch   launched successfully
+   [007] Process: pShare          ~ pShare          launched successfully
+   [008] Process: uTimerScript    ~ uTimerScript    launched successfully
+   [009] Process: pHostInfo       ~ pHostInfo       launched successfully
+   [010] Process: sUUV            ~ sUUV            launched successfully
+   [011] Process: uFldNodeBroker  ~ uFldNodeBroker  launched successfully
+   [012] Process: sSensor         ~ SENSOR1         launched successfully
+Failed exec - not good. Called exec as follows:
+
+
+
+PID REPORT: (32)(9.0394/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (33)(9.05392/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (34)(9.03865/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (35)(9.0385/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (36)(9.05932/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (37)(9.08015/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (38)(9.10131/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+---------------------- [1;33mROUTING INFORMATION[0m ------------------------------------
+[1;32mStandard Routes:
+[0m  routing for "NODE_BROKER_PING_0"
+  --> localhost:9300       as NODE_BROKER_PING [udp] every notification 
+  routing for "NODE_MESSAGE_LOCAL"
+  --> localhost:9300       as NODE_MESSAGE [udp] every notification 
+[1;32mWildcard Routes:
+[0m   none
+[1;32mListening on:
+[0m  <-- localhost:9304      [udp]
+-------------------------------------------------------------------------------
+---------------------- [1;33mROUTING INFORMATION[0m ------------------------------------
+[1;32mStandard Routes:
+[0m  routing for "NODE_BROKER_PING_0"
+  --> localhost:9300       as NODE_BROKER_PING [udp] every notification 
+  routing for "NODE_MESSAGE_LOCAL"
+  --> localhost:9300       as NODE_MESSAGE [udp] every notification 
+  routing for "NODE_REPORT_LOCAL"
+  --> localhost:9300       as NODE_REPORT [udp] every notification 
+[1;32mWildcard Routes:
+[0m   none
+[1;32mListening on:
+[0m  <-- localhost:9304      [udp]
+-------------------------------------------------------------------------------
+---------------------- [1;33mROUTING INFORMATION[0m ------------------------------------
+[1;32mStandard Routes:
+[0m  routing for "APPCAST"
+  --> localhost:9300       as APPCAST    [udp] every notification 
+  routing for "NODE_BROKER_PING_0"
+  --> localhost:9300       as NODE_BROKER_PING [udp] every notification 
+  routing for "NODE_MESSAGE_LOCAL"
+  --> localhost:9300       as NODE_MESSAGE [udp] every notification 
+  routing for "NODE_REPORT_LOCAL"
+  --> localhost:9300       as NODE_REPORT [udp] every notification 
+[1;32mWildcard Routes:
+[0m   none
+[1;32mListening on:
+[0m  <-- localhost:9304      [udp]
+-------------------------------------------------------------------------------
+---------------------- [1;33mROUTING INFORMATION[0m ------------------------------------
+[1;32mStandard Routes:
+[0m  routing for "APPCAST"
+  --> localhost:9300       as APPCAST    [udp] every notification 
+  routing for "NODE_BROKER_PING_0"
+  --> localhost:9300       as NODE_BROKER_PING [udp] every notification 
+  routing for "NODE_MESSAGE_LOCAL"
+  --> localhost:9300       as NODE_MESSAGE [udp] every notification 
+  routing for "NODE_REPORT_LOCAL"
+  --> localhost:9300       as NODE_REPORT [udp] every notification 
+  routing for "VIEW_SEGLIST"
+  --> localhost:9300       as VIEW_SEGLIST [udp] every notification 
+[1;32mWildcard Routes:
+[0m   none
+[1;32mListening on:
+[0m  <-- localhost:9304      [udp]
+-------------------------------------------------------------------------------
+---------------------- [1;33mROUTING INFORMATION[0m ------------------------------------
+[1;32mStandard Routes:
+[0m  routing for "APPCAST"
+  --> localhost:9300       as APPCAST    [udp] every notification 
+  routing for "NODE_BROKER_PING_0"
+  --> localhost:9300       as NODE_BROKER_PING [udp] every notification 
+  routing for "NODE_MESSAGE_LOCAL"
+  --> localhost:9300       as NODE_MESSAGE [udp] every notification 
+  routing for "NODE_REPORT_LOCAL"
+  --> localhost:9300       as NODE_REPORT [udp] every notification 
+  routing for "VIEW_POINT"
+  --> localhost:9300       as VIEW_POINT [udp] every notification 
+  routing for "VIEW_SEGLIST"
+  --> localhost:9300       as VIEW_SEGLIST [udp] every notification 
+[1;32mWildcard Routes:
+[0m   none
+[1;32mListening on:
+[0m  <-- localhost:9304      [udp]
+-------------------------------------------------------------------------------
+---------------------- [1;33mROUTING INFORMATION[0m ------------------------------------
+[1;32mStandard Routes:
+[0m  routing for "APPCAST"
+  --> localhost:9300       as APPCAST    [udp] every notification 
+  routing for "NODE_BROKER_PING_0"
+  --> localhost:9300       as NODE_BROKER_PING [udp] every notification 
+  routing for "NODE_MESSAGE_LOCAL"
+  --> localhost:9300       as NODE_MESSAGE [udp] every notification 
+  routing for "NODE_REPORT_LOCAL"
+  --> localhost:9300       as NODE_REPORT [udp] every notification 
+  routing for "VIEW_POINT"
+  --> localhost:9300       as VIEW_POINT [udp] every notification 
+  routing for "VIEW_POLYGON"
+  --> localhost:9300       as VIEW_POLYGON [udp] every notification 
+  routing for "VIEW_SEGLIST"
+  --> localhost:9300       as VIEW_SEGLIST [udp] every notification 
+[1;32mWildcard Routes:
+[0m   none
+[1;32mListening on:
+[0m  <-- localhost:9304      [udp]
+-------------------------------------------------------------------------------
+
+
+
+PID REPORT: (39)(9.08866/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (40)(9.0551/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (41)(9.06667/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (42)(9.07699/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (43)(9.06841/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (44)(9.05747/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (45)(9.04519/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (46)(9.0438/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (47)(9.02131/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (48)(9.02928/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (49)(9.03056/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (50)(9.03393/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (51)(9.04545/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (52)(9.05869/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (53)(9.03639/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+ pMarinePID says: pMarinePID Control Is On
+
+
+
+PID REPORT: (54)(9.03911/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (55)(9.04801/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (56)(9.03533/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (57)(9.03703/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (58)(9.04507/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (59)(9.05881/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (60)(9.0592/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (61)(9.05507/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (62)(9.06344/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (63)(9.07521/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (64)(9.07678/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (65)(9.07211/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (66)(9.07873/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (67)(9.0807/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (68)(9.07296/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (69)(9.08133/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (70)(9.08509/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (71)(9.08184/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (72)(9.07081/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (73)(9.07272/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (74)(9.08285/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (75)(9.09191/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (76)(9.08747/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (77)(9.07404/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (78)(9.0835/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (79)(9.06886/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (80)(9.06993/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (81)(9.05631/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (82)(9.04344/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (83)(9.05042/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (84)(9.05888/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (85)(9.06358/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (86)(9.06785/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (87)(9.07654/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (88)(9.07057/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (89)(9.07559/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (90)(9.08147/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (91)(9.08499/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (92)(9.08295/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (93)(9.08732/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (94)(9.09081/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (95)(9.09821/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (96)(9.0915/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (97)(9.08225/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (98)(9.09036/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (99)(9.08262/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (100)(9.08323/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (101)(9.08298/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (102)(9.08726/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (103)(9.09439/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (104)(9.09354/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (105)(9.09375/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (106)(9.09712/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (107)(9.09283/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (108)(9.0907/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (109)(9.08553/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (110)(9.07893/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (111)(9.08612/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (112)(9.08851/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (113)(9.07777/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (114)(9.07785/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (115)(9.0835/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (116)(9.08578/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (117)(9.08986/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (118)(9.09031/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (119)(9.08472/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (120)(9.09135/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (121)(9.09402/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (122)(9.10021/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (123)(9.10624/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (124)(9.11111/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (125)(9.11271/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (126)(9.11857/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (127)(9.10809/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (128)(9.10883/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (129)(9.10947/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (130)(9.11475/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (131)(9.11765/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (132)(9.11542/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (133)(9.11433/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (134)(9.11401/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (135)(9.11366/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (136)(9.11442/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (137)(9.11483/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (138)(9.11225/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (139)(9.11195/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (140)(9.10356/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (141)(9.09749/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (142)(9.10106/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (143)(9.09422/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (144)(9.09943/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (145)(9.09218/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (146)(9.09372/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (147)(9.09143/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (148)(9.08306/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (149)(9.08463/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (150)(9.07865/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (151)(9.07561/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (152)(9.07299/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (153)(9.06857/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (154)(9.07097/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (155)(9.07312/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (156)(9.07068/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (157)(9.0736/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (158)(9.0741/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (159)(9.07342/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (160)(9.07772/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (161)(9.08129/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (162)(9.07341/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (163)(9.06625/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (164)(9.06939/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (165)(9.07189/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (166)(9.07236/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (167)(9.06484/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (168)(9.06936/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (169)(9.06475/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (170)(9.06846/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (171)(9.06596/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (172)(9.06458/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (173)(9.06786/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (174)(9.06491/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (175)(9.06898/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (176)(9.07324/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (177)(9.06953/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (178)(9.07325/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (179)(9.07069/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (180)(9.07325/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (181)(9.07553/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (182)(9.078/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (183)(9.08212/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (184)(9.08291/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (185)(9.08476/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (186)(9.08782/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (187)(9.08843/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (188)(9.08303/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+uTimerScript is Running:
+ |-Baseline AppTick   @ 2.0 Hz
+ |--Comms is Full Duplex and Asynchronous
+ -Iterate Mode 0 :
+   |-Regular iterate and message delivery at 2 Hz
+	|-Time Warp @ 5.0 
+	|-Time Warp delay @ 2.0 ms 
+
+
+
+
+
+PID REPORT: (189)(9.08491/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (190)(9.08107/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (191)(9.07839/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (192)(9.08002/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (193)(9.08155/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (194)(9.08028/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (195)(9.07818/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (196)(9.08198/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (197)(9.07579/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (198)(9.07316/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (199)(9.06692/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (200)(9.06517/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (201)(9.06861/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (202)(9.06694/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (203)(9.07045/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (204)(9.06601/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (205)(9.0597/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (206)(9.0609/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (207)(9.06064/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (208)(9.06398/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (209)(9.05821/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (210)(9.05936/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (211)(9.06194/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (212)(9.06308/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (213)(9.06212/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (214)(9.06233/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (215)(9.05835/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (216)(9.06192/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (217)(9.06125/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (218)(9.05566/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (219)(9.05261/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (220)(9.05161/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (221)(9.05432/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (222)(9.05524/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (223)(9.05416/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (224)(9.05233/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (225)(9.05338/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (226)(9.04991/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (227)(9.05085/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (228)(9.05407/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (229)(9.051/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (230)(9.05366/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (231)(9.04994/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (232)(9.05004/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (233)(9.04933/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (234)(9.05196/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (235)(9.04914/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (236)(9.05254/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (237)(9.05119/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (238)(9.04728/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (239)(9.05038/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (240)(9.04993/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (241)(9.05267/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (242)(9.04822/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (243)(9.05034/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (244)(9.04629/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (245)(9.04673/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (246)(9.04825/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (247)(9.04759/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (248)(9.04649/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (249)(9.04665/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (250)(9.0475/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (251)(9.04565/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (252)(9.04737/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (253)(9.0424/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (254)(9.04254/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (255)(9.04444/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (256)(9.04406/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (257)(9.0431/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (258)(9.04316/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (259)(9.04623/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (260)(9.04813/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (261)(9.04499/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (262)(9.04026/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (263)(9.0371/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (264)(9.03616/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (265)(9.03772/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (266)(9.03861/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (267)(9.03973/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (268)(9.04137/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (269)(9.04121/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (270)(9.04114/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (271)(9.03784/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (272)(9.03918/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (273)(9.03618/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (274)(9.03785/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (275)(9.03861/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (276)(9.03484/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (277)(9.03493/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (278)(9.036/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (279)(9.03694/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (280)(9.03843/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (281)(9.0403/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (282)(9.03603/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (283)(9.03727/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (284)(9.03835/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (285)(9.04104/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (286)(9.03942/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (287)(9.03977/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (288)(9.03644/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (289)(9.03839/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (290)(9.03605/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (291)(9.03786/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (292)(9.03391/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (293)(9.02987/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (294)(9.02861/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (295)(9.02726/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (296)(9.02471/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (297)(9.02265/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (298)(9.01925/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (299)(9.02059/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (300)(9.02309/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (301)(9.02166/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (302)(9.02061/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (303)(9.02084/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (304)(9.02133/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (305)(9.02384/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (306)(9.0227/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (307)(9.02182/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (308)(9.01853/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (309)(9.02087/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (310)(9.01971/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (311)(9.01993/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (312)(9.02197/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (313)(9.01884/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (314)(9.01798/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (315)(9.0185/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (316)(9.01824/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (317)(9.01794/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (318)(9.01553/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (319)(9.01785/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (320)(9.01452/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (321)(9.01628/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (322)(9.01465/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (323)(9.01172/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (324)(9.00819/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (325)(9.01052/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (326)(9.01183/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (327)(9.01156/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (328)(9.0119/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (329)(9.01373/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (330)(9.01215/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (331)(9.01472/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (332)(9.0122/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (333)(9.01088/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (334)(9.00984/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (335)(9.01004/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (336)(9.00885/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (337)(9.00663/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (338)(9.00736/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (339)(9.00959/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (340)(9.01158/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (341)(9.01057/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (342)(9.00983/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (343)(9.01226/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (344)(9.01426/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (345)(9.01236/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (346)(9.01427/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (347)(9.01482/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (348)(9.01413/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (349)(9.01139/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (350)(9.01192/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (351)(9.01403/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (352)(9.01586/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (353)(9.0124/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (354)(9.01005/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (355)(9.00912/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (356)(9.00886/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (357)(9.00959/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (358)(9.00912/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (359)(9.00961/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (360)(9.01173/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (361)(9.0136/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (362)(9.01308/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (363)(9.0145/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (364)(9.01193/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (365)(9.01216/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (366)(9.01097/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (367)(9.01079/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (368)(9.01192/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (369)(9.01368/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (370)(9.01281/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (371)(9.01332/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (372)(9.0154/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (373)(9.01757/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (374)(9.01664/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (375)(9.01749/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (376)(9.01724/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (377)(9.01541/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (378)(9.01298/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (379)(9.01006/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (380)(9.00892/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (381)(9.00696/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (382)(9.00648/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (383)(9.00626/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (384)(9.00735/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (385)(9.00444/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (386)(9.00374/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (387)(9.00231/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (388)(9.00242/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (389)(9.00211/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (390)(9.00307/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (391)(9.00511/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (392)(9.00578/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (393)(9.00782/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (394)(9.00929/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (395)(9.01133/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (396)(9.01052/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (397)(9.01005/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (398)(9.01008/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (399)(9.00884/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (400)(9.00797/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (401)(9.00694/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (402)(9.00765/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (403)(9.00819/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (404)(9.01005/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (405)(9.01109/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (406)(9.01253/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (407)(9.01446/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (408)(9.01325/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (409)(9.01162/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (410)(9.01255/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (411)(9.01386/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (412)(9.01143/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (413)(9.01013/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (414)(9.00923/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (415)(9.0065/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (416)(9.00361/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (417)(9.00486/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (418)(9.00516/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (419)(9.00715/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (420)(9.00622/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (421)(9.00713/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (422)(9.00712/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (423)(9.00865/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (424)(9.00943/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (425)(9.0106/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (426)(9.01138/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (427)(9.01299/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (428)(9.01463/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (429)(9.01549/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (430)(9.01539/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (431)(9.01723/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (432)(9.01849/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (433)(9.01771/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (434)(9.01824/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (435)(9.01901/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (436)(9.0163/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (437)(9.01417/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (438)(9.01439/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (439)(9.01468/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (440)
