@@ -37,6 +37,7 @@ public class AgentImpl implements Agent {
     // TEST
     // Assume 1 per metre travelled
     private double batteryRange = ThreadLocalRandom.current().nextDouble(100);
+    private AgentMetaData agentMetaData = new AgentMetaData();
 
     public AgentImpl(String name) {
         this.name = name;
@@ -44,7 +45,7 @@ public class AgentImpl implements Agent {
 
     @Override
     public AgentMetaData metadata() {
-        return null;
+        return agentMetaData;
     }
 
     @Override

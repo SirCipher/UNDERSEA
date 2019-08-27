@@ -9,6 +9,20 @@ import java.util.Properties;
 public class AgentMetaData {
 
     private boolean isMaster = false;
+    private String metadataFileName;
+    private String launchFileName;
+    private Properties runnerProperties;
+    private File missionDirectory;
+    private String missionName;
+    private int hardwarePort;
+
+    public String getLaunchFileName() {
+        return launchFileName;
+    }
+
+    public void setLaunchFileName(String launchFileName) {
+        this.launchFileName = launchFileName;
+    }
 
     public boolean isMaster() {
         return isMaster;
@@ -18,9 +32,6 @@ public class AgentMetaData {
         isMaster = master;
     }
 
-    private String metadataFileName;
-    private Properties runnerProperties;
-
     public Properties getRunnerProperties() {
         return runnerProperties;
     }
@@ -28,9 +39,6 @@ public class AgentMetaData {
     public void setRunnerProperties(Properties runnerProperties) {
         this.runnerProperties = runnerProperties;
     }
-
-    private File missionDirectory;
-    private String missionName;
 
     public File getMissionDirectory() {
         return missionDirectory;
@@ -47,8 +55,6 @@ public class AgentMetaData {
     public void setMissionName(String missionName) {
         this.missionName = missionName;
     }
-
-    private int hardwarePort;
 
     public String getMetadataFileName() {
         return metadataFileName;

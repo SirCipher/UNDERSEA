@@ -80,8 +80,7 @@ class EnvironmentBuilder {
      * Removing all mission include files required for the NSPLUG.
      */
     private static void cleanup() {
-        List<String> ignoreList = new ArrayList<>(Arrays.asList("clean.sh", "pAntler-launch.sh", "undersea-launch.sh"
-                , "agents.ports"));
+        List<String> ignoreList = new ArrayList<>(Arrays.asList("clean.sh"));
 
         for (File includeFile : Objects.requireNonNull(missionIncludeDir.listFiles())) {
             for (File missionFile :
@@ -95,7 +94,8 @@ class EnvironmentBuilder {
                 }
 
                 // Whitelist all behaviour and ignore list files
-                if (missionFile.getName().endsWith(".bhv") || ignoreList.stream().anyMatch(s -> s.equals(missionFile.getName()))) {
+                String fileName = missionFile.getName();
+                if (fileName.endsWith(".bhv") || fileName.startsWith("pAntler") || ignoreList.stream().anyMatch(s -> s.equals(missionFile.getName()))) {
                     continue;
                 }
 

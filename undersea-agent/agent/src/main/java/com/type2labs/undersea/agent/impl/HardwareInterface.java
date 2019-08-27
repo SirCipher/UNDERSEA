@@ -12,9 +12,8 @@ import com.type2labs.undersea.utilities.process.ProcessBuilderUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.io.*;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -52,6 +51,19 @@ public class HardwareInterface implements AgentService {
         return agent;
     }
 
+    private void launchAgent(String script) {
+        ProcessBuilder pb = ProcessBuilderUtil.getSanitisedBuilder();
+        pb.command("./" + script);
+        pb.directory(new File("missions/test_01/"));
+
+        try {
+            process = pb.start();
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+    }
+
     @Override
     public void run() {
         AgentMetaData metaData = agent.metadata();
@@ -66,10 +78,10 @@ public class HardwareInterface implements AgentService {
         // TODO: This needs to be changed to a MRS check
         if (metaData.isMaster()) {
             logger.info(agent.name() + ": starting shoreside server", agent);
-            runShoreside();
+            launchAgent(metaData.getLaunchFileName());
         } else {
             logger.info(agent.name() + ": starting agent server", agent);
-            runAgent();
+            launchAgent(metaData.getLaunchFileName());
         }
     }
 
@@ -103,6 +115,8 @@ public class HardwareInterface implements AgentService {
     }
 
     private void runShoreside() {
+
+
         AgentMetaData metaData = agent.metadata();
 
         ProcessBuilder pb = ProcessBuilderUtil.getSanitisedBuilder();

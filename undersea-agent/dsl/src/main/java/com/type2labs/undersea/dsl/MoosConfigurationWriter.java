@@ -1,6 +1,7 @@
 package com.type2labs.undersea.dsl;
 
 
+import com.type2labs.undersea.common.agent.AgentMetaData;
 import com.type2labs.undersea.common.agent.Sensor;
 import com.type2labs.undersea.dsl.uuv.factory.FactoryProvider;
 import com.type2labs.undersea.dsl.uuv.factory.SensorFactory;
@@ -45,7 +46,35 @@ class MoosConfigurationWriter {
                 false);
     }
 
-    private static void generateLaunchAndCleanScripts() {
+    private static void generateScripts() {
+        StringBuilder shoreSideScript = new StringBuilder();
+        DslAgentProxy shoreside = environmentProperties.getShoreside();
+
+        shoreSideScript.append("pAntler " + shoreside.getMetaFileName() + "> /dev/null 2>&1\n");
+        shoreSideScript.append("uMAC " + environmentProperties.getShoreside().getMetaFileName() + "\n");
+
+        AgentMetaData metaData = shoreside.metadata();
+        String launchFileName = "pAntler-launch-shoreside.sh";
+
+        metaData.setLaunchFileName(launchFileName);
+
+        Utility.exportToFileWithPermissions(MoosConfigurationWriter.buildDir + File.separator + launchFileName,
+                shoreSideScript.toString(),
+                false, Collections.singletonList(PosixFilePermission.OWNER_EXECUTE));
+
+        for (Map.Entry<String, DslAgentProxy> entry : environmentProperties.getAgents().entrySet()) {
+            DslAgentProxy agent = entry.getValue();
+            metaData = agent.metadata();
+            launchFileName = "pAntler-launch-" + agent.name() + ".sh";
+
+            metaData.setLaunchFileName(launchFileName);
+
+            Utility.exportToFileWithPermissions(
+                    MoosConfigurationWriter.buildDir + File.separator + launchFileName,
+                    "pAntler " + agent.getMetaFileName() + "> /dev/null 2>&1\n",
+                    false, Collections.singletonList(PosixFilePermission.OWNER_EXECUTE));
+        }
+
         StringBuilder cleanScript = new StringBuilder();
         cleanScript.append("#!/bin/bash\n");
         cleanScript.append("\n");
@@ -58,45 +87,8 @@ class MoosConfigurationWriter {
         Utility.exportToFileWithPermissions(MoosConfigurationWriter.buildDir + File.separator + "clean.sh",
                 cleanScript.toString(),
                 false, Collections.singletonList(PosixFilePermission.OWNER_EXECUTE));
-
-        String timeWarp =
-                environmentProperties.getEnvironmentValue(EnvironmentProperties.EnvironmentValue.TIME_WINDOW);
-        StringBuilder launchScript = new StringBuilder();
-
-        launchScript.append("#---------------------\n");
-        launchScript.append("# Launch the processes\n");
-        launchScript.append("#---------------------\n");
-
-        DslAgentProxy shoreside = environmentProperties.getShoreside();
-
-        launchScript.append("printf \"Launching " + shoreside.getName() + " MOOS Community\"\n");
-        launchScript.append("pAntler " + shoreside.getMetaFileName() + " >& /dev/null &\n\n");
-
-        for (Map.Entry<String, DslAgentProxy> e : environmentProperties.getAgents().entrySet()) {
-            DslAgentProxy agent = e.getValue();
-            launchScript.append("printf \"Launching " + agent.getName() + " MOOS Community\"\n");
-            launchScript.append("pAntler " + agent.getMetaFileName() + " >& /dev/null &\n\n");
-        }
-
-        launchScript.append("#--------------------------------------------------\n");
-        launchScript.append("# Launch uMAC and kill everything upon exiting uMAC\n");
-        launchScript.append("#--------------------------------------------------\n");
-
-        launchScript.append("uMAC " + environmentProperties.getShoreside().getMetaFileName() + "\n");
-        launchScript.append("printf \"Killing all processes...\\n\"\n");
-
-        launchScript.append("kill");
-
-        for (int i = 0; i < environmentProperties.getTotalNumberOfAgents(); i++) {
-            launchScript.append(" %").append(i + 1);
-        }
-
-        launchScript.append("\nprintf \"Done killing processes...\\n\"\n");
-
-        Utility.exportToFileWithPermissions(MoosConfigurationWriter.buildDir + File.separator + "pAntler-launch.sh",
-                launchScript.toString(),
-                false, Collections.singletonList(PosixFilePermission.OWNER_EXECUTE));
     }
+
 
     private static void generateSensors() {
         for (Map.Entry<String, Sensor> entry : sensorFactory.getSensors().entrySet()) {
@@ -272,7 +264,8 @@ class MoosConfigurationWriter {
             generateIvPHelmBlock(agent);
         }
 
-        generateLaunchAndCleanScripts();
+        generateScripts();
+//        generateLaunchAndCleanScripts();
     }
 
     private static void writeHostInfo(StringBuilder vehicleBlock) {

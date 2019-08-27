@@ -70,7 +70,7 @@ public class AgentInitialiserImpl implements AgentInitialiser {
                     serviceManager,
                     new AgentStatus(key, new ArrayList<>()));
 
-            AgentMetaData metaData = new AgentMetaData();
+            AgentMetaData metaData = value.metadata();
             if (value.name().equals("shoreside")) {
                 metaData.setMaster(true);
             }
