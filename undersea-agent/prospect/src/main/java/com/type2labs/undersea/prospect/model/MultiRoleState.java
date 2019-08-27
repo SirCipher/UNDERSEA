@@ -52,6 +52,8 @@ public class MultiRoleState {
         LEADER_FOLLOWER,
 
         /**
+         * Default status.
+         *
          * Denotes that this node is not in a leader-follower state. Such that it is a follower in its cluster
          */
         NOT_APPLIED

@@ -292,8 +292,6 @@ class MoosConfigurationWriter {
     private static void writePortListFile() {
         StringBuilder ports = new StringBuilder();
 
-        String s = "";
-
         environmentProperties.getAllAgents().values().forEach(a -> ports.append(a.getServerPort() + "\n"));
 
         Utility.exportToFile(MoosConfigurationWriter.buildDir + File.separator + "agents.ports", ports.toString(),

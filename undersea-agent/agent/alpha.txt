@@ -5,7 +5,7 @@
   contacting a MOOS server localhost:9002 -  try 00001 
   Handshaking as uSimMarine             [1;32m[ok]
 [0m  DB reports async support is           [1;32m[on]
-[0m  DB is running on                      [1;32mThomass-MacBook-Pro-3.local
+[0m  DB is running on                      [1;32mmudkipz
 [0m  Timing skew estimation is             [33m[off] (not needed)
 [0m--------------------------------------------------
 
@@ -85,7 +85,7 @@ listen with "nc -u -lk 9020"
   contacting a MOOS server localhost:9002 -  try 00001 
   Handshaking as pNodeReporter          [1;32m[ok]
 [0m  DB reports async support is           [1;32m[on]
-[0m  DB is running on                      [1;32mThomass-MacBook-Pro-3.local
+[0m  DB is running on                      [1;32mmudkipz
 [0m  Timing skew estimation is             [33m[off] (not needed)
 [0m--------------------------------------------------
 
@@ -121,7 +121,7 @@ param =  APPTICK
   contacting a MOOS server localhost:9002 -  try 00001 
   Handshaking as pMarinePID             [1;32m[ok]
 [0m  DB reports async support is           [1;32m[on]
-[0m  DB is running on                      [1;32mThomass-MacBook-Pro-3.local
+[0m  DB is running on                      [1;32mmudkipz
 [0m  Timing skew estimation is             [33m[off] (not needed)
 [0m--------------------------------------------------
 
@@ -150,268 +150,239 @@ pMarinePID is Running:
 
 
 
-PID REPORT: (1)(8.48356/sec)
+PID REPORT: (1)(9.31265/sec)
  pMarinePID says: Paused Due To Tardy HELM Input: THRUST=0
 Paused Due To Tardy HELM Input: THRUST=0
 
 
 
-PID REPORT: (2)(8.97707/sec)
+PID REPORT: (2)(9.61771/sec)
 Paused Due To Tardy HELM Input: THRUST=0
 
 
 
-PID REPORT: (3)(8.83235/sec)
+PID REPORT: (3)(9.72305/sec)
 Paused Due To Tardy HELM Input: THRUST=0
 
 
 
-PID REPORT: (4)(9.04897/sec)
-Paused Due To Tardy HELM Input: THRUST=0
-
-
-
-PID REPORT: (5)(9.16347/sec)
-Paused Due To Tardy HELM Input: THRUST=0
-
-
-
-PID REPORT: (6)(8.95476/sec)
-Paused Due To Tardy HELM Input: THRUST=0
-
-
-
-PID REPORT: (7)(9.06684/sec)
-Paused Due To Tardy HELM Input: THRUST=0
-
-
-
-PID REPORT: (8)(8.94519/sec)
-Paused Due To Tardy HELM Input: THRUST=0
-
-
-
-PID REPORT: (9)(8.9612/sec)
-Paused Due To Tardy HELM Input: THRUST=0
-
-
-
-PID REPORT: (10)(8.96784/sec)
-Paused Due To Tardy HELM Input: THRUST=0
-
-
-
-PID REPORT: (11)(8.90883/sec)
-Paused Due To Tardy HELM Input: THRUST=0
-
-
-
-PID REPORT: (12)(8.97465/sec)
-Paused Due To Tardy HELM Input: THRUST=0
-
-
-
-PID REPORT: (13)(9.02966/sec)
-Paused Due To Tardy HELM Input: THRUST=0
-
-
-
-PID REPORT: (14)(8.97885/sec)
-Paused Due To Tardy HELM Input: THRUST=0
-
-
-
-PID REPORT: (15)(8.97575/sec)
-Paused Due To Tardy HELM Input: THRUST=0
-
-
-
-PID REPORT: (16)(8.98427/sec)
-Paused Due To Tardy HELM Input: THRUST=0
-
-
-
-PID REPORT: (17)(8.91976/sec)
-Paused Due To Tardy HELM Input: THRUST=0
-
-
-
-PID REPORT: (18)(8.91422/sec)
-Paused Due To Tardy HELM Input: THRUST=0
-
-
-
-PID REPORT: (19)(8.91613/sec)
-Paused Due To Tardy HELM Input: THRUST=0
-
-
-
-PID REPORT: (20)(8.89094/sec)
-Paused Due To Tardy HELM Input: THRUST=0
-
-
-
-PID REPORT: (21)(8.92546/sec)
-Paused Due To Tardy HELM Input: THRUST=0
-
-
-
-PID REPORT: (22)(8.89817/sec)
-Paused Due To Tardy HELM Input: THRUST=0
-
-
-
-PID REPORT: (23)(8.93608/sec)
-Paused Due To Tardy HELM Input: THRUST=0
-
-
-
-PID REPORT: (24)(8.95098/sec)
-Paused Due To Tardy HELM Input: THRUST=0
-
-
-
-PID REPORT: (25)(8.98675/sec)
-Paused Due To Tardy HELM Input: THRUST=0
-
-
-
-PID REPORT: (26)(8.99673/sec)
-Paused Due To Tardy HELM Input: THRUST=0
-
-
-
-PID REPORT: (27)(9.0214/sec)
-Paused Due To Tardy HELM Input: THRUST=0
-
-
-
-PID REPORT: (28)(9.0352/sec)
-Paused Due To Tardy HELM Input: THRUST=0
-
-
-
-PID REPORT: (29)(9.06352/sec)
-Paused Due To Tardy HELM Input: THRUST=0
-
-
-
-PID REPORT: (30)(9.07198/sec)
-Paused Due To Tardy HELM Input: THRUST=0
-
-
-
-PID REPORT: (31)(9.06282/sec)
-Paused Due To Tardy HELM Input: THRUST=0
-
-
-
-PID REPORT: (32)(9.05794/sec)
-Paused Due To Tardy HELM Input: THRUST=0
-
-
-
-PID REPORT: (33)(9.06796/sec)
-Paused Due To Tardy HELM Input: THRUST=0
-
-
-
-PID REPORT: (34)(9.09152/sec)
-Paused Due To Tardy HELM Input: THRUST=0
-
-
-
-PID REPORT: (35)(9.08169/sec)
-Paused Due To Tardy HELM Input: THRUST=0
-
-
-
-PID REPORT: (36)(9.08512/sec)
-Paused Due To Tardy HELM Input: THRUST=0
-
-
-
-PID REPORT: (37)(9.05532/sec)
-Paused Due To Tardy HELM Input: THRUST=0
-
-
-
-PID REPORT: (38)(9.05845/sec)
-Paused Due To Tardy HELM Input: THRUST=0
-
-
-
-PID REPORT: (39)(9.03133/sec)
-Paused Due To Tardy HELM Input: THRUST=0
-
-
-
-PID REPORT: (40)(9.05066/sec)
-Paused Due To Tardy HELM Input: THRUST=0
-[32muProcessWatch launching as uProcessWatch
-[0m
-[32mpHostInfo launching as pHostInfo
-[0m
-
-
-
-PID REPORT: (41)(9.03691/sec)
-Paused Due To Tardy HELM Input: THRUST=0
-[32muTimerScript launching as uTimerScript
-[0m
-
-
-
-PID REPORT: (42)(9.04122/sec)
-Paused Due To Tardy HELM Input: THRUST=0
-
-
-
-PID REPORT: (43)(9.05404/sec)
-Paused Due To Tardy HELM Input: THRUST=0
-
-
-
-PID REPORT: (44)(9.06948/sec)
-Paused Due To Tardy HELM Input: THRUST=0
-
-
-
-PID REPORT: (45)(9.07597/sec)
+PID REPORT: (4)(9.77531/sec)
 Paused Due To Tardy HELM Input: THRUST=0
 
 -------------- moos connect ----------------------
   contacting a MOOS server localhost:9002 -  try 00001 
-  Handshaking as pShare                 [1;32m[ok]
+  Handshaking as pLogger                [1;32m[ok]
 [0m  DB reports async support is           [1;32m[on]
-[0m  DB is running on                      [1;32mThomass-MacBook-Pro-3.local
+[0m  DB is running on                      [1;32mmudkipz
 [0m  Timing skew estimation is             [33m[off] (not needed)
 [0m--------------------------------------------------
 
----------------------- [1;33mROUTING INFORMATION[0m ------------------------------------
-[1;32mStandard Routes:
-[0m   none
-[1;32mWildcard Routes:
-[0m   none
-[1;32mListening on:
-[0m  <-- localhost:9303      [udp]
--------------------------------------------------------------------------------
+pLogger is Running:
+ |-Baseline AppTick   @ 10.0 Hz
+ |--Comms is Full Duplex and Asynchronous
+ -Iterate Mode 0 :
+   |-Regular iterate and message delivery at 10 Hz
+	|-Time Warp @ 5.0 
+	|-Time Warp delay @ 2.0 ms 
 
 
+  Added wildcard logging of APPCAST             
+  Added wildcard logging of APPCAST_REQ         
+  Added wildcard logging of BUOYANCY_CONTROL    
+  Added wildcard logging of BUOYANCY_RATE       
+  Added wildcard logging of CURRENT_X           
+  Added wildcard logging of CURRENT_Y           
+  Added wildcard logging of DB_CLIENTS          
+  Added wildcard logging of DB_EVENT            
+  Added wildcard logging of DB_QOS              
+  Added wildcard logging of DB_RWSUMMARY        
+  Added wildcard logging of DB_TIME             
+  Added wildcard logging of DB_UPTIME           
+  Added wildcard logging of DB_VARSUMMARY       
+  Added wildcard logging of DESIRED_ELEVATOR    
+  Added wildcard logging of DESIRED_RUDDER      
+  Added wildcard logging of DESIRED_THRUST      
+  Added wildcard logging of DESIRED_THRUST_L    
+  Added wildcard logging of DESIRED_THRUST_R    
+  Added wildcard logging of DRIFT_VECTOR        
+  Added wildcard logging of DRIFT_VECTOR_ADD    
+  Added wildcard logging of DRIFT_VECTOR_MULT   
+  Added wildcard logging of DRIFT_X             
+  Added wildcard logging of DRIFT_Y             
+  Added wildcard logging of LOGGER_DIRECTORY    
+  Added wildcard logging of LOGGER_RESTART      
+  Added wildcard logging of NAV_DEPTH           
+  Added wildcard logging of NAV_HEADING         
+  Added wildcard logging of NAV_HEADING_OVER_GROUND
+  Added wildcard logging of NAV_LAT             
+  Added wildcard logging of NAV_LONG            
+  Added wildcard logging of NAV_PITCH           
+  Added wildcard logging of NAV_SPEED           
+  Added wildcard logging of NAV_SPEED_OVER_GROUND
+  Added wildcard logging of NAV_X               
+  Added wildcard logging of NAV_Y               
+  Added wildcard logging of NAV_YAW             
+  Added wildcard logging of NAV_Z               
+  Added wildcard logging of OBSTACLE_HIT        
+  Added wildcard logging of PLOGGER_CMD         
+  Added wildcard logging of ROTATE_SPEED        
+  Added wildcard logging of SIMULATION_MODE     
+  Added wildcard logging of THRUST_MODE_DIFFERENTIAL
+  Added wildcard logging of THRUST_MODE_REVERSE 
+  Added wildcard logging of TRIM_CONTROL        
+  Added wildcard logging of TRUE_X              
+  Added wildcard logging of TRUE_Y              
+  Added wildcard logging of USIMMARINE_ITER_GAP 
+  Added wildcard logging of USIMMARINE_ITER_LEN 
+  Added wildcard logging of USM_BUOYANCY_RATE   
+  Added wildcard logging of USM_DRIFT_SUMMARY   
+  Added wildcard logging of USM_FORCE_THETA     
+  Added wildcard logging of USM_FORCE_VECTOR    
+  Added wildcard logging of USM_FORCE_VECTOR_ADD
+  Added wildcard logging of USM_FORCE_VECTOR_MULT
+  Added wildcard logging of USM_FORCE_X         
+  Added wildcard logging of USM_FORCE_Y         
+  Added wildcard logging of USM_FSUMMARY        
+  Added wildcard logging of USM_RESET           
+  Added wildcard logging of USM_SIM_PAUSED      
+  Added wildcard logging of USM_WATER_DEPTH     
+  Added wildcard logging of WATER_DEPTH         
+  Added wildcard logging of AUX_MODE            
+  Added wildcard logging of IVPHELM_ALLSTOP     
+  Added wildcard logging of IVPHELM_STATE       
+  Added wildcard logging of IVPHELM_SUMMARY     
+  Added wildcard logging of LOAD_WARNING        
+  Added wildcard logging of NAV_TRAJECTORY      
+  Added wildcard logging of PNR_PAUSE           
+  Added wildcard logging of DESIRED_DEPTH       
+  Added wildcard logging of DESIRED_HEADING     
+  Added wildcard logging of DESIRED_SPEED  
 
-PID REPORT: (46)(9.04907/sec)
+
+PID REPORT: (5)(9.80931/sec)
 Paused Due To Tardy HELM Input: THRUST=0
 
 
 
-PID REPORT: (47)(9.06539/sec)
+PID REPORT: (6)(9.83244/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (7)(9.84951/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (8)(9.86187/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+-------------- moos connect ----------------------
+  contacting a MOOS server localhost:9002 -  try 00001 
+  Handshaking as pHelmIvP               [1;32m[ok]
+[0m  DB reports async support is           [1;32m[on]
+[0m  DB is running on                      [1;32mmudkipz
+[0m  Timing skew estimation is             [33m[off] (not needed)
+[0m--------------------------------------------------
+
+***************************************************
+*  pHelmIvP starting ...
+***************************************************
++++++++++++++++++++++++++++++++++++++++++++++++++
+param =  DOMAIN
++++++++++++++++++++++++++++++++++++++++++++++++++
++++++++++++++++++++++++++++++++++++++++++++++++++
+param =  DOMAIN
++++++++++++++++++++++++++++++++++++++++++++++++++
++++++++++++++++++++++++++++++++++++++++++++++++++
+param =  ACTIVE_START
++++++++++++++++++++++++++++++++++++++++++++++++++
++++++++++++++++++++++++++++++++++++++++++++++++++
+param =  OK_SKEW
++++++++++++++++++++++++++++++++++++++++++++++++++
++++++++++++++++++++++++++++++++++++++++++++++++++
+param =  VERBOSE
++++++++++++++++++++++++++++++++++++++++++++++++++
++++++++++++++++++++++++++++++++++++++++++++++++++
+param =  BEHAVIORS
++++++++++++++++++++++++++++++++++++++++++++++++++
++++++++++++++++++++++++++++++++++++++++++++++++++
+param =  COMMSTICK
++++++++++++++++++++++++++++++++++++++++++++++++++
++++++++++++++++++++++++++++++++++++++++++++++++++
+param =  APPTICK
++++++++++++++++++++++++++++++++++++++++++++++++++
+Number of behavior files: 1
+Processing Behavior File: meta_alpha.bhv  START
+    Successfully found file: meta_alpha.bhv
+Processing Behavior File: meta_alpha.bhv  END
+[32mLoading behavior dynamic libraries specified in IVP_BEHAVIOR_DIRS...
+[0m  Environment variable IVP_BEHAVIOR_DIRS not set.
+Loading behavior dynamic libraries specified in IVP_BEHAVIOR_DIRS skipped.
+BehaviorSet: Total # of specs: 2
+spec_build: 0  result:0
+spec_build: 1  result:1
+BehaviorSet: all_builds_ok: false
+Fatal Behavior Configuration Line 24
+  [24]: 
+
+
+
+PID REPORT: (9)(9.87118/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (10)(9.87864/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (11)(9.88471/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+[32muProcessWatch launching as uProcessWatch
+[0m
+
+
+
+PID REPORT: (12)(9.88982/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (13)(9.89424/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (14)(9.89777/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (15)(9.90086/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (16)(9.9036/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (17)(9.90555/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (18)(9.90701/sec)
 Paused Due To Tardy HELM Input: THRUST=0
 
 -------------- moos connect ----------------------
   contacting a MOOS server localhost:9002 -  try 00001 
   Handshaking as uProcessWatch          [1;32m[ok]
 [0m  DB reports async support is           [1;32m[on]
-[0m  DB is running on                      [1;32mThomass-MacBook-Pro-3.local
+[0m  DB is running on                      [1;32mmudkipz
 [0m  Timing skew estimation is             [33m[off] (not needed)
 [0m--------------------------------------------------
 
@@ -448,66 +419,134 @@ param =  APPTICK
 
 
 
-PID REPORT: (48)(9.05684/sec)
+PID REPORT: (19)(9.90892/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (20)(9.91056/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (21)(9.9112/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (22)(9.91263/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (23)(9.91401/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (24)(9.91494/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (25)(9.91611/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (26)(9.91715/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (27)(9.91785/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (28)(9.91851/sec)
 Paused Due To Tardy HELM Input: THRUST=0
 
 -------------- moos connect ----------------------
   contacting a MOOS server localhost:9002 -  try 00001 
-  Handshaking as pHostInfo              [1;32m[ok]
+  Handshaking as pShare                 [1;32m[ok]
 [0m  DB reports async support is           [1;32m[on]
-[0m  DB is running on                      [1;32mThomass-MacBook-Pro-3.local
+[0m  DB is running on                      [1;32mmudkipz
 [0m  Timing skew estimation is             [33m[off] (not needed)
 [0m--------------------------------------------------
 
-***************************************************
-*  pHostInfo starting ...
-***************************************************
-+++++++++++++++++++++++++++++++++++++++++++++++++
-param =  DEFAULT_HOSTIP_FORCE
-+++++++++++++++++++++++++++++++++++++++++++++++++
-+++++++++++++++++++++++++++++++++++++++++++++++++
-param =  COMMSTICK
-+++++++++++++++++++++++++++++++++++++++++++++++++
-+++++++++++++++++++++++++++++++++++++++++++++++++
-param =  APPTICK
-+++++++++++++++++++++++++++++++++++++++++++++++++
-*************************************
-*  This is Antler, head of MOOS...  *
-*  P. Newman 2008                   *
-*************************************
-
-
-|****** Launch ******|
-
-Unless directed otherwise using system path to locate binaries 
-   [000] Process: MOOSDB          ~ MOOSDB          launched successfully
-   [001] Process: uSimMarine      ~ uSimMarine      launched successfully
-   [002] Process: pLogger         ~ pLogger         launched successfully
-   [003] Process: pNodeReporter   ~ pNodeReporter   launched successfully
-   [004] Process: pMarinePID      ~ pMarinePID      launched successfully
-   [005] Process: pHelmIvP        ~ pHelmIvP        launched successfully
-   [006] Process: uProcessWatch   ~ uProcessWatch   launched successfully
-   [007] Process: pShare          ~ pShare          launched successfully
-   [008] Process: uTimerScript    ~ uTimerScript    launched successfully
-   [009] Process: pHostInfo       ~ pHostInfo       launched successfully
-Failed exec - not good. Called exec as follows:
+---------------------- [1;33mROUTING INFORMATION[0m ------------------------------------
+[1;32mStandard Routes:
+[0m   none
+[1;32mWildcard Routes:
+[0m   none
+[1;32mListening on:
+[0m  <-- localhost:9303      [udp]
+-------------------------------------------------------------------------------
 
 
 
-PID REPORT: (49)(9.06463/sec)
+PID REPORT: (29)(9.91908/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (30)(9.91993/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (31)(9.92076/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+[32muTimerScript launching as uTimerScript
+[0m
+
+
+
+PID REPORT: (32)(9.92146/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (33)(9.9222/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (34)(9.92262/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (35)(9.92279/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (36)(9.92336/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (37)(9.92391/sec)
 Paused Due To Tardy HELM Input: THRUST=0
 
 -------------- moos connect ----------------------
   contacting a MOOS server localhost:9002 -  try 00001 
   Handshaking as uTimerScript           [1;32m[ok]
 [0m  DB reports async support is           [1;32m[on]
-[0m  DB is running on                      [1;32mThomass-MacBook-Pro-3.local
+[0m  DB is running on                      [1;32mmudkipz
 [0m  Timing skew estimation is             [33m[off] (not needed)
 [0m--------------------------------------------------
 
 ***************************************************
 *  uTimerScript starting ...
 ***************************************************
+
+
+
+PID REPORT: (38)(9.92437/sec)
+Paused Due To Tardy HELM Input: THRUST=0
 +++++++++++++++++++++++++++++++++++++++++++++++++
 param =  EVENT
 +++++++++++++++++++++++++++++++++++++++++++++++++
@@ -540,37 +579,64 @@ Total Elements: 3
 
 
 
-PID REPORT: (50)(9.05421/sec)
+PID REPORT: (39)(9.92476/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (40)(9.9252/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (41)(9.92545/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+[32mpHostInfo launching as pHostInfo
+[0m
+
+
+
+PID REPORT: (42)(9.9259/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (43)(9.92623/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (44)(9.92664/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (45)(9.92716/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (46)(9.92767/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (47)(9.92792/sec)
 Paused Due To Tardy HELM Input: THRUST=0
 
 -------------- moos connect ----------------------
   contacting a MOOS server localhost:9002 -  try 00001 
-  Handshaking as pHelmIvP               [1;32m[ok]
+  Handshaking as pHostInfo              [1;32m[ok]
 [0m  DB reports async support is           [1;32m[on]
-[0m  DB is running on                      [1;32mThomass-MacBook-Pro-3.local
+[0m  DB is running on                      [1;32mmudkipz
 [0m  Timing skew estimation is             [33m[off] (not needed)
 [0m--------------------------------------------------
 
 ***************************************************
-*  pHelmIvP starting ...
+*  pHostInfo starting ...
 ***************************************************
 +++++++++++++++++++++++++++++++++++++++++++++++++
-param =  DOMAIN
-+++++++++++++++++++++++++++++++++++++++++++++++++
-+++++++++++++++++++++++++++++++++++++++++++++++++
-param =  DOMAIN
-+++++++++++++++++++++++++++++++++++++++++++++++++
-+++++++++++++++++++++++++++++++++++++++++++++++++
-param =  ACTIVE_START
-+++++++++++++++++++++++++++++++++++++++++++++++++
-+++++++++++++++++++++++++++++++++++++++++++++++++
-param =  OK_SKEW
-+++++++++++++++++++++++++++++++++++++++++++++++++
-+++++++++++++++++++++++++++++++++++++++++++++++++
-param =  VERBOSE
-+++++++++++++++++++++++++++++++++++++++++++++++++
-+++++++++++++++++++++++++++++++++++++++++++++++++
-param =  BEHAVIORS
+param =  DEFAULT_HOSTIP_FORCE
 +++++++++++++++++++++++++++++++++++++++++++++++++
 +++++++++++++++++++++++++++++++++++++++++++++++++
 param =  COMMSTICK
@@ -578,102 +644,134 @@ param =  COMMSTICK
 +++++++++++++++++++++++++++++++++++++++++++++++++
 param =  APPTICK
 +++++++++++++++++++++++++++++++++++++++++++++++++
-Number of behavior files: 1
-Processing Behavior File: meta_alpha.bhv  START
-    Successfully found file: meta_alpha.bhv
 
 
 
-PID REPORT: (51)(9.06206/sec)
-Paused Due To Tardy HELM Input: THRUST=0
-Processing Behavior File: meta_alpha.bhv  END
-[32mLoading behavior dynamic libraries specified in IVP_BEHAVIOR_DIRS...
-[0m  Environment variable IVP_BEHAVIOR_DIRS not set.
-Loading behavior dynamic libraries specified in IVP_BEHAVIOR_DIRS skipped.
-BehaviorSet: Total # of specs: 2
-spec_build: 0  result:0
-spec_build: 1  result:1
-BehaviorSet: all_builds_ok: false
-Fatal Behavior Configuration Line 24
-  [24]: 
-
-
-
-PID REPORT: (52)(9.05972/sec)
+PID REPORT: (48)(9.92836/sec)
 Paused Due To Tardy HELM Input: THRUST=0
 
 
 
-PID REPORT: (53)(9.04475/sec)
+PID REPORT: (49)(9.92863/sec)
 Paused Due To Tardy HELM Input: THRUST=0
 
 
 
-PID REPORT: (54)(9.04613/sec)
+PID REPORT: (50)(9.92893/sec)
 Paused Due To Tardy HELM Input: THRUST=0
 
 
 
-PID REPORT: (55)(9.03341/sec)
+PID REPORT: (51)(9.92924/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+*************************************
+*  This is Antler, head of MOOS...  *
+*  P. Newman 2008                   *
+*************************************
+
+
+|****** Launch ******|
+
+Unless directed otherwise using system path to locate binaries 
+   [000] Process: MOOSDB          ~ MOOSDB          launched successfully
+   [001] Process: uSimMarine      ~ uSimMarine      launched successfully
+   [002] Process: pLogger         ~ pLogger         launched successfully
+   [003] Process: pNodeReporter   ~ pNodeReporter   launched successfully
+   [004] Process: pMarinePID      ~ pMarinePID      launched successfully
+   [005] Process: pHelmIvP        ~ pHelmIvP        launched successfully
+   [006] Process: uProcessWatch   ~ uProcessWatch   launched successfully
+   [007] Process: pShare          ~ pShare          launched successfully
+   [008] Process: uTimerScript    ~ uTimerScript    launched successfully
+   [009] Process: pHostInfo       ~ pHostInfo       launched successfully
+Failed exec - not good. Called exec as follows:
+
+
+
+PID REPORT: (52)(9.92955/sec)
 Paused Due To Tardy HELM Input: THRUST=0
 
 
 
-PID REPORT: (56)(9.04587/sec)
+PID REPORT: (53)(9.92989/sec)
 Paused Due To Tardy HELM Input: THRUST=0
 
 
 
-PID REPORT: (57)(9.06015/sec)
+PID REPORT: (54)(9.93025/sec)
 Paused Due To Tardy HELM Input: THRUST=0
 
 
 
-PID REPORT: (58)(9.07233/sec)
+PID REPORT: (55)(9.93052/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (56)(9.93072/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (57)(9.93097/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (58)(9.93122/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (59)(9.93148/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (60)(9.93164/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (61)(9.93164/sec)
 Paused Due To Tardy HELM Input: THRUST=0
 [32muFldNodeBroker launching as: uFldNodeBroker
 [0m
 
 
 
-PID REPORT: (59)(9.07777/sec)
+PID REPORT: (62)(9.93195/sec)
 Paused Due To Tardy HELM Input: THRUST=0
 
 
 
-PID REPORT: (60)(9.09108/sec)
+PID REPORT: (63)(9.93219/sec)
 Paused Due To Tardy HELM Input: THRUST=0
 
 
 
-PID REPORT: (61)(9.09818/sec)
+PID REPORT: (64)(9.93231/sec)
 Paused Due To Tardy HELM Input: THRUST=0
 
 
 
-PID REPORT: (62)(9.10915/sec)
+PID REPORT: (65)(9.93232/sec)
 Paused Due To Tardy HELM Input: THRUST=0
 
 
 
-PID REPORT: (63)(9.10921/sec)
+PID REPORT: (66)(9.9325/sec)
 Paused Due To Tardy HELM Input: THRUST=0
 
 
 
-PID REPORT: (64)(9.09531/sec)
-Paused Due To Tardy HELM Input: THRUST=0
-
-
-
-PID REPORT: (65)(9.10009/sec)
+PID REPORT: (67)(9.9327/sec)
 Paused Due To Tardy HELM Input: THRUST=0
 
 -------------- moos connect ----------------------
   contacting a MOOS server localhost:9002 -  try 00001 
   Handshaking as uFldNodeBroker         [1;32m[ok]
 [0m  DB reports async support is           [1;32m[on]
-[0m  DB is running on                      [1;32mThomass-MacBook-Pro-3.local
+[0m  DB is running on                      [1;32mmudkipz
 [0m  Timing skew estimation is             [33m[off] (not needed)
 [0m--------------------------------------------------
 
@@ -707,6 +805,16 @@ param =  COMMSTICK
 +++++++++++++++++++++++++++++++++++++++++++++++++
 param =  APPTICK
 +++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+
+PID REPORT: (68)(9.93284/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (69)(9.93297/sec)
+Paused Due To Tardy HELM Input: THRUST=0
 pShare is Running:
  |-Baseline AppTick   @ 40.0 Hz
  |--Comms is Full Duplex and Asynchronous
@@ -729,12 +837,12 @@ pShare is Running:
 
 
 
-PID REPORT: (66)(9.10423/sec)
+PID REPORT: (70)(9.93313/sec)
 Paused Due To Tardy HELM Input: THRUST=0
 
 
 
-PID REPORT: (67)(9.09732/sec)
+PID REPORT: (71)(9.93331/sec)
 Paused Due To Tardy HELM Input: THRUST=0
 *************************************
 *  This is Antler, head of MOOS...  *
@@ -761,37 +869,32 @@ Failed exec - not good. Called exec as follows:
 
 
 
-PID REPORT: (68)(9.08652/sec)
+PID REPORT: (72)(9.93353/sec)
 Paused Due To Tardy HELM Input: THRUST=0
 
 
 
-PID REPORT: (69)(9.08909/sec)
+PID REPORT: (73)(9.93373/sec)
 Paused Due To Tardy HELM Input: THRUST=0
 
 
 
-PID REPORT: (70)(9.09233/sec)
+PID REPORT: (74)(9.93384/sec)
 Paused Due To Tardy HELM Input: THRUST=0
 
 
 
-PID REPORT: (71)(9.08739/sec)
+PID REPORT: (75)(9.93405/sec)
 Paused Due To Tardy HELM Input: THRUST=0
 
 
 
-PID REPORT: (72)(9.08792/sec)
+PID REPORT: (76)(9.93426/sec)
 Paused Due To Tardy HELM Input: THRUST=0
 
 
 
-PID REPORT: (73)(9.09789/sec)
-Paused Due To Tardy HELM Input: THRUST=0
-
-
-
-PID REPORT: (74)(9.09798/sec)
+PID REPORT: (77)(9.93439/sec)
 Paused Due To Tardy HELM Input: THRUST=0
 ---------------------- [1;33mROUTING INFORMATION[0m ------------------------------------
 [1;32mStandard Routes:
@@ -805,12 +908,22 @@ Paused Due To Tardy HELM Input: THRUST=0
 
 
 
-PID REPORT: (75)(9.08629/sec)
+PID REPORT: (78)(9.9345/sec)
 Paused Due To Tardy HELM Input: THRUST=0
 
 
 
-PID REPORT: (76)(9.09624/sec)
+PID REPORT: (79)(9.93466/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (80)(9.93478/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (81)(9.93471/sec)
 Paused Due To Tardy HELM Input: THRUST=0
 *************************************
 *  This is Antler, head of MOOS...  *
@@ -823,4 +936,3117 @@ Paused Due To Tardy HELM Input: THRUST=0
 Unless directed otherwise using system path to locate binaries 
    [000] Process: MOOSDB          ~ MOOSDB          launched successfully
    [001] Process: uSimMarine      ~ uSimMarine      launched successfully
-   [002] Process: pLogger  
+   [002] Process: pLogger         ~ pLogger         launched successfully
+   [003] Process: pNodeReporter   ~ pNodeReporter   launched successfully
+   [004] Process: pMarinePID      ~ pMarinePID      launched successfully
+   [005] Process: pHelmIvP        ~ pHelmIvP        launched successfully
+   [006] Process: uProcessWatch   ~ uProcessWatch   launched successfully
+   [007] Process: pShare          ~ pShare          launched successfully
+   [008] Process: uTimerScript    ~ uTimerScript    launched successfully
+   [009] Process: pHostInfo       ~ pHostInfo       launched successfully
+   [010] Process: sUUV            ~ sUUV            launched successfully
+   [011] Process: uFldNodeBroker  ~ uFldNodeBroker  launched successfully
+   [012] Process: sSensor         ~ SENSOR1         launched successfully
+Failed exec - not good. Called exec as follows:
+
+
+
+PID REPORT: (82)(9.93491/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (83)(9.935/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (84)(9.93513/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (85)(9.93525/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (86)(9.93528/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (87)(9.93543/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+---------------------- [1;33mROUTING INFORMATION[0m ------------------------------------
+[1;32mStandard Routes:
+[0m  routing for "NODE_BROKER_PING_0"
+  --> localhost:9300       as NODE_BROKER_PING [udp] every notification 
+[1;32mWildcard Routes:
+[0m   none
+[1;32mListening on:
+[0m  <-- localhost:9303      [udp]
+-------------------------------------------------------------------------------
+
+
+
+PID REPORT: (88)(9.93558/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (89)(9.9355/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (90)(9.93552/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (91)(9.93562/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (92)(9.93571/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (93)(9.93587/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+ pMarinePID says: pMarinePID Control Is On
+
+
+
+PID REPORT: (94)(9.93592/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (95)(9.936/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (96)(9.93611/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (97)(9.93607/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+---------------------- [1;33mROUTING INFORMATION[0m ------------------------------------
+[1;32mStandard Routes:
+[0m  routing for "NODE_BROKER_PING_0"
+  --> localhost:9300       as NODE_BROKER_PING [udp] every notification 
+[1;32mWildcard Routes:
+[0m   none
+[1;32mListening on:
+[0m  <-- localhost:9303      [udp]
+-------------------------------------------------------------------------------
+
+
+
+PID REPORT: (98)(9.93604/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (99)(9.93603/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (100)(9.93599/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (101)(9.93584/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (102)(9.93588/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (103)(9.93587/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (104)(9.93591/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (105)(9.93593/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (106)(9.936/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (107)(9.93606/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+---------------------- [1;33mROUTING INFORMATION[0m ------------------------------------
+[1;32mStandard Routes:
+[0m  routing for "NODE_BROKER_PING_0"
+  --> localhost:9300       as NODE_BROKER_PING [udp] every notification 
+[1;32mWildcard Routes:
+[0m   none
+[1;32mListening on:
+[0m  <-- localhost:9303      [udp]
+-------------------------------------------------------------------------------
+
+
+
+PID REPORT: (108)(9.93617/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (109)(9.93629/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (110)(9.93637/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (111)(9.93643/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (112)(9.93651/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (113)(9.93662/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (114)(9.93666/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (115)(9.93657/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (116)(9.93659/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (117)(9.93668/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+---------------------- [1;33mROUTING INFORMATION[0m ------------------------------------
+[1;32mStandard Routes:
+[0m  routing for "NODE_BROKER_PING_0"
+  --> localhost:9300       as NODE_BROKER_PING [udp] every notification 
+[1;32mWildcard Routes:
+[0m   none
+[1;32mListening on:
+[0m  <-- localhost:9303      [udp]
+-------------------------------------------------------------------------------
+
+
+
+PID REPORT: (118)(9.93679/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (119)(9.93671/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (120)(9.93674/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (121)(9.93667/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (122)(9.93674/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (123)(9.93678/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (124)(9.93683/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (125)(9.93682/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (126)(9.93679/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (127)(9.9368/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+---------------------- [1;33mROUTING INFORMATION[0m ------------------------------------
+[1;32mStandard Routes:
+[0m  routing for "NODE_BROKER_PING_0"
+  --> localhost:9300       as NODE_BROKER_PING [udp] every notification 
+[1;32mWildcard Routes:
+[0m   none
+[1;32mListening on:
+[0m  <-- localhost:9303      [udp]
+-------------------------------------------------------------------------------
+
+
+
+PID REPORT: (128)(9.93683/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (129)(9.93682/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (130)(9.93679/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (131)(9.9368/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (132)(9.93679/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (133)(9.93685/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (134)(9.93686/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (135)(9.93684/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (136)(9.93682/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (137)(9.93682/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+---------------------- [1;33mROUTING INFORMATION[0m ------------------------------------
+[1;32mStandard Routes:
+[0m  routing for "NODE_BROKER_PING_0"
+  --> localhost:9300       as NODE_BROKER_PING [udp] every notification 
+[1;32mWildcard Routes:
+[0m   none
+[1;32mListening on:
+[0m  <-- localhost:9303      [udp]
+-------------------------------------------------------------------------------
+
+
+
+PID REPORT: (138)(9.93684/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (139)(9.9368/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (140)(9.93674/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (141)(9.93662/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (142)(9.93669/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (143)(9.93673/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (144)(9.93678/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (145)(9.93684/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (146)(9.93692/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (147)(9.93687/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+---------------------- [1;33mROUTING INFORMATION[0m ------------------------------------
+[1;32mStandard Routes:
+[0m  routing for "NODE_BROKER_PING_0"
+  --> localhost:9300       as NODE_BROKER_PING [udp] every notification 
+[1;32mWildcard Routes:
+[0m   none
+[1;32mListening on:
+[0m  <-- localhost:9303      [udp]
+-------------------------------------------------------------------------------
+
+
+
+PID REPORT: (148)(9.9368/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (149)(9.93681/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (150)(9.93685/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (151)(9.93684/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (152)(9.93687/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (153)(9.93688/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (154)(9.93689/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (155)(9.93692/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (156)(9.93692/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (157)(9.93687/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+---------------------- [1;33mROUTING INFORMATION[0m ------------------------------------
+[1;32mStandard Routes:
+[0m  routing for "NODE_BROKER_PING_0"
+  --> localhost:9300       as NODE_BROKER_PING [udp] every notification 
+[1;32mWildcard Routes:
+[0m   none
+[1;32mListening on:
+[0m  <-- localhost:9303      [udp]
+-------------------------------------------------------------------------------
+
+
+
+PID REPORT: (158)(9.93691/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (159)(9.93695/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (160)(9.93684/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (161)(9.93683/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (162)(9.93691/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (163)(9.93696/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (164)(9.93699/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (165)(9.93685/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (166)(9.93688/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (167)(9.93694/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+---------------------- [1;33mROUTING INFORMATION[0m ------------------------------------
+[1;32mStandard Routes:
+[0m  routing for "NODE_BROKER_PING_0"
+  --> localhost:9300       as NODE_BROKER_PING [udp] every notification 
+[1;32mWildcard Routes:
+[0m   none
+[1;32mListening on:
+[0m  <-- localhost:9303      [udp]
+-------------------------------------------------------------------------------
+
+
+
+PID REPORT: (168)(9.93697/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (169)(9.93633/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (170)(9.93631/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (171)(9.93627/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (172)(9.93629/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (173)(9.93635/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (174)(9.93638/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (175)(9.9363/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (176)(9.93635/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (177)(9.93632/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+---------------------- [1;33mROUTING INFORMATION[0m ------------------------------------
+[1;32mStandard Routes:
+[0m  routing for "NODE_BROKER_PING_0"
+  --> localhost:9300       as NODE_BROKER_PING [udp] every notification 
+[1;32mWildcard Routes:
+[0m   none
+[1;32mListening on:
+[0m  <-- localhost:9303      [udp]
+-------------------------------------------------------------------------------
+
+
+
+PID REPORT: (178)(9.93634/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (179)(9.93638/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (180)(9.93645/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (181)(9.93642/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (182)(9.93649/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (183)(9.93654/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (184)(9.93661/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (185)(9.93669/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (186)(9.93674/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (187)(9.93681/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+---------------------- [1;33mROUTING INFORMATION[0m ------------------------------------
+[1;32mStandard Routes:
+[0m  routing for "NODE_BROKER_PING_0"
+  --> localhost:9300       as NODE_BROKER_PING [udp] every notification 
+[1;32mWildcard Routes:
+[0m   none
+[1;32mListening on:
+[0m  <-- localhost:9303      [udp]
+-------------------------------------------------------------------------------
+
+
+
+PID REPORT: (188)(9.93688/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (189)(9.93692/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (190)(9.93698/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (191)(9.93703/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (192)(9.9371/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (193)(9.93715/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (194)(9.93719/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (195)(9.93727/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (196)(9.93735/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (197)(9.93734/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+---------------------- [1;33mROUTING INFORMATION[0m ------------------------------------
+[1;32mStandard Routes:
+[0m  routing for "NODE_BROKER_PING_0"
+  --> localhost:9300       as NODE_BROKER_PING [udp] every notification 
+[1;32mWildcard Routes:
+[0m   none
+[1;32mListening on:
+[0m  <-- localhost:9303      [udp]
+-------------------------------------------------------------------------------
+
+
+
+PID REPORT: (198)(9.93738/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (199)(9.93743/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (200)(9.93747/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (201)(9.93736/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (202)(9.9374/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (203)(9.93745/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (204)(9.93749/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (205)(9.93752/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (206)(9.93755/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (207)(9.9376/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+---------------------- [1;33mROUTING INFORMATION[0m ------------------------------------
+[1;32mStandard Routes:
+[0m  routing for "NODE_BROKER_PING_0"
+  --> localhost:9300       as NODE_BROKER_PING [udp] every notification 
+[1;32mWildcard Routes:
+[0m   none
+[1;32mListening on:
+[0m  <-- localhost:9303      [udp]
+-------------------------------------------------------------------------------
+
+
+
+PID REPORT: (208)(9.93762/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (209)(9.93764/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (210)(9.9377/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (211)(9.93774/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (212)(9.93778/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (213)(9.93783/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (214)(9.93784/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (215)(9.93785/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (216)(9.93788/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (217)(9.93792/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+---------------------- [1;33mROUTING INFORMATION[0m ------------------------------------
+[1;32mStandard Routes:
+[0m  routing for "NODE_BROKER_PING_0"
+  --> localhost:9300       as NODE_BROKER_PING [udp] every notification 
+[1;32mWildcard Routes:
+[0m   none
+[1;32mListening on:
+[0m  <-- localhost:9303      [udp]
+-------------------------------------------------------------------------------
+
+
+
+PID REPORT: (218)(9.9379/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (219)(9.93793/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (220)(9.93798/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (221)(9.93798/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (222)(9.93806/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (223)(9.93809/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (224)(9.93814/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (225)(9.93815/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (226)(9.93744/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+---------------------- [1;33mROUTING INFORMATION[0m ------------------------------------
+[1;32mStandard Routes:
+[0m  routing for "NODE_BROKER_PING_0"
+  --> localhost:9300       as NODE_BROKER_PING [udp] every notification 
+[1;32mWildcard Routes:
+[0m   none
+[1;32mListening on:
+[0m  <-- localhost:9303      [udp]
+-------------------------------------------------------------------------------
+
+
+
+PID REPORT: (227)(9.93744/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (228)(9.93747/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (229)(9.93748/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (230)(9.93748/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (231)(9.93746/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (232)(9.9375/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (233)(9.93755/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (234)(9.93754/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (235)(9.93757/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (236)(9.93761/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (237)(9.93766/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+---------------------- [1;33mROUTING INFORMATION[0m ------------------------------------
+[1;32mStandard Routes:
+[0m  routing for "NODE_BROKER_PING_0"
+  --> localhost:9300       as NODE_BROKER_PING [udp] every notification 
+[1;32mWildcard Routes:
+[0m   none
+[1;32mListening on:
+[0m  <-- localhost:9303      [udp]
+-------------------------------------------------------------------------------
+
+
+
+PID REPORT: (238)(9.93769/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (239)(9.93763/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (240)(9.93774/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (241)(9.93768/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (242)(9.93772/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (243)(9.93774/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (244)(9.93777/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (245)(9.9378/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (246)(9.93778/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+---------------------- [1;33mROUTING INFORMATION[0m ------------------------------------
+[1;32mStandard Routes:
+[0m  routing for "NODE_BROKER_PING_0"
+  --> localhost:9300       as NODE_BROKER_PING [udp] every notification 
+[1;32mWildcard Routes:
+[0m   none
+[1;32mListening on:
+[0m  <-- localhost:9303      [udp]
+-------------------------------------------------------------------------------
+
+
+
+PID REPORT: (247)(9.9378/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (248)(9.93782/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (249)(9.93783/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (250)(9.93785/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (251)(9.93787/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (252)(9.93789/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (253)(9.93793/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (254)(9.93796/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (255)(9.93798/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (256)(9.93801/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+---------------------- [1;33mROUTING INFORMATION[0m ------------------------------------
+[1;32mStandard Routes:
+[0m  routing for "NODE_BROKER_PING_0"
+  --> localhost:9300       as NODE_BROKER_PING [udp] every notification 
+[1;32mWildcard Routes:
+[0m   none
+[1;32mListening on:
+[0m  <-- localhost:9303      [udp]
+-------------------------------------------------------------------------------
+
+
+
+PID REPORT: (257)(9.93803/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (258)(9.93808/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (259)(9.93812/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (260)(9.93823/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (261)(9.93815/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (262)(9.93815/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (263)(9.93825/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (264)(9.93823/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (265)(9.93825/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (266)(9.93824/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+---------------------- [1;33mROUTING INFORMATION[0m ------------------------------------
+[1;32mStandard Routes:
+[0m  routing for "NODE_BROKER_PING_0"
+  --> localhost:9300       as NODE_BROKER_PING [udp] every notification 
+[1;32mWildcard Routes:
+[0m   none
+[1;32mListening on:
+[0m  <-- localhost:9303      [udp]
+-------------------------------------------------------------------------------
+
+
+
+PID REPORT: (267)(9.93824/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (268)(9.93828/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (269)(9.93824/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (270)(9.93823/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (271)(9.93826/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (272)(9.93829/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (273)(9.93832/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (274)(9.93834/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (275)(9.93836/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (276)(9.93837/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+---------------------- [1;33mROUTING INFORMATION[0m ------------------------------------
+[1;32mStandard Routes:
+[0m  routing for "NODE_BROKER_PING_0"
+  --> localhost:9300       as NODE_BROKER_PING [udp] every notification 
+[1;32mWildcard Routes:
+[0m   none
+[1;32mListening on:
+[0m  <-- localhost:9303      [udp]
+-------------------------------------------------------------------------------
+
+
+
+PID REPORT: (277)(9.93839/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (278)(9.93844/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (279)(9.93847/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (280)(9.93851/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (281)(9.93852/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (282)(9.93857/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (283)(9.93859/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (284)(9.93858/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (285)(9.93861/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (286)(9.93866/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+---------------------- [1;33mROUTING INFORMATION[0m ------------------------------------
+[1;32mStandard Routes:
+[0m  routing for "NODE_BROKER_PING_0"
+  --> localhost:9300       as NODE_BROKER_PING [udp] every notification 
+[1;32mWildcard Routes:
+[0m   none
+[1;32mListening on:
+[0m  <-- localhost:9303      [udp]
+-------------------------------------------------------------------------------
+
+
+
+PID REPORT: (287)(9.9387/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (288)(9.93874/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (289)(9.93877/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (290)(9.93881/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (291)(9.93886/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+uTimerScript is Running:
+ |-Baseline AppTick   @ 2.0 Hz
+ |--Comms is Full Duplex and Asynchronous
+ -Iterate Mode 0 :
+   |-Regular iterate and message delivery at 2 Hz
+	|-Time Warp @ 5.0 
+	|-Time Warp delay @ 2.0 ms 
+
+
+
+
+
+PID REPORT: (292)(9.93891/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (293)(9.93894/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (294)(9.93897/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (295)(9.93902/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (296)(9.93908/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+---------------------- [1;33mROUTING INFORMATION[0m ------------------------------------
+[1;32mStandard Routes:
+[0m  routing for "NODE_BROKER_PING_0"
+  --> localhost:9300       as NODE_BROKER_PING [udp] every notification 
+[1;32mWildcard Routes:
+[0m   none
+[1;32mListening on:
+[0m  <-- localhost:9303      [udp]
+-------------------------------------------------------------------------------
+
+
+
+PID REPORT: (297)(9.93911/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (298)(9.93912/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (299)(9.93915/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (300)(9.93917/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (301)(9.93917/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (302)(9.93922/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (303)(9.93925/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (304)(9.93928/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (305)(9.93929/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (306)(9.93928/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+---------------------- [1;33mROUTING INFORMATION[0m ------------------------------------
+[1;32mStandard Routes:
+[0m  routing for "NODE_BROKER_PING_0"
+  --> localhost:9300       as NODE_BROKER_PING [udp] every notification 
+[1;32mWildcard Routes:
+[0m   none
+[1;32mListening on:
+[0m  <-- localhost:9303      [udp]
+-------------------------------------------------------------------------------
+
+
+
+PID REPORT: (307)(9.93931/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (308)(9.93934/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (309)(9.93938/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (310)(9.93943/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (311)(9.93946/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (312)(9.93948/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (313)(9.93948/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (314)(9.93947/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (315)(9.93949/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (316)(9.9395/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+---------------------- [1;33mROUTING INFORMATION[0m ------------------------------------
+[1;32mStandard Routes:
+[0m  routing for "NODE_BROKER_PING_0"
+  --> localhost:9300       as NODE_BROKER_PING [udp] every notification 
+[1;32mWildcard Routes:
+[0m   none
+[1;32mListening on:
+[0m  <-- localhost:9303      [udp]
+-------------------------------------------------------------------------------
+
+
+
+PID REPORT: (317)(9.93953/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (318)(9.93956/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (319)(9.93959/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (320)(9.9396/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (321)(9.93956/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (322)(9.93956/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (323)(9.93957/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (324)(9.9396/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (325)(9.93963/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (326)(9.93963/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+---------------------- [1;33mROUTING INFORMATION[0m ------------------------------------
+[1;32mStandard Routes:
+[0m  routing for "NODE_BROKER_PING_0"
+  --> localhost:9300       as NODE_BROKER_PING [udp] every notification 
+[1;32mWildcard Routes:
+[0m   none
+[1;32mListening on:
+[0m  <-- localhost:9303      [udp]
+-------------------------------------------------------------------------------
+
+
+
+PID REPORT: (327)(9.93964/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (328)(9.93965/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (329)(9.93964/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (330)(9.93966/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (331)(9.93967/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (332)(9.93968/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (333)(9.93967/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (334)(9.93966/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (335)(9.93967/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (336)(9.93968/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+---------------------- [1;33mROUTING INFORMATION[0m ------------------------------------
+[1;32mStandard Routes:
+[0m  routing for "NODE_BROKER_PING_0"
+  --> localhost:9300       as NODE_BROKER_PING [udp] every notification 
+[1;32mWildcard Routes:
+[0m   none
+[1;32mListening on:
+[0m  <-- localhost:9303      [udp]
+-------------------------------------------------------------------------------
+
+
+
+PID REPORT: (337)(9.93971/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (338)(9.93972/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (339)(9.93965/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (340)(9.93964/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (341)(9.93959/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (342)(9.93961/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (343)(9.93928/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (344)(9.93925/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (345)(9.93926/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (346)(9.93927/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+---------------------- [1;33mROUTING INFORMATION[0m ------------------------------------
+[1;32mStandard Routes:
+[0m  routing for "NODE_BROKER_PING_0"
+  --> localhost:9300       as NODE_BROKER_PING [udp] every notification 
+[1;32mWildcard Routes:
+[0m   none
+[1;32mListening on:
+[0m  <-- localhost:9303      [udp]
+-------------------------------------------------------------------------------
+
+
+
+PID REPORT: (347)(9.9387/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (348)(9.93868/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (349)(9.93868/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (350)(9.93868/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (351)(9.93867/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (352)(9.93868/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (353)(9.93836/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (354)(9.93834/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (355)(9.93836/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (356)(9.93837/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+---------------------- [1;33mROUTING INFORMATION[0m ------------------------------------
+[1;32mStandard Routes:
+[0m  routing for "NODE_BROKER_PING_0"
+  --> localhost:9300       as NODE_BROKER_PING [udp] every notification 
+[1;32mWildcard Routes:
+[0m   none
+[1;32mListening on:
+[0m  <-- localhost:9303      [udp]
+-------------------------------------------------------------------------------
+
+
+
+PID REPORT: (357)(9.93836/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (358)(9.93835/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (359)(9.93834/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (360)(9.93836/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (361)(9.93832/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (362)(9.93832/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (363)(9.9383/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (364)(9.93829/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (365)(9.9383/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (366)(9.93832/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+---------------------- [1;33mROUTING INFORMATION[0m ------------------------------------
+[1;32mStandard Routes:
+[0m  routing for "NODE_BROKER_PING_0"
+  --> localhost:9300       as NODE_BROKER_PING [udp] every notification 
+[1;32mWildcard Routes:
+[0m   none
+[1;32mListening on:
+[0m  <-- localhost:9303      [udp]
+-------------------------------------------------------------------------------
+
+
+
+PID REPORT: (367)(9.93832/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (368)(9.93834/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (369)(9.93834/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (370)(9.93833/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (371)(9.93833/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (372)(9.93832/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (373)(9.93831/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (374)(9.93831/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (375)(9.93833/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (376)(9.93831/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+---------------------- [1;33mROUTING INFORMATION[0m ------------------------------------
+[1;32mStandard Routes:
+[0m  routing for "NODE_BROKER_PING_0"
+  --> localhost:9300       as NODE_BROKER_PING [udp] every notification 
+[1;32mWildcard Routes:
+[0m   none
+[1;32mListening on:
+[0m  <-- localhost:9303      [udp]
+-------------------------------------------------------------------------------
+
+
+
+PID REPORT: (377)(9.93831/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (378)(9.93831/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (379)(9.93832/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (380)(9.93834/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (381)(9.93833/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (382)(9.93835/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (383)(9.93834/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (384)(9.93834/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (385)(9.93836/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (386)(9.93836/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+---------------------- [1;33mROUTING INFORMATION[0m ------------------------------------
+[1;32mStandard Routes:
+[0m  routing for "NODE_BROKER_PING_0"
+  --> localhost:9300       as NODE_BROKER_PING [udp] every notification 
+[1;32mWildcard Routes:
+[0m   none
+[1;32mListening on:
+[0m  <-- localhost:9303      [udp]
+-------------------------------------------------------------------------------
+
+
+
+PID REPORT: (387)(9.93835/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (388)(9.93834/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (389)(9.93834/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (390)(9.93836/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (391)(9.93838/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (392)(9.93838/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (393)(9.93837/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (394)(9.93834/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (395)(9.93833/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (396)(9.93834/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+---------------------- [1;33mROUTING INFORMATION[0m ------------------------------------
+[1;32mStandard Routes:
+[0m  routing for "NODE_BROKER_PING_0"
+  --> localhost:9300       as NODE_BROKER_PING [udp] every notification 
+[1;32mWildcard Routes:
+[0m   none
+[1;32mListening on:
+[0m  <-- localhost:9303      [udp]
+-------------------------------------------------------------------------------
+
+
+
+PID REPORT: (397)(9.93834/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (398)(9.93834/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (399)(9.93835/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (400)(9.93836/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (401)(9.93834/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (402)(9.93837/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (403)(9.93839/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (404)(9.9384/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (405)(9.93842/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (406)(9.93844/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+---------------------- [1;33mROUTING INFORMATION[0m ------------------------------------
+[1;32mStandard Routes:
+[0m  routing for "NODE_BROKER_PING_0"
+  --> localhost:9300       as NODE_BROKER_PING [udp] every notification 
+[1;32mWildcard Routes:
+[0m   none
+[1;32mListening on:
+[0m  <-- localhost:9303      [udp]
+-------------------------------------------------------------------------------
+
+
+
+PID REPORT: (407)(9.9383/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (408)(9.93828/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (409)(9.93827/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (410)(9.93827/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (411)(9.93827/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (412)(9.93825/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (413)(9.93806/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (414)(9.93807/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (415)(9.93808/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (416)(9.93811/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+---------------------- [1;33mROUTING INFORMATION[0m ------------------------------------
+[1;32mStandard Routes:
+[0m  routing for "NODE_BROKER_PING_0"
+  --> localhost:9300       as NODE_BROKER_PING [udp] every notification 
+[1;32mWildcard Routes:
+[0m   none
+[1;32mListening on:
+[0m  <-- localhost:9303      [udp]
+-------------------------------------------------------------------------------
+
+
+
+PID REPORT: (417)(9.93815/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (418)(9.93815/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (419)(9.93817/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (420)(9.93817/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (421)(9.93814/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (422)(9.93814/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (423)(9.93812/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (424)(9.93812/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (425)(9.93804/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+---------------------- [1;33mROUTING INFORMATION[0m ------------------------------------
+[1;32mStandard Routes:
+[0m  routing for "NODE_BROKER_PING_0"
+  --> localhost:9300       as NODE_BROKER_PING [udp] every notification 
+[1;32mWildcard Routes:
+[0m   none
+[1;32mListening on:
+[0m  <-- localhost:9303      [udp]
+-------------------------------------------------------------------------------
+
+
+
+PID REPORT: (426)(9.93804/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (427)(9.93803/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (428)(9.93804/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (429)(9.93805/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (430)(9.93805/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (431)(9.93806/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (432)(9.93806/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (433)(9.93784/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (434)(9.93782/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (435)(9.93783/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+---------------------- [1;33mROUTING INFORMATION[0m ------------------------------------
+[1;32mStandard Routes:
+[0m  routing for "NODE_BROKER_PING_0"
+  --> localhost:9300       as NODE_BROKER_PING [udp] every notification 
+[1;32mWildcard Routes:
+[0m   none
+[1;32mListening on:
+[0m  <-- localhost:9303      [udp]
+-------------------------------------------------------------------------------
+
+
+
+PID REPORT: (436)(9.93783/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (437)(9.93783/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (438)(9.93783/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (439)(9.93783/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (440)(9.93783/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (441)(9.93778/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (442)(9.93782/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (443)(9.93783/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (444)(9.93783/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (445)(9.93785/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+---------------------- [1;33mROUTING INFORMATION[0m ------------------------------------
+[1;32mStandard Routes:
+[0m  routing for "NODE_BROKER_PING_0"
+  --> localhost:9300       as NODE_BROKER_PING [udp] every notification 
+[1;32mWildcard Routes:
+[0m   none
+[1;32mListening on:
+[0m  <-- localhost:9303      [udp]
+-------------------------------------------------------------------------------
+
+
+
+PID REPORT: (446)(9.93787/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (447)(9.9379/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (448)(9.9379/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (449)(9.9379/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (450)(9.93791/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (451)(9.9379/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (452)(9.9379/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (453)(9.93789/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (454)(9.93758/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (455)(9.93758/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+---------------------- [1;33mROUTING INFORMATION[0m ------------------------------------
+[1;32mStandard Routes:
+[0m  routing for "NODE_BROKER_PING_0"
+  --> localhost:9300       as NODE_BROKER_PING [udp] every notification 
+[1;32mWildcard Routes:
+[0m   none
+[1;32mListening on:
+[0m  <-- localhost:9303      [udp]
+-------------------------------------------------------------------------------
+
+
+
+PID REPORT: (456)(9.93758/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (457)(9.9376/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (458)(9.93762/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (459)(9.93763/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (460)(9.93764/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (461)(9.93763/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (462)(9.93765/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (463)(9.93765/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (464)(9.93764/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (465)(9.93766/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+---------------------- [1;33mROUTING INFORMATION[0m ------------------------------------
+[1;32mStandard Routes:
+[0m  routing for "NODE_BROKER_PING_0"
+  --> localhost:9300       as NODE_BROKER_PING [udp] every notification 
+[1;32mWildcard Routes:
+[0m   none
+[1;32mListening on:
+[0m  <-- localhost:9303      [udp]
+-------------------------------------------------------------------------------
+
+
+
+PID REPORT: (466)(9.93766/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (467)(9.93764/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (468)(9.93764/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (469)(9.93763/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (470)(9.93763/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (471)(9.93763/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (472)(9.93762/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (473)(9.93764/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (474)(9.93769/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (475)(9.9377/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+---------------------- [1;33mROUTING INFORMATION[0m ------------------------------------
+[1;32mStandard Routes:
+[0m  routing for "NODE_BROKER_PING_0"
+  --> localhost:9300       as NODE_BROKER_PING [udp] every notification 
+[1;32mWildcard Routes:
+[0m   none
+[1;32mListening on:
+[0m  <-- localhost:9303      [udp]
+-------------------------------------------------------------------------------
+
+
+
+PID REPORT: (476)(9.93771/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (477)(9.93772/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (478)(9.93772/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (479)(9.93773/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (480)(9.93773/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (481)(9.93769/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (482)(9.93771/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (483)(9.9377/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (484)(9.93771/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (485)(9.93773/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+---------------------- [1;33mROUTING INFORMATION[0m ------------------------------------
+[1;32mStandard Routes:
+[0m  routing for "NODE_BROKER_PING_0"
+  --> localhost:9300       as NODE_BROKER_PING [udp] every notification 
+[1;32mWildcard Routes:
+[0m   none
+[1;32mListening on:
+[0m  <-- localhost:9303      [udp]
+-------------------------------------------------------------------------------
+
+
+
+PID REPORT: (486)(9.93773/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (487)(9.93775/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (488)(9.93776/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (489)(9.93775/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (490)(9.93775/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (491)(9.93776/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (492)(9.93778/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (493)(9.93779/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (494)(9.93782/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (495)(9.93785/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+---------------------- [1;33mROUTING INFORMATION[0m ------------------------------------
+[1;32mStandard Routes:
+[0m  routing for "NODE_BROKER_PING_0"
+  --> localhost:9300       as NODE_BROKER_PING [udp] every notification 
+[1;32mWildcard Routes:
+[0m   none
+[1;32mListening on:
+[0m  <-- localhost:9303      [udp]
+-------------------------------------------------------------------------------
+
+
+
+PID REPORT: (496)(9.93787/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (497)(9.93788/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (498)(9.93788/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (499)(9.93789/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (500)(9.93789/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (501)(9.93788/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (502)(9.9379/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (503)(9.93791/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (504)(9.9379/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (505)(9.9379/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+---------------------- [1;33mROUTING INFORMATION[0m ------------------------------------
+[1;32mStandard Routes:
+[0m  routing for "NODE_BROKER_PING_0"
+  --> localhost:9300       as NODE_BROKER_PING [udp] every notification 
+[1;32mWildcard Routes:
+[0m   none
+[1;32mListening on:
+[0m  <-- localhost:9303      [udp]
+-------------------------------------------------------------------------------
+
+
+
+PID REPORT: (506)(9.93787/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (507)(9.93788/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (508)(9.93788/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (509)(9.93789/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (510)(9.9379/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (511)(9.93793/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (512)(9.93794/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (513)(9.93794/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (514)(9.93796/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (515)(9.93798/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+---------------------- [1;33mROUTING INFORMATION[0m ------------------------------------
+[1;32mStandard Routes:
+[0m  routing for "NODE_BROKER_PING_0"
+  --> localhost:9300       as NODE_BROKER_PING [udp] every notification 
+[1;32mWildcard Routes:
+[0m   none
+[1;32mListening on:
+[0m  <-- localhost:9303      [udp]
+-------------------------------------------------------------------------------
+
+
+
+PID REPORT: (516)(9.938/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (517)(9.93801/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (518)(9.938/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (519)(9.938/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (520)(9.93801/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (521)(9.938/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (522)(9.93801/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (523)(9.93803/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (524)(9.93806/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (525)(9.93808/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+---------------------- [1;33mROUTING INFORMATION[0m ------------------------------------
+[1;32mStandard Routes:
+[0m  routing for "NODE_BROKER_PING_0"
+  --> localhost:9300       as NODE_BROKER_PING [udp] every notification 
+[1;32mWildcard Routes:
+[0m   none
+[1;32mListening on:
+[0m  <-- localhost:9303      [udp]
+-------------------------------------------------------------------------------
+
+
+
+PID REPORT: (526)(9.9381/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (527)(9.93813/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (528)(9.93815/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (529)(9.93815/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (530)(9.93815/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (531)(9.93816/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (532)(9.93818/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (533)(9.9382/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (534)(9.93821/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (535)(9.93823/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+---------------------- [1;33mROUTING INFORMATION[0m ------------------------------------
+[1;32mStandard Routes:
+[0m  routing for "NODE_BROKER_PING_0"
+  --> localhost:9300       as NODE_BROKER_PING [udp] every notification 
+[1;32mWildcard Routes:
+[0m   none
+[1;32mListening on:
+[0m  <-- localhost:9303      [udp]
+-------------------------------------------------------------------------------
+
+
+
+PID REPORT: (536)(9.93824/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (537)(9.93825/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (538)(9.93824/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (539)(9.93825/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (540)(9.93827/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (541)(9.93825/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (542)(9.93828/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (543)(9.9383/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (544)(9.93833/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (545)(9.93835/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+---------------------- [1;33mROUTING INFORMATION[0m ------------------------------------
+[1;32mStandard Routes:
+[0m  routing for "NODE_BROKER_PING_0"
+  --> localhost:9300       as NODE_BROKER_PING [udp] every notification 
+[1;32mWildcard Routes:
+[0m   none
+[1;32mListening on:
+[0m  <-- localhost:9303      [udp]
+-------------------------------------------------------------------------------
+
+
+
+PID REPORT: (546)(9.93837/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (547)(9.93839/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (548)(9.93839/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (549)(9.9384/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (550)(9.9384/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (551)(9.93839/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (552)(9.93838/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (553)(9.93838/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (554)(9.93839/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (555)(9.93839/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+---------------------- [1;33mROUTING INFORMATION[0m ------------------------------------
+[1;32mStandard Routes:
+[0m  routing for "NODE_BROKER_PING_0"
+  --> localhost:9300       as NODE_BROKER_PING [udp] every notification 
+[1;32mWildcard Routes:
+[0m   none
+[1;32mListening on:
+[0m  <-- localhost:9303      [udp]
+-------------------------------------------------------------------------------
+
+
+
+PID REPORT: (556)(9.93839/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (557)(9.93841/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (558)(9.93843/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (559)(9.93845/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (560)(9.93847/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (561)(9.93846/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (562)(9.93846/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (563)(9.93845/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (564)(9.93848/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (565)(9.9385/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+---------------------- [1;33mROUTING INFORMATION[0m ------------------------------------
+[1;32mStandard Routes:
+[0m  routing for "NODE_BROKER_PING_0"
+  --> localhost:9300       as NODE_BROKER_PING [udp] every notification 
+[1;32mWildcard Routes:
+[0m   none
+[1;32mListening on:
+[0m  <-- localhost:9303      [udp]
+-------------------------------------------------------------------------------
+
+
+
+PID REPORT: (566)(9.93852/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (567)(9.93854/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (568)(9.93855/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (569)(9.93856/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (570)(9.93858/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (571)(9.93859/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (572)(9.9386/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (573)(9.93861/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (574)(9.93862/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (575)(9.93861/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+---------------------- [1;33mROUTING INFORMATION[0m ------------------------------------
+[1;32mStandard Routes:
+[0m  routing for "NODE_BROKER_PING_0"
+  --> localhost:9300       as NODE_BROKER_PING [udp] every notification 
+[1;32mWildcard Routes:
+[0m   none
+[1;32mListening on:
+[0m  <-- localhost:9303      [udp]
+-------------------------------------------------------------------------------
+
+
+
+PID REPORT: (576)(9.93861/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (577)(9.93862/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (578)(9.93862/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (579)(9.93862/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (580)(9.93864/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (581)(9.93863/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (582)(9.93865/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (583)(9.93866/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (584)(9.93868/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (585)(9.93868/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+---------------------- [1;33mROUTING INFORMATION[0m ------------------------------------
+[1;32mStandard Routes:
+[0m  routing for "NODE_BROKER_PING_0"
+  --> localhost:9300       as NODE_BROKER_PING [udp] every notification 
+[1;32mWildcard Routes:
+[0m   none
+[1;32mListening on:
+[0m  <-- localhost:9303      [udp]
+-------------------------------------------------------------------------------
+
+
+
+PID REPORT: (586)(9.9387/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (587)(9.9387/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (588)(9.9387/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (589)(9.93873/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (590)(9.93874/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (591)(9.93873/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (592)(9.93875/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (593)(9.93876/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (594)(9.93855/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+---------------------- [1;33mROUTING INFORMATION[0m ------------------------------------
+[1;32mStandard Routes:
+[0m  routing for "NODE_BROKER_PING_0"
+  --> localhost:9300       as NODE_BROKER_PING [udp] every notification 
+[1;32mWildcard Routes:
+[0m   none
+[1;32mListening on:
+[0m  <-- localhost:9303      [udp]
+-------------------------------------------------------------------------------
+
+
+
+PID REPORT: (595)(9.93857/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (596)(9.93858/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (597)(9.93857/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (598)(9.93856/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (599)(9.93857/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (600)(9.93857/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (601)(9.93854/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (602)(9.93854/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (603)(9.93853/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (604)(9.93851/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+
+
+
+PID REPORT: (605)(9.9385/sec)
+Paused Due To Tardy HELM Input: THRUST=0
+---------------------- [1;33mROUTING INFORMATION[0m ------------------------------------
+[1;32mStandard Routes:
+[0m  routing for "NO

@@ -11,10 +11,10 @@ dependencies {
     compile project(":common")
     compile project(":utilities")
 
-    if (Os.isFamily(Os.FAMILY_UNIX)) {
-        compile files("../repo/prism/linux/prism.jar")
-    } else if (Os.isFamily(Os.FAMILY_MAC)) {
-        compile fileTree("../repo/prism/osx")
+    if (Os.isFamily(Os.FAMILY_MAC)) {
+        compile files("${rootProject.projectDir}/../libraries/repo/prism/osx/prism.jsr")
+    } else if (Os.isFamily(Os.FAMILY_UNIX)) {
+        compile files("${rootProject.projectDir}/../libraries/repo/prism/linux/prism.jar")
     } else {
         throw new GradleException("Unsupported Prism OS type")
     }

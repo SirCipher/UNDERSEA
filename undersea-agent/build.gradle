@@ -93,9 +93,11 @@ allprojects {
         String path = "${rootProject.projectDir}/../libraries/repo/ortools/:";
 
         if (Os.isFamily(Os.FAMILY_MAC)) {
+            System.out.println("Detected OS MAC")
             path += "${rootProject.projectDir}/../libraries/repo/prism/osx";
             environment "DYLD_LIBRARY_PATH", "${rootProject.projectDir}/../libraries/MATLAB/v95/sys/os/maci64/:${rootProject.projectDir}/../libraries/MATLAB/v95/bin/maci64/:${rootProject.projectDir}/../libraries/MATLAB/v95/extern/bin/maci64/:${rootProject.projectDir}/../libraries/repo/prism/osx/"
         } else if (Os.isFamily(Os.FAMILY_UNIX)) {
+            System.out.println("Detected OS Unix")
             path += "${rootProject.projectDir}/../libraries/repo/prism/linux";
             environment "LD_LIBRARY_PATH", "${rootProject.projectDir}/../libraries/MATLAB/v95/sys/os/glnxa64/:${rootProject.projectDir}/../libraries/MATLAB/v95/bin/glnxa64/:${rootProject.projectDir}/../libraries/MATLAB/v95/runtime/glnxa64/:${rootProject.projectDir}/../libraries/repo/prism/linux/"
         } else {

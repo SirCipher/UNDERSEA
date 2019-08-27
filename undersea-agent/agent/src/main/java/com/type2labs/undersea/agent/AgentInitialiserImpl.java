@@ -6,7 +6,6 @@ import com.type2labs.undersea.common.agent.Agent;
 import com.type2labs.undersea.common.agent.AgentFactory;
 import com.type2labs.undersea.common.agent.AgentMetaData;
 import com.type2labs.undersea.common.agent.AgentStatus;
-import com.type2labs.undersea.common.cluster.PeerId;
 import com.type2labs.undersea.common.monitor.impl.MonitorImpl;
 import com.type2labs.undersea.common.monitor.impl.VisualiserClientImpl;
 import com.type2labs.undersea.common.monitor.model.Monitor;
@@ -27,7 +26,6 @@ import com.type2labs.undersea.prospect.impl.RaftNodeImpl;
 import com.type2labs.undersea.seachain.BlockchainNetworkImpl;
 
 import java.io.File;
-import java.net.InetSocketAddress;
 import java.util.*;
 
 /**
@@ -53,9 +51,7 @@ public class AgentInitialiserImpl implements AgentInitialiser {
             RaftNodeImpl raftNode = new RaftNodeImpl(
                     raftClusterConfig,
                     agentProxy.getName(),
-                    new RaftIntegrationImpl(agentProxy.getName()),
-                    new InetSocketAddress("localhost", agentProxy.getServerPort()),
-                    PeerId.newId()
+                    new RaftIntegrationImpl(agentProxy.getName())
             );
 
             ServiceManager serviceManager = new ServiceManager();

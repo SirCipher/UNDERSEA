@@ -54,6 +54,7 @@ public class HardwareInterface implements AgentService {
     public void run() {
         AgentMetaData metaData = agent.metadata();
 
+        // TODO: This needs to be changed to a MRS check
         if (metaData.isMaster()) {
             logger.info(agent.name() + ": starting shoreside server", agent);
             runShoreside();
@@ -82,13 +83,12 @@ public class HardwareInterface implements AgentService {
             BufferedWriter writer = Files.newBufferedWriter(new File(agent.name() + ".txt").toPath(),
                     StandardCharsets.UTF_8);
 
-            String s = null;
+            String s;
             while ((s = stdInput.readLine()) != null) {
                 writer.write(s + "\n");
             }
 
-            process.waitFor();
-        } catch (IOException | InterruptedException e) {
+        } catch (IOException e) {
             throw new UnderseaException("Failed to start agent: " + parent().name(), e);
         }
     }
@@ -121,7 +121,7 @@ public class HardwareInterface implements AgentService {
             }
 
             if (process.isAlive()) {
-                logger.error(agent + ": attempted to cleanly kill interface but failed. Forcibily destorying", agent);
+                logger.error(agent + ": attempted to cleanly kill interface but failed. Forcibily destroying", agent);
                 process.destroyForcibly();
             } else {
                 logger.info(agent.name() + ": shut down MOOS process", agent);
