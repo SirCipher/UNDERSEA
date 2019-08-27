@@ -2,19 +2,24 @@ package com.type2labs.undersea.missionplanner.planner.vrp;
 
 import com.type2labs.undersea.common.agent.Agent;
 import com.type2labs.undersea.common.agent.AgentFactory;
+import com.type2labs.undersea.common.cluster.Client;
+import com.type2labs.undersea.common.cluster.ClusterState;
+import com.type2labs.undersea.common.cluster.PeerId;
 import com.type2labs.undersea.common.config.UnderseaRuntimeConfig;
 import com.type2labs.undersea.common.missions.PlannerException;
-import com.type2labs.undersea.missionplanner.manager.MissionManagerImpl;
 import com.type2labs.undersea.common.missions.planner.impl.MissionParametersImpl;
 import com.type2labs.undersea.common.missions.planner.model.MissionManager;
 import com.type2labs.undersea.common.missions.planner.model.MissionParameters;
 import com.type2labs.undersea.common.missions.planner.model.MissionPlanner;
+import com.type2labs.undersea.missionplanner.manager.MissionManagerImpl;
 import com.type2labs.undersea.missionplanner.model.GeneratedMissionImpl;
 import com.type2labs.undersea.utilities.Utility;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import java.net.InetSocketAddress;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
@@ -45,6 +50,34 @@ public class VehicleRoutingOptimiserTest {
         agents.add(agent);
 
         MissionParameters missionParameters = new MissionParametersImpl(1, area, 20);
+        missionParameters.setClients(new ArrayList<>(agent.clusterClients().values()));
+        missionParameters.getClients().add(new Client() {
+
+            @Override
+            public ClusterState.ClientState state() {
+                return new ClusterState.ClientState(this, true);
+            }
+
+            @Override
+            public PeerId peerId() {
+                return agent.peerId();
+            }
+
+            @Override
+            public InetSocketAddress socketAddress() {
+                return new InetSocketAddress(0);
+            }
+
+            @Override
+            public void shutdown() {
+
+            }
+
+            @Override
+            public boolean isSelf() {
+                return true;
+            }
+        });
 
         config.missionParameters(missionParameters);
         missionManager.initialise(agent);

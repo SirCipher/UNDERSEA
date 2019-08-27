@@ -16,7 +16,7 @@ public class ParserEngineTest {
     @Test
     public void testParser() {
         try {
-            Properties properties = Utility.getPropertiesByName("../resources/runner.properties");
+            Properties properties = Utility.getPropertiesByName("src/test/resources/test.properties");
             ParserEngine parserEngine = new ParserEngine(properties);
             parserEngine.parseMission();
 

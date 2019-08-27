@@ -27,8 +27,7 @@ public class GroupTest {
                     assertEquals(count, clusterState.getMembers().size());
                 }
             }, 5);
-
-
+            
             Thread.sleep(5000);
         } catch (InterruptedException e) {
             e.printStackTrace();
@@ -36,7 +35,7 @@ public class GroupTest {
     }
 
     // TODO: 19/08/2019
-    @Test
+//    @Test
     public void testElection() {
         int count = 3;
 

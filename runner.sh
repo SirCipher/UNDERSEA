@@ -1,7 +1,8 @@
 #!/bin/bash
 
 cd undersea-agent
-./gradlew -p agent jar
+# TODO: Check return code
+./gradlew agent:build agent:fatJar --stacktrace -x test
 cd ..
 
 cp undersea-agent/agent/build/libs/agent.jar .
@@ -17,4 +18,5 @@ else
 	exit 1
 fi
 
+# Just in case the JVM crashed...
 pkill -f .moos -9

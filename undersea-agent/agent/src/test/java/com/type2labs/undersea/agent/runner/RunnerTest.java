@@ -20,8 +20,6 @@ import java.io.InputStreamReader;
 @RunWith(UnderseaRunner.class)
 public class RunnerTest {
 
-    private static final Logger logger = LogManager.getLogger(RunnerTest.class);
-
     @Test
     public void ignored() {
 
@@ -32,49 +30,6 @@ public class RunnerTest {
         Utility.killMoos();
     }
 
-
-    @Test
-    @IgnoredOnCi
-    public void testMultiple() throws InterruptedException, IOException {
-        launchAgent("./shoreside.sh");
-        launchAgent("./alpha.sh");
-        launchAgent("./bravo.sh");
-        launchAgent("./charlie.sh");
-
-
-        Thread.sleep(10000);
-    }
-
-    private void launchAgent(String script) throws IOException {
-        ProcessBuilder pb = ProcessBuilderUtil.getSanitisedBuilder();
-        pb.command(script);
-        pb.directory(new File("../missions/test_01/"));
-
-        Process process = pb.start();
-        Runtime.getRuntime().addShutdownHook(new Thread(process::destroyForcibly));
-    }
-
-    @Test
-    @IgnoredOnCi
-    public void test() throws IOException, InterruptedException {
-        ProcessBuilder pb = ProcessBuilderUtil.getSanitisedBuilder();
-        pb.command("pAntler", "meta_shoreside.moos");
-        pb.directory(new File("../missions/test_01/"));
-
-        Process process = pb.start();
-
-        String line;
-        BufferedReader in = new BufferedReader(new InputStreamReader(process.getInputStream()));
-        while ((line = in.readLine()) != null) {
-            System.out.println(line);
-        }
-
-        Thread.sleep(100);
-
-        process.destroyForcibly();
-    }
-
-
     @Test
     @IgnoredOnCi
     public void testRunner() {
@@ -82,9 +37,6 @@ public class RunnerTest {
 
         Runner runner = new Runner(testProperties);
         runner.run();
-
-//        ThreadUtils.sleep(20000, logger);
-
 
         runner.shutdown();
     }

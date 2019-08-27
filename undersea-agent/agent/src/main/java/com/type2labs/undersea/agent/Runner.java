@@ -34,6 +34,8 @@ public class Runner extends AbstractRunner {
             throw new IllegalArgumentException("Configuration file must be provided");
         }
 
+        Runtime.getRuntime().addShutdownHook(new Thread(Utility::killMoos));
+
         Runner runner = new Runner(args[0]);
         runner.run();
     }

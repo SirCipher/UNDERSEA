@@ -2,6 +2,7 @@ package com.type2labs.undersea.agent.service;
 
 import com.google.common.collect.Sets;
 import com.type2labs.undersea.common.cluster.ClusterState;
+import com.type2labs.undersea.common.service.hardware.NoNetworkInterfaceImpl;
 import com.type2labs.undersea.missionplanner.manager.MissionManagerImpl;
 import com.type2labs.undersea.common.service.AgentService;
 import com.type2labs.undersea.missionplanner.planner.vrp.VehicleRoutingOptimiser;
@@ -21,7 +22,8 @@ public class MissionDistributionTest {
 
         int count = 5;
         Set<AgentService> services = Sets.newHashSet(
-                new MissionManagerImpl(new VehicleRoutingOptimiser())
+                new MissionManagerImpl(new VehicleRoutingOptimiser()),
+                new NoNetworkInterfaceImpl()
         );
 
         try (LocalAgentGroup localAgentGroup = new LocalAgentGroup(count, services, true)) {

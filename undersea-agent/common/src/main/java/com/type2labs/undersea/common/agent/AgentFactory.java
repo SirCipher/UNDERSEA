@@ -2,6 +2,7 @@ package com.type2labs.undersea.common.agent;
 
 
 import com.type2labs.undersea.common.cluster.Client;
+import com.type2labs.undersea.common.cluster.ClusterState;
 import com.type2labs.undersea.common.cluster.PeerId;
 import com.type2labs.undersea.common.config.UnderseaRuntimeConfig;
 import com.type2labs.undersea.common.service.ServiceManager;
@@ -21,6 +22,11 @@ public class AgentFactory implements AbstractFactory<Agent> {
         for (Agent peer : peers) {
             PeerId peerId = PeerId.newId();
             agent.clusterClients().put(peerId, new Client() {
+                @Override
+                public ClusterState.ClientState state() {
+                    return new ClusterState.ClientState(this, true);
+                }
+
                 @Override
                 public PeerId peerId() {
                     return peerId;

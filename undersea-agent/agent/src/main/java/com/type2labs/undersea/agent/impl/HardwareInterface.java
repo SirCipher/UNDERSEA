@@ -12,7 +12,6 @@ import com.type2labs.undersea.utilities.process.ProcessBuilderUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -51,10 +50,10 @@ public class HardwareInterface implements AgentService {
         return agent;
     }
 
-    private void launchAgent(String script) {
+    private void launchAgent(AgentMetaData metaData) {
         ProcessBuilder pb = ProcessBuilderUtil.getSanitisedBuilder();
-        pb.command("./" + script);
-        pb.directory(new File("missions/test_01/"));
+        pb.command("./" + metaData.getLaunchFileName());
+        pb.directory(metaData.getMissionDirectory());
 
         try {
             process = pb.start();
@@ -78,10 +77,10 @@ public class HardwareInterface implements AgentService {
         // TODO: This needs to be changed to a MRS check
         if (metaData.isMaster()) {
             logger.info(agent.name() + ": starting shoreside server", agent);
-            launchAgent(metaData.getLaunchFileName());
+            launchAgent(metaData);
         } else {
             logger.info(agent.name() + ": starting agent server", agent);
-            launchAgent(metaData.getLaunchFileName());
+            launchAgent(metaData);
         }
     }
 
