@@ -17,6 +17,8 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * Interface for running the moos library that the agent operates on
@@ -53,6 +55,13 @@ public class HardwareInterface implements AgentService {
     @Override
     public void run() {
         AgentMetaData metaData = agent.metadata();
+        Random random = ThreadLocalRandom.current();
+
+        try {
+            Thread.sleep(random.nextInt(5000));
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
         // TODO: This needs to be changed to a MRS check
         if (metaData.isMaster()) {
@@ -78,15 +87,15 @@ public class HardwareInterface implements AgentService {
             proc.directory(metaData.getMissionDirectory().getCanonicalFile());
             process = proc.start();
 
-            BufferedReader stdInput = new BufferedReader(new
-                    InputStreamReader(process.getInputStream()));
-            BufferedWriter writer = Files.newBufferedWriter(new File(agent.name() + ".txt").toPath(),
-                    StandardCharsets.UTF_8);
-
-            String s;
-            while ((s = stdInput.readLine()) != null) {
-                writer.write(s + "\n");
-            }
+//            BufferedReader stdInput = new BufferedReader(new
+//                    InputStreamReader(process.getInputStream()));
+//            BufferedWriter writer = Files.newBufferedWriter(new File(agent.name() + ".txt").toPath(),
+//                    StandardCharsets.UTF_8);
+//
+//            String s;
+//            while ((s = stdInput.readLine()) != null) {
+//                writer.write(s + "\n");
+//            }
 
         } catch (IOException e) {
             throw new UnderseaException("Failed to start agent: " + parent().name(), e);

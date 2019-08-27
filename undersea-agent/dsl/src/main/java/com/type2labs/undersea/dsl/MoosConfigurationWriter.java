@@ -273,7 +273,6 @@ class MoosConfigurationWriter {
         }
 
         generateLaunchAndCleanScripts();
-        writePortListFile();
     }
 
     private static void writeHostInfo(StringBuilder vehicleBlock) {
@@ -287,15 +286,6 @@ class MoosConfigurationWriter {
         vehicleBlock.append("\n");
         vehicleBlock.append("\tDEFAULT_HOSTIP_FORCE = localhost\n");
         vehicleBlock.append("}\n");
-    }
-
-    private static void writePortListFile() {
-        StringBuilder ports = new StringBuilder();
-
-        environmentProperties.getAllAgents().values().forEach(a -> ports.append(a.getServerPort() + "\n"));
-
-        Utility.exportToFile(MoosConfigurationWriter.buildDir + File.separator + "agents.ports", ports.toString(),
-                false);
     }
 
 }

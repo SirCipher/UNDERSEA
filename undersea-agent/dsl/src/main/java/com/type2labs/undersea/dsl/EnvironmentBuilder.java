@@ -11,6 +11,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 class EnvironmentBuilder {
@@ -46,6 +47,8 @@ class EnvironmentBuilder {
 
         nsplug(shoreside.getMetaFileName(), shoreside.getMetaFileName(), nsPlugArgs);
 
+        vPort++;
+
         for (Map.Entry<String, DslAgentProxy> entry : environmentProperties.getAgents().entrySet()) {
             DslAgentProxy agent = entry.getValue();
 
@@ -55,8 +58,8 @@ class EnvironmentBuilder {
             nsPlugArgs.add("VHOST=" +
                     environmentProperties.getEnvironmentValue(EnvironmentProperties.EnvironmentValue.HOST));
             nsPlugArgs.add("VNAME=" + agent.getName());
-            nsPlugArgs.add("VPORT=" + ++vPort);
-            nsPlugArgs.add("SHARE_LISTEN=" + ++shareListen);
+            nsPlugArgs.add("VPORT=" + vPort++);
+            nsPlugArgs.add("SHARE_LISTEN=" + shareListen++);
             nsPlugArgs.add("SHORE_LISTEN=" + shoreListen);
 
             logger.info("-----------------------------------------");
@@ -155,7 +158,7 @@ class EnvironmentBuilder {
             writer.write("y");
             writer.flush();
 
-            String output = IOUtils.toString(process.getInputStream(), "UTF-8");
+            String output = IOUtils.toString(process.getInputStream(), StandardCharsets.UTF_8);
             logger.info(output);
             process.destroy();
         } catch (IOException e) {

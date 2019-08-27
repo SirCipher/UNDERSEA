@@ -4,6 +4,7 @@ import com.type2labs.undersea.utilities.exception.UnderseaException;
 import org.apache.commons.lang3.SystemUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.junit.After;
 
 import java.io.*;
 import java.nio.channels.FileChannel;
@@ -24,6 +25,30 @@ public class Utility {
 
     private Utility() {
 
+    }
+
+    /**
+     * The Java process system does not kill child processes that have been launched and even though the
+     * pMarineViewer is still open, the {@link Process#isAlive()} method returns false after the process has been
+     * closed. Unfortunately, this results in a number of child processes remaining afterwards. So the only
+     * alternative (at present) is to kill all processes matching {@code '.moos'}. This will forcibly kill all
+     * processes matching the pattern. Depending on the {@code net.ipv4.tcp_fin_timeout} set, the port may linger
+     * after the process has been killed before it can be reused again. Using
+     * {@link java.net.ServerSocket#setReuseAddress(boolean)} (SO_REUSEADDR) will reduce this time on sockets.
+     * <p>
+     * See <a href="https://bugs.java.com/bugdatabase/view_bug.do?bug_id=4770092">Java bug database</a>
+     * <p>
+     * See
+     * <a href="https://unix.stackexchange.com/questions/294616/unbind-port-of-crashed-program">For port release on Linux</a>"
+     */
+    public static void killMoos() {
+        try {
+            logger.info("Terminating processes matching .moos");
+            Runtime.getRuntime().exec("pkill -f .moos -9");
+            logger.info("Terminated processes matching .moos");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public static double[][] stringTo2dDoubleArray(String s) {

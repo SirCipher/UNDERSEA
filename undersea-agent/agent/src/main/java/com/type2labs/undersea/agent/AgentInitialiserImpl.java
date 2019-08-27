@@ -56,9 +56,9 @@ public class AgentInitialiserImpl implements AgentInitialiser {
 
             ServiceManager serviceManager = new ServiceManager();
 
-            serviceManager.registerService(raftNode);
+//            serviceManager.registerService(raftNode);
             serviceManager.registerService(new BlockchainNetworkImpl());
-            serviceManager.registerService(new MissionManagerImpl(new VehicleRoutingOptimiser()));
+//            serviceManager.registerService(new MissionManagerImpl(new VehicleRoutingOptimiser()));
             serviceManager.registerService(new HardwareInterface(), ServiceManager.ServiceExecutionPriority.HIGH);
             serviceManager.registerService(new MoosConnector());
 
@@ -71,7 +71,7 @@ public class AgentInitialiserImpl implements AgentInitialiser {
                     new AgentStatus(key, new ArrayList<>()));
 
             AgentMetaData metaData = new AgentMetaData();
-            if (((DslAgentProxy) value).name().equals("shoreside")) {
+            if (value.name().equals("shoreside")) {
                 metaData.setMaster(true);
             }
 
@@ -87,13 +87,13 @@ public class AgentInitialiserImpl implements AgentInitialiser {
 
             underseaAgent.setMetadata(metaData);
 
-            serviceManager.registerService(new ControllerImpl(
-                    underseaAgent,
-                    new MonitorPMC(),
-                    new AnalyserPMC(),
-                    new PlannerPMC(),
-                    new ExecutorPMC()
-            ));
+//            serviceManager.registerService(new ControllerImpl(
+//                    underseaAgent,
+//                    new MonitorPMC(),
+//                    new AnalyserPMC(),
+//                    new PlannerPMC(),
+//                    new ExecutorPMC()
+//            ));
 
             monitor.setVisualiser(new VisualiserClientImpl());
 

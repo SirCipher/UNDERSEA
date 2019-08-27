@@ -2,6 +2,7 @@ package com.type2labs.undersea.common.runner;
 
 import com.type2labs.undersea.common.agent.Agent;
 import com.type2labs.undersea.utilities.Utility;
+import com.type2labs.undersea.utilities.lang.ThreadUtils;
 
 import java.io.FileNotFoundException;
 import java.util.List;
@@ -30,7 +31,15 @@ public abstract class AbstractRunner {
 
     private void _run() {
         agents.stream().filter(a -> a.metadata().isMaster()).forEach(a -> a.services().startServices());
-        agents.stream().filter(a -> !a.metadata().isMaster()).forEach(a -> a.services().startServices());
+
+        // Wait for viewer to start
+        ThreadUtils.sleep(2000);
+
+        agents.stream().filter(a -> !a.metadata().isMaster()).forEach(a -> {
+            a.services().startServices();
+            ThreadUtils.sleep(2000);
+        });
+
     }
 
     protected abstract void generateFiles();
