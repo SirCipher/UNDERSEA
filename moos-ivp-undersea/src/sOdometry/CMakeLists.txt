@@ -6,18 +6,17 @@
 # FILE(GLOB SRC *.cpp)
 
 SET(SRC
-  Odometry.cpp
-  Odometry_Info.cpp
-  main.cpp
-)
-
+        Odometry.cpp
+        Odometry_Info.cpp
+        main.cpp
+        )
 
 
 ADD_EXECUTABLE(sOdometry ${SRC})
 
 TARGET_LINK_LIBRARIES(sOdometry
-   ${MOOS_LIBRARIES}
-   mbutil
-   m
-   pthread)
+        ${MOOS_LIBRARIES}
+        mbutil
+        m
+        pthread)
 

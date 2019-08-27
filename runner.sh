@@ -2,7 +2,7 @@
 
 cd undersea-agent
 # TODO: Check return code
-./gradlew agent:build agent:fatJar --stacktrace -x test
+./gradlew agent:build agent:jar --stacktrace -x test
 cd ..
 
 cp undersea-agent/agent/build/libs/agent.jar .

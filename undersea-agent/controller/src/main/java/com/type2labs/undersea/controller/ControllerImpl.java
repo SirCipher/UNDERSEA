@@ -2,6 +2,7 @@ package com.type2labs.undersea.controller;
 
 import com.google.common.util.concurrent.ListenableFuture;
 import com.type2labs.undersea.common.agent.Agent;
+import com.type2labs.undersea.common.agent.AgentMetaData;
 import com.type2labs.undersea.common.controller.Controller;
 import com.type2labs.undersea.common.service.transaction.Transaction;
 import com.type2labs.undersea.controller.controller.*;
@@ -18,27 +19,19 @@ public class ControllerImpl implements Controller {
     // TODO: Pass properties to controller
     private static final Properties properties = new Properties(); //Utility.getPropertiesByName("config.properties");
     private static final Logger logger = LogManager.getLogger(ControllerImpl.class);
-    private static long SIMULATION_SPEED;
-    private final Agent agent;
+    private static long simulationSpeed;
+    private Agent agent;
     protected Monitor monitor;
-    protected Analyser analyser;
+    private Analyser analyser;
     protected Planner planner;
-    protected Executor executor;
+    private Executor executor;
     private Sensor sensor;
     private Effector effector;
     private Client client;
-    private String host;//	= "localhost";
-    private int port;// 		= 8888;
     private long start = System.currentTimeMillis();
 
-    public ControllerImpl(Agent agent, Monitor monitor, Analyser analyser, Planner planner, Executor executor) {
-        this.agent = agent;
-        //init comms client
-        host = "localhost";
-
+    public ControllerImpl(Monitor monitor, Analyser analyser, Planner planner, Executor executor) {
         client = new Client();
-
-        //init MAPE
         sensor = new Sensor(client);
         effector = new Effector(client);
 
@@ -46,34 +39,29 @@ public class ControllerImpl implements Controller {
         this.analyser = analyser;
         this.planner = planner;
         this.executor = executor;
-
-        //init simulation speed
-        SIMULATION_SPEED = 100;//Math.round(Double.parseDouble(Utility.getProperty(properties, "SIMULATION_SPEED")));
-    }
-
-    @Override
-    public Agent agent() {
-        return agent;
     }
 
     @Override
     public void initialise(Agent parentAgent) {
+        this.agent = parentAgent;
 
+        AgentMetaData metaData = agent.metadata();
+        simulationSpeed = (long) metaData.getProperty("simulation_speed");
     }
 
     @Override
     public Agent parent() {
-        return null;
+        return agent;
     }
 
     @Override
     public void run() {
-        double initTime = (System.currentTimeMillis() - start) / 1000.0 * SIMULATION_SPEED;
+        double initTime = (System.currentTimeMillis() - start) / 1000.0 * simulationSpeed;
         Knowledge.getInstance().addToInitTimeList(initTime);
         logger.info(initTime + "\tRequested UUV state");
 
         sensor.run();
-        double sensorTime = (System.currentTimeMillis() - start) / 1000.0 * SIMULATION_SPEED;
+        double sensorTime = (System.currentTimeMillis() - start) / 1000.0 * simulationSpeed;
         logger.info(sensorTime + "\tReceived:\t" + sensor.getReply());
 
         monitor.run();
@@ -81,13 +69,13 @@ public class ControllerImpl implements Controller {
         planner.run();
         executor.run();
 
-        double controllerTime = (System.currentTimeMillis() - start) / 1000.0 * SIMULATION_SPEED;
+        double controllerTime = (System.currentTimeMillis() - start) / 1000.0 * simulationSpeed;
         logger.info(controllerTime + "\tNew config:\t" + executor.getCommand());
 
         effector.setCommand(executor.getCommand());
         effector.run();
 
-        double endTime = (System.currentTimeMillis() - start) / 1000.0 * SIMULATION_SPEED;
+        double endTime = (System.currentTimeMillis() - start) / 1000.0 * simulationSpeed;
         logger.info(endTime + "\tApplied?\t" + effector.getReply() + "\n");
         Knowledge.getInstance().addToEndTimeList(endTime);
     }

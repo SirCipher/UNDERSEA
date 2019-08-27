@@ -12,12 +12,13 @@
 
 class Utilities {
 
-	public:
-		static void writeToFile(std::string filename, std::string outputString);
+public:
+    static void writeToFile(std::string filename, std::string outputString);
 
-	private:
-		Utilities();
-		virtual ~Utilities();
+private:
+    Utilities();
+
+    virtual ~Utilities();
 };
 
 #endif /* SRC_SUUV_UTILITIES_H_ */

@@ -1,8 +1,8 @@
 package com.type2labs.undersea.dsl;
 
 import com.type2labs.undersea.dsl.uuv.model.DslAgentProxy;
-import com.type2labs.undersea.utilities.exception.UnderseaException;
 import com.type2labs.undersea.utilities.Utility;
+import com.type2labs.undersea.utilities.exception.UnderseaException;
 import org.apache.commons.io.IOUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -33,8 +33,7 @@ class EnvironmentBuilder {
 
         int vPort =
                 Integer.parseInt(environmentProperties.getEnvironmentValue(EnvironmentProperties.EnvironmentValue.PORT_START));
-        int shoreListen = vPort + 300;
-        int shareListen = shoreListen + 1;
+        int shoreListen = vPort;
 
         List<String> nsPlugArgs = new ArrayList<>();
 
@@ -43,11 +42,10 @@ class EnvironmentBuilder {
         nsPlugArgs.add("VHOST=" + environmentProperties.getEnvironmentValue(EnvironmentProperties.EnvironmentValue.HOST));
         nsPlugArgs.add("VNAME=shoreside");
         nsPlugArgs.add("SHARE_LISTEN=" + shoreListen);
-        nsPlugArgs.add("VPORT=" + vPort);
+        nsPlugArgs.add("VPORT=" + vPort++);
 
         nsplug(shoreside.getMetaFileName(), shoreside.getMetaFileName(), nsPlugArgs);
 
-        vPort++;
 
         for (Map.Entry<String, DslAgentProxy> entry : environmentProperties.getAgents().entrySet()) {
             DslAgentProxy agent = entry.getValue();
@@ -58,9 +56,10 @@ class EnvironmentBuilder {
             nsPlugArgs.add("VHOST=" +
                     environmentProperties.getEnvironmentValue(EnvironmentProperties.EnvironmentValue.HOST));
             nsPlugArgs.add("VNAME=" + agent.getName());
-            nsPlugArgs.add("VPORT=" + vPort++);
-            nsPlugArgs.add("SHARE_LISTEN=" + shareListen++);
+            nsPlugArgs.add("VPORT=" + (vPort += 10));
+            nsPlugArgs.add("SHARE_LISTEN=" + (++vPort));
             nsPlugArgs.add("SHORE_LISTEN=" + shoreListen);
+            nsPlugArgs.add("SUUVPORT=" + (++vPort));
 
             logger.info("-----------------------------------------");
             nsplug(agent.getMetaFileName(), agent.getMetaFileName(), nsPlugArgs);

@@ -31,35 +31,4 @@ public class DslAgentProxy extends AgentImpl {
         this.metaFileName = metaFileName;
     }
 
-    @Override
-    public String toString() {
-        StringBuilder str = new StringBuilder();
-        str.append("//-------------------------\n");
-        str.append("// sUUV Configuration Block\n");
-        str.append("//-------------------------\n");
-        str.append("ProcessConfig = sUUV\n");
-        str.append("{\n");
-        str.append("\t AppTick = " + super.getRate() + "\n");
-        str.append("\t CommsTick = " + super.getRate() + "\n");
-        str.append("\t MAX_APPCAST_EVENTS = 25 \n");
-        str.append("\t NAME = " + super.getName() + "\n");
-        str.append("\t PORT = " + super.getServerPort() + "\n");
-
-        StringBuilder sensorsStr = new StringBuilder();
-
-        Iterator<Sensor> iterator = super.getSensors().iterator();
-
-        while (iterator.hasNext()) {
-            sensorsStr.append(iterator.next().getName());
-
-            if (iterator.hasNext()) {
-                sensorsStr.append(",");
-            }
-        }
-        str.append("\t SENSORS = ").append(sensorsStr).append("\n").append("}\n");
-
-        return str.toString();
-    }
-
-
 }

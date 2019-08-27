@@ -27,7 +27,7 @@ public class GroupTest {
                     assertEquals(count, clusterState.getMembers().size());
                 }
             }, 5);
-            
+
             Thread.sleep(5000);
         } catch (InterruptedException e) {
             e.printStackTrace();

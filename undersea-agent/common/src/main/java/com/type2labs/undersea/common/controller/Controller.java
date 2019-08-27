@@ -5,6 +5,4 @@ import com.type2labs.undersea.common.service.AgentService;
 
 public interface Controller extends AgentService {
 
-    Agent agent();
-
 }

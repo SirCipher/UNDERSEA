@@ -1,0 +1,593 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6"/>
+	<Project>
+		<Option title="IVP_EXTEND"/>
+		<Option makefile_is_custom="1"/>
+		<Option compiler="gcc"/>
+		<Option virtualFolders="CMake Files\;CMake Files\..\;CMake Files\..\libraries\;CMake Files\..\libraries\moos-ivp\;CMake Files\..\libraries\moos-ivp\build\;CMake Files\..\libraries\moos-ivp\build\MOOS\;CMake Files\..\libraries\moos-ivp\build\MOOS\MOOSCore\;CMake Files\src\;CMake Files\src\sOdometry\;CMake Files\src\sSensor\;CMake Files\src\sUUV\;CMake Files\src\sTest\;"/>
+		<Build>
+			<Target title="all">
+				<Option working_dir="/home/tom/Desktop/PACS/UNDERSEA/moos-ivp-undersea/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j12 -f &quot;/home/tom/Desktop/PACS/UNDERSEA/moos-ivp-undersea/cmake-build-debug/Makefile&quot;  VERBOSE=1 all"/>
+					<CompileFile command="/usr/bin/make -j12 -f &quot;/home/tom/Desktop/PACS/UNDERSEA/moos-ivp-undersea/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j12 -f &quot;/home/tom/Desktop/PACS/UNDERSEA/moos-ivp-undersea/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j12 -f &quot;/home/tom/Desktop/PACS/UNDERSEA/moos-ivp-undersea/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="rebuild_cache">
+				<Option working_dir="/home/tom/Desktop/PACS/UNDERSEA/moos-ivp-undersea/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j12 -f &quot;/home/tom/Desktop/PACS/UNDERSEA/moos-ivp-undersea/cmake-build-debug/Makefile&quot;  VERBOSE=1 rebuild_cache"/>
+					<CompileFile command="/usr/bin/make -j12 -f &quot;/home/tom/Desktop/PACS/UNDERSEA/moos-ivp-undersea/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j12 -f &quot;/home/tom/Desktop/PACS/UNDERSEA/moos-ivp-undersea/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j12 -f &quot;/home/tom/Desktop/PACS/UNDERSEA/moos-ivp-undersea/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="edit_cache">
+				<Option working_dir="/home/tom/Desktop/PACS/UNDERSEA/moos-ivp-undersea/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j12 -f &quot;/home/tom/Desktop/PACS/UNDERSEA/moos-ivp-undersea/cmake-build-debug/Makefile&quot;  VERBOSE=1 edit_cache"/>
+					<CompileFile command="/usr/bin/make -j12 -f &quot;/home/tom/Desktop/PACS/UNDERSEA/moos-ivp-undersea/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j12 -f &quot;/home/tom/Desktop/PACS/UNDERSEA/moos-ivp-undersea/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j12 -f &quot;/home/tom/Desktop/PACS/UNDERSEA/moos-ivp-undersea/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="sOdometry">
+				<Option output="/home/tom/Desktop/PACS/UNDERSEA/moos-ivp-undersea/bin/sOdometry" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/tom/Desktop/PACS/UNDERSEA/moos-ivp-undersea/bin"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/home/tom/Desktop/PACS/UNDERSEA/libraries/moos-ivp/MOOS/MOOSCore/Core/libMOOS/include"/>
+					<Add directory="/home/tom/Desktop/PACS/UNDERSEA/libraries/moos-ivp/MOOS/MOOSCore/Core/libMOOS/App/include"/>
+					<Add directory="/home/tom/Desktop/PACS/UNDERSEA/libraries/moos-ivp/MOOS/MOOSCore/Core/libMOOS/Comms/include"/>
+					<Add directory="/home/tom/Desktop/PACS/UNDERSEA/libraries/moos-ivp/MOOS/MOOSCore/Core/libMOOS/DB/include"/>
+					<Add directory="/home/tom/Desktop/PACS/UNDERSEA/libraries/moos-ivp/MOOS/MOOSCore/Core/libMOOS/Utils/include"/>
+					<Add directory="/home/tom/Desktop/PACS/UNDERSEA/libraries/moos-ivp/MOOS/MOOSCore/Core/libMOOS/Thirdparty/PocoBits/include"/>
+					<Add directory="/home/tom/Desktop/PACS/UNDERSEA/libraries/moos-ivp/MOOS/MOOSCore/Core/libMOOS/Thirdparty/getpot/include"/>
+					<Add directory="/home/tom/Desktop/PACS/UNDERSEA/libraries/moos-ivp/MOOS/MOOSCore/Core/libMOOS/Thirdparty/AppCasting/include"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_apputil"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_behaviors"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_behaviors-colregs"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_behaviors-marine"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_bhvutil"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_contacts"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_encounters"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_genutil"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_geometry"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_helmivp"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_henrik_anneal"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_ipfview"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_ivpbuild"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_ivpcore"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_ivpsolve"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_logic"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_logutils"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_manifest"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_marineview"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_mbutil"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_ucommand"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_ufield"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_ufld_hazards"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_zaicview"/>
+					<Add directory="/usr/include/c++/7"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/7"/>
+					<Add directory="/usr/include/c++/7/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j12 -f &quot;/home/tom/Desktop/PACS/UNDERSEA/moos-ivp-undersea/cmake-build-debug/src/sOdometry/Makefile&quot;  VERBOSE=1 sOdometry"/>
+					<CompileFile command="/usr/bin/make -j12 -f &quot;/home/tom/Desktop/PACS/UNDERSEA/moos-ivp-undersea/cmake-build-debug/src/sOdometry/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j12 -f &quot;/home/tom/Desktop/PACS/UNDERSEA/moos-ivp-undersea/cmake-build-debug/src/sOdometry/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j12 -f &quot;/home/tom/Desktop/PACS/UNDERSEA/moos-ivp-undersea/cmake-build-debug/src/sOdometry/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="sOdometry/fast">
+				<Option output="/home/tom/Desktop/PACS/UNDERSEA/moos-ivp-undersea/bin/sOdometry" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/tom/Desktop/PACS/UNDERSEA/moos-ivp-undersea/bin"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/home/tom/Desktop/PACS/UNDERSEA/libraries/moos-ivp/MOOS/MOOSCore/Core/libMOOS/include"/>
+					<Add directory="/home/tom/Desktop/PACS/UNDERSEA/libraries/moos-ivp/MOOS/MOOSCore/Core/libMOOS/App/include"/>
+					<Add directory="/home/tom/Desktop/PACS/UNDERSEA/libraries/moos-ivp/MOOS/MOOSCore/Core/libMOOS/Comms/include"/>
+					<Add directory="/home/tom/Desktop/PACS/UNDERSEA/libraries/moos-ivp/MOOS/MOOSCore/Core/libMOOS/DB/include"/>
+					<Add directory="/home/tom/Desktop/PACS/UNDERSEA/libraries/moos-ivp/MOOS/MOOSCore/Core/libMOOS/Utils/include"/>
+					<Add directory="/home/tom/Desktop/PACS/UNDERSEA/libraries/moos-ivp/MOOS/MOOSCore/Core/libMOOS/Thirdparty/PocoBits/include"/>
+					<Add directory="/home/tom/Desktop/PACS/UNDERSEA/libraries/moos-ivp/MOOS/MOOSCore/Core/libMOOS/Thirdparty/getpot/include"/>
+					<Add directory="/home/tom/Desktop/PACS/UNDERSEA/libraries/moos-ivp/MOOS/MOOSCore/Core/libMOOS/Thirdparty/AppCasting/include"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_apputil"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_behaviors"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_behaviors-colregs"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_behaviors-marine"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_bhvutil"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_contacts"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_encounters"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_genutil"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_geometry"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_helmivp"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_henrik_anneal"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_ipfview"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_ivpbuild"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_ivpcore"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_ivpsolve"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_logic"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_logutils"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_manifest"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_marineview"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_mbutil"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_ucommand"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_ufield"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_ufld_hazards"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_zaicview"/>
+					<Add directory="/usr/include/c++/7"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/7"/>
+					<Add directory="/usr/include/c++/7/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j12 -f &quot;/home/tom/Desktop/PACS/UNDERSEA/moos-ivp-undersea/cmake-build-debug/src/sOdometry/Makefile&quot;  VERBOSE=1 sOdometry/fast"/>
+					<CompileFile command="/usr/bin/make -j12 -f &quot;/home/tom/Desktop/PACS/UNDERSEA/moos-ivp-undersea/cmake-build-debug/src/sOdometry/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j12 -f &quot;/home/tom/Desktop/PACS/UNDERSEA/moos-ivp-undersea/cmake-build-debug/src/sOdometry/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j12 -f &quot;/home/tom/Desktop/PACS/UNDERSEA/moos-ivp-undersea/cmake-build-debug/src/sOdometry/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="sSensor">
+				<Option output="/home/tom/Desktop/PACS/UNDERSEA/moos-ivp-undersea/bin/sSensor" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/tom/Desktop/PACS/UNDERSEA/moos-ivp-undersea/bin"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/home/tom/Desktop/PACS/UNDERSEA/libraries/moos-ivp/MOOS/MOOSCore/Core/libMOOS/include"/>
+					<Add directory="/home/tom/Desktop/PACS/UNDERSEA/libraries/moos-ivp/MOOS/MOOSCore/Core/libMOOS/App/include"/>
+					<Add directory="/home/tom/Desktop/PACS/UNDERSEA/libraries/moos-ivp/MOOS/MOOSCore/Core/libMOOS/Comms/include"/>
+					<Add directory="/home/tom/Desktop/PACS/UNDERSEA/libraries/moos-ivp/MOOS/MOOSCore/Core/libMOOS/DB/include"/>
+					<Add directory="/home/tom/Desktop/PACS/UNDERSEA/libraries/moos-ivp/MOOS/MOOSCore/Core/libMOOS/Utils/include"/>
+					<Add directory="/home/tom/Desktop/PACS/UNDERSEA/libraries/moos-ivp/MOOS/MOOSCore/Core/libMOOS/Thirdparty/PocoBits/include"/>
+					<Add directory="/home/tom/Desktop/PACS/UNDERSEA/libraries/moos-ivp/MOOS/MOOSCore/Core/libMOOS/Thirdparty/getpot/include"/>
+					<Add directory="/home/tom/Desktop/PACS/UNDERSEA/libraries/moos-ivp/MOOS/MOOSCore/Core/libMOOS/Thirdparty/AppCasting/include"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_apputil"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_behaviors"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_behaviors-colregs"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_behaviors-marine"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_bhvutil"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_contacts"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_encounters"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_genutil"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_geometry"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_helmivp"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_henrik_anneal"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_ipfview"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_ivpbuild"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_ivpcore"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_ivpsolve"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_logic"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_logutils"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_manifest"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_marineview"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_mbutil"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_ucommand"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_ufield"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_ufld_hazards"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_zaicview"/>
+					<Add directory="/usr/include/c++/7"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/7"/>
+					<Add directory="/usr/include/c++/7/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j12 -f &quot;/home/tom/Desktop/PACS/UNDERSEA/moos-ivp-undersea/cmake-build-debug/src/sSensor/Makefile&quot;  VERBOSE=1 sSensor"/>
+					<CompileFile command="/usr/bin/make -j12 -f &quot;/home/tom/Desktop/PACS/UNDERSEA/moos-ivp-undersea/cmake-build-debug/src/sSensor/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j12 -f &quot;/home/tom/Desktop/PACS/UNDERSEA/moos-ivp-undersea/cmake-build-debug/src/sSensor/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j12 -f &quot;/home/tom/Desktop/PACS/UNDERSEA/moos-ivp-undersea/cmake-build-debug/src/sSensor/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="sSensor/fast">
+				<Option output="/home/tom/Desktop/PACS/UNDERSEA/moos-ivp-undersea/bin/sSensor" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/tom/Desktop/PACS/UNDERSEA/moos-ivp-undersea/bin"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/home/tom/Desktop/PACS/UNDERSEA/libraries/moos-ivp/MOOS/MOOSCore/Core/libMOOS/include"/>
+					<Add directory="/home/tom/Desktop/PACS/UNDERSEA/libraries/moos-ivp/MOOS/MOOSCore/Core/libMOOS/App/include"/>
+					<Add directory="/home/tom/Desktop/PACS/UNDERSEA/libraries/moos-ivp/MOOS/MOOSCore/Core/libMOOS/Comms/include"/>
+					<Add directory="/home/tom/Desktop/PACS/UNDERSEA/libraries/moos-ivp/MOOS/MOOSCore/Core/libMOOS/DB/include"/>
+					<Add directory="/home/tom/Desktop/PACS/UNDERSEA/libraries/moos-ivp/MOOS/MOOSCore/Core/libMOOS/Utils/include"/>
+					<Add directory="/home/tom/Desktop/PACS/UNDERSEA/libraries/moos-ivp/MOOS/MOOSCore/Core/libMOOS/Thirdparty/PocoBits/include"/>
+					<Add directory="/home/tom/Desktop/PACS/UNDERSEA/libraries/moos-ivp/MOOS/MOOSCore/Core/libMOOS/Thirdparty/getpot/include"/>
+					<Add directory="/home/tom/Desktop/PACS/UNDERSEA/libraries/moos-ivp/MOOS/MOOSCore/Core/libMOOS/Thirdparty/AppCasting/include"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_apputil"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_behaviors"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_behaviors-colregs"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_behaviors-marine"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_bhvutil"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_contacts"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_encounters"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_genutil"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_geometry"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_helmivp"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_henrik_anneal"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_ipfview"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_ivpbuild"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_ivpcore"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_ivpsolve"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_logic"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_logutils"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_manifest"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_marineview"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_mbutil"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_ucommand"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_ufield"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_ufld_hazards"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_zaicview"/>
+					<Add directory="/usr/include/c++/7"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/7"/>
+					<Add directory="/usr/include/c++/7/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j12 -f &quot;/home/tom/Desktop/PACS/UNDERSEA/moos-ivp-undersea/cmake-build-debug/src/sSensor/Makefile&quot;  VERBOSE=1 sSensor/fast"/>
+					<CompileFile command="/usr/bin/make -j12 -f &quot;/home/tom/Desktop/PACS/UNDERSEA/moos-ivp-undersea/cmake-build-debug/src/sSensor/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j12 -f &quot;/home/tom/Desktop/PACS/UNDERSEA/moos-ivp-undersea/cmake-build-debug/src/sSensor/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j12 -f &quot;/home/tom/Desktop/PACS/UNDERSEA/moos-ivp-undersea/cmake-build-debug/src/sSensor/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="sUUV">
+				<Option output="/home/tom/Desktop/PACS/UNDERSEA/moos-ivp-undersea/bin/sUUV" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/tom/Desktop/PACS/UNDERSEA/moos-ivp-undersea/bin"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/home/tom/Desktop/PACS/UNDERSEA/libraries/moos-ivp/MOOS/MOOSCore/Core/libMOOS/include"/>
+					<Add directory="/home/tom/Desktop/PACS/UNDERSEA/libraries/moos-ivp/MOOS/MOOSCore/Core/libMOOS/App/include"/>
+					<Add directory="/home/tom/Desktop/PACS/UNDERSEA/libraries/moos-ivp/MOOS/MOOSCore/Core/libMOOS/Comms/include"/>
+					<Add directory="/home/tom/Desktop/PACS/UNDERSEA/libraries/moos-ivp/MOOS/MOOSCore/Core/libMOOS/DB/include"/>
+					<Add directory="/home/tom/Desktop/PACS/UNDERSEA/libraries/moos-ivp/MOOS/MOOSCore/Core/libMOOS/Utils/include"/>
+					<Add directory="/home/tom/Desktop/PACS/UNDERSEA/libraries/moos-ivp/MOOS/MOOSCore/Core/libMOOS/Thirdparty/PocoBits/include"/>
+					<Add directory="/home/tom/Desktop/PACS/UNDERSEA/libraries/moos-ivp/MOOS/MOOSCore/Core/libMOOS/Thirdparty/getpot/include"/>
+					<Add directory="/home/tom/Desktop/PACS/UNDERSEA/libraries/moos-ivp/MOOS/MOOSCore/Core/libMOOS/Thirdparty/AppCasting/include"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_apputil"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_behaviors"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_behaviors-colregs"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_behaviors-marine"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_bhvutil"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_contacts"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_encounters"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_genutil"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_geometry"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_helmivp"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_henrik_anneal"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_ipfview"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_ivpbuild"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_ivpcore"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_ivpsolve"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_logic"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_logutils"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_manifest"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_marineview"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_mbutil"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_ucommand"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_ufield"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_ufld_hazards"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_zaicview"/>
+					<Add directory="/usr/include/c++/7"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/7"/>
+					<Add directory="/usr/include/c++/7/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j12 -f &quot;/home/tom/Desktop/PACS/UNDERSEA/moos-ivp-undersea/cmake-build-debug/src/sUUV/Makefile&quot;  VERBOSE=1 sUUV"/>
+					<CompileFile command="/usr/bin/make -j12 -f &quot;/home/tom/Desktop/PACS/UNDERSEA/moos-ivp-undersea/cmake-build-debug/src/sUUV/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j12 -f &quot;/home/tom/Desktop/PACS/UNDERSEA/moos-ivp-undersea/cmake-build-debug/src/sUUV/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j12 -f &quot;/home/tom/Desktop/PACS/UNDERSEA/moos-ivp-undersea/cmake-build-debug/src/sUUV/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="sUUV/fast">
+				<Option output="/home/tom/Desktop/PACS/UNDERSEA/moos-ivp-undersea/bin/sUUV" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/tom/Desktop/PACS/UNDERSEA/moos-ivp-undersea/bin"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/home/tom/Desktop/PACS/UNDERSEA/libraries/moos-ivp/MOOS/MOOSCore/Core/libMOOS/include"/>
+					<Add directory="/home/tom/Desktop/PACS/UNDERSEA/libraries/moos-ivp/MOOS/MOOSCore/Core/libMOOS/App/include"/>
+					<Add directory="/home/tom/Desktop/PACS/UNDERSEA/libraries/moos-ivp/MOOS/MOOSCore/Core/libMOOS/Comms/include"/>
+					<Add directory="/home/tom/Desktop/PACS/UNDERSEA/libraries/moos-ivp/MOOS/MOOSCore/Core/libMOOS/DB/include"/>
+					<Add directory="/home/tom/Desktop/PACS/UNDERSEA/libraries/moos-ivp/MOOS/MOOSCore/Core/libMOOS/Utils/include"/>
+					<Add directory="/home/tom/Desktop/PACS/UNDERSEA/libraries/moos-ivp/MOOS/MOOSCore/Core/libMOOS/Thirdparty/PocoBits/include"/>
+					<Add directory="/home/tom/Desktop/PACS/UNDERSEA/libraries/moos-ivp/MOOS/MOOSCore/Core/libMOOS/Thirdparty/getpot/include"/>
+					<Add directory="/home/tom/Desktop/PACS/UNDERSEA/libraries/moos-ivp/MOOS/MOOSCore/Core/libMOOS/Thirdparty/AppCasting/include"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_apputil"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_behaviors"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_behaviors-colregs"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_behaviors-marine"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_bhvutil"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_contacts"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_encounters"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_genutil"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_geometry"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_helmivp"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_henrik_anneal"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_ipfview"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_ivpbuild"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_ivpcore"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_ivpsolve"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_logic"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_logutils"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_manifest"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_marineview"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_mbutil"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_ucommand"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_ufield"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_ufld_hazards"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_zaicview"/>
+					<Add directory="/usr/include/c++/7"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/7"/>
+					<Add directory="/usr/include/c++/7/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j12 -f &quot;/home/tom/Desktop/PACS/UNDERSEA/moos-ivp-undersea/cmake-build-debug/src/sUUV/Makefile&quot;  VERBOSE=1 sUUV/fast"/>
+					<CompileFile command="/usr/bin/make -j12 -f &quot;/home/tom/Desktop/PACS/UNDERSEA/moos-ivp-undersea/cmake-build-debug/src/sUUV/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j12 -f &quot;/home/tom/Desktop/PACS/UNDERSEA/moos-ivp-undersea/cmake-build-debug/src/sUUV/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j12 -f &quot;/home/tom/Desktop/PACS/UNDERSEA/moos-ivp-undersea/cmake-build-debug/src/sUUV/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="sTest">
+				<Option output="/home/tom/Desktop/PACS/UNDERSEA/moos-ivp-undersea/bin/sTest" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/tom/Desktop/PACS/UNDERSEA/moos-ivp-undersea/bin"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/home/tom/Desktop/PACS/UNDERSEA/libraries/moos-ivp/MOOS/MOOSCore/Core/libMOOS/include"/>
+					<Add directory="/home/tom/Desktop/PACS/UNDERSEA/libraries/moos-ivp/MOOS/MOOSCore/Core/libMOOS/App/include"/>
+					<Add directory="/home/tom/Desktop/PACS/UNDERSEA/libraries/moos-ivp/MOOS/MOOSCore/Core/libMOOS/Comms/include"/>
+					<Add directory="/home/tom/Desktop/PACS/UNDERSEA/libraries/moos-ivp/MOOS/MOOSCore/Core/libMOOS/DB/include"/>
+					<Add directory="/home/tom/Desktop/PACS/UNDERSEA/libraries/moos-ivp/MOOS/MOOSCore/Core/libMOOS/Utils/include"/>
+					<Add directory="/home/tom/Desktop/PACS/UNDERSEA/libraries/moos-ivp/MOOS/MOOSCore/Core/libMOOS/Thirdparty/PocoBits/include"/>
+					<Add directory="/home/tom/Desktop/PACS/UNDERSEA/libraries/moos-ivp/MOOS/MOOSCore/Core/libMOOS/Thirdparty/getpot/include"/>
+					<Add directory="/home/tom/Desktop/PACS/UNDERSEA/libraries/moos-ivp/MOOS/MOOSCore/Core/libMOOS/Thirdparty/AppCasting/include"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_apputil"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_behaviors"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_behaviors-colregs"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_behaviors-marine"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_bhvutil"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_contacts"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_encounters"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_genutil"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_geometry"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_helmivp"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_henrik_anneal"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_ipfview"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_ivpbuild"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_ivpcore"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_ivpsolve"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_logic"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_logutils"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_manifest"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_marineview"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_mbutil"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_ucommand"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_ufield"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_ufld_hazards"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_zaicview"/>
+					<Add directory="/usr/include/c++/7"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/7"/>
+					<Add directory="/usr/include/c++/7/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j12 -f &quot;/home/tom/Desktop/PACS/UNDERSEA/moos-ivp-undersea/cmake-build-debug/src/sTest/Makefile&quot;  VERBOSE=1 sTest"/>
+					<CompileFile command="/usr/bin/make -j12 -f &quot;/home/tom/Desktop/PACS/UNDERSEA/moos-ivp-undersea/cmake-build-debug/src/sTest/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j12 -f &quot;/home/tom/Desktop/PACS/UNDERSEA/moos-ivp-undersea/cmake-build-debug/src/sTest/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j12 -f &quot;/home/tom/Desktop/PACS/UNDERSEA/moos-ivp-undersea/cmake-build-debug/src/sTest/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="sTest/fast">
+				<Option output="/home/tom/Desktop/PACS/UNDERSEA/moos-ivp-undersea/bin/sTest" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/tom/Desktop/PACS/UNDERSEA/moos-ivp-undersea/bin"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/home/tom/Desktop/PACS/UNDERSEA/libraries/moos-ivp/MOOS/MOOSCore/Core/libMOOS/include"/>
+					<Add directory="/home/tom/Desktop/PACS/UNDERSEA/libraries/moos-ivp/MOOS/MOOSCore/Core/libMOOS/App/include"/>
+					<Add directory="/home/tom/Desktop/PACS/UNDERSEA/libraries/moos-ivp/MOOS/MOOSCore/Core/libMOOS/Comms/include"/>
+					<Add directory="/home/tom/Desktop/PACS/UNDERSEA/libraries/moos-ivp/MOOS/MOOSCore/Core/libMOOS/DB/include"/>
+					<Add directory="/home/tom/Desktop/PACS/UNDERSEA/libraries/moos-ivp/MOOS/MOOSCore/Core/libMOOS/Utils/include"/>
+					<Add directory="/home/tom/Desktop/PACS/UNDERSEA/libraries/moos-ivp/MOOS/MOOSCore/Core/libMOOS/Thirdparty/PocoBits/include"/>
+					<Add directory="/home/tom/Desktop/PACS/UNDERSEA/libraries/moos-ivp/MOOS/MOOSCore/Core/libMOOS/Thirdparty/getpot/include"/>
+					<Add directory="/home/tom/Desktop/PACS/UNDERSEA/libraries/moos-ivp/MOOS/MOOSCore/Core/libMOOS/Thirdparty/AppCasting/include"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_apputil"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_behaviors"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_behaviors-colregs"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_behaviors-marine"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_bhvutil"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_contacts"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_encounters"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_genutil"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_geometry"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_helmivp"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_henrik_anneal"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_ipfview"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_ivpbuild"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_ivpcore"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_ivpsolve"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_logic"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_logutils"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_manifest"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_marineview"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_mbutil"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_ucommand"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_ufield"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_ufld_hazards"/>
+					<Add directory="/home/tom/Desktop/PACS/moos-ivp/ivp/src/lib_zaicview"/>
+					<Add directory="/usr/include/c++/7"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/7"/>
+					<Add directory="/usr/include/c++/7/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j12 -f &quot;/home/tom/Desktop/PACS/UNDERSEA/moos-ivp-undersea/cmake-build-debug/src/sTest/Makefile&quot;  VERBOSE=1 sTest/fast"/>
+					<CompileFile command="/usr/bin/make -j12 -f &quot;/home/tom/Desktop/PACS/UNDERSEA/moos-ivp-undersea/cmake-build-debug/src/sTest/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j12 -f &quot;/home/tom/Desktop/PACS/UNDERSEA/moos-ivp-undersea/cmake-build-debug/src/sTest/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j12 -f &quot;/home/tom/Desktop/PACS/UNDERSEA/moos-ivp-undersea/cmake-build-debug/src/sTest/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+		</Build>
+		<Unit filename="/home/tom/Desktop/PACS/UNDERSEA/moos-ivp-undersea/src/sOdometry/Odometry.cpp">
+			<Option target="sOdometry"/>
+		</Unit>
+		<Unit filename="/home/tom/Desktop/PACS/UNDERSEA/moos-ivp-undersea/src/sOdometry/Odometry.h">
+			<Option target="sOdometry"/>
+		</Unit>
+		<Unit filename="/home/tom/Desktop/PACS/UNDERSEA/moos-ivp-undersea/src/sOdometry/Odometry_Info.cpp">
+			<Option target="sOdometry"/>
+		</Unit>
+		<Unit filename="/home/tom/Desktop/PACS/UNDERSEA/moos-ivp-undersea/src/sOdometry/Odometry_Info.h">
+			<Option target="sOdometry"/>
+		</Unit>
+		<Unit filename="/home/tom/Desktop/PACS/UNDERSEA/moos-ivp-undersea/src/sOdometry/main.cpp">
+			<Option target="sOdometry"/>
+		</Unit>
+		<Unit filename="/home/tom/Desktop/PACS/UNDERSEA/moos-ivp-undersea/src/sSensor/Change.cpp">
+			<Option target="sSensor"/>
+		</Unit>
+		<Unit filename="/home/tom/Desktop/PACS/UNDERSEA/moos-ivp-undersea/src/sSensor/Change.h">
+			<Option target="sSensor"/>
+		</Unit>
+		<Unit filename="/home/tom/Desktop/PACS/UNDERSEA/moos-ivp-undersea/src/sSensor/Sensor.cpp">
+			<Option target="sSensor"/>
+		</Unit>
+		<Unit filename="/home/tom/Desktop/PACS/UNDERSEA/moos-ivp-undersea/src/sSensor/Sensor.h">
+			<Option target="sSensor"/>
+		</Unit>
+		<Unit filename="/home/tom/Desktop/PACS/UNDERSEA/moos-ivp-undersea/src/sSensor/Sensor_Info.cpp">
+			<Option target="sSensor"/>
+		</Unit>
+		<Unit filename="/home/tom/Desktop/PACS/UNDERSEA/moos-ivp-undersea/src/sSensor/Sensor_Info.h">
+			<Option target="sSensor"/>
+		</Unit>
+		<Unit filename="/home/tom/Desktop/PACS/UNDERSEA/moos-ivp-undersea/src/sSensor/main.cpp">
+			<Option target="sSensor"/>
+		</Unit>
+		<Unit filename="/home/tom/Desktop/PACS/UNDERSEA/moos-ivp-undersea/src/sTest/Change.cpp">
+			<Option target="sTest"/>
+		</Unit>
+		<Unit filename="/home/tom/Desktop/PACS/UNDERSEA/moos-ivp-undersea/src/sTest/Change.h">
+			<Option target="sTest"/>
+		</Unit>
+		<Unit filename="/home/tom/Desktop/PACS/UNDERSEA/moos-ivp-undersea/src/sTest/Sensor.cpp">
+			<Option target="sTest"/>
+		</Unit>
+		<Unit filename="/home/tom/Desktop/PACS/UNDERSEA/moos-ivp-undersea/src/sTest/Sensor.h">
+			<Option target="sTest"/>
+		</Unit>
+		<Unit filename="/home/tom/Desktop/PACS/UNDERSEA/moos-ivp-undersea/src/sTest/Sensor_Info.cpp">
+			<Option target="sTest"/>
+		</Unit>
+		<Unit filename="/home/tom/Desktop/PACS/UNDERSEA/moos-ivp-undersea/src/sTest/Sensor_Info.h">
+			<Option target="sTest"/>
+		</Unit>
+		<Unit filename="/home/tom/Desktop/PACS/UNDERSEA/moos-ivp-undersea/src/sTest/main.cpp">
+			<Option target="sTest"/>
+		</Unit>
+		<Unit filename="/home/tom/Desktop/PACS/UNDERSEA/moos-ivp-undersea/src/sUUV/UUV.cpp">
+			<Option target="sUUV"/>
+		</Unit>
+		<Unit filename="/home/tom/Desktop/PACS/UNDERSEA/moos-ivp-undersea/src/sUUV/UUV.h">
+			<Option target="sUUV"/>
+		</Unit>
+		<Unit filename="/home/tom/Desktop/PACS/UNDERSEA/moos-ivp-undersea/src/sUUV/UUV_Info.cpp">
+			<Option target="sUUV"/>
+		</Unit>
+		<Unit filename="/home/tom/Desktop/PACS/UNDERSEA/moos-ivp-undersea/src/sUUV/UUV_Info.h">
+			<Option target="sUUV"/>
+		</Unit>
+		<Unit filename="/home/tom/Desktop/PACS/UNDERSEA/moos-ivp-undersea/src/sUUV/Utilities.cpp">
+			<Option target="sUUV"/>
+		</Unit>
+		<Unit filename="/home/tom/Desktop/PACS/UNDERSEA/moos-ivp-undersea/src/sUUV/Utilities.h">
+			<Option target="sUUV"/>
+		</Unit>
+		<Unit filename="/home/tom/Desktop/PACS/UNDERSEA/moos-ivp-undersea/src/sUUV/main.cpp">
+			<Option target="sUUV"/>
+		</Unit>
+		<Unit filename="/home/tom/Desktop/PACS/UNDERSEA/moos-ivp-undersea/src/sUUV/server/serverLoop.cpp">
+			<Option target="sUUV"/>
+		</Unit>
+		<Unit filename="/home/tom/Desktop/PACS/UNDERSEA/moos-ivp-undersea/src/sUUV/server/serverLoop.h">
+			<Option target="sUUV"/>
+		</Unit>
+		<Unit filename="/home/tom/Desktop/PACS/UNDERSEA/moos-ivp-undersea/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\"/>
+		</Unit>
+		<Unit filename="/home/tom/Desktop/PACS/UNDERSEA/moos-ivp-undersea/../libraries/moos-ivp/build/MOOS/MOOSCore/MOOSConfig.cmake">
+			<Option virtualFolder="CMake Files\..\libraries\moos-ivp\build\MOOS\MOOSCore\"/>
+		</Unit>
+		<Unit filename="/home/tom/Desktop/PACS/UNDERSEA/moos-ivp-undersea/../libraries/moos-ivp/build/MOOS/MOOSCore/MOOSConfigVersion.cmake">
+			<Option virtualFolder="CMake Files\..\libraries\moos-ivp\build\MOOS\MOOSCore\"/>
+		</Unit>
+		<Unit filename="/home/tom/Desktop/PACS/UNDERSEA/moos-ivp-undersea/../libraries/moos-ivp/build/MOOS/MOOSCore/UseMOOS.cmake">
+			<Option virtualFolder="CMake Files\..\libraries\moos-ivp\build\MOOS\MOOSCore\"/>
+		</Unit>
+		<Unit filename="/home/tom/Desktop/PACS/UNDERSEA/moos-ivp-undersea/src/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\src\"/>
+		</Unit>
+		<Unit filename="/home/tom/Desktop/PACS/UNDERSEA/moos-ivp-undersea/src/sOdometry/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\src\sOdometry\"/>
+		</Unit>
+		<Unit filename="/home/tom/Desktop/PACS/UNDERSEA/moos-ivp-undersea/src/sSensor/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\src\sSensor\"/>
+		</Unit>
+		<Unit filename="/home/tom/Desktop/PACS/UNDERSEA/moos-ivp-undersea/src/sUUV/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\src\sUUV\"/>
+		</Unit>
+		<Unit filename="/home/tom/Desktop/PACS/UNDERSEA/moos-ivp-undersea/src/sTest/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\src\sTest\"/>
+		</Unit>
+	</Project>
+</CodeBlocks_project_file>

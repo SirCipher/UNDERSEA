@@ -11,9 +11,10 @@ import com.type2labs.undersea.utilities.Utility;
 import java.io.File;
 import java.nio.file.attribute.PosixFilePermission;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.Map;
 
-@SuppressWarnings("StringConcatenationInsideStringBufferAppend")
+@SuppressWarnings({"StringConcatenationInsideStringBufferAppend", "StringBufferReplaceableByString"})
 class MoosConfigurationWriter {
 
     private static final SensorFactory sensorFactory = FactoryProvider.getSensorFactory();
@@ -40,8 +41,7 @@ class MoosConfigurationWriter {
 
         ivpBlock.append("}");
 
-        //write
-        Utility.exportToFile(MoosConfigurationWriter.buildDir + "/plug_pHelmIvP_" + agent.getName() + ".moos",
+        Utility.exportToFile(MoosConfigurationWriter.buildDir + File.separator + "plug_pHelmIvP_" + agent.getName() + ".moos",
                 ivpBlock.toString(),
                 false);
     }
@@ -75,20 +75,18 @@ class MoosConfigurationWriter {
                     false, Collections.singletonList(PosixFilePermission.OWNER_EXECUTE));
         }
 
-        StringBuilder cleanScript = new StringBuilder();
-        cleanScript.append("#!/bin/bash\n");
-        cleanScript.append("\n");
-        cleanScript.append("rm -rf\tMOOSLog_*\n");
-        cleanScript.append("rm -rf\tLOG_*\n");
-        cleanScript.append("rm -f\t*~\n");
-        cleanScript.append("rm -f\t*.moos++\n");
-        cleanScript.append("rm -f\t.LastOpenedMOOSLogDirectory\n");
+        String cleanScript = "#!/bin/bash\n" +
+                "\n" +
+                "rm -rf\tMOOSLog_*\n" +
+                "rm -rf\tLOG_*\n" +
+                "rm -f\t*~\n" +
+                "rm -f\t*.moos++\n" +
+                "rm -f\t.LastOpenedMOOSLogDirectory\n";
 
         Utility.exportToFileWithPermissions(MoosConfigurationWriter.buildDir + File.separator + "clean.sh",
-                cleanScript.toString(),
+                cleanScript,
                 false, Collections.singletonList(PosixFilePermission.OWNER_EXECUTE));
     }
-
 
     private static void generateSensors() {
         for (Map.Entry<String, Sensor> entry : sensorFactory.getSensors().entrySet()) {
@@ -215,6 +213,30 @@ class MoosConfigurationWriter {
 
         vehicleBlock.append("}\n\n");
 
+        vehicleBlock.append("//-------------------------\n");
+        vehicleBlock.append("// sUUV Configuration Block\n");
+        vehicleBlock.append("//-------------------------\n");
+        vehicleBlock.append("ProcessConfig = sUUV\n");
+        vehicleBlock.append("{\n");
+        vehicleBlock.append("\t AppTick = " + agent.getRate() + "\n");
+        vehicleBlock.append("\t CommsTick = " + agent.getRate() + "\n");
+        vehicleBlock.append("\t MAX_APPCAST_EVENTS = 25 \n");
+        vehicleBlock.append("\t NAME = " + agent.getName() + "\n");
+        vehicleBlock.append("\t PORT = $(SUUVPORT)\n");
+
+        StringBuilder sensorsStr = new StringBuilder();
+
+        Iterator<Sensor> iterator = agent.getSensors().iterator();
+
+        while (iterator.hasNext()) {
+            sensorsStr.append(iterator.next().getName());
+
+            if (iterator.hasNext()) {
+                sensorsStr.append(",");
+            }
+        }
+        vehicleBlock.append("\t SENSORS = ").append(sensorsStr).append("\n").append("}\n");
+
         vehicleBlock.append("#include plug_uSimMarine.moos\n");
         vehicleBlock.append("#include plug_pLogger.moos\n");
         vehicleBlock.append("#include plug_pNodeReporter.moos\n");
@@ -225,7 +247,6 @@ class MoosConfigurationWriter {
         vehicleBlock.append("#include plug_pHostInfo.moos\n");
         vehicleBlock.append("#include plug_uFldNodeBroker.moos\n");
         vehicleBlock.append("#include plug_uTimerScript.moos\n");
-        vehicleBlock.append("#include plug_agent_" + agent.getName() + ".moos\n");
 
         for (Sensor sensor : agent.getSensors()) {
             vehicleBlock.append("#include plug_" + sensor.getName() + ".moos\n");
@@ -252,11 +273,6 @@ class MoosConfigurationWriter {
         for (Map.Entry<String, DslAgentProxy> entry : environmentProperties.getAgents().entrySet()) {
             DslAgentProxy agent = entry.getValue();
 
-            //generate agent moos block
-            Utility.exportToFile(MoosConfigurationWriter.buildDir + File.separator + "plug_agent_" + agent.getName() +
-                            ".moos",
-                    agent.toString(), false);
-
             //generate target vehicle block
             generateTargetVehicleBlock(agent);
 
@@ -265,20 +281,6 @@ class MoosConfigurationWriter {
         }
 
         generateScripts();
-//        generateLaunchAndCleanScripts();
-    }
-
-    private static void writeHostInfo(StringBuilder vehicleBlock) {
-        vehicleBlock.append("//------------------------------\n");
-        vehicleBlock.append("// pHostInfo configuration block\n");
-        vehicleBlock.append("//------------------------------\n");
-        vehicleBlock.append("ProcessConfig = pHostInfo\n");
-        vehicleBlock.append("{\n");
-        vehicleBlock.append("\tAppTick\t\t= 1\n");
-        vehicleBlock.append("\tCommsTick\t= 1\n");
-        vehicleBlock.append("\n");
-        vehicleBlock.append("\tDEFAULT_HOSTIP_FORCE = localhost\n");
-        vehicleBlock.append("}\n");
     }
 
 }

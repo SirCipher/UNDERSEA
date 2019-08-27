@@ -27,11 +27,23 @@ ProcessConfig = ANTLER
 	Run = pShare         @ NewConsole = false
 	Run = uTimerScript   @ NewConsole = false
 	Run = pHostInfo		 @ NewConsole = false
-	Run = sUUV           @ NewConsole = false
+	Run = sUUV           @ NewConsole = false ~sUUVbravo
 	Run = uFldNodeBroker @ NewConsole = false
-	Run = sSensor		 @ NewConsole = false ~SENSOR3
-	Run = sSensor		 @ NewConsole = false ~SENSOR4
+	//Run = sSensor		 @ NewConsole = false ~SENSOR3
+	//Run = sSensor		 @ NewConsole = false ~SENSOR4
+  Run = sTest       @ NewConsole = false
 }
+
+//------------------------------------------------
+// Underseap config block
+
+ProcessConfig = sTest
+{
+   AppTick   = 4
+   CommsTick = 4
+}
+
+
 
 //-------------------------------
 // uSimMarine Configuration Block
@@ -205,10 +217,10 @@ ProcessConfig = uTimerScript
 //-------------------------
 // sUUV Configuration Block
 //-------------------------
-ProcessConfig = sUUV
+ProcessConfig = sUUVbravo
 {
-	 AppTick = null
-	 CommsTick = null
+	 AppTick			= 3.0
+	 CommsTick			= 3.0
 	 MAX_APPCAST_EVENTS = 25 
 	 NAME = bravo
 	 PORT = 9002

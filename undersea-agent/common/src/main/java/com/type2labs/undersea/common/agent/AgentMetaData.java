@@ -36,6 +36,10 @@ public class AgentMetaData {
         return runnerProperties;
     }
 
+    public Object getProperty(String key){
+        return runnerProperties.get(key);
+    }
+
     public void setRunnerProperties(Properties runnerProperties) {
         this.runnerProperties = runnerProperties;
     }

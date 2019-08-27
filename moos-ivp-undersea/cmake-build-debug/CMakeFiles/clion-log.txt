@@ -1,0 +1,5 @@
+/home/tom/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/192.6262.62/bin/cmake/linux/bin/cmake -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles" /home/tom/Desktop/PACS/UNDERSEA/moos-ivp-undersea
+/home/tom/Desktop/PACS/UNDERSEA/libraries/moos-ivp/MOOS/MOOSCore/Core/libMOOS/include/home/tom/Desktop/PACS/UNDERSEA/libraries/moos-ivp/MOOS/MOOSCore/Core/libMOOS/App/include/home/tom/Desktop/PACS/UNDERSEA/libraries/moos-ivp/MOOS/MOOSCore/Core/libMOOS/Comms/include/home/tom/Desktop/PACS/UNDERSEA/libraries/moos-ivp/MOOS/MOOSCore/Core/libMOOS/DB/include/home/tom/Desktop/PACS/UNDERSEA/libraries/moos-ivp/MOOS/MOOSCore/Core/libMOOS/Utils/include/home/tom/Desktop/PACS/UNDERSEA/libraries/moos-ivp/MOOS/MOOSCore/Core/libMOOS/Thirdparty/PocoBits/include/home/tom/Desktop/PACS/UNDERSEA/libraries/moos-ivp/MOOS/MOOSCore/Core/libMOOS/Thirdparty/getpot/include/home/tom/Desktop/PACS/UNDERSEA/libraries/moos-ivp/MOOS/MOOSCore/Core/libMOOS/Thirdparty/AppCasting/include
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /home/tom/Desktop/PACS/UNDERSEA/moos-ivp-undersea/cmake-build-debug

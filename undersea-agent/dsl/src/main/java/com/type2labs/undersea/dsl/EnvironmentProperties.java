@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.stream.Collectors;
 
+// TODO: 27/08/2019 I think this should be moved to common and be a subclass of env props
 public class EnvironmentProperties {
 
     private static Properties runnerProperties;
@@ -15,6 +16,16 @@ public class EnvironmentProperties {
     private final Map<String, DslAgentProxy> agents = new HashMap<>();
 
     public Properties getRunnerProperties() {
+        return runnerProperties;
+    }
+
+    /**
+     * Adds all {@link EnvironmentValue}s to {@link EnvironmentProperties#runnerProperties}
+     *
+     * @return a populated properties file
+     */
+    public Properties finaliseProperties() {
+        environmentValues.forEach((key, value) -> runnerProperties.put(key.toString().toLowerCase(), value));
         return runnerProperties;
     }
 

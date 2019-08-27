@@ -11,34 +11,38 @@
 //#include "MOOS/libMOOS/MOOSLib.h"
 #include "MOOS/libMOOS/Thirdparty/AppCasting/AppCastingMOOSApp.h"
 
-class Odometry : public AppCastingMOOSApp
-{
- public:
-   Odometry();
-   ~Odometry();
-   bool buildReport();
+class Odometry : public AppCastingMOOSApp {
+public:
+    Odometry();
 
- protected:
-   bool OnNewMail(MOOSMSG_LIST &NewMail);
-   bool Iterate();
-   bool OnStartUp();
+    ~Odometry();
 
-   bool OnConnectToServer();
-   void RegisterVariables();
+    bool buildReport();
+
+protected:
+    bool OnNewMail(MOOSMSG_LIST &NewMail);
+
+    bool Iterate();
+
+    bool OnStartUp();
+
+    bool OnConnectToServer();
+
+    void RegisterVariables();
 
 
- private: // Configuration variables
+private: // Configuration variables
 
- private: // State variables
-   unsigned int m_iterations;
-   double       m_timewarp;
+private: // State variables
+    unsigned int m_iterations;
+    double m_timewarp;
 
-   bool m_first_reading;
-   double m_current_x;
-   double m_current_y;
-   double m_previous_x;
-   double m_previous_y;
-   double m_total_distance;
+    bool m_first_reading;
+    double m_current_x;
+    double m_current_y;
+    double m_previous_x;
+    double m_previous_y;
+    double m_total_distance;
 };
 
 #endif 

@@ -45,6 +45,8 @@ public class AgentInitialiserImpl implements AgentInitialiser {
         AgentFactory agentFactory = new AgentFactory();
         List<Agent> constructedAgents = new LinkedList<>();
 
+        Properties properties = environmentProperties.finaliseProperties();
+
         agents.forEach((key, value) -> {
             DslAgentProxy agentProxy = (DslAgentProxy) value;
 
@@ -82,8 +84,8 @@ public class AgentInitialiserImpl implements AgentInitialiser {
                     environmentProperties.getEnvironmentValue(EnvironmentProperties.EnvironmentValue.MISSION_NAME);
             metaData.setMissionName(missionName);
 
-            Properties properties = environmentProperties.getRunnerProperties();
             metaData.setMissionDirectory(new File((String) properties.get("config.output")));
+            metaData.setRunnerProperties(properties);
 
             underseaAgent.setMetadata(metaData);
 
