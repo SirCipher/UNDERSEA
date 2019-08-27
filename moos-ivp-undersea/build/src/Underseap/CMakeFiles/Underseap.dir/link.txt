@@ -1,1 +1,0 @@
-/usr/bin/c++   -fPIC -g  -rdynamic CMakeFiles/Underseap.dir/p.cpp.o CMakeFiles/Underseap.dir/p_Info.cpp.o CMakeFiles/Underseap.dir/main.cpp.o  -o ../../../bin/Underseap  -L/home/tom/Desktop/PACS/moos-ivp/lib -Wl,-rpath,/home/tom/Desktop/PACS/moos-ivp/lib /home/tom/Desktop/PACS/UNDERSEA/libraries/moos-ivp/build/MOOS/MOOSCore/lib/libMOOS.a -lmbutil -lm -lpthread 
