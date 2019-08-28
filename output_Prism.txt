@@ -1,7 +1,0 @@
-PRISM
-=====
-
-Version: 4.5
-Date: Tue Aug 27 15:08:03 BST 2019
-Hostname: mudkipz
-Memory limits: cudd=1g, java(heap)=1.7g
