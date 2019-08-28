@@ -135,7 +135,7 @@ void *runServer2(void *m_sensors_map) {
 
     do {
         bzero(buffer, 256);
-        printf("Waiting:\n");
+        printf("Waiting...\n");
         n = read(newsockfd, buffer, 255);
         if (n < 0)
             error("ERROR reading from socket");
@@ -150,6 +150,8 @@ void *runServer2(void *m_sensors_map) {
 
         if (strcmp(buffer, "###") == 0) {
             outputStr = "###\n";
+            std::cout << "Received shutdown request" << std::endl;
+
         } else if (strcmp(buffer, "SENSORS") == 0) {
             outputStr.clear();
             for (auto &it : *sensMap) {
@@ -213,6 +215,8 @@ void *runServer2(void *m_sensors_map) {
 //			 printf("%d\t", (int)(buffer[i]));
 
     } while (strcmp(buffer, "!!") != 0);
+
+    std::cout << "Terminating" << std::endl;
 
     close(newsockfd);
     close(sockfd);

@@ -204,7 +204,10 @@ class MoosConfigurationWriter {
         vehicleBlock.append("\tRun = pShare         @ NewConsole = false\n");
         vehicleBlock.append("\tRun = uTimerScript   @ NewConsole = false\n");
         vehicleBlock.append("\tRun = pHostInfo\t\t @ NewConsole = false\n");
-        vehicleBlock.append("\tRun = sUUV           @ NewConsole = true\n");
+
+        String suuvProcName = "sUUV" + agent.name();
+
+        vehicleBlock.append("\tRun = sUUV           @ NewConsole = true ~" + suuvProcName + "\n");
         vehicleBlock.append("\tRun = uFldNodeBroker @ NewConsole = false\n");
 
         for (Sensor sensor : agent.getSensors()) {
@@ -216,7 +219,7 @@ class MoosConfigurationWriter {
         vehicleBlock.append("//-------------------------\n");
         vehicleBlock.append("// sUUV Configuration Block\n");
         vehicleBlock.append("//-------------------------\n");
-        vehicleBlock.append("ProcessConfig = sUUV\n");
+        vehicleBlock.append("ProcessConfig = " + suuvProcName + "\n");
         vehicleBlock.append("{\n");
         vehicleBlock.append("\t AppTick = " + 4 + "\n");
         vehicleBlock.append("\t CommsTick = " + 4 + "\n");
