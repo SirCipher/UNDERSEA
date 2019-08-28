@@ -57,8 +57,6 @@ public class AgentInitialiserImpl implements AgentInitialiser {
             serviceManager.registerService(raftNode);
             serviceManager.registerService(new BlockchainNetworkImpl());
 //            serviceManager.registerService(new MissionManagerImpl(new VehicleRoutingOptimiser()));
-            serviceManager.registerService(new HardwareInterface(), ServiceManager.ServiceExecutionPriority.HIGH);
-            serviceManager.registerService(new MoosConnector());
 
             Monitor monitor = new MonitorImpl();
             monitor.setVisualiser(new VisualiserClientImpl());
@@ -95,6 +93,8 @@ public class AgentInitialiserImpl implements AgentInitialiser {
 
             underseaAgent.setMetadata(metaData);
 
+            serviceManager.registerService(new HardwareInterface(), ServiceManager.ServiceExecutionPriority.HIGH);
+
             if (!(boolean) value.metadata().getProperty(AgentMetaData.PropertyKey.IS_MASTER_NODE)) {
                 serviceManager.registerService(new ControllerImpl(
                         new MonitorPMC(),
@@ -102,6 +102,12 @@ public class AgentInitialiserImpl implements AgentInitialiser {
                         new PlannerPMC(),
                         new ExecutorPMC()
                 ));
+
+                /*
+                 * Needs to be started after the hardware interface and to allow enough time for the interface to
+                 * have started
+                 */
+                serviceManager.registerService(new MoosConnector(), ServiceManager.ServiceExecutionPriority.LOW);
             }
 
             monitor.setVisualiser(new VisualiserClientImpl());

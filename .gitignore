@@ -1,1 +1,2 @@
-libraries/
+libraries/MATLAB/*
+libraries/moos-ivp/*

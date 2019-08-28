@@ -1,15 +1,13 @@
 package com.type2labs.undersea.controller.controller;
 
-import com.type2labs.undersea.controller.controller.comms.Client;
-
-import java.io.IOException;
+import com.type2labs.undersea.common.service.hardware.NetworkInterface;
 
 public class Effector {
 
     /**
      * Communication handles
      */
-    private Client client;
+    private NetworkInterface networkInterface;
 
     /**
      * Command to send to managed system
@@ -25,8 +23,8 @@ public class Effector {
     /**
      * Constructor: create a new sensor
      */
-    public Effector(Client client) {
-        this.client = client;
+    public Effector(NetworkInterface networkInterface) {
+        this.networkInterface = networkInterface;
     }
 
     public String getReply() {
@@ -34,12 +32,8 @@ public class Effector {
     }
 
     public void run() {
-        try {
-            reply = client.write(command);
-        } catch (IOException e) {
-            e.printStackTrace();
-            reply = "ERROR";
-        }
+        networkInterface.write(command);
+        reply = networkInterface.read();
     }
 
     public void setCommand(String command) {

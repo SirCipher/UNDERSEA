@@ -163,12 +163,11 @@ bool UUV::Iterate() {
     string outputString = doubleToString(m_current_iterate - GetAppStartTime(), 2) + ",";
 
     //reset sensors
-//		for (sensorsMap::iterator it = m_sensors_map.begin();  it != m_sensors_map.end(); it++){
-//			outputString += doubleToString(it->second.averageRate,2) +",";
-    //reset sensors information
-//			it->second.reset();
-//		}
-
+    for (auto & it : m_sensors_map) {
+        outputString += doubleToString(it.second.averageRate, 2) + ",";
+        // reset sensors information
+        it.second.reset();
+    }
 
 
     //show visual hints on pMarineViewer
@@ -189,27 +188,27 @@ bool UUV::Iterate() {
 // Procedure: buildReport
 //---------------------------------------------------------
 bool UUV::buildReport() {
-//    m_msgs << "UUV name:\t" << m_uuv_name << endl;
-//    m_msgs << "UUV port:\t" << PORT << endl << endl;
-//    m_msgs << "UUV Sensors (" << m_uuv_sensors.size() << ")" << endl;
-//    m_msgs << "------------------------------------------------" << endl;
-//
-//    Utilities::writeToFile("log/log.txt", "Building report");
-//
-//    for (const auto &m_uuv_sensor : m_uuv_sensors) {
-//        m_msgs << m_uuv_sensor << endl;
-//    }
-//
-//    m_msgs << endl;
-//
-//    m_msgs << "Sensor Readings" << endl;
-//    m_msgs << "------------------------------------------------" << endl;
-//
-//    for (auto &it : m_sensors_map) {
-//        m_msgs << it.second.toString() << endl;
-//    }
+    m_msgs << "UUV name:\t" << m_uuv_name << endl;
+    m_msgs << "UUV port:\t" << PORT << endl << endl;
+    m_msgs << "UUV Sensors (" << m_uuv_sensors.size() << ")" << endl;
+    m_msgs << "------------------------------------------------" << endl;
 
-    return false;
+//    Utilities::writeToFile("log/log.txt", "Building report");
+
+    for (const auto &m_uuv_sensor : m_uuv_sensors) {
+        m_msgs << m_uuv_sensor << endl;
+    }
+
+    m_msgs << endl;
+
+    m_msgs << "Sensor Readings" << endl;
+    m_msgs << "------------------------------------------------" << endl;
+
+    for (auto &it : m_sensors_map) {
+        m_msgs << it.second.toString() << endl;
+    }
+
+    return true;
 }
 
 
@@ -271,10 +270,8 @@ void UUV::initSensorsMap() {
 void UUV::initServer() {
     initialiseServer(PORT);
     pthread_t thread;
+
 //	int n = pthread_create(&thread, NULL, runServer, NULL);
-
-
-
     int n = pthread_create(&thread, nullptr, runServer2, (void *) &m_sensors_map);
 }
 

@@ -1,8 +1,6 @@
 package com.type2labs.undersea.controller.controller;
 
-import com.type2labs.undersea.controller.controller.comms.Client;
-
-import java.io.IOException;
+import com.type2labs.undersea.common.service.hardware.NetworkInterface;
 
 
 public class Sensor {
@@ -10,7 +8,7 @@ public class Sensor {
     /**
      * Communication handles
      */
-    private Client client;
+    private NetworkInterface networkInterface;
 
     /**
      * Command to send to managed system
@@ -25,9 +23,9 @@ public class Sensor {
     /**
      * Constructor: create a new sensor
      */
-    public Sensor(Client client) {
+    public Sensor(NetworkInterface networkInterface) {
         //assign client handler
-        this.client = client;
+        this.networkInterface = networkInterface;
     }
 
     public String getReply() {
@@ -58,12 +56,8 @@ public class Sensor {
     }
 
     public void run() {
-        try {
-            reply = client.write(command);
-            parseReply(reply);
-        } catch (IOException e) {
-            e.printStackTrace();
-            reply = "ERROR";
-        }
+        networkInterface.write(command);
+        reply = networkInterface.read();
+        parseReply(reply);
     }
 }

@@ -10,7 +10,7 @@ public class NoNetworkInterfaceImpl implements NetworkInterface {
     private Agent parentAgent;
 
     @Override
-    public String read(String request) {
+    public String read() {
         return "";
     }
 

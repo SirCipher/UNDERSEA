@@ -27,7 +27,6 @@ public class HardwareInterface implements AgentService {
     private static final Logger logger = LogManager.getLogger(HardwareInterface.class);
 
     private Agent agent;
-    private MoosConnector moosConnector;
     private Process process;
 
     public HardwareInterface() {
@@ -37,11 +36,6 @@ public class HardwareInterface implements AgentService {
     @Override
     public void initialise(Agent parentAgent) {
         this.agent = parentAgent;
-        this.moosConnector = agent.services().getService(MoosConnector.class);
-
-        if (moosConnector == null) {
-            throw new ServiceNotRegisteredException(MoosConnector.class, HardwareInterface.class);
-        }
     }
 
     @Override
@@ -73,51 +67,6 @@ public class HardwareInterface implements AgentService {
         } else {
             logger.info(agent.name() + ": starting agent server", agent);
             launchAgent(metaData);
-        }
-    }
-
-    private void runAgent() {
-        AgentMetaData metaData = agent.metadata();
-        List<String> procArgs = new ArrayList<>();
-
-        procArgs.add("pAntler");
-        procArgs.add((String) metaData.getProperty(AgentMetaData.PropertyKey.METADATA_FILE_NAME));
-
-        ProcessBuilder proc = ProcessBuilderUtil.getSanitisedBuilder();
-        proc.command(procArgs);
-
-        try {
-            proc.directory(((File) metaData.getProperty(AgentMetaData.PropertyKey.MISSION_NAME)).getCanonicalFile());
-            process = proc.start();
-
-//            BufferedReader stdInput = new BufferedReader(new
-//                    InputStreamReader(process.getInputStream()));
-//            BufferedWriter writer = Files.newBufferedWriter(new File(agent.name() + ".txt").toPath(),
-//                    StandardCharsets.UTF_8);
-//
-//            String s;
-//            while ((s = stdInput.readLine()) != null) {
-//                writer.write(s + "\n");
-//            }
-
-        } catch (IOException e) {
-            throw new UnderseaException("Failed to start agent: " + parent().name(), e);
-        }
-    }
-
-    private void runShoreside() {
-
-
-        AgentMetaData metaData = agent.metadata();
-
-        ProcessBuilder pb = ProcessBuilderUtil.getSanitisedBuilder();
-        pb.command("pAntler", (String) metaData.getProperty(AgentMetaData.PropertyKey.METADATA_FILE_NAME));
-        pb.directory((File) metaData.getProperty(AgentMetaData.PropertyKey.MISSION_DIRECTORY));
-
-        try {
-            process = pb.start();
-        } catch (IOException e) {
-            e.printStackTrace();
         }
     }
 

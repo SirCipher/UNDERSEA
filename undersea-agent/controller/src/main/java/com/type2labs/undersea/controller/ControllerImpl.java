@@ -4,14 +4,12 @@ import com.google.common.util.concurrent.ListenableFuture;
 import com.type2labs.undersea.common.agent.Agent;
 import com.type2labs.undersea.common.agent.AgentMetaData;
 import com.type2labs.undersea.common.controller.Controller;
+import com.type2labs.undersea.common.service.hardware.NetworkInterface;
 import com.type2labs.undersea.common.service.transaction.Transaction;
 import com.type2labs.undersea.controller.controller.*;
-import com.type2labs.undersea.controller.controller.comms.Client;
 import com.type2labs.undersea.utilities.exception.NotSupportedException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import java.io.IOException;
 
 @SuppressWarnings("DuplicatedCode")
 public class ControllerImpl implements Controller {
@@ -25,7 +23,7 @@ public class ControllerImpl implements Controller {
     private Executor executor;
     private Sensor sensor;
     private Effector effector;
-    private Client client;
+    private NetworkInterface networkInterface;
     private long start = System.currentTimeMillis();
 
     public ControllerImpl(Monitor monitor, Analyser analyser, Planner planner, Executor executor) {
@@ -38,10 +36,11 @@ public class ControllerImpl implements Controller {
     @Override
     public void initialise(Agent parentAgent) {
         this.agent = parentAgent;
-        client = new Client(agent);
 
-        sensor = new Sensor(client);
-        effector = new Effector(client);
+        networkInterface = agent.services().getService(NetworkInterface.class);
+
+        sensor = new Sensor(networkInterface);
+        effector = new Effector(networkInterface);
 
         AgentMetaData metaData = agent.metadata();
         simulationSpeed = Long.parseLong((String) metaData.getProperty(AgentMetaData.PropertyKey.SIMULATION_SPEED));
@@ -80,23 +79,7 @@ public class ControllerImpl implements Controller {
 
     @Override
     public void shutdown() {
-        if (client == null) {
-            return;
-        }
-
-        boolean closed = false;
-
-        try {
-            closed = client.shutDown();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            if (closed) {
-                System.out.println("Comms terminated correctly!");
-            } else {
-                System.out.println("Something was wrong with terminating comms!");
-            }
-        }
+        networkInterface.shutdown();
     }
 
     @Override

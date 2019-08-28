@@ -23,11 +23,13 @@ public class RunnerTest {
 
     @Test
     @IgnoredOnCi
-    public void testRunner() {
+    public void testRunner() throws InterruptedException {
         String testProperties = "src/test/resources/test.properties";
 
         Runner runner = new Runner(testProperties);
         runner.run();
+
+        Thread.sleep(10000);
 
         runner.shutdown();
     }

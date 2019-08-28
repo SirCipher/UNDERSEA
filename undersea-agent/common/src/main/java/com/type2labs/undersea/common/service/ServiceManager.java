@@ -24,14 +24,12 @@ public class ServiceManager {
     private final Map<Class<? extends AgentService>, Pair<AgentService, ServiceExecutionPriority>> services =
             new ConcurrentHashMap<>();
     private final Map<Class<? extends AgentService>, ScheduledFuture<?>> scheduledFutures = new ConcurrentHashMap<>();
-    private final ScheduledExecutorService scheduledExecutor;
 
+    private ScheduledExecutorService scheduledExecutor;
     private Agent agent;
-    private boolean autoLogTransactions;
+    private boolean started = false;
 
     public ServiceManager() {
-        this.scheduledExecutor = ScheduledThrowableExecutor.newSingleThreadExecutor(logger);
-
         Runtime.getRuntime().addShutdownHook(new Thread(this::shutdownServices));
     }
 
@@ -90,7 +88,7 @@ public class ServiceManager {
      *
      * @return the sorted list
      */
-    private List<Map.Entry<Class<? extends AgentService>, Pair<AgentService, ServiceExecutionPriority>>> prioritySorted() {
+    private synchronized List<Map.Entry<Class<? extends AgentService>, Pair<AgentService, ServiceExecutionPriority>>> prioritySorted() {
         List<Map.Entry<Class<? extends AgentService>, Pair<AgentService, ServiceExecutionPriority>>> sorted =
                 new LinkedList<>(services.entrySet());
         sorted.sort(Comparator.comparingInt(o -> o.getValue().getValue().priority));
@@ -104,7 +102,7 @@ public class ServiceManager {
             throw new IllegalArgumentException("Service already exists");
         }
 
-        registerService(service, ServiceExecutionPriority.LOW);
+        registerService(service, ServiceExecutionPriority.MEDIUM);
     }
 
     public synchronized void registerService(AgentService service, ServiceExecutionPriority priority) {
@@ -133,11 +131,10 @@ public class ServiceManager {
 
     public void setAgent(Agent agent) {
         this.agent = agent;
-        this.autoLogTransactions = agent.config().autoLogTransactions();
         logger.info("Agent " + agent.name() + " service manager assigned", agent);
     }
 
-    public void shutdownService(Class<? extends AgentService> service, AgentService key) {
+    public synchronized void shutdownService(Class<? extends AgentService> service, AgentService key) {
         ScheduledFuture<?> scheduledFuture = getScheduledFuture(service);
 
         if (scheduledFuture != null) {
@@ -157,6 +154,8 @@ public class ServiceManager {
                 prioritySorted()) {
             shutdownService(e.getKey(), e.getValue().getKey());
         }
+
+        started = false;
     }
 
     /**
@@ -174,7 +173,7 @@ public class ServiceManager {
         logger.info("Agent: " + agent.name() + ", started repeating service: " + service.getClass().getSimpleName() + " at period: " + period, agent);
     }
 
-    private void startService(Class<? extends AgentService> service) {
+    private synchronized void startService(Class<? extends AgentService> service) {
         AgentService agentService = getService(service);
         agentService.initialise(agent);
 
@@ -186,11 +185,19 @@ public class ServiceManager {
         logger.info("Agent " + agent.name() + " started service: " + agentService.getClass().getSimpleName(), agent);
     }
 
-    public void startServices() {
+    public synchronized void startServices() {
+        if (started) {
+            throw new IllegalStateException("Service manager already started, cannot start again");
+        }
+
+        scheduledExecutor = ScheduledThrowableExecutor.newExecutor(services.size(), logger);
+
         for (Map.Entry<Class<? extends AgentService>, Pair<AgentService, ServiceExecutionPriority>> e :
                 prioritySorted()) {
             startService(e.getKey());
         }
+
+        started = true;
     }
 
     /**
@@ -204,14 +211,21 @@ public class ServiceManager {
         LOW(0),
 
         /**
-         * Indicates that a service should start first.
+         * Indicates that a service should start after high priority services but before low priority
+         */
+        MEDIUM(3),
+
+        /**
+         * Indicates that a service should start first
          */
         HIGH(5);
 
-        private int priority = 0;
+        private int priority;
 
         ServiceExecutionPriority(int priority) {
             this.priority = priority;
         }
+
     }
+
 }
