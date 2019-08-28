@@ -33,6 +33,7 @@ public class MissionManagerImpl implements MissionManager {
     private final MissionPlanner missionPlanner;
     private final ListeningExecutorService singleThreadExecutor;
     private final Map<Task, ListenableFuture<?>> activeTasks = new HashMap<>();
+
     private Agent agent;
     private List<Task> tasks = new ArrayList<>();
     private GeneratedMission missionAssigned;

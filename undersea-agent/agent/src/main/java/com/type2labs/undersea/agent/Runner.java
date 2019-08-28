@@ -1,11 +1,14 @@
 package com.type2labs.undersea.agent;
 
+import com.type2labs.undersea.common.agent.Agent;
 import com.type2labs.undersea.common.config.UnderseaRuntimeConfig;
 import com.type2labs.undersea.common.runner.AbstractRunner;
 import com.type2labs.undersea.dsl.EnvironmentProperties;
 import com.type2labs.undersea.dsl.ParserEngine;
 import com.type2labs.undersea.dsl.uuv.model.DslAgentProxy;
 import com.type2labs.undersea.prospect.RaftClusterConfig;
+import com.type2labs.undersea.prospect.impl.RaftNodeImpl;
+import com.type2labs.undersea.prospect.model.RaftNode;
 import com.type2labs.undersea.utilities.Utility;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -38,6 +41,25 @@ public class Runner extends AbstractRunner {
 
         Runner runner = new Runner(args[0]);
         runner.run();
+
+        Properties properties = Utility.getPropertiesByName(args[0]);
+        boolean localNodeDiscovery = Boolean.parseBoolean(Utility.getProperty(properties, "config.localnodediscovery"));
+
+        if(localNodeDiscovery){
+//            for(Agent agent:)
+//
+//            for (RaftNodeImpl raftNode : raftNodes) {
+//                for (int j = raftNodes.length - 1; j >= 0; j--) {
+//                    RaftNode nodeB = raftNodes[j];
+//
+//                    if (raftNode != nodeB) {
+//                        raftNode.state().discoverNode(nodeB);
+//                    }
+//                }
+//
+//                System.out.println(raftNode.parent().clusterClients().size());
+//            }
+        }
     }
 
     @Override

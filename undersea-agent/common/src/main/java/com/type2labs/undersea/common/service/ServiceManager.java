@@ -25,12 +25,15 @@ public class ServiceManager {
             new ConcurrentHashMap<>();
     private final Map<Class<? extends AgentService>, ScheduledFuture<?>> scheduledFutures = new ConcurrentHashMap<>();
 
+    private ScheduledExecutorService serviceExecutor;
     private ScheduledExecutorService scheduledExecutor;
     private Agent agent;
     private boolean started = false;
 
     public ServiceManager() {
         Runtime.getRuntime().addShutdownHook(new Thread(this::shutdownServices));
+
+        scheduledExecutor = ScheduledThrowableExecutor.newSingleThreadExecutor(logger);
     }
 
     public Set<ListenableFuture<?>> commitTransaction(Transaction transaction) {
@@ -155,6 +158,8 @@ public class ServiceManager {
             shutdownService(e.getKey(), e.getValue().getKey());
         }
 
+        scheduledExecutor.shutdownNow();
+
         started = false;
     }
 
@@ -179,7 +184,7 @@ public class ServiceManager {
 
         logger.info("Agent " + agent.name() + " starting service: " + agentService.getClass().getSimpleName(), agent);
 
-        ScheduledFuture<?> future = scheduledExecutor.schedule(agentService, 1, TimeUnit.MILLISECONDS);
+        ScheduledFuture<?> future = serviceExecutor.schedule(agentService, 1, TimeUnit.MILLISECONDS);
         scheduledFutures.put(service, future);
 
         logger.info("Agent " + agent.name() + " started service: " + agentService.getClass().getSimpleName(), agent);
@@ -190,7 +195,7 @@ public class ServiceManager {
             throw new IllegalStateException("Service manager already started, cannot start again");
         }
 
-        scheduledExecutor = ScheduledThrowableExecutor.newExecutor(services.size(), logger);
+        serviceExecutor = ScheduledThrowableExecutor.newExecutor(services.size(), logger);
 
         for (Map.Entry<Class<? extends AgentService>, Pair<AgentService, ServiceExecutionPriority>> e :
                 prioritySorted()) {

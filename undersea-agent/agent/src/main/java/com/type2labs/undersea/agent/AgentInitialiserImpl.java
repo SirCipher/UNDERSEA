@@ -18,6 +18,8 @@ import com.type2labs.undersea.controller.controllerPMC.MonitorPMC;
 import com.type2labs.undersea.controller.controllerPMC.PlannerPMC;
 import com.type2labs.undersea.dsl.EnvironmentProperties;
 import com.type2labs.undersea.dsl.uuv.model.DslAgentProxy;
+import com.type2labs.undersea.missionplanner.manager.MissionManagerImpl;
+import com.type2labs.undersea.missionplanner.planner.vrp.VehicleRoutingOptimiser;
 import com.type2labs.undersea.prospect.RaftClusterConfig;
 import com.type2labs.undersea.prospect.impl.RaftIntegrationImpl;
 import com.type2labs.undersea.prospect.impl.RaftNodeImpl;
@@ -56,7 +58,7 @@ public class AgentInitialiserImpl implements AgentInitialiser {
 
             serviceManager.registerService(raftNode);
             serviceManager.registerService(new BlockchainNetworkImpl());
-//            serviceManager.registerService(new MissionManagerImpl(new VehicleRoutingOptimiser()));
+            serviceManager.registerService(new MissionManagerImpl(new VehicleRoutingOptimiser()));
 
             Monitor monitor = new MonitorImpl();
             monitor.setVisualiser(new VisualiserClientImpl());
