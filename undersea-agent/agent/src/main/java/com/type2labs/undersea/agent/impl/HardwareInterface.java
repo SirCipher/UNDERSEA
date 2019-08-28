@@ -12,11 +12,10 @@ import com.type2labs.undersea.utilities.process.ProcessBuilderUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
-import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * Interface for running the moos library that the agent operates on
@@ -52,8 +51,8 @@ public class HardwareInterface implements AgentService {
 
     private void launchAgent(AgentMetaData metaData) {
         ProcessBuilder pb = ProcessBuilderUtil.getSanitisedBuilder();
-        pb.command("./" + metaData.getLaunchFileName());
-        pb.directory(metaData.getMissionDirectory());
+        pb.command("./" + metaData.getProperty(AgentMetaData.PropertyKey.LAUNCH_FILE_NAME));
+        pb.directory((File) metaData.getProperty(AgentMetaData.PropertyKey.MISSION_DIRECTORY));
 
         try {
             process = pb.start();
@@ -66,16 +65,9 @@ public class HardwareInterface implements AgentService {
     @Override
     public void run() {
         AgentMetaData metaData = agent.metadata();
-        Random random = ThreadLocalRandom.current();
-
-        try {
-            Thread.sleep(random.nextInt(5000));
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
 
         // TODO: This needs to be changed to a MRS check
-        if (metaData.isMaster()) {
+        if ((boolean) metaData.getProperty(AgentMetaData.PropertyKey.IS_MASTER_NODE)) {
             logger.info(agent.name() + ": starting shoreside server", agent);
             launchAgent(metaData);
         } else {
@@ -89,13 +81,13 @@ public class HardwareInterface implements AgentService {
         List<String> procArgs = new ArrayList<>();
 
         procArgs.add("pAntler");
-        procArgs.add(metaData.getMetadataFileName());
+        procArgs.add((String) metaData.getProperty(AgentMetaData.PropertyKey.METADATA_FILE_NAME));
 
         ProcessBuilder proc = ProcessBuilderUtil.getSanitisedBuilder();
         proc.command(procArgs);
 
         try {
-            proc.directory(metaData.getMissionDirectory().getCanonicalFile());
+            proc.directory(((File) metaData.getProperty(AgentMetaData.PropertyKey.MISSION_NAME)).getCanonicalFile());
             process = proc.start();
 
 //            BufferedReader stdInput = new BufferedReader(new
@@ -119,8 +111,8 @@ public class HardwareInterface implements AgentService {
         AgentMetaData metaData = agent.metadata();
 
         ProcessBuilder pb = ProcessBuilderUtil.getSanitisedBuilder();
-        pb.command("pAntler", metaData.getMetadataFileName());
-        pb.directory(metaData.getMissionDirectory());
+        pb.command("pAntler", (String) metaData.getProperty(AgentMetaData.PropertyKey.METADATA_FILE_NAME));
+        pb.directory((File) metaData.getProperty(AgentMetaData.PropertyKey.MISSION_DIRECTORY));
 
         try {
             process = pb.start();

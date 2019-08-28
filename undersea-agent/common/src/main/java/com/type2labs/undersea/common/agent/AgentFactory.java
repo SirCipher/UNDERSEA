@@ -72,7 +72,7 @@ public class AgentFactory implements AbstractFactory<Agent> {
         ServiceManager serviceManager = new ServiceManager();
         AgentStatus agentStatus = new AgentStatus(name, new ArrayList<>());
 
-        return new AbstractAgent(config, name, serviceManager, agentStatus,PeerId.newId()) {
+        return new AbstractAgent(config, name, serviceManager, agentStatus, PeerId.newId()) {
             private static final long serialVersionUID = -2866679824255773653L;
 
             @Override
@@ -88,7 +88,7 @@ public class AgentFactory implements AbstractFactory<Agent> {
         ServiceManager serviceManager = new ServiceManager();
         AgentStatus agentStatus = new AgentStatus(name, new ArrayList<>());
 
-        return new AbstractAgent(new UnderseaRuntimeConfig(), name, serviceManager, agentStatus,PeerId.newId()) {
+        return new AbstractAgent(new UnderseaRuntimeConfig(), name, serviceManager, agentStatus, PeerId.newId()) {
             private static final long serialVersionUID = -2866679824255773653L;
 
             @Override

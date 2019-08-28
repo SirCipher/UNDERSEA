@@ -11,8 +11,8 @@ import java.util.List;
 public class MissionParametersImpl implements MissionParameters {
 
     private final int startingNode;
-    private List<Client> agents;
     private final double[][] polygon;
+    private List<Client> agents;
     private double minimumSensorRange;
     private double[][] centroids;
 
@@ -20,11 +20,6 @@ public class MissionParametersImpl implements MissionParameters {
         this.startingNode = startingNode;
         this.polygon = polygon;
         this.minimumSensorRange = minimumSensorRange;
-    }
-
-    @Override
-    public void setClients(List<Client> agents) {
-        this.agents = agents;
     }
 
     public double[][] getPolygon() {
@@ -46,6 +41,11 @@ public class MissionParametersImpl implements MissionParameters {
     @Override
     public List<Client> getClients() {
         return agents;
+    }
+
+    @Override
+    public void setClients(List<Client> agents) {
+        this.agents = agents;
     }
 
     public double[][] getCentroids() {

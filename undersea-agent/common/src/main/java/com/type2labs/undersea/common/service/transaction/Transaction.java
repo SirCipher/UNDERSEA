@@ -35,7 +35,8 @@ public class Transaction {
     private final Collection<Class<? extends AgentService>> destinationServices;
 
     /**
-     * The status/event code that has triggered this transaction. This transactionData type generic so implementations may
+     * The status/event code that has triggered this transaction. This transactionData type generic so
+     * implementations may
      * implement their own status codes.
      */
     private final Enum<? extends TransactionStatusCode> statusCode;

@@ -1,7 +1,6 @@
 package com.type2labs.undersea.prospect.task;
 
 import com.type2labs.undersea.common.consensus.RaftRole;
-import com.type2labs.undersea.prospect.impl.RaftNodeImpl;
 import com.type2labs.undersea.prospect.model.RaftNode;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

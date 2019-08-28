@@ -10,12 +10,28 @@
 #include "ColorParse.h"
 #include "UUV.h"
 #include "UUV_Info.h"
+#include "Utilities.h"
+#include "server/serverLoop.h"
+
+void dotest();
 
 using namespace std;
 
 int main(int argc, char *argv[]) {
+
+//    if (true) {
+//        return 0;
+//    }
+
+
     string mission_file;
     string run_command = argv[0];
+
+//    freopen("output.txt", "w", stdout);
+//    freopen("error.txt", "w", stderr);
+
+    cout << "Starting" << endl;
+
 
     for (int i = 1; i < argc; i++) {
         string argi = argv[i];

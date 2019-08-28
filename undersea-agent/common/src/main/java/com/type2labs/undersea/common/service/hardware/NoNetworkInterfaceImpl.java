@@ -7,6 +7,8 @@ import com.type2labs.undersea.utilities.exception.NotSupportedException;
 
 public class NoNetworkInterfaceImpl implements NetworkInterface {
 
+    private Agent parentAgent;
+
     @Override
     public String read(String request) {
         return "";
@@ -26,8 +28,6 @@ public class NoNetworkInterfaceImpl implements NetworkInterface {
     public ListenableFuture<?> executeTransaction(Transaction transaction) {
         throw new NotSupportedException();
     }
-
-    private Agent parentAgent;
 
     @Override
     public void initialise(Agent parentAgent) {

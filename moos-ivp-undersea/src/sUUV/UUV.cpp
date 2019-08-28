@@ -23,20 +23,18 @@ UUV::UUV() {
     m_app_start_time = MOOSTime(true);
     m_current_iterate = m_app_start_time;
     m_previous_iterate = m_app_start_time;
+    m_uuv_speed = 4;
 
     M_TIME_WINDOW = 10;
 
     PORT = 8888;
-
-    m_uuv_speed = 4;
 }
 
 
 //---------------------------------------------------------
 // Destructor
 //---------------------------------------------------------
-UUV::~UUV() {
-}
+UUV::~UUV() = default;
 
 
 //---------------------------------------------------------
@@ -44,10 +42,13 @@ UUV::~UUV() {
 //            happens before connection is open
 //---------------------------------------------------------
 bool UUV::OnStartUp() {
-    AppCastingMOOSApp::OnStartUp();               // Add this line
+    AppCastingMOOSApp::OnStartUp();
 
     list<string> sParams;
     m_MissionReader.EnableVerbatimQuoting(false);
+
+    std::cout << "Reading configuration file" << std::endl;
+
     if (m_MissionReader.GetConfiguration(GetAppName(), sParams)) {
         list<string>::iterator p;
         for (p = sParams.begin(); p != sParams.end(); p++) {
@@ -55,18 +56,21 @@ bool UUV::OnStartUp() {
             string param = stripBlankEnds(toupper(biteString(*p, '=')));
             string value = stripBlankEnds(*p);
 
-            if (param == "NAME") { // get uuv name
+            if (param == "NAME") {
                 m_uuv_name = value;
             } else if (param == "SENSORS") {
                 bool handled = handleSensorsNames(value);
             } else if (param == "TIME_WINDOW") {
-                if (isNumber(value.c_str()))
+                if (isNumber(value))
                     M_TIME_WINDOW = atoi(value.c_str());
             } else if (param == "PORT") {
-                if (isNumber(value.c_str()))
+                if (isNumber(value)) {
                     PORT = atoi(value.c_str());
-            } else //throw a configuration warning
+                }
+            } else {
+                //throw a configuration warning
                 reportUnhandledConfigWarning(original_line);
+            }
         }
     } else {
         reportConfigWarning("No configuration block found for " + GetAppName());
@@ -76,8 +80,9 @@ bool UUV::OnStartUp() {
 
     //init sensors map
     initSensorsMap();
+    //init controller server
+    initServer();
 
-    RegisterVariables();
     return (true);
 }
 
@@ -91,9 +96,6 @@ bool UUV::OnConnectToServer() {
     // m_MissionReader.GetConfigurationParam("Name", <string>);
     // m_Comms.Register("VARNAME", 0);
 
-    //init controller server
-    initServer();
-
     RegisterVariables();
     return (true);
 }
@@ -105,8 +107,8 @@ bool UUV::OnConnectToServer() {
 void UUV::RegisterVariables() {
     AppCastingMOOSApp::RegisterVariables();      // Add this line
 
-    for (vector<string>::iterator it = m_uuv_sensors.begin(); it != m_uuv_sensors.end(); it++) {
-        Register(*it, 0);
+    for (auto &m_uuv_sensor : m_uuv_sensors) {
+        Register(m_uuv_sensor, 0);
     }
 }
 
@@ -187,21 +189,27 @@ bool UUV::Iterate() {
 // Procedure: buildReport
 //---------------------------------------------------------
 bool UUV::buildReport() {
-    m_msgs << "UUV name:\t" << m_uuv_name << endl << endl;
+//    m_msgs << "UUV name:\t" << m_uuv_name << endl;
+//    m_msgs << "UUV port:\t" << PORT << endl << endl;
+//    m_msgs << "UUV Sensors (" << m_uuv_sensors.size() << ")" << endl;
+//    m_msgs << "------------------------------------------------" << endl;
+//
+//    Utilities::writeToFile("log/log.txt", "Building report");
+//
+//    for (const auto &m_uuv_sensor : m_uuv_sensors) {
+//        m_msgs << m_uuv_sensor << endl;
+//    }
+//
+//    m_msgs << endl;
+//
+//    m_msgs << "Sensor Readings" << endl;
+//    m_msgs << "------------------------------------------------" << endl;
+//
+//    for (auto &it : m_sensors_map) {
+//        m_msgs << it.second.toString() << endl;
+//    }
 
-
-    m_msgs << "UUV Sensors (" << m_uuv_sensors.size() << ")" << endl;
-    m_msgs << "------------------------------------------------" << endl;
-    for (unsigned i = 0; i < m_uuv_sensors.size(); i++) {
-        m_msgs << m_uuv_sensors.at(i) << endl;
-    }
-
-    m_msgs << endl << endl;
-    for (sensorsMap::iterator it = m_sensors_map.begin(); it != m_sensors_map.end(); it++) {
-        m_msgs << it->second.toString() << endl;
-    }
-
-    return true;
+    return false;
 }
 
 
@@ -214,13 +222,13 @@ bool UUV::handleSensorsNames(string value) {
     vector<string> v = parseString(removeWhite(value), ",");
 
     //check if all tokens are alphanumerics
-    for (vector<string>::iterator it = v.begin(); it != v.end(); it++) {
-        if (!isAlphaNum(*it))
+    for (auto &it : v) {
+        if (!isAlphaNum(it))
             reportConfigWarning(
-                    "Problem with configuring 'SENSORS =" + value + "': expected alphanumeric but received " + *it);
+                    "Problem with configuring 'SENSORS =" + value + "': expected alphanumeric but received " + it);
         else
             //if everything is OK, create a sensor element and add it to the vector
-            m_uuv_sensors.push_back(*it);
+            m_uuv_sensors.push_back(it);
     }
 
     return true;
@@ -231,16 +239,16 @@ bool UUV::handleSensorsNames(string value) {
 // Procedure: initSensorsMap
 //---------------------------------------------------------
 void UUV::initSensorsMap() {
-    for (vector<string>::iterator it = m_uuv_sensors.begin(); it != m_uuv_sensors.end(); it++) {
+    for (auto &m_uuv_sensor : m_uuv_sensors) {
         Sensor newSensor;
-        newSensor.name = *it;
+        newSensor.name = m_uuv_sensor;
         newSensor.averageRate = 0;
         newSensor.numOfReadings = 0;
         newSensor.numOfSuccReadings = 0;
         newSensor.state = -1;
         newSensor.time = MOOSTime(true);
         newSensor.other = 0;
-        m_sensors_map[*it] = newSensor;
+        m_sensors_map[m_uuv_sensor] = newSensor;
     }
 
     //Dummy workaround for getting the speed value from controller
@@ -264,7 +272,10 @@ void UUV::initServer() {
     initialiseServer(PORT);
     pthread_t thread;
 //	int n = pthread_create(&thread, NULL, runServer, NULL);
-    int n = pthread_create(&thread, NULL, runServer2, (void *) &m_sensors_map);
+
+
+
+    int n = pthread_create(&thread, nullptr, runServer2, (void *) &m_sensors_map);
 }
 
 //---------------------------------------------------------
@@ -272,21 +283,19 @@ void UUV::initServer() {
 //---------------------------------------------------------
 void UUV::sendNotifications() {
     string yPosition = "-50";
+
     int xMiddlePosition = 75;
-
-    int numOfSensors = m_uuv_sensors.size();
-
     int xStartPosition = (m_uuv_sensors.size() / 2 * (-50)) + xMiddlePosition;
 
     int index = 0;
-    for (sensorsMap::iterator it = m_sensors_map.begin(); it != m_sensors_map.end(); it++) {
-        if (it->first != "SPEED") {
+    for (auto &it : m_sensors_map) {
+        if (it.first != "SPEED") {
 
             int xPosition = xStartPosition + index * 50;
             index++;
 
-            string sensorColor = "";
-            switch (it->second.state) {
+            string sensorColor;
+            switch (it.second.state) {
                 case -1: {
                     sensorColor = "red";
                     break;
@@ -306,10 +315,10 @@ void UUV::sendNotifications() {
             }
 
             Notify("VIEW_MARKER",
-                   "type=circle,x=" + intToString(xPosition) + ",y=-50,scale=2,label=" + it->first + ",color=" +
+                   "type=circle,x=" + intToString(xPosition) + ",y=-50,scale=2,label=" + it.first + ",color=" +
                    sensorColor + ",width=12");
             Notify("VIEW_MARKER", "type=circle,x=" + intToString(xPosition) + ",y=-70,scale=2,msg=avg.rate:" +
-                                  doubleToString(it->second.averageRate, 2) + ",label=" + it->first +
+                                  doubleToString(it.second.averageRate, 2) + ",label=" + it.first +
                                   "1,color=darkblue,width=1");
         }
     }
@@ -319,6 +328,4 @@ void UUV::sendNotifications() {
     Notify("UPDATES_CONSTANT_SPEED", "speed=" + doubleToString(m_uuv_speed));
     Notify("VIEW_MARKER", "type=circle,x=" + intToString(xMiddlePosition) + ",y=-85,scale=2,msg=speed:" +
                           doubleToString(m_uuv_speed, 2) + ",label=speed,color=darkblue,width=1");
-
-
 }

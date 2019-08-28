@@ -2,9 +2,6 @@ package com.type2labs.undersea.dsl.uuv.model;
 
 import com.type2labs.undersea.common.agent.AgentImpl;
 import com.type2labs.undersea.common.agent.Node;
-import com.type2labs.undersea.common.agent.Sensor;
-
-import java.util.Iterator;
 
 public class DslAgentProxy extends AgentImpl {
 

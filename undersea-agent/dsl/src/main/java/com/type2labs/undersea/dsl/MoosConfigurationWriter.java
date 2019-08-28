@@ -56,7 +56,7 @@ class MoosConfigurationWriter {
         AgentMetaData metaData = shoreside.metadata();
         String launchFileName = "pAntler-launch-shoreside.sh";
 
-        metaData.setLaunchFileName(launchFileName);
+        metaData.setProperty(AgentMetaData.PropertyKey.LAUNCH_FILE_NAME, launchFileName);
 
         Utility.exportToFileWithPermissions(MoosConfigurationWriter.buildDir + File.separator + launchFileName,
                 shoreSideScript.toString(),
@@ -67,7 +67,7 @@ class MoosConfigurationWriter {
             metaData = agent.metadata();
             launchFileName = "pAntler-launch-" + agent.name() + ".sh";
 
-            metaData.setLaunchFileName(launchFileName);
+            metaData.setProperty(AgentMetaData.PropertyKey.LAUNCH_FILE_NAME, launchFileName);
 
             Utility.exportToFileWithPermissions(
                     MoosConfigurationWriter.buildDir + File.separator + launchFileName,
@@ -204,7 +204,7 @@ class MoosConfigurationWriter {
         vehicleBlock.append("\tRun = pShare         @ NewConsole = false\n");
         vehicleBlock.append("\tRun = uTimerScript   @ NewConsole = false\n");
         vehicleBlock.append("\tRun = pHostInfo\t\t @ NewConsole = false\n");
-        vehicleBlock.append("\tRun = sUUV           @ NewConsole = false\n");
+        vehicleBlock.append("\tRun = sUUV           @ NewConsole = true\n");
         vehicleBlock.append("\tRun = uFldNodeBroker @ NewConsole = false\n");
 
         for (Sensor sensor : agent.getSensors()) {
@@ -218,8 +218,8 @@ class MoosConfigurationWriter {
         vehicleBlock.append("//-------------------------\n");
         vehicleBlock.append("ProcessConfig = sUUV\n");
         vehicleBlock.append("{\n");
-        vehicleBlock.append("\t AppTick = " + agent.getRate() + "\n");
-        vehicleBlock.append("\t CommsTick = " + agent.getRate() + "\n");
+        vehicleBlock.append("\t AppTick = " + 4 + "\n");
+        vehicleBlock.append("\t CommsTick = " + 4 + "\n");
         vehicleBlock.append("\t MAX_APPCAST_EVENTS = 25 \n");
         vehicleBlock.append("\t NAME = " + agent.getName() + "\n");
         vehicleBlock.append("\t PORT = $(SUUVPORT)\n");

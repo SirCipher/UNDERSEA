@@ -19,16 +19,6 @@ public class EnvironmentProperties {
         return runnerProperties;
     }
 
-    /**
-     * Adds all {@link EnvironmentValue}s to {@link EnvironmentProperties#runnerProperties}
-     *
-     * @return a populated properties file
-     */
-    public Properties finaliseProperties() {
-        environmentValues.forEach((key, value) -> runnerProperties.put(key.toString().toLowerCase(), value));
-        return runnerProperties;
-    }
-
     public static void setRunnerProperties(Properties runnerProperties) {
         EnvironmentProperties.runnerProperties = runnerProperties;
     }

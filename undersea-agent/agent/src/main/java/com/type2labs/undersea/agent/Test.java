@@ -13,7 +13,8 @@ public class Test {
     public static void main(String[] args) throws InterruptedException, IOException {
         Runtime rt = Runtime.getRuntime();
 
-        ProcessBuilder pb = new ProcessBuilder(new String[]{"/Volumes/MiniMudkipz/dev/PACS/moos-ivp/bin/pMarineViewer","meta_shoreside.moos"});
+        ProcessBuilder pb = new ProcessBuilder(new String[]{"/Volumes/MiniMudkipz/dev/PACS/moos-ivp/bin/pMarineViewer"
+                , "meta_shoreside.moos"});
         pb.directory(new File("missions/test_01/"));
         pb.redirectErrorStream(true);
 
@@ -21,7 +22,7 @@ public class Test {
 
         String line;
         BufferedReader in = new BufferedReader(
-                new InputStreamReader(process.getInputStream()) );
+                new InputStreamReader(process.getInputStream()));
         while ((line = in.readLine()) != null) {
             System.out.println(line);
         }

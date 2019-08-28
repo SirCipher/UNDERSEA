@@ -17,7 +17,7 @@ service RaftProtocolService {
 
     }
 
-    rpc DistributeMission(DistributeMissionRequest) returns (DisributeMissionResponse){
+    rpc DistributeMission (DistributeMissionRequest) returns (DisributeMissionResponse) {
 
     }
 }
@@ -29,7 +29,7 @@ message DistributeMissionRequest {
 
 message DisributeMissionResponse {
     RaftPeerProto client = 1;
-    int32 response =2;
+    int32 response = 2;
 }
 
 message RaftPeerProto {

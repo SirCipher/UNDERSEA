@@ -38,6 +38,8 @@ void error(const char *msg) {
 
 
 void initialiseServer(int portNo) {
+    std::cout << "Initialising server on port: " << portNo << std::endl;
+
     if (portNo < 2000) {
         fprintf(stderr, "ERROR, no port provided\n");
         exit(1);
@@ -64,6 +66,8 @@ void initialiseServer(int portNo) {
     listen(sockfd, 5);
 
     clientLen = sizeof(clientAddress);
+
+    std::cout << "Initialised server" << std::endl;
 }
 
 
@@ -113,13 +117,17 @@ void closeServer() {
 
 }
 
-
 void *runServer2(void *m_sensors_map) {
     //contains the number of characters read or written
     int n;
 
+    std::cout << "Starting server" << std::endl;
+
     //block the process until a client connects to the server
     newsockfd = accept(sockfd, (struct sockaddr *) &clientAddress, &clientLen);
+
+    std::cout << "Accepted client" << std::endl;
+
     if (newsockfd < 0)
         error("ERROR on accept");
 
@@ -144,7 +152,7 @@ void *runServer2(void *m_sensors_map) {
             outputStr = "###\n";
         } else if (strcmp(buffer, "SENSORS") == 0) {
             outputStr.clear();
-            for (auto & it : *sensMap) {
+            for (auto &it : *sensMap) {
 //				outputStr += it->first +"="+ doubleToString(it->second.averageRate,2) +",";
 
                 //if it's not the dummy element that resembles the speed in sensors map
@@ -169,7 +177,7 @@ void *runServer2(void *m_sensors_map) {
             free(dup);
 
             //iterate over tokens and extract the desired values from each token
-            for (const string& str : uuvElements) {
+            for (const string &str : uuvElements) {
                 char *dup2 = strdup(str.c_str());
                 char *token2 = strtok(dup2, "=");
                 vector<string> v;

@@ -31,11 +31,6 @@ public abstract class AbstractAgent implements Agent {
     private String metaFileName;
     private String name;
 
-    @Override
-    public void setMetadata(AgentMetaData metaData) {
-        this.metaData = metaData;
-    }
-
     public AbstractAgent(UnderseaRuntimeConfig config, String name, ServiceManager serviceManager, AgentStatus status
             , PeerId peerId) {
         // Avoided using javax validation for minimal reliance on reflection
@@ -67,6 +62,11 @@ public abstract class AbstractAgent implements Agent {
 
     public static Logger getLogger() {
         return logger;
+    }
+
+    @Override
+    public void setMetadata(AgentMetaData metaData) {
+        this.metaData = metaData;
     }
 
     public BlockchainNetwork getBlockchainNetwork() {

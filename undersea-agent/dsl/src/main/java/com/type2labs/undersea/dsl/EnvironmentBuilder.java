@@ -1,5 +1,6 @@
 package com.type2labs.undersea.dsl;
 
+import com.type2labs.undersea.common.agent.AgentMetaData;
 import com.type2labs.undersea.dsl.uuv.model.DslAgentProxy;
 import com.type2labs.undersea.utilities.Utility;
 import com.type2labs.undersea.utilities.exception.UnderseaException;
@@ -60,6 +61,8 @@ class EnvironmentBuilder {
             nsPlugArgs.add("SHARE_LISTEN=" + (++vPort));
             nsPlugArgs.add("SHORE_LISTEN=" + shoreListen);
             nsPlugArgs.add("SUUVPORT=" + (++vPort));
+
+            agent.metadata().setProperty(AgentMetaData.PropertyKey.HARDWARE_PORT, vPort);
 
             logger.info("-----------------------------------------");
             nsplug(agent.getMetaFileName(), agent.getMetaFileName(), nsPlugArgs);

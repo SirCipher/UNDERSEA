@@ -7,23 +7,21 @@ import com.type2labs.undersea.common.controller.Controller;
 import com.type2labs.undersea.common.service.transaction.Transaction;
 import com.type2labs.undersea.controller.controller.*;
 import com.type2labs.undersea.controller.controller.comms.Client;
+import com.type2labs.undersea.utilities.exception.NotSupportedException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
-import java.util.Properties;
 
 @SuppressWarnings("DuplicatedCode")
 public class ControllerImpl implements Controller {
 
-    // TODO: Pass properties to controller
-    private static final Properties properties = new Properties(); //Utility.getPropertiesByName("config.properties");
     private static final Logger logger = LogManager.getLogger(ControllerImpl.class);
     private static long simulationSpeed;
-    private Agent agent;
     protected Monitor monitor;
-    private Analyser analyser;
     protected Planner planner;
+    private Agent agent;
+    private Analyser analyser;
     private Executor executor;
     private Sensor sensor;
     private Effector effector;
@@ -31,10 +29,6 @@ public class ControllerImpl implements Controller {
     private long start = System.currentTimeMillis();
 
     public ControllerImpl(Monitor monitor, Analyser analyser, Planner planner, Executor executor) {
-        client = new Client();
-        sensor = new Sensor(client);
-        effector = new Effector(client);
-
         this.monitor = monitor;
         this.analyser = analyser;
         this.planner = planner;
@@ -44,9 +38,13 @@ public class ControllerImpl implements Controller {
     @Override
     public void initialise(Agent parentAgent) {
         this.agent = parentAgent;
+        client = new Client(agent);
+
+        sensor = new Sensor(client);
+        effector = new Effector(client);
 
         AgentMetaData metaData = agent.metadata();
-        simulationSpeed = (long) metaData.getProperty("simulation_speed");
+        simulationSpeed = Long.parseLong((String) metaData.getProperty(AgentMetaData.PropertyKey.SIMULATION_SPEED));
     }
 
     @Override
@@ -82,6 +80,10 @@ public class ControllerImpl implements Controller {
 
     @Override
     public void shutdown() {
+        if (client == null) {
+            return;
+        }
+
         boolean closed = false;
 
         try {
@@ -99,6 +101,6 @@ public class ControllerImpl implements Controller {
 
     @Override
     public ListenableFuture<?> executeTransaction(Transaction transaction) {
-        return null;
+        throw new NotSupportedException();
     }
 }

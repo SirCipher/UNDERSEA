@@ -36,11 +36,6 @@ public class RaftClientImpl implements RaftClient {
     private RaftNode consensusAlgorithm;
     private boolean isSelf = false;
 
-    @Override
-    public ClusterState.ClientState state() {
-        return consensusAlgorithm.state().clusterState().getClientState(this);
-    }
-
     public RaftClientImpl(RaftNode consensusAlgorithm, InetSocketAddress socketAddress, PeerId peerId) {
         this.consensusAlgorithm = consensusAlgorithm;
         this.clientId = peerId;
@@ -59,6 +54,11 @@ public class RaftClientImpl implements RaftClient {
         RaftClientImpl self = new RaftClientImpl(raftNode, new InetSocketAddress(0), raftNode.parent().peerId());
         self.isSelf = true;
         return self;
+    }
+
+    @Override
+    public ClusterState.ClientState state() {
+        return consensusAlgorithm.state().clusterState().getClientState(this);
     }
 
     @Override

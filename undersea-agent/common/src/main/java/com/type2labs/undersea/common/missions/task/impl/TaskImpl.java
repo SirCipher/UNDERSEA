@@ -13,7 +13,7 @@ public class TaskImpl implements Task {
     private TaskType taskType;
     private TaskStatus taskStatus = TaskStatus.TODO;
 
-    public TaskImpl(){
+    public TaskImpl() {
 
     }
 
@@ -22,17 +22,13 @@ public class TaskImpl implements Task {
         this.taskType = taskType;
     }
 
-    public void setCoordinates(double[] coordinates) {
-        this.coordinates = coordinates;
+    @Override
+    public TaskType getTaskType() {
+        return taskType;
     }
 
     public void setTaskType(TaskType taskType) {
         this.taskType = taskType;
-    }
-
-    @Override
-    public TaskType getTaskType() {
-        return taskType;
     }
 
     @Override
@@ -58,6 +54,10 @@ public class TaskImpl implements Task {
     @Override
     public double[] getCoordinates() {
         return coordinates;
+    }
+
+    public void setCoordinates(double[] coordinates) {
+        this.coordinates = coordinates;
     }
 
 }

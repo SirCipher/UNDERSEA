@@ -11,7 +11,6 @@ import com.type2labs.undersea.prospect.util.GrpcUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.Collection;
 import java.util.concurrent.ConcurrentMap;
 
 public class VoteTask implements Runnable {

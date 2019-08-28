@@ -13,7 +13,7 @@
 class Utilities {
 
 public:
-    static void writeToFile(std::string filename, std::string outputString);
+    static void writeToFile(const char *filename, const std::string& outputString);
 
 private:
     Utilities();

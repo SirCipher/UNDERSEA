@@ -18,8 +18,6 @@ import com.type2labs.undersea.controller.controllerPMC.MonitorPMC;
 import com.type2labs.undersea.controller.controllerPMC.PlannerPMC;
 import com.type2labs.undersea.dsl.EnvironmentProperties;
 import com.type2labs.undersea.dsl.uuv.model.DslAgentProxy;
-import com.type2labs.undersea.missionplanner.manager.MissionManagerImpl;
-import com.type2labs.undersea.missionplanner.planner.vrp.VehicleRoutingOptimiser;
 import com.type2labs.undersea.prospect.RaftClusterConfig;
 import com.type2labs.undersea.prospect.impl.RaftIntegrationImpl;
 import com.type2labs.undersea.prospect.impl.RaftNodeImpl;
@@ -45,8 +43,6 @@ public class AgentInitialiserImpl implements AgentInitialiser {
         AgentFactory agentFactory = new AgentFactory();
         List<Agent> constructedAgents = new LinkedList<>();
 
-        Properties properties = environmentProperties.finaliseProperties();
-
         agents.forEach((key, value) -> {
             DslAgentProxy agentProxy = (DslAgentProxy) value;
 
@@ -58,7 +54,7 @@ public class AgentInitialiserImpl implements AgentInitialiser {
 
             ServiceManager serviceManager = new ServiceManager();
 
-//            serviceManager.registerService(raftNode);
+            serviceManager.registerService(raftNode);
             serviceManager.registerService(new BlockchainNetworkImpl());
 //            serviceManager.registerService(new MissionManagerImpl(new VehicleRoutingOptimiser()));
             serviceManager.registerService(new HardwareInterface(), ServiceManager.ServiceExecutionPriority.HIGH);
@@ -72,30 +68,41 @@ public class AgentInitialiserImpl implements AgentInitialiser {
                     serviceManager,
                     new AgentStatus(key, new ArrayList<>()));
 
+            Properties properties = environmentProperties.getRunnerProperties();
             AgentMetaData metaData = value.metadata();
+            metaData.setProperty(AgentMetaData.PropertyKey.SIMULATION_SPEED,
+                    environmentProperties.getEnvironmentValue(EnvironmentProperties.EnvironmentValue.SIMULATION_SPEED));
+
+
             if (value.name().equals("shoreside")) {
-                metaData.setMaster(true);
+                metaData.setProperty(AgentMetaData.PropertyKey.IS_MASTER_NODE, true);
+            } else {
+                metaData.setProperty(AgentMetaData.PropertyKey.IS_MASTER_NODE, false);
             }
 
-            metaData.setHardwarePort(((DslAgentProxy) value).getServerPort());
-            metaData.setMetadataFileName(((DslAgentProxy) value).getMetaFileName());
+            metaData.setProperty(AgentMetaData.PropertyKey.SERVER_PORT, ((DslAgentProxy) value).getServerPort());
+
+            metaData.setProperty(AgentMetaData.PropertyKey.METADATA_FILE_NAME,
+                    ((DslAgentProxy) value).getMetaFileName());
 
             String missionName =
                     environmentProperties.getEnvironmentValue(EnvironmentProperties.EnvironmentValue.MISSION_NAME);
-            metaData.setMissionName(missionName);
+            metaData.setProperty(AgentMetaData.PropertyKey.MISSION_NAME, missionName);
 
-            metaData.setMissionDirectory(new File((String) properties.get("config.output")));
-            metaData.setRunnerProperties(properties);
+
+            metaData.setProperty(AgentMetaData.PropertyKey.MISSION_DIRECTORY, new File((String) properties.get(
+                    "config.output")));
 
             underseaAgent.setMetadata(metaData);
 
-//            serviceManager.registerService(new ControllerImpl(
-//                    underseaAgent,
-//                    new MonitorPMC(),
-//                    new AnalyserPMC(),
-//                    new PlannerPMC(),
-//                    new ExecutorPMC()
-//            ));
+            if (!(boolean) value.metadata().getProperty(AgentMetaData.PropertyKey.IS_MASTER_NODE)) {
+                serviceManager.registerService(new ControllerImpl(
+                        new MonitorPMC(),
+                        new AnalyserPMC(),
+                        new PlannerPMC(),
+                        new ExecutorPMC()
+                ));
+            }
 
             monitor.setVisualiser(new VisualiserClientImpl());
 

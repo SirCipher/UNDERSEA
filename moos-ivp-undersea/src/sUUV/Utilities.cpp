@@ -11,20 +11,19 @@
 using namespace std;
 
 
-Utilities::Utilities() {}
+Utilities::Utilities() = default;
 
-Utilities::~Utilities() {}
+Utilities::~Utilities() = default;
 
 
 //---------------------------------------------------------
 // Procedure: writeToFile(string filename, string outputString)
 //
 //---------------------------------------------------------
-void Utilities::writeToFile(string filename, string outputString) {
+void Utilities::writeToFile(const char *filename, const string &outputString) {
     ofstream myfile;
     myfile.open(filename, ios::app);
     myfile << outputString << "\n";
     myfile.close();
-    return;
 }
 

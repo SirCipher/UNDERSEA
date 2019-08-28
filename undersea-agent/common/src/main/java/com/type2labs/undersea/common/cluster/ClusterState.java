@@ -35,7 +35,7 @@ public class ClusterState {
         this.clusterCosts.put(client, agent);
     }
 
-    public ClientState getClientState(Client client){
+    public ClientState getClientState(Client client) {
         return clusterCosts.get(client);
     }
 
