@@ -20,12 +20,15 @@ public class Sensor {
      */
     private String reply;
 
+    private Knowledge knowledge;
+
     /**
      * Constructor: create a new sensor
      */
-    public Sensor(NetworkInterface networkInterface) {
+    public Sensor(NetworkInterface networkInterface, Knowledge knowledge) {
         //assign client handler
         this.networkInterface = networkInterface;
+        this.knowledge = knowledge;
     }
 
     public String getReply() {
@@ -48,9 +51,9 @@ public class Sensor {
             if (rate == 0)
                 rate = 0.2;
 
-            Knowledge.getInstance().setSensorRate(sensorData[0], rate);
-            Knowledge.getInstance().setSensorReadings(sensorData[0], Integer.parseInt(sensorData[2]));
-            Knowledge.getInstance().setSensorAccurateReadings(sensorData[0], Integer.parseInt(sensorData[3]));
+           knowledge.setSensorRate(sensorData[0], rate);
+           knowledge.setSensorReadings(sensorData[0], Integer.parseInt(sensorData[2]));
+           knowledge.setSensorAccurateReadings(sensorData[0], Integer.parseInt(sensorData[3]));
 
         }
     }

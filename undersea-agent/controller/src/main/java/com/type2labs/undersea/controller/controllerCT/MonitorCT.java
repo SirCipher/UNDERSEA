@@ -6,12 +6,13 @@ import com.type2labs.undersea.controller.controller.Monitor;
 
 public class MonitorCT extends Monitor {
 
-    public MonitorCT() {
+    public MonitorCT(Knowledge knowledge) {
+        super(knowledge);
     }
 
     @Override
     public void run() {
-        Knowledge.getInstance().analysisRequired = true; //always analyze
+        getKnowledge().analysisRequired = true; //always analyze
     }
 
 }

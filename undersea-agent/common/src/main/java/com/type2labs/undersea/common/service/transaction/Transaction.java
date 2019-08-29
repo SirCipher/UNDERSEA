@@ -116,6 +116,11 @@ public class Transaction {
             return this;
         }
 
+        public Builder forAllRunningServices() {
+            this.services = agent.services().getRunningServiceClasses();
+            return this;
+        }
+
         public Builder forExecutorService(ListeningExecutorService executorService) {
             this.executorService = executorService;
             return this;

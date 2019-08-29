@@ -2,10 +2,16 @@ package com.type2labs.undersea.controller.controller;
 
 public abstract class Monitor {
 
-    public Monitor() {
+    private final Knowledge knowledge;
+
+    public Monitor(Knowledge knowledge) {
+        this.knowledge = knowledge;
     }
 
 
     public abstract void run();
 
+    public Knowledge getKnowledge() {
+        return knowledge;
+    }
 }

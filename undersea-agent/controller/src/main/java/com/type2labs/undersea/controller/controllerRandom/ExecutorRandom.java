@@ -2,24 +2,27 @@ package com.type2labs.undersea.controller.controllerRandom;
 
 import com.type2labs.undersea.controller.controller.Executor;
 import com.type2labs.undersea.controller.controller.Knowledge;
+import org.checkerframework.checker.units.qual.K;
 
 import java.util.Iterator;
 
 
 public class ExecutorRandom extends Executor {
 
-    public ExecutorRandom() {
+
+    public ExecutorRandom(Knowledge knowledge) {
+        super(knowledge);
     }
 
 
     @Override
     public void run() {
-        command = "SPEED=" + (Knowledge.getInstance().getUUVspeed()) + ",";
+        command = "SPEED=" + (getKnowledge().getUUVspeed()) + ",";
 
-        Iterator<String> it = Knowledge.getInstance().sensorsMap.keySet().iterator();
+        Iterator<String> it = getKnowledge().sensorsMap.keySet().iterator();
         while (it.hasNext()) {
             String sensorName = it.next();
-            command += sensorName + "=" + (Knowledge.getInstance().getSensorState(sensorName));
+            command += sensorName + "=" + (getKnowledge().getSensorState(sensorName));
 
             if (it.hasNext())
                 command += ",";

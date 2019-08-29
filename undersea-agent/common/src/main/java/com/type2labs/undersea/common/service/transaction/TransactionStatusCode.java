@@ -33,5 +33,10 @@ public enum TransactionStatusCode {
     /**
      * Denotes that a read request should take place
      */
-    READ_OBJECT
+    READ_OBJECT,
+
+    /**
+     * Denotes that an {@link com.type2labs.undersea.common.service.AgentService} has failed in some capacity
+     */
+    SERVICE_FAILED
 }

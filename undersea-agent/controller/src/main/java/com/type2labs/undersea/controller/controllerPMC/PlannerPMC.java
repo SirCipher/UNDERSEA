@@ -4,15 +4,13 @@ import com.type2labs.undersea.controller.controller.Knowledge;
 import com.type2labs.undersea.controller.controller.Planner;
 import com.type2labs.undersea.controller.controllerPMC.prism.PMCResult;
 
-import java.util.Random;
-
 
 public class PlannerPMC extends Planner {
 
-    Random rand = new Random(System.currentTimeMillis());
-
-    public PlannerPMC() {
+    public PlannerPMC(Knowledge knowledge) {
+        super(knowledge);
     }
+
 
     @Override
     public void run() {
@@ -22,8 +20,8 @@ public class PlannerPMC extends Planner {
         double MAX_ENERGY = 120;
 
         //analyse configuration
-        for (Integer index : Knowledge.getInstance().PMCResultsMap.keySet()) {
-            PMCResult result = Knowledge.getInstance().PMCResultsMap.get(index);
+        for (Integer index : getKnowledge().PMCResultsMap.keySet()) {
+            PMCResult result = getKnowledge().PMCResultsMap.get(index);
             if ((result.getReq1Result() > MIN_READINGS) &&
                     (result.getReq2Result() < MAX_ENERGY) &&
                     (result.getCost() < bestCost)) {
@@ -32,19 +30,24 @@ public class PlannerPMC extends Planner {
             }
         }
 
-        //set new speed
-        double desiredSpeed = Knowledge.getInstance().PMCResultsMap.get(bestIndex).getSpeed();
-        Knowledge.getInstance().setUUVspeed(desiredSpeed);
+        PMCResult pmcResult = getKnowledge().PMCResultsMap.get(bestIndex);
 
-        //set new sensor configuration
+        if (pmcResult != null) {
+            //set new speed
+            double desiredSpeed = pmcResult.getSpeed();
+            getKnowledge().setUUVspeed(desiredSpeed);
+
+            //set new sensor configuration
 //		for (UUVSensor uuvSensor : Knowledge.sensorsMap.values()){
-        Knowledge.getInstance().setSensorState("SENSOR1",
-                Knowledge.getInstance().PMCResultsMap.get(bestIndex).getSensor1());
-        Knowledge.getInstance().setSensorState("SENSOR2",
-                Knowledge.getInstance().PMCResultsMap.get(bestIndex).getSensor2());
-        Knowledge.getInstance().setSensorState("SENSOR3",
-                Knowledge.getInstance().PMCResultsMap.get(bestIndex).getSensor3());
-//		}		
+            getKnowledge().setSensorState("SENSOR1",
+                    getKnowledge().PMCResultsMap.get(bestIndex).getSensor1());
+            getKnowledge().setSensorState("SENSOR2",
+                    getKnowledge().PMCResultsMap.get(bestIndex).getSensor2());
+            getKnowledge().setSensorState("SENSOR3",
+                    getKnowledge().PMCResultsMap.get(bestIndex).getSensor3());
+//		}
+        }
+
     }
 
 }

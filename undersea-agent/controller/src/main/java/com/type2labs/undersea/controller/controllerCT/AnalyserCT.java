@@ -19,8 +19,11 @@ public class AnalyserCT extends Analyser {
     double consumedSpeed;
     private double currentStep;
     private SimCAAdaptationEngine simca;
+    private final Knowledge knowledge;
 
-    public AnalyserCT() {
+    public AnalyserCT(Knowledge knowledge) {
+        super(knowledge);
+        this.knowledge = knowledge;
         currentStep = 0;
 
         chosenSensor = 0;
@@ -45,7 +48,7 @@ public class AnalyserCT extends Analyser {
 
             for (int i = 0; i < sensorNum; i++) {
                 String sensName = "SENSOR" + (i + 1);
-                double rate = Knowledge.getInstance().getSensorRate(sensName);
+                double rate = knowledge.getSensorRate(sensName);
 
                 simca.setSensorProperty(0, sensors.get(i).ID, rate * sensors.get(i).energry);
                 simca.setSensorProperty(1, sensors.get(i).ID, rate / sensors.get(i).accuracy);
@@ -75,7 +78,7 @@ public class AnalyserCT extends Analyser {
             //System.out.println("Av.accuracy = " + consumed[2]/(double)adaptPeriod);
 
             simca.adapt(measured);
-            Knowledge.getInstance().setUUVspeed(simca.getUUVspeed());
+            knowledge.setUUVspeed(simca.getUUVspeed());
             for (int k = 0; k < goalsN + 1; k++)
                 consumed[k] = 0;
             consumedSpeed = 0;
@@ -83,17 +86,17 @@ public class AnalyserCT extends Analyser {
         chosenSensor = simca.chooseSensors();
 
         //set new sensor configurationsimca.getUUVspeed()
-        for (UUVSensor uuvSensor : Knowledge.getInstance().sensorsMap.values())
-            Knowledge.getInstance().setSensorState(uuvSensor.getName(), 0);
+        for (UUVSensor uuvSensor : knowledge.sensorsMap.values())
+            knowledge.setSensorState(uuvSensor.getName(), 0);
         String chosenSens = "SENSOR" + (chosenSensor + 1);
-        Knowledge.getInstance().setSensorState(chosenSens, 1);
+        knowledge.setSensorState(chosenSens, 1);
 
         //System.out.println("Chosen sensor = " + chosenSensor);
-        consumedSpeed += Knowledge.getInstance().getUUVspeed();
+        consumedSpeed += knowledge.getUUVspeed();
 
         consumed[0] += sensors.get(chosenSensor).energry;
         //consumed[1]+=sensors.get(chosenSensor).rate;
-        consumed[1] += Knowledge.getInstance().getSensorRate(chosenSens);//
+        consumed[1] += knowledge.getSensorRate(chosenSens);//
         consumed[2] += sensors.get(chosenSensor).accuracy;
 
         if (currentStep == 6000)//goal change scenario

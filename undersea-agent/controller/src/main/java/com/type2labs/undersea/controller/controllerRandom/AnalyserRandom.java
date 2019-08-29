@@ -2,10 +2,13 @@ package com.type2labs.undersea.controller.controllerRandom;
 
 
 import com.type2labs.undersea.controller.controller.Analyser;
+import com.type2labs.undersea.controller.controller.Knowledge;
 
 public class AnalyserRandom extends Analyser {
 
-    public AnalyserRandom() {
+
+    public AnalyserRandom(Knowledge knowledge) {
+        super(knowledge);
     }
 
     @Override

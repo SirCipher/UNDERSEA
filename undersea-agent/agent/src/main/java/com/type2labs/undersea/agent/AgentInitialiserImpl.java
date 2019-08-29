@@ -12,18 +12,11 @@ import com.type2labs.undersea.common.monitor.model.Monitor;
 import com.type2labs.undersea.common.runner.AgentInitialiser;
 import com.type2labs.undersea.common.service.ServiceManager;
 import com.type2labs.undersea.controller.ControllerImpl;
-import com.type2labs.undersea.controller.controllerPMC.AnalyserPMC;
-import com.type2labs.undersea.controller.controllerPMC.ExecutorPMC;
-import com.type2labs.undersea.controller.controllerPMC.MonitorPMC;
-import com.type2labs.undersea.controller.controllerPMC.PlannerPMC;
 import com.type2labs.undersea.dsl.EnvironmentProperties;
 import com.type2labs.undersea.dsl.uuv.model.DslAgentProxy;
-import com.type2labs.undersea.missionplanner.manager.MissionManagerImpl;
-import com.type2labs.undersea.missionplanner.planner.vrp.VehicleRoutingOptimiser;
 import com.type2labs.undersea.prospect.RaftClusterConfig;
 import com.type2labs.undersea.prospect.impl.RaftIntegrationImpl;
 import com.type2labs.undersea.prospect.impl.RaftNodeImpl;
-import com.type2labs.undersea.seachain.BlockchainNetworkImpl;
 
 import java.io.File;
 import java.util.*;
@@ -98,12 +91,7 @@ public class AgentInitialiserImpl implements AgentInitialiser {
             serviceManager.registerService(new HardwareInterface(), ServiceManager.ServiceExecutionPriority.HIGH);
 
             if (!(boolean) value.metadata().getProperty(AgentMetaData.PropertyKey.IS_MASTER_NODE)) {
-                serviceManager.registerService(new ControllerImpl(
-                        new MonitorPMC(),
-                        new AnalyserPMC(),
-                        new PlannerPMC(),
-                        new ExecutorPMC()
-                ), ServiceManager.ServiceExecutionPriority.LOW);
+                serviceManager.registerService(ControllerImpl.PMCimpl(), ServiceManager.ServiceExecutionPriority.LOW);
 
                 /*
                  * Needs to be started after the hardware interface and to allow enough time for the interface to

@@ -12,8 +12,6 @@ import java.util.*;
 
 public class Knowledge {
 
-    private static Knowledge knowledge = null;
-
     /**
      * UUV
      */
@@ -38,15 +36,6 @@ public class Knowledge {
      * flag showing whether analysis is required
      */
     public boolean analysisRequired = false;
-
-    private Knowledge() {
-    }
-
-    public static Knowledge getInstance() {
-        if (knowledge == null)
-            knowledge = new Knowledge();
-        return knowledge;
-    }
 
     public void addResult(int index, PMCResult result) {
         PMCResultsMap.put(index, result);

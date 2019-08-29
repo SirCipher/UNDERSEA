@@ -45,7 +45,9 @@ public class AnalyserPMC extends Analyser {
     /**
      * Constructor
      */
-    public AnalyserPMC() {
+    public AnalyserPMC(Knowledge knowledge) {
+        super(knowledge);
+
         try {
             //Read  model and properties parameters
             this.modelFileName = "../controller/models/uuv/uuv.csl";//Utility.getProperty(properties, "MODEL_FILE");
@@ -105,7 +107,7 @@ public class AnalyserPMC extends Analyser {
      * Run quantitative verification
      */
     public void run() {
-        Knowledge.getInstance().PMCResultsMap.clear();
+        getKnowledge().PMCResultsMap.clear();
 
         //For all configurations run QV and populate RQVResultArray
         for (int CSC = 1; CSC < NUM_OF_SENSOR_CONFIGS; CSC++) {
@@ -114,9 +116,9 @@ public class AnalyserPMC extends Analyser {
                 int index = ((CSC - 1) * 21) + (sp - 20);
 
                 Object[] arguments = new Object[9];
-                arguments[0] = Knowledge.getInstance().getSensorRate("SENSOR1");
-                arguments[1] = Knowledge.getInstance().getSensorRate("SENSOR2");
-                arguments[2] = Knowledge.getInstance().getSensorRate("SENSOR3");
+                arguments[0] = getKnowledge().getSensorRate("SENSOR1");
+                arguments[1] = getKnowledge().getSensorRate("SENSOR2");
+                arguments[2] = getKnowledge().getSensorRate("SENSOR3");
                 arguments[3] = estimateP(sp / 10.0, 5);
                 arguments[4] = estimateP(sp / 10.0, 7);
                 arguments[5] = estimateP(sp / 10.0, 11);
@@ -137,7 +139,7 @@ public class AnalyserPMC extends Analyser {
                 double cost = 1 * req2result + 20 / (sp / 10);
 
                 //4) store configuration results
-                Knowledge.getInstance().addResult(index, new PMCResult(CSC, sp / 10.0, req1result, req2result, cost));
+                getKnowledge().addResult(index, new PMCResult(CSC, sp / 10.0, req1result, req2result, cost));
             }
         }
 

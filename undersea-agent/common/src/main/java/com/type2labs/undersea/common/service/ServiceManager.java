@@ -1,8 +1,11 @@
 package com.type2labs.undersea.common.service;
 
 import com.google.common.util.concurrent.ListenableFuture;
+import com.google.common.util.concurrent.MoreExecutors;
 import com.type2labs.undersea.common.agent.Agent;
 import com.type2labs.undersea.common.service.transaction.Transaction;
+import com.type2labs.undersea.common.service.transaction.TransactionData;
+import com.type2labs.undersea.common.service.transaction.TransactionStatusCode;
 import com.type2labs.undersea.utilities.executor.ScheduledThrowableExecutor;
 import com.type2labs.undersea.utilities.executor.ThrowableExecutor;
 import org.apache.commons.lang3.tuple.Pair;
@@ -51,6 +54,28 @@ public class ServiceManager {
 
     private void transitionService(Class<? extends AgentService> service, ServiceState status) {
         serviceStates.put(service, status);
+
+        if (status == ServiceState.FAILED) {
+            notifyServicesOfFailure(service);
+        }
+    }
+
+    /**
+     * Sends a {@link Transaction} to all {@link AgentService}s to notify them that a service has transitioned to
+     * {@link ServiceState#FAILED}
+     *
+     * @param service that has failed
+     */
+    private void notifyServicesOfFailure(Class<? extends AgentService> service) {
+        // This does not currently take care of notifying the target services as to why/how the service failed
+        Transaction transaction = new Transaction.Builder(agent)
+                .forAllRunningServices()
+                .withStatus(TransactionStatusCode.SERVICE_FAILED)
+                .withData(TransactionData.from(service))
+                .forExecutorService(MoreExecutors.newDirectExecutorService())
+                .build();
+
+        commitTransaction(transaction);
     }
 
     /**
@@ -96,7 +121,6 @@ public class ServiceManager {
 
     public ServiceManager() {
         Runtime.getRuntime().addShutdownHook(new Thread(this::shutdownServices));
-
         scheduledExecutor = ScheduledThrowableExecutor.newSingleThreadExecutor(logger);
     }
 
@@ -105,13 +129,23 @@ public class ServiceManager {
         Set<ListenableFuture<?>> futures = new HashSet<>(destinationServices.size());
 
         for (Class<? extends AgentService> service : destinationServices) {
-            AgentService _registeredService = Objects.requireNonNull(getService(service),
-                    "Service not registered: " + service.getSimpleName());
+            AgentService _registeredService = checkServiceAndThrow(service);
             ListenableFuture<?> future = _registeredService.executeTransaction(transaction);
+
             futures.add(future);
         }
 
         return Collections.unmodifiableSet(futures);
+    }
+
+    /**
+     * Retrieves a services and checks if it is registered. If it isn't, then a {@link NullPointerException} is thrown
+     *
+     * @param service to fetch
+     * @return the instance
+     */
+    private AgentService checkServiceAndThrow(Class<? extends AgentService> service) {
+        return Objects.requireNonNull(getService(service), "Service not registered: " + service.getSimpleName());
     }
 
     private ScheduledFuture<?> getScheduledFuture(Class<? extends AgentService> service) {
@@ -135,7 +169,17 @@ public class ServiceManager {
         return null;
     }
 
+
     public Collection<Class<? extends AgentService>> getServiceClasses() {
+        return services.keySet();
+    }
+
+    /**
+     * Returns all {@link AgentService} that are in a {@link ServiceState#RUNNING} state
+     *
+     * @return a filtered collection
+     */
+    public Collection<Class<? extends AgentService>> getRunningServiceClasses() {
         return services.keySet();
     }
 
@@ -183,7 +227,10 @@ public class ServiceManager {
 
     /**
      * The {@link ServiceManager} is healthy if all {@link AgentService}s are in a state of
-     * {@link ServiceState#RUNNING}. I.e, no services are currently starting or have previously encountered an error
+     * {@link ServiceState#RUNNING}. I.e, no services are currently starting or have previously encountered an error.
+     * <p>
+     * If the service manager is unhealthy, then the global state of an {@link Agent} is now uncertain. Design of
+     * {@link AgentService}s should have this taken in to consideration.
      *
      * @return if the {@link ServiceManager} is healthy
      */
@@ -281,7 +328,7 @@ public class ServiceManager {
             try {
                 agentService.run();
             } catch (final Throwable t) {
-                serviceStates.put(agentService.getClass(), ServiceState.FAILED);
+                transitionService(agentService.getClass(), ServiceState.FAILED);
                 throw t;
             }
         };

@@ -6,13 +6,14 @@ import com.type2labs.undersea.controller.controller.Monitor;
 
 public class MonitorPMC extends Monitor {
 
-    public MonitorPMC() {
+
+    public MonitorPMC(Knowledge knowledge) {
+        super(knowledge);
     }
 
     @Override
     public void run() {
-        boolean analysisRequired = Knowledge.getInstance().systemStateChanged();
-        Knowledge.getInstance().analysisRequired = analysisRequired;
+        getKnowledge().analysisRequired = getKnowledge().systemStateChanged();
     }
 
 }
