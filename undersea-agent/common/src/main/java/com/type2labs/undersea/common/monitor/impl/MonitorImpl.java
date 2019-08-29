@@ -9,6 +9,7 @@ import com.type2labs.undersea.common.service.transaction.Transaction;
 public class MonitorImpl implements Monitor {
 
     private VisualiserClient visualiserClient = new NoVisualiser();
+    private Agent agent;
 
     @Override
     public void update() {
@@ -47,12 +48,13 @@ public class MonitorImpl implements Monitor {
 
     @Override
     public void initialise(Agent parentAgent) {
-
+        this.agent = parentAgent;
+        visualiserClient.initialise(agent);
     }
 
     @Override
     public Agent parent() {
-        return null;
+        return agent;
     }
 
     @Override

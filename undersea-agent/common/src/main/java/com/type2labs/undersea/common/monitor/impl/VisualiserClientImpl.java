@@ -25,10 +25,6 @@ public class VisualiserClientImpl implements VisualiserClient {
     private SocketChannel channel;
     private boolean enabled = false;
 
-    public VisualiserClientImpl() {
-
-    }
-
     private void _write(Object data) {
         if (!openConnection()) {
             return;

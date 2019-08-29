@@ -14,9 +14,12 @@ import com.type2labs.undersea.common.service.ServiceManager;
 import com.type2labs.undersea.controller.ControllerImpl;
 import com.type2labs.undersea.dsl.EnvironmentProperties;
 import com.type2labs.undersea.dsl.uuv.model.DslAgentProxy;
+import com.type2labs.undersea.missionplanner.manager.MissionManagerImpl;
+import com.type2labs.undersea.missionplanner.planner.vrp.VehicleRoutingOptimiser;
 import com.type2labs.undersea.prospect.RaftClusterConfig;
 import com.type2labs.undersea.prospect.impl.RaftIntegrationImpl;
 import com.type2labs.undersea.prospect.impl.RaftNodeImpl;
+import com.type2labs.undersea.seachain.BlockchainNetworkImpl;
 
 import java.io.File;
 import java.util.*;
@@ -49,9 +52,9 @@ public class AgentInitialiserImpl implements AgentInitialiser {
 
             ServiceManager serviceManager = new ServiceManager();
 
-//            serviceManager.registerService(raftNode);
-//            serviceManager.registerService(new BlockchainNetworkImpl());
-//            serviceManager.registerService(new MissionManagerImpl(new VehicleRoutingOptimiser()));
+            serviceManager.registerService(raftNode);
+            serviceManager.registerService(new BlockchainNetworkImpl());
+            serviceManager.registerService(new MissionManagerImpl(new VehicleRoutingOptimiser()));
 
             Monitor monitor = new MonitorImpl();
             monitor.setVisualiser(new VisualiserClientImpl());

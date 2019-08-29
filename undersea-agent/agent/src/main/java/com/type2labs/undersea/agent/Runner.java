@@ -65,6 +65,8 @@ public class Runner extends AbstractRunner {
 
         MissionParameters missionParameters = new MissionParametersImpl(0, area, 40);
         underseaRuntimeConfig.missionParameters(missionParameters);
+
+        underseaRuntimeConfig.enableVisualiser(true);
     }
 
     public Runner(String configurationFileLocation) {

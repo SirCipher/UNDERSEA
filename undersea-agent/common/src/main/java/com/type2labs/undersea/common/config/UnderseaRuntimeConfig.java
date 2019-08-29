@@ -10,24 +10,12 @@ import java.util.Map;
 
 import static com.type2labs.undersea.utilities.preconditions.Preconditions.isNotNull;
 
+@SuppressWarnings("UnusedReturnValue")
 public class UnderseaRuntimeConfig {
 
-    private VisualiserClient visualiser;
     private boolean visualiserEnabled = true;
-    private boolean autoLogTransactions = true;
     private MissionParameters missionParameters;
     private CostConfiguration costConfiguration;
-
-    private Map<Class<? extends UnderseaConfig>, UnderseaConfig> serviceConfigs = new HashMap<>();
-
-    public UnderseaRuntimeConfig addServiceConfig(UnderseaConfig config) {
-        this.serviceConfigs.put(config.getClass(), config);
-        return this;
-    }
-
-    public UnderseaConfig getServiceConfig(Class<? extends UnderseaConfig> clazz) {
-        return serviceConfigs.get(clazz);
-    }
 
     public UnderseaRuntimeConfig missionParameters(MissionParameters missionParameters) {
         this.missionParameters = missionParameters;
@@ -38,15 +26,6 @@ public class UnderseaRuntimeConfig {
         return missionParameters;
     }
 
-    public UnderseaRuntimeConfig autoLogTransactions(boolean autoLogTransactions) {
-        this.autoLogTransactions = autoLogTransactions;
-        return this;
-    }
-
-    public boolean autoLogTransactions() {
-        return autoLogTransactions;
-    }
-
     public boolean isVisualiserEnabled() {
         return visualiserEnabled;
     }
@@ -55,17 +34,6 @@ public class UnderseaRuntimeConfig {
         this.visualiserEnabled = visualiserEnabled;
 
         return this;
-    }
-
-    public UnderseaRuntimeConfig setVisualiser(VisualiserClient visualiser) {
-        this.visualiser = visualiser;
-        this.visualiserEnabled = true;
-
-        return this;
-    }
-
-    public CostConfiguration getCostConfiguration() {
-        return costConfiguration;
     }
 
     public UnderseaRuntimeConfig setCostConfiguration(CostConfiguration costConfiguration) {

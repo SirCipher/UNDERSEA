@@ -36,6 +36,7 @@ public class Visualiser {
 
     // AgentName:Log
     private Map<String, String> logs = new HashMap<>();
+    private JFrame frame;
     private JTextArea logArea;
     private JTable table;
     private String currentLog;
@@ -70,7 +71,7 @@ public class Visualiser {
     }
 
     private void initGui() {
-        JFrame frame = new JFrame("UNDERSEA cluster monitor");
+        frame = new JFrame("UNDERSEA cluster monitor");
         frame.setLayout(new BorderLayout());
 
         JPanel pane = new JPanel();
@@ -238,6 +239,10 @@ public class Visualiser {
         return -1;
     }
 
+    public void shutdown() {
+        frame.dispose();
+    }
+
     private class ClientTask implements Runnable {
         private final Socket clientSocket;
 
@@ -287,8 +292,8 @@ public class Visualiser {
 
                         model.addRow(new Object[]{
                                 clientSocket.getRemoteSocketAddress(),
-                                agentState.getName(),
                                 agentState.getRaftPeerId(),
+                                agentState.getName(),
                                 agentState.getRaftRole(),
                                 agentState.getNoTasks(),
                                 Arrays.toString(agentState.getPos())});

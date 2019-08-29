@@ -239,9 +239,7 @@ public class ServiceManager {
     }
 
     public void registerServices(Set<AgentService> services) {
-        for (AgentService as : services) {
-            registerService(as);
-        }
+        services.forEach(this::registerService);
     }
 
     public synchronized boolean serviceRunning(Class<? extends AgentService> service) {
