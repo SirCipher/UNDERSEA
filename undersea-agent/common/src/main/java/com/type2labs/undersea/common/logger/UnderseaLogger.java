@@ -48,16 +48,26 @@ public class UnderseaLogger extends AbstractAppender {
             return;
         }
 
-        String message = new String(getLayout().toByteArray(event));
-        LogMessage logMessage = new LogMessage(agent.peerId().toString(), message);
-
         ServiceManager serviceManager = agent.services();
-        Monitor monitor = serviceManager.getService(Monitor.class);
+        if (serviceManager == null) {
+            return;
+        }
 
+        /*
+            TODO: This will currently prevent all logging during the service manager's initialisation. Or if any
+             service has crashed
+         */
+        if (!serviceManager.isHealthy()) {
+            return;
+        }
+
+        Monitor monitor = serviceManager.getService(Monitor.class);
         if (monitor == null) {
             return;
         }
 
+        String message = new String(getLayout().toByteArray(event));
+        LogMessage logMessage = new LogMessage(agent.peerId().toString(), message);
         VisualiserClient visualiserClient = monitor.visualiser();
 
         try {

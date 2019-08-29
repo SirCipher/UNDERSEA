@@ -1,14 +1,19 @@
 package com.type2labs.undersea.agent;
 
 import com.type2labs.undersea.common.agent.Agent;
+import com.type2labs.undersea.common.cluster.Client;
+import com.type2labs.undersea.common.cluster.ClusterState;
 import com.type2labs.undersea.common.config.UnderseaRuntimeConfig;
+import com.type2labs.undersea.common.cost.CostConfiguration;
+import com.type2labs.undersea.common.cost.CostConfigurationImpl;
+import com.type2labs.undersea.common.missions.planner.impl.MissionParametersImpl;
+import com.type2labs.undersea.common.missions.planner.model.MissionParameters;
 import com.type2labs.undersea.common.runner.AbstractRunner;
 import com.type2labs.undersea.dsl.EnvironmentProperties;
 import com.type2labs.undersea.dsl.ParserEngine;
 import com.type2labs.undersea.dsl.uuv.model.DslAgentProxy;
 import com.type2labs.undersea.prospect.RaftClusterConfig;
 import com.type2labs.undersea.prospect.impl.RaftNodeImpl;
-import com.type2labs.undersea.prospect.model.RaftNode;
 import com.type2labs.undersea.utilities.Utility;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -25,9 +30,45 @@ public class Runner extends AbstractRunner {
     private static final Logger logger = LogManager.getLogger(Runner.class);
     private ParserEngine parserEngine;
     private AgentInitialiserImpl agentInitialiser;
+    private static RaftClusterConfig raftClusterConfig;
+    private static UnderseaRuntimeConfig underseaRuntimeConfig = new UnderseaRuntimeConfig();
+
+    static {
+        raftClusterConfig = new RaftClusterConfig(underseaRuntimeConfig);
+
+        CostConfiguration costConfiguration = new CostConfigurationImpl();
+        costConfiguration.setCostCalculator((ClusterState clusterState) -> {
+            double accuracyWeighting = (double) costConfiguration.getBias("ACCURACY");
+            double speedWeighting = (double) costConfiguration.getBias("SPEED");
+
+            for (Map.Entry<Client, ClusterState.ClientState> e : clusterState.getMembers().entrySet()) {
+                ClusterState.ClientState a = e.getValue();
+                if (!a.isReachable()) {
+                    continue;
+                }
+
+                double cost = ((a.getAccuracy() * accuracyWeighting)
+                        + (a.getRemainingBattery() * speedWeighting))
+                        / a.getRange();
+
+                e.getValue().setCost(cost);
+            }
+        });
+
+        costConfiguration.setBias("ACCURACY", 30.0);
+        costConfiguration.setBias("SPEED", 5.0);
+
+        underseaRuntimeConfig.setCostConfiguration(costConfiguration);
+
+        Properties properties = Utility.getPropertiesByName("../resources/runner.properties");
+        double[][] area = Utility.propertyKeyTo2dDoubleArray(properties, "environment.area");
+
+        MissionParameters missionParameters = new MissionParametersImpl(0, area, 40);
+        underseaRuntimeConfig.missionParameters(missionParameters);
+    }
 
     public Runner(String configurationFileLocation) {
-        super(configurationFileLocation, new AgentInitialiserImpl(new RaftClusterConfig(new UnderseaRuntimeConfig())));
+        super(configurationFileLocation, new AgentInitialiserImpl(raftClusterConfig));
 
         this.agentInitialiser = (AgentInitialiserImpl) super.getAgentInitialiser();
     }
@@ -40,25 +81,26 @@ public class Runner extends AbstractRunner {
         Runtime.getRuntime().addShutdownHook(new Thread(Utility::killMoos));
 
         Runner runner = new Runner(args[0]);
-        runner.run();
+        runner.setup();
+        runner.onParsed(args[0]);
+    }
 
-        Properties properties = Utility.getPropertiesByName(args[0]);
+    public void onParsed(String args) {
+        Properties properties = Utility.getPropertiesByName(args);
         boolean localNodeDiscovery = Boolean.parseBoolean(Utility.getProperty(properties, "config.localnodediscovery"));
 
-        if(localNodeDiscovery){
-//            for(Agent agent:)
-//
-//            for (RaftNodeImpl raftNode : raftNodes) {
-//                for (int j = raftNodes.length - 1; j >= 0; j--) {
-//                    RaftNode nodeB = raftNodes[j];
-//
-//                    if (raftNode != nodeB) {
-//                        raftNode.state().discoverNode(nodeB);
-//                    }
-//                }
-//
-//                System.out.println(raftNode.parent().clusterClients().size());
-//            }
+        if (localNodeDiscovery) {
+            for (Agent agentA : super.getAgents()) {
+                RaftNodeImpl raftNodeA = agentA.services().getService(RaftNodeImpl.class);
+
+                for (Agent agentB : super.getAgents()) {
+                    RaftNodeImpl raftNodeB = agentB.services().getService(RaftNodeImpl.class);
+
+                    if (raftNodeA != raftNodeB) {
+                        raftNodeA.state().discoverNode(raftNodeB);
+                    }
+                }
+            }
         }
     }
 

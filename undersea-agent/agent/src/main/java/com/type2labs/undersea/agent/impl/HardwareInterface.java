@@ -6,16 +6,12 @@ import com.type2labs.undersea.common.agent.AgentMetaData;
 import com.type2labs.undersea.common.service.AgentService;
 import com.type2labs.undersea.common.service.transaction.Transaction;
 import com.type2labs.undersea.utilities.exception.NotSupportedException;
-import com.type2labs.undersea.utilities.exception.ServiceNotRegisteredException;
-import com.type2labs.undersea.utilities.exception.UnderseaException;
 import com.type2labs.undersea.utilities.process.ProcessBuilderUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Interface for running the moos library that the agent operates on
@@ -24,10 +20,15 @@ import java.util.List;
  */
 public class HardwareInterface implements AgentService {
 
-    private static final Logger logger = LogManager.getLogger(HardwareInterface.class);
+    private final Logger logger = LogManager.getLogger(HardwareInterface.class);
 
     private Agent agent;
     private Process process;
+
+    @Override
+    public long transitionTimeout() {
+        return 5000;
+    }
 
     public HardwareInterface() {
         Runtime.getRuntime().addShutdownHook(new Thread(this::shutdown));
@@ -68,7 +69,13 @@ public class HardwareInterface implements AgentService {
             logger.info(agent.name() + ": starting agent server", agent);
             launchAgent(metaData);
         }
+
+        started = true;
+
+        logger.info(agent.name() + ": started agent server", agent);
     }
+
+    private boolean started = false;
 
     @Override
     public void shutdown() {
@@ -90,6 +97,13 @@ public class HardwareInterface implements AgentService {
                 logger.info(agent.name() + ": shut down MOOS process", agent);
             }
         }
+
+        started = false;
+    }
+
+    @Override
+    public boolean started() {
+        return started;
     }
 
     @Override

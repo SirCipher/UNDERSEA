@@ -259,6 +259,7 @@ public class RaftNodeImpl implements RaftNode {
         started = true;
     }
 
+    @Override
     public void schedule(Runnable task, long delayInMillis) {
         integration.schedule(task, delayInMillis, MILLISECONDS);
     }
@@ -303,6 +304,11 @@ public class RaftNodeImpl implements RaftNode {
     public void shutdown() {
         singleThreadScheduledExecutor.shutdown();
         server.close();
+    }
+
+    @Override
+    public boolean started() {
+        return started;
     }
 
     @Override

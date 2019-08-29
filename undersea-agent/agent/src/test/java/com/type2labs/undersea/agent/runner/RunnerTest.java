@@ -27,7 +27,10 @@ public class RunnerTest {
         String testProperties = "src/test/resources/test.properties";
 
         Runner runner = new Runner(testProperties);
-        runner.run();
+
+        runner.setup();
+        runner.start();
+        runner.onParsed(testProperties);
 
         Thread.sleep(10000);
 

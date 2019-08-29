@@ -56,9 +56,9 @@ public class AgentInitialiserImpl implements AgentInitialiser {
 
             ServiceManager serviceManager = new ServiceManager();
 
-            serviceManager.registerService(raftNode);
-            serviceManager.registerService(new BlockchainNetworkImpl());
-            serviceManager.registerService(new MissionManagerImpl(new VehicleRoutingOptimiser()));
+//            serviceManager.registerService(raftNode);
+//            serviceManager.registerService(new BlockchainNetworkImpl());
+//            serviceManager.registerService(new MissionManagerImpl(new VehicleRoutingOptimiser()));
 
             Monitor monitor = new MonitorImpl();
             monitor.setVisualiser(new VisualiserClientImpl());
@@ -103,13 +103,13 @@ public class AgentInitialiserImpl implements AgentInitialiser {
                         new AnalyserPMC(),
                         new PlannerPMC(),
                         new ExecutorPMC()
-                ));
+                ), ServiceManager.ServiceExecutionPriority.LOW);
 
                 /*
                  * Needs to be started after the hardware interface and to allow enough time for the interface to
                  * have started
                  */
-                serviceManager.registerService(new MoosConnector(), ServiceManager.ServiceExecutionPriority.LOW);
+                serviceManager.registerService(new MoosConnector(), ServiceManager.ServiceExecutionPriority.MEDIUM);
             }
 
             monitor.setVisualiser(new VisualiserClientImpl());

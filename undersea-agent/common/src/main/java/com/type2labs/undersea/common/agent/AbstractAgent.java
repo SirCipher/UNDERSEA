@@ -28,7 +28,6 @@ public abstract class AbstractAgent implements Agent {
     private final ConcurrentHashMap<PeerId, Client> clusterClients = new ConcurrentHashMap<>();
     private final PeerId peerId;
     private AgentMetaData metaData;
-    private String metaFileName;
     private String name;
 
     public AbstractAgent(UnderseaRuntimeConfig config, String name, ServiceManager serviceManager, AgentStatus status

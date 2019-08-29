@@ -127,6 +127,11 @@ public class MissionManagerImpl implements MissionManager {
         activeTasks.forEach((key, value) -> value.cancel(false));
     }
 
+    @Override
+    public boolean started() {
+        return true;
+    }
+
     /**
      * Execues a given {@link Transaction} on the mission planner. Supported {@link TransactionStatusCode}s are:
      * {@link TransactionStatusCode#ELECTED_LEADER} - which will generate a mission in accordance with the current
@@ -155,4 +160,5 @@ public class MissionManagerImpl implements MissionManager {
                     + " does not support status code: " + statusCode);
         }
     }
+
 }

@@ -18,6 +18,10 @@ public abstract class AbstractRunner {
     private final String configurationFileLocation;
     private List<Agent> agents;
 
+    public List<Agent> getAgents() {
+        return agents;
+    }
+
     public AbstractRunner(String configurationFileLocation, AgentInitialiser agentInitialiser) {
         try {
             Utility.fileExists(configurationFileLocation, false, false);
@@ -29,12 +33,6 @@ public abstract class AbstractRunner {
         this.agentInitialiser = Objects.requireNonNull(agentInitialiser);
     }
 
-    private void _run() {
-        agents.stream().filter(a -> (boolean) a.metadata().getProperty(AgentMetaData.PropertyKey.IS_MASTER_NODE)).forEach(a -> a.services().startServices());
-        agents.stream().filter(a -> !(boolean) a.metadata().getProperty(AgentMetaData.PropertyKey.IS_MASTER_NODE)).forEach(a -> a.services().startServices());
-
-    }
-
     protected abstract void generateFiles();
 
     protected AgentInitialiser getAgentInitialiser() {
@@ -43,12 +41,16 @@ public abstract class AbstractRunner {
 
     protected abstract Map<String, ? extends Agent> parseDsl(String configurationFileLocation);
 
-    public void run() {
-        setup();
-        _run();
+    public void setup() {
+        _setup();
     }
 
-    private void setup() {
+    public void start(){
+        agents.stream().filter(a -> (boolean) a.metadata().getProperty(AgentMetaData.PropertyKey.IS_MASTER_NODE)).forEach(a -> a.services().startServices());
+        agents.stream().filter(a -> !(boolean) a.metadata().getProperty(AgentMetaData.PropertyKey.IS_MASTER_NODE)).forEach(a -> a.services().startServices());
+    }
+
+    private void _setup() {
         Map<String, ? extends Agent> proxies = parseDsl(configurationFileLocation);
         agents = agentInitialiser.initialise(proxies);
         generateFiles();

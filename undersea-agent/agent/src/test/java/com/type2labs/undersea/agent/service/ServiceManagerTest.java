@@ -74,6 +74,11 @@ public class ServiceManagerTest {
         }
 
         @Override
+        public boolean started() {
+            return true;
+        }
+
+        @Override
         public ListenableFuture<?> executeTransaction(Transaction transaction) {
             return null;
         }

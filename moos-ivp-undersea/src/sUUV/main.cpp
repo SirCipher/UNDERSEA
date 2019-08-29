@@ -18,12 +18,6 @@ void dotest();
 using namespace std;
 
 int main(int argc, char *argv[]) {
-
-//    if (true) {
-//        return 0;
-//    }
-
-
     string mission_file;
     string run_command = argv[0];
 

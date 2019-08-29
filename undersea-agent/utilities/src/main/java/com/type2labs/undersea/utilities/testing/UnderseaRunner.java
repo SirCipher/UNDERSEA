@@ -9,6 +9,12 @@ import org.junit.runners.model.InitializationError;
 import java.lang.annotation.Annotation;
 
 /**
+ * Ensures that unit tests annotated with {@link IgnoredOnCi} are ignored on a build server when the gradle flag
+ * {@code buildserver} is supplied.
+ * <p>
+ * At the moment, if this results in a class having no unit tests once the filtering has taken place then JUnit will
+ * throw an exception. So an empty test needs to exist if this is a posibility
+ * <p>
  * Created by Thomas Klapwijk on 2019-08-24.
  */
 public class UnderseaRunner extends BlockJUnit4ClassRunner {

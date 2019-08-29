@@ -30,4 +30,5 @@ public interface RaftNode extends ConsensusAlgorithm {
 
     GrpcServer server();
 
+    void schedule(Runnable task, long delayInMillis);
 }

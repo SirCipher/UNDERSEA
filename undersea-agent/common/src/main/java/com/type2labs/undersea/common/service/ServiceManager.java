@@ -4,31 +4,95 @@ import com.google.common.util.concurrent.ListenableFuture;
 import com.type2labs.undersea.common.agent.Agent;
 import com.type2labs.undersea.common.service.transaction.Transaction;
 import com.type2labs.undersea.utilities.executor.ScheduledThrowableExecutor;
+import com.type2labs.undersea.utilities.executor.ThrowableExecutor;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import javax.annotation.concurrent.ThreadSafe;
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
+import java.util.function.BooleanSupplier;
 
 /**
  * Created by Thomas Klapwijk on 2019-08-08.
  */
+@ThreadSafe
 public class ServiceManager {
+
+    /**
+     * The default time (in milliseconds) that the service manager should wait for a service to start before assuming
+     * that something has gone wrong. {@link AgentService}s can override {@link AgentService#transitionTimeout()} if
+     * more time is required.
+     */
+    static final long DEFAULT_TRANSITION_TIMEOUT = 2000;
 
     private static final Logger logger = LogManager.getLogger(ServiceManager.class);
 
     private final Map<Class<? extends AgentService>, Pair<AgentService, ServiceExecutionPriority>> services =
             new ConcurrentHashMap<>();
     private final Map<Class<? extends AgentService>, ScheduledFuture<?>> scheduledFutures = new ConcurrentHashMap<>();
+    private final Map<Class<? extends AgentService>, ServiceState> serviceStates = new ConcurrentHashMap<>();
 
     private ScheduledExecutorService serviceExecutor;
     private ScheduledExecutorService scheduledExecutor;
+    private ThrowableExecutor serviceInitialiser = ThrowableExecutor.newSingleThreadExecutor(logger);
+
     private Agent agent;
     private boolean started = false;
+
+    private static class ServiceManagerException extends RuntimeException {
+        private static final long serialVersionUID = -8357603298883501831L;
+
+        ServiceManagerException(String s) {
+            super(s);
+        }
+    }
+
+    private void transitionService(Class<? extends AgentService> service, ServiceState status) {
+        serviceStates.put(service, status);
+    }
+
+    /**
+     * Waits for an {@link AgentService} to transition from it's current state to the supplier's new state.
+     *
+     * @param supplier   to poll on
+     * @param service    to wait to transition
+     * @param starting   {@link ServiceState}
+     * @param successful {@link ServiceState} to set if the service transitions successfully
+     * @return true if the service transitioned successfully. False only if the thread throws an exception
+     */
+    private synchronized boolean _waitForTransition(BooleanSupplier supplier, AgentService service,
+                                                    ServiceState starting, ServiceState successful) {
+        long startupTimeout = service.transitionTimeout();
+        transitionService(service.getClass(), starting);
+
+        Future<Boolean> future = serviceInitialiser.submit(() -> {
+            long start = System.currentTimeMillis();
+
+            while (!supplier.getAsBoolean()) {
+                if (System.currentTimeMillis() - start > startupTimeout) {
+                    transitionService(service.getClass(), ServiceState.FAILED);
+
+                    throw new ServiceManagerException(String.format(agent.name() + ": service "
+                            + service.getClass().getSimpleName() + " did not transition in the allocated time" +
+                            " %s ms", startupTimeout) + ". Attempted to go from " + starting + " to " + successful);
+                }
+            }
+            logger.info("Agent " + agent.name() + " started service: " + service.getClass().getSimpleName(),
+                    agent);
+
+            transitionService(service.getClass(), successful);
+
+            return true;
+        });
+
+        try {
+            return future.get();
+        } catch (InterruptedException | ExecutionException e) {
+            return false;
+        }
+    }
 
     public ServiceManager() {
         Runtime.getRuntime().addShutdownHook(new Thread(this::shutdownServices));
@@ -60,7 +124,7 @@ public class ServiceManager {
         return null;
     }
 
-    public synchronized <T extends AgentService> T getService(Class<T> s) {
+    public <T extends AgentService> T getService(Class<T> s) {
         for (Map.Entry<Class<? extends AgentService>, Pair<AgentService, ServiceExecutionPriority>> e :
                 services.entrySet()) {
             if (s.isAssignableFrom(e.getKey())) {
@@ -114,6 +178,17 @@ public class ServiceManager {
         }
 
         services.put(service.getClass(), Pair.of(service, priority));
+        serviceStates.put(service.getClass(), ServiceState.STOPPED);
+    }
+
+    /**
+     * The {@link ServiceManager} is healthy if all {@link AgentService}s are in a state of
+     * {@link ServiceState#RUNNING}. I.e, no services are currently starting or have previously encountered an error
+     *
+     * @return if the {@link ServiceManager} is healthy
+     */
+    public boolean isHealthy() {
+        return serviceStates.values().stream().filter(e -> e == ServiceState.RUNNING).count() == serviceStates.size();
     }
 
     public void registerServices(Set<AgentService> services) {
@@ -143,6 +218,7 @@ public class ServiceManager {
         if (scheduledFuture != null) {
             scheduledFuture.cancel(true);
             scheduledFutures.remove(service);
+            serviceStates.put(service, ServiceState.STOPPED);
         }
 
         if (key != null) {
@@ -171,7 +247,7 @@ public class ServiceManager {
      * @param period  the period between successive executions
      */
     public synchronized void startRepeatingService(AgentService service, long period) {
-        ScheduledFuture<?> scheduledFuture = scheduledExecutor.scheduleAtFixedRate(service, 1, period,
+        ScheduledFuture<?> scheduledFuture = scheduledExecutor.scheduleAtFixedRate(wrapAgentService(service), 1, period,
                 TimeUnit.MILLISECONDS);
         scheduledFutures.put(service.getClass(), scheduledFuture);
 
@@ -184,10 +260,31 @@ public class ServiceManager {
 
         logger.info("Agent " + agent.name() + " starting service: " + agentService.getClass().getSimpleName(), agent);
 
-        ScheduledFuture<?> future = serviceExecutor.schedule(agentService, 1, TimeUnit.MILLISECONDS);
-        scheduledFutures.put(service, future);
+        ScheduledFuture<?> future = serviceExecutor.schedule(wrapAgentService(agentService), 1, TimeUnit.NANOSECONDS);
 
-        logger.info("Agent " + agent.name() + " started service: " + agentService.getClass().getSimpleName(), agent);
+        //noinspection StatementWithEmptyBody
+        while (!_waitForTransition(agentService::started, agentService, ServiceState.STARTING, ServiceState.RUNNING)) {
+        }
+
+        scheduledFutures.put(service, future);
+    }
+
+    /**
+     * Wraps an {@link AgentService} such that any exception that is thrown by the service will be caught and the
+     * service's {@link ServiceState} can be set to {@link ServiceState#FAILED}
+     *
+     * @param agentService to wrap
+     * @return a wrapped {@link AgentService}
+     */
+    private Runnable wrapAgentService(final AgentService agentService) {
+        return () -> {
+            try {
+                agentService.run();
+            } catch (final Throwable t) {
+                serviceStates.put(agentService.getClass(), ServiceState.FAILED);
+                throw t;
+            }
+        };
     }
 
     public synchronized void startServices() {
@@ -203,6 +300,31 @@ public class ServiceManager {
         }
 
         started = true;
+    }
+
+    /**
+     * Type defines a {@link AgentService}'s current status
+     */
+    public enum ServiceState {
+        /**
+         * Service is currently starting up
+         */
+        STARTING,
+
+        /**
+         * Service is up and running successfully
+         */
+        RUNNING,
+
+        /**
+         * Service has stopped successfully
+         */
+        STOPPED,
+
+        /**
+         * Service failed to start/stop successfully or abnormally terminated
+         */
+        FAILED,
     }
 
     /**

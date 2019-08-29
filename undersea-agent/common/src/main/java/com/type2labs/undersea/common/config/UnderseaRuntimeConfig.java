@@ -76,6 +76,10 @@ public class UnderseaRuntimeConfig {
     }
 
     public CostCalculator getCostCalculator() {
+        if (costConfiguration == null) {
+            throw new NullPointerException("Cost configuration not supplied");
+        }
+
         return costConfiguration.getCostCalculator();
     }
 

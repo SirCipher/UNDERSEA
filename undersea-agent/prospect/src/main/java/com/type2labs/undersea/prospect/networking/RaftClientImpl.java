@@ -22,6 +22,7 @@ import java.net.InetSocketAddress;
 import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 public class RaftClientImpl implements RaftClient {
 
@@ -74,6 +75,13 @@ public class RaftClientImpl implements RaftClient {
     @Override
     public void shutdown() {
         channel.shutdownNow();
+
+        try {
+            channel.awaitTermination(3000, TimeUnit.MILLISECONDS);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+            logger.error(consensusAlgorithm.agent().name() + ": failed to shutdown channel successfully", e);
+        }
     }
 
     @Override

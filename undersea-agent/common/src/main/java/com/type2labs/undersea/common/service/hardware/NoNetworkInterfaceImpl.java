@@ -25,8 +25,18 @@ public class NoNetworkInterfaceImpl implements NetworkInterface {
     }
 
     @Override
+    public boolean started() {
+        return true;
+    }
+
+    @Override
     public ListenableFuture<?> executeTransaction(Transaction transaction) {
         throw new NotSupportedException();
+    }
+
+    @Override
+    public long transitionTimeout() {
+        return 0;
     }
 
     @Override

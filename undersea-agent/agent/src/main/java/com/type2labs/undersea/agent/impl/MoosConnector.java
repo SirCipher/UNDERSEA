@@ -28,6 +28,7 @@ public class MoosConnector implements NetworkInterface {
     private Agent agent;
     private PrintWriter out;
     private BufferedReader in;
+    private boolean started = false;
 
     @Override
     public void initialise(Agent parentAgent) {
@@ -35,15 +36,16 @@ public class MoosConnector implements NetworkInterface {
     }
 
     private void connectToServer() {
-        int retries = 10;
+        int retries = 20;
         int port = (int) agent.metadata().getProperty(AgentMetaData.PropertyKey.HARDWARE_PORT);
+//        int port = 9025;
         Exception exception = null;
 
-        try {
-            Thread.sleep(5000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            Thread.sleep(2000);
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
 
         for (int i = 0; i < retries; i++) {
             try {
@@ -51,13 +53,14 @@ public class MoosConnector implements NetworkInterface {
 
                 out = new PrintWriter(socket.getOutputStream(), true);
                 in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                started = true;
 
                 logger.info(agent.name() + ": connected to MOOS server", agent);
 
                 return;
             } catch (IOException e) {
                 // Excuse the first few attempts as the server may not have started yet
-                if (i > 5) {
+                if (i > 10) {
                     logger.warn(agent.name() + ": failed to connect to server, retrying", e);
                     exception = e;
                 }
@@ -100,10 +103,24 @@ public class MoosConnector implements NetworkInterface {
 
     @Override
     public void shutdown() {
+        if (in == null) {
+            return;
+        }
+
         String SHUT_DOWN_STR = "###";
         String inputStr = read();
 
         logger.info(agent.name() + ": writing: " + SHUT_DOWN_STR + ". received back: " + inputStr, agent);
+    }
+
+    @Override
+    public long transitionTimeout() {
+        return 1000;
+    }
+
+    @Override
+    public boolean started() {
+        return started;
     }
 
     @Override

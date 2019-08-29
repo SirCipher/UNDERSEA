@@ -83,7 +83,13 @@ public class ControllerImpl implements Controller {
     }
 
     @Override
+    public boolean started() {
+        return true;
+    }
+
+    @Override
     public ListenableFuture<?> executeTransaction(Transaction transaction) {
         throw new NotSupportedException();
     }
+
 }

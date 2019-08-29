@@ -51,8 +51,18 @@ public class NoMissionManager implements MissionManager {
     }
 
     @Override
+    public boolean started() {
+        return true;
+    }
+
+    @Override
     public ListenableFuture<?> executeTransaction(Transaction transaction) {
         return null;
+    }
+
+    @Override
+    public long transitionTimeout() {
+        return 0;
     }
 
     @Override

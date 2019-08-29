@@ -29,6 +29,8 @@ public class AcquireStatusTask implements Runnable {
 
         if (localNodes.size() == 0) {
             logger.info(raftNode.name() + " has no local nodes", raftNode.agent());
+            raftNode.schedule(new AcquireStatusTask(raftNode), 500);
+            return;
         }
 
         for (Client localNode : localNodes) {
