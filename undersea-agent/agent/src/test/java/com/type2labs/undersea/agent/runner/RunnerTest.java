@@ -32,7 +32,7 @@ public class RunnerTest {
         runner.start();
         runner.onParsed(testProperties);
 
-        Thread.sleep(10000);
+        Thread.sleep(1000);
 
         runner.shutdown();
     }

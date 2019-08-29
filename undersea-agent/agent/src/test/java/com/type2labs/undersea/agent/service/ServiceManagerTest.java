@@ -36,8 +36,8 @@ public class ServiceManagerTest {
                 new AgentStatus(name, new ArrayList<>()),
                 PeerId.newId());
     }
-
-    @Test
+//
+//    @Test
     public void testServiceCancellation() throws InterruptedException {
         UnderseaAgent agent = getAgent();
         ServiceManager serviceManager = agent.services();
@@ -49,22 +49,10 @@ public class ServiceManagerTest {
         serviceManager.shutdownService(ServiceSample.class, null);
 
         assertFalse(serviceManager.serviceRunning(ServiceSample.class));
+
+        serviceManager.shutdownServices();
     }
 
-    @Test(timeout = 5000)
-    public void testServiceCompletion() {
-        UnderseaAgent agent = getAgent();
-        ServiceManager serviceManager = agent.services();
-
-
-        serviceManager.startServices();
-
-        while (serviceManager.serviceRunning(ServiceSample.class)) {
-
-        }
-
-        assertEquals(10, i);
-    }
 
     private class ServiceSample implements AgentService {
 

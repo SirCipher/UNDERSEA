@@ -259,7 +259,7 @@ public class ServiceManager {
         logger.info("Agent " + agent.name() + " service manager assigned", agent);
     }
 
-    public synchronized void shutdownService(Class<? extends AgentService> service, AgentService key) {
+    public synchronized void shutdownService(Class<? extends AgentService> service, AgentService agentService) {
         ScheduledFuture<?> scheduledFuture = getScheduledFuture(service);
 
         if (scheduledFuture != null) {
@@ -268,8 +268,8 @@ public class ServiceManager {
             serviceStates.put(service, ServiceState.STOPPED);
         }
 
-        if (key != null) {
-            key.shutdown();
+        if (agentService != null) {
+            agentService.shutdown();
         }
 
         logger.info("Agent: " + agent.name() + " shutting down service: " + service.getSimpleName(), agent);
@@ -281,7 +281,12 @@ public class ServiceManager {
             shutdownService(e.getKey(), e.getValue().getKey());
         }
 
+        if (serviceExecutor != null) {
+            serviceExecutor.shutdownNow();
+        }
+
         scheduledExecutor.shutdownNow();
+        serviceInitialiser.shutdownNow();
 
         started = false;
     }

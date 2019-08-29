@@ -10,7 +10,7 @@ import com.type2labs.undersea.common.service.transaction.Transaction;
 public interface AgentService extends Runnable, AgentAware {
 
     /**
-     * Signals that the service should start the shutdown procedure.
+     * Signals that the service should start the shutdown procedure. This must be a non-blocking process
      */
     void shutdown();
 

@@ -46,10 +46,10 @@ public class UnderseaAgentTest {
                 new AgentStatus("test", new ArrayList<>()),
                 PeerId.newId());
 
-        serviceManager.startRepeatingService(ControllerImpl.PMCimpl(), 1);
-
         assertNotNull(serviceManager.getService(Monitor.class));
         assertNotNull(underseaAgent.getBlockchainNetwork());
+
+        serviceManager.shutdownServices();
     }
 
 }

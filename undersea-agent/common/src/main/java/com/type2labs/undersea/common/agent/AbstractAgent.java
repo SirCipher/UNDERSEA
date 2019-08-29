@@ -56,7 +56,6 @@ public abstract class AbstractAgent implements Agent {
         this.peerId = peerId;
 
         serviceManager.setAgent(this);
-        logServices();
     }
 
     public static Logger getLogger() {
@@ -94,21 +93,6 @@ public abstract class AbstractAgent implements Agent {
 
     public AgentStatus getStatus() {
         return status;
-    }
-
-    private void logServices() {
-        StringBuilder s = new StringBuilder("Agent: " + status.getName() + ". Registered services:");
-        Iterator<AgentService> it = services.getServices().iterator();
-
-        while (it.hasNext()) {
-            s.append(" ").append(it.next().getClass().getSimpleName());
-
-            if (it.hasNext()) {
-                s.append(",");
-            }
-        }
-
-        logger.info(s);
     }
 
     @Override

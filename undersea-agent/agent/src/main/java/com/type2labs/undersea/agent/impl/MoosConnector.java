@@ -107,10 +107,12 @@ public class MoosConnector implements NetworkInterface {
             return;
         }
 
-        String SHUT_DOWN_STR = "###";
-        String inputStr = read();
+        try {
+            in.close();
+        } catch (IOException ignored) {
+        }
 
-        logger.info(agent.name() + ": writing: " + SHUT_DOWN_STR + ". received back: " + inputStr, agent);
+        out.close();
     }
 
     @Override
