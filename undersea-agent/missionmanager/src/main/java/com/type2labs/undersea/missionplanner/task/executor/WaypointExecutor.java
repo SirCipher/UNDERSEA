@@ -48,7 +48,7 @@ public class WaypointExecutor implements TaskExecutor {
     public void run() {
 //        logger.info("Running task: " + task);
 
-        networkInterface.write("FWD:WAYPOINT_UPDATES:"+ Arrays.toString(task.getCoordinates()).replace("[", "").replace("]", ""));
+        networkInterface.write("FWD:WAYPOINT_" + agent.name() + "_UPDATES:points=" + Arrays.toString(task.getCoordinates()).replace("[", "").replace("]", ""));
     }
 
 }

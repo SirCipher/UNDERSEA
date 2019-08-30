@@ -22,7 +22,7 @@ Behavior = BHV_Waypoint
   updates   = WAYPOINT_$(VNAME)_UPDATES
   perpetual = true
   speed = 2.0
-  points = $(POINTS)
+  //points = $(POINTS)
 }
 
 Behavior = BHV_Waypoint
