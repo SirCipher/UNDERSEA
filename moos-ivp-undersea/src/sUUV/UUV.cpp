@@ -110,6 +110,9 @@ void UUV::RegisterVariables() {
     for (auto &m_uuv_sensor : m_uuv_sensors) {
         Register(m_uuv_sensor, 0);
     }
+
+    // For waypoint updates
+    Register("WPT_STAT", 0);
 }
 
 
@@ -136,11 +139,22 @@ bool UUV::OnNewMail(MOOSMSG_LIST &NewMail) {
 #endif
 
         string key = msg.GetKey();
-        double value = msg.GetDouble();
-        if (find(m_uuv_sensors.begin(), m_uuv_sensors.end(), key) != m_uuv_sensors.end()) {
 
-            m_sensors_map[key].newReading(value);
+        if (key.compare("WPT_STAT") == 0) {
+            std::cout << msg.GetString() << std::endl;
+        } else {
+            double value = msg.GetDouble();
+            if (find(m_uuv_sensors.begin(), m_uuv_sensors.end(), key) != m_uuv_sensors.end()) {
+                m_sensors_map[key].newReading(value);
+            }
         }
+
+
+
+//        if(key == "WPT_STAT"){
+//            std:cout<<
+//        }
+
     }
 
     return (true);
@@ -163,7 +177,7 @@ bool UUV::Iterate() {
     string outputString = doubleToString(m_current_iterate - GetAppStartTime(), 2) + ",";
 
     //reset sensors
-    for (auto & it : m_sensors_map) {
+    for (auto &it : m_sensors_map) {
         outputString += doubleToString(it.second.averageRate, 2) + ",";
         // reset sensors information
         it.second.reset();
@@ -327,6 +341,6 @@ void UUV::sendNotifications() {
                           doubleToString(m_uuv_speed, 2) + ",label=speed,color=darkblue,width=1");
 }
 
-void UUV::ForwardMessage(const std::string& key, const std::string& value) {
+void UUV::ForwardMessage(const std::string &key, const std::string &value) {
     Notify(key, value);
 }
