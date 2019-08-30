@@ -117,7 +117,7 @@ void closeServer() {
 
 }
 
-void *runServer2(void *m_sensors_map) {
+void *runServer2(UUV uuv) {
     //contains the number of characters read or written
     int n;
 
@@ -128,10 +128,11 @@ void *runServer2(void *m_sensors_map) {
 
     std::cout << "Accepted client" << std::endl;
 
-    if (newsockfd < 0)
+    if (newsockfd < 0) {
         error("ERROR on accept");
+    }
 
-    auto *sensMap = (UUV::sensorsMap *) m_sensors_map;
+    auto sensMap = uuv.m_sensors_map;
 
     do {
         bzero(buffer, 256);
@@ -154,7 +155,7 @@ void *runServer2(void *m_sensors_map) {
 
         } else if (strcmp(buffer, "SENSORS") == 0) {
             outputStr.clear();
-            for (auto &it : *sensMap) {
+            for (auto &it : sensMap) {
 //				outputStr += it->first +"="+ doubleToString(it->second.averageRate,2) +",";
 
                 //if it's not the dummy element that resembles the speed in sensors map
@@ -170,6 +171,7 @@ void *runServer2(void *m_sensors_map) {
             char *dup = strdup(inputStr.c_str());
             char *token = strtok(dup, ",");
             vector<string> uuvElements;
+
             while (token != nullptr) {
                 uuvElements.emplace_back(token);
                 // the call is treated as a subsequent calls to strtok:
@@ -192,13 +194,13 @@ void *runServer2(void *m_sensors_map) {
                 free(dup2);
                 if (v.size() == 2) {
                     if (v.at(0).find("SPEED") != string::npos) {//SPEED=3.22
-                        auto it = sensMap->find(v.at(0));
-                        if (it != sensMap->end()) {
+                        auto it = sensMap.find(v.at(0));
+                        if (it != sensMap.end()) {
                             it->second.other = stod(v.at(1));
                         }
                     } else if (v.at(0).find("SENSOR") != string::npos) {
-                        auto it = sensMap->find(v.at(0));
-                        if (it != sensMap->end()) {
+                        auto it = sensMap.find(v.at(0));
+                        if (it != sensMap.end()) {
                             it->second.state = stod(v.at(1));
                         }
                     }
@@ -206,7 +208,22 @@ void *runServer2(void *m_sensors_map) {
             }
 
             outputStr = "OK\n";
+        } else if (inputStr.rfind("FWD", 0) == 0) {
+            std::cout << "Forwarding message: " << inputStr << std::endl;
+
+            inputStr = inputStr.substr(4);
+            std::cout << inputStr << std::endl;
+
+            std::istringstream iss(inputStr);
+            std::string key;
+            std::getline(iss, key, ':');
+
+            std::string value;
+            std::getline(iss, value, ':');
+
+            uuv.ForwardMessage(key, value);
         }
+
         n = write(newsockfd, outputStr.c_str(), outputStr.length());
         if (n < 0)
             error("ERROR writing to socket");

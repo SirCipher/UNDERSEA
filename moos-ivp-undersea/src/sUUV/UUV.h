@@ -22,6 +22,8 @@ public:
     bool buildReport();
 
 
+    void ForwardMessage(const std::string& key, const std::string& value);
+
 protected:
     bool OnNewMail(MOOSMSG_LIST &NewMail);
 
@@ -111,4 +113,4 @@ public:
 
 };
 
-#endif 
+#endif

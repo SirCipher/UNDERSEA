@@ -208,7 +208,7 @@ bool UUV::buildReport() {
         m_msgs << it.second.toString() << endl;
     }
 
-    return true;
+    return false;
 }
 
 
@@ -272,7 +272,7 @@ void UUV::initServer() {
     pthread_t thread;
 
 //	int n = pthread_create(&thread, NULL, runServer, NULL);
-    int n = pthread_create(&thread, nullptr, runServer2, (void *) &m_sensors_map);
+    int n = pthread_create(&thread, nullptr, reinterpret_cast<void *(*)(void *)>(runServer2), this);
 }
 
 //---------------------------------------------------------
@@ -325,4 +325,8 @@ void UUV::sendNotifications() {
     Notify("UPDATES_CONSTANT_SPEED", "speed=" + doubleToString(m_uuv_speed));
     Notify("VIEW_MARKER", "type=circle,x=" + intToString(xMiddlePosition) + ",y=-85,scale=2,msg=speed:" +
                           doubleToString(m_uuv_speed, 2) + ",label=speed,color=darkblue,width=1");
+}
+
+void UUV::ForwardMessage(const std::string& key, const std::string& value) {
+    Notify(key, value);
 }

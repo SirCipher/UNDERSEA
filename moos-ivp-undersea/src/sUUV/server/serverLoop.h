@@ -14,7 +14,7 @@ void initialiseServer(int portNo);
 
 void *runServer(void *dummyPt);
 
-void *runServer2(void *m_sensors_map);
+void *runServer2(UUV uuv);
 
 void closeServer();
 

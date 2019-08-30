@@ -9,6 +9,8 @@ import com.type2labs.undersea.utilities.exception.ServiceNotRegisteredException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.Arrays;
+
 /**
  * Created by Thomas Klapwijk on 2019-08-23.
  */
@@ -46,7 +48,7 @@ public class WaypointExecutor implements TaskExecutor {
     public void run() {
 //        logger.info("Running task: " + task);
 
-        networkInterface.write("UPDATES=");
+        networkInterface.write("FWD:WAYPOINT_UPDATES:"+ Arrays.toString(task.getCoordinates()).replace("[", "").replace("]", ""));
     }
 
 }

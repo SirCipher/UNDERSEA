@@ -207,7 +207,7 @@ class MoosConfigurationWriter {
 
         String suuvProcName = "sUUV" + agent.name();
 
-        vehicleBlock.append("\tRun = sUUV           @ NewConsole = false ~" + suuvProcName + "\n");
+        vehicleBlock.append("\tRun = sUUV           @ NewConsole = true ~" + suuvProcName + "\n");
         vehicleBlock.append("\tRun = uFldNodeBroker @ NewConsole = false\n");
 
         for (Sensor sensor : agent.getSensors()) {
