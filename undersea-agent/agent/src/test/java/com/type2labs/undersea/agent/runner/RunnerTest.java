@@ -6,12 +6,25 @@ import com.type2labs.undersea.monitor.Visualiser;
 import com.type2labs.undersea.utilities.Utility;
 import com.type2labs.undersea.utilities.testing.IgnoredOnCi;
 import com.type2labs.undersea.utilities.testing.UnderseaRunner;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.core.LoggerContext;
+import org.apache.logging.log4j.core.config.Configuration;
+import org.apache.logging.log4j.core.config.LoggerConfig;
 import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 @RunWith(UnderseaRunner.class)
 public class RunnerTest {
+
+    static {
+        LoggerContext ctx = (LoggerContext) LogManager.getContext(false);
+        Configuration config = ctx.getConfiguration();
+        LoggerConfig loggerConfig = config.getLoggerConfig("io.netty");
+        loggerConfig.setLevel(Level.ERROR);
+        ctx.updateLoggers();
+    }
 
     @Test
     public void ignored() {

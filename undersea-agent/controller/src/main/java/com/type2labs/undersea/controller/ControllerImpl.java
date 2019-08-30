@@ -98,7 +98,9 @@ public class ControllerImpl implements Controller {
 
     @Override
     public void shutdown() {
-        networkInterface.shutdown();
+        if (networkInterface != null) {
+            networkInterface.shutdown();
+        }
     }
 
     @Override

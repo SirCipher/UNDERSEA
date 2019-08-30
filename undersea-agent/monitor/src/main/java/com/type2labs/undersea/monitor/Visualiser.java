@@ -40,6 +40,7 @@ public class Visualiser {
     private JTextArea logArea;
     private JTable table;
     private String currentLog;
+    private boolean shutdown = false;
 
     public Visualiser() {
         startServer();
@@ -58,12 +59,15 @@ public class Visualiser {
                 ServerSocket serverSocket = new ServerSocket(5050);
                 logger.info("Waiting for clients to connect...");
 
-                while (true) {
+                while (!shutdown) {
                     Socket clientSocket = serverSocket.accept();
+                    logger.info("Processing request from: " + clientSocket.getPort());
                     clientProcessingPool.execute(new ClientTask(clientSocket));
                 }
+
+                logger.info("Shutting down visualiser");
             } catch (IOException e) {
-                System.err.println("Unable to process client request");
+                logger.error("Unable to process client request", e);
                 e.printStackTrace();
             }
         });
@@ -240,6 +244,7 @@ public class Visualiser {
     }
 
     public void shutdown() {
+        shutdown = true;
         frame.dispose();
     }
 
@@ -249,7 +254,7 @@ public class Visualiser {
         private ClientTask(Socket clientSocket) {
             this.clientSocket = clientSocket;
             try {
-                clientSocket.setSoTimeout(200);
+                clientSocket.setSoTimeout(10000);
             } catch (SocketException e) {
                 e.printStackTrace();
             }
@@ -265,7 +270,7 @@ public class Visualiser {
                 ois = new ObjectInputStream(inputStream);
                 handleData(ois);
             } catch (SocketTimeoutException ignored) {
-
+                ignored.printStackTrace();
             } catch (IOException e) {
                 e.printStackTrace();
                 return;
@@ -327,6 +332,8 @@ public class Visualiser {
                 }
             } catch (EOFException ignored) {
                 // Connection is always kept open so this is expected
+                ignored.printStackTrace();
+
             } catch (IOException | ClassNotFoundException e) {
                 e.printStackTrace();
             }

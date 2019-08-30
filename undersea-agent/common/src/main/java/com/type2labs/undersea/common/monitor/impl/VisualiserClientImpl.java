@@ -22,17 +22,27 @@ public class VisualiserClientImpl implements VisualiserClient {
 
     private final InetSocketAddress visualiserAddress = new InetSocketAddress("localhost", 5050);
     private Agent parent;
-    private SocketChannel channel;
     private boolean enabled = false;
+    private ObjectOutputStream oos;
 
-    private void _write(Object data) {
-        if (!openConnection()) {
-            return;
+    private synchronized void _write(Object data) {
+        try {
+            SocketChannel channel = SocketChannel.open();
+
+            channel.configureBlocking(true);
+            channel.socket().setKeepAlive(false);
+            channel.connect(visualiserAddress);
+
+            while (!channel.finishConnect()) {
+                // TODO: Set timeout
+            }
+
+            oos = new ObjectOutputStream(channel.socket().getOutputStream());
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
         try {
-            ObjectOutputStream oos = new ObjectOutputStream(channel.socket().getOutputStream());
-
             oos.writeObject(data);
             oos.flush();
         } catch (IOException e) {
@@ -61,24 +71,6 @@ public class VisualiserClientImpl implements VisualiserClient {
     @Override
     public Agent parent() {
         return parent;
-    }
-
-    private boolean openConnection() {
-        try {
-            channel = SocketChannel.open();
-            channel.configureBlocking(true);
-            channel.socket().setKeepAlive(true);
-            channel.connect(visualiserAddress);
-
-            while (!channel.finishConnect()) {
-                // TODO: Set timeout
-            }
-
-            return true;
-        } catch (IOException e) {
-            // TODO
-            return false;
-        }
     }
 
     @Override
@@ -139,8 +131,8 @@ public class VisualiserClientImpl implements VisualiserClient {
     }
 
     @Override
-    public void closeConnection() throws IOException {
-        channel.close();
+    public void closeConnection() {
+
     }
 
     @Override
