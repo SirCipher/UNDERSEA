@@ -12,9 +12,8 @@
 #include "MBUtils.h"
 
 #include <map>
-#include <IvPBehavior.h>
 
-class UUV : public IvPBehavior {
+class UUV : public AppCastingMOOSApp {
 public:
     UUV();
 
