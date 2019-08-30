@@ -39,6 +39,10 @@ public class MultiRoleState {
         this.status = status;
     }
 
+    public boolean isLeader() {
+        return status == Status.LEADER;
+    }
+
     public enum Status {
 
         /*

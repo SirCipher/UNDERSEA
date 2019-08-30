@@ -74,7 +74,7 @@ public class RaftClientImpl implements RaftClient {
 
     @Override
     public void shutdown() {
-        channel.shutdownNow();
+        channel.shutdown();
 
         try {
             channel.awaitTermination(3000, TimeUnit.MILLISECONDS);

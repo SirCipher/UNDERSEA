@@ -9,15 +9,17 @@ import java.util.Map.Entry;
 // TODO: This whole system needs refactoring as it's far too fragile
 public class ClusterState {
 
-    private final Map<Client, ClientState> clusterCosts;
+    private final Map<Client, ClientState> clusterState;
     private final ConsensusAlgorithm associatedAlg;
     private final int term;
     private boolean calculatedCosts = false;
+    private int clusterSize;
 
-    public ClusterState(ConsensusAlgorithm associatedAlg, int term) {
+    public ClusterState(ConsensusAlgorithm associatedAlg, int term, int clusterSize) {
         this.associatedAlg = associatedAlg;
         this.term = term;
-        this.clusterCosts = new HashMap<>();
+        this.clusterState = new HashMap<>(clusterSize);
+        this.clusterSize = clusterSize;
     }
 
     public void addSelf(Client self) {
@@ -28,19 +30,23 @@ public class ClusterState {
             agentInfo.setField(pair.getKey(), pair.getValue());
         }
 
-        this.clusterCosts.put(self, agentInfo);
+        this.clusterState.put(self, agentInfo);
     }
 
     public void setAgentInformation(Client client, ClientState agent) {
-        this.clusterCosts.put(client, agent);
+        this.clusterState.put(client, agent);
     }
 
     public ClientState getClientState(Client client) {
-        return clusterCosts.get(client);
+        return clusterState.get(client);
     }
 
     public Map<Client, ClientState> getMembers() {
-        return clusterCosts;
+        return clusterState;
+    }
+
+    public boolean heardFromAllNodes() {
+        return clusterSize == clusterState.size();
     }
 
     public Pair<Client, ClientState> getNominee(Client self) {
@@ -51,7 +57,7 @@ public class ClusterState {
         }
 
         Optional<Entry<Client, ClientState>> min =
-                clusterCosts.entrySet().stream().min(Comparator.comparing(e -> e.getValue().getCost()));
+                clusterState.entrySet().stream().min(Comparator.comparing(e -> e.getValue().getCost()));
 
         if (min.isPresent()) {
             Entry<Client, ClientState> var = min.get();

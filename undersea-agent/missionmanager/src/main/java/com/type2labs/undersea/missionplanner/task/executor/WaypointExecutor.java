@@ -44,7 +44,7 @@ public class WaypointExecutor implements TaskExecutor {
 
     @Override
     public void run() {
-        logger.info("Runing task: " + task);
+//        logger.info("Running task: " + task);
 
         networkInterface.write("UPDATES=");
     }

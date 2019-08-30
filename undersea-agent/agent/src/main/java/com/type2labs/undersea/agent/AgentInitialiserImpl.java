@@ -19,6 +19,7 @@ import com.type2labs.undersea.missionplanner.planner.vrp.VehicleRoutingOptimiser
 import com.type2labs.undersea.prospect.RaftClusterConfig;
 import com.type2labs.undersea.prospect.impl.RaftIntegrationImpl;
 import com.type2labs.undersea.prospect.impl.RaftNodeImpl;
+import com.type2labs.undersea.prospect.model.MultiRoleState;
 import com.type2labs.undersea.seachain.BlockchainNetworkImpl;
 
 import java.io.File;
@@ -50,6 +51,7 @@ public class AgentInitialiserImpl implements AgentInitialiser {
                     new RaftIntegrationImpl(agentProxy.getName())
             );
 
+
             ServiceManager serviceManager = new ServiceManager();
 
             serviceManager.registerService(raftNode);
@@ -72,6 +74,7 @@ public class AgentInitialiserImpl implements AgentInitialiser {
 
             if (value.name().equals("shoreside")) {
                 metaData.setProperty(AgentMetaData.PropertyKey.IS_MASTER_NODE, true);
+                raftNode.multiRole().setStatus(MultiRoleState.Status.LEADER);
             } else {
                 metaData.setProperty(AgentMetaData.PropertyKey.IS_MASTER_NODE, false);
             }

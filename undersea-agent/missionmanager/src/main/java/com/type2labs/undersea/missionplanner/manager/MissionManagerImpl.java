@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Created by Thomas Klapwijk on 2019-08-23.
@@ -32,7 +33,7 @@ public class MissionManagerImpl implements MissionManager {
     private static final Logger logger = LogManager.getLogger(MissionManagerImpl.class);
     private final MissionPlanner missionPlanner;
     private final ListeningExecutorService singleThreadExecutor;
-    private final Map<Task, ListenableFuture<?>> activeTasks = new HashMap<>();
+    private final Map<Task, ListenableFuture<?>> activeTasks = new ConcurrentHashMap<>();
 
     private Agent agent;
     private List<Task> tasks = new ArrayList<>();

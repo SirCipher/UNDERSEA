@@ -27,7 +27,6 @@ import com.type2labs.undersea.prospect.networking.RaftClient;
 import com.type2labs.undersea.prospect.networking.RaftClientImpl;
 import com.type2labs.undersea.prospect.task.AcquireStatusTask;
 import com.type2labs.undersea.prospect.task.RequireRoleTask;
-import com.type2labs.undersea.prospect.task.VoteTask;
 import com.type2labs.undersea.prospect.util.GrpcUtil;
 import com.type2labs.undersea.utilities.concurrent.SimpleFutureCallback;
 import com.type2labs.undersea.utilities.executor.ThrowableExecutor;
@@ -89,6 +88,7 @@ public class RaftNodeImpl implements RaftNode {
         this.singleThreadScheduledExecutor = ThrowableExecutor.newSingleThreadExecutor(logger);
         this.listeningExecutorService =
                 MoreExecutors.listeningDecorator(ThrowableExecutor.newSingleThreadExecutor(logger));
+        this.multiRoleState = new MultiRoleState();
     }
 
     @Override
@@ -130,7 +130,7 @@ public class RaftNodeImpl implements RaftNode {
     }
 
     @Override
-    public synchronized void toLeader() {
+    public synchronized void toLeader(int term) {
         // Prevent reassigning the role
         if (role == RaftRole.LEADER) {
             return;
@@ -148,6 +148,7 @@ public class RaftNodeImpl implements RaftNode {
                 .forService(MissionManager.class)
                 .withStatus(TransactionStatusCode.ELECTED_LEADER)
                 .usingExecutorService(listeningExecutorService)
+                .invokedBy(this)
                 .build();
 
         Set<ListenableFuture<?>> futures = agent.services().commitTransaction(transaction);
@@ -177,7 +178,7 @@ public class RaftNodeImpl implements RaftNode {
 
     public void toCandidate() {
         role = RaftRole.CANDIDATE;
-        state().initCandidate();
+        state().initCandidate(0);
         logger.info(name + " is now a candidate", agent);
 
         getMonitor().update();
@@ -254,7 +255,7 @@ public class RaftNodeImpl implements RaftNode {
         }
 
         server.start();
-        startVotingRound();
+//        startVotingRound();
         logger.trace("Started node: " + name, agent);
         started = true;
     }
@@ -327,10 +328,11 @@ public class RaftNodeImpl implements RaftNode {
         return agent;
     }
 
-    private void startVotingRound() {
-        logger.info(agent.name() + " starting voting round", agent);
-        execute(new AcquireStatusTask(RaftNodeImpl.this));
-        execute(new VoteTask(RaftNodeImpl.this, 0));
+    public void startVotingRound() {
+        if (!multiRole().isLeader()) {
+            logger.info(agent.name() + " starting voting round", agent);
+            execute(new AcquireStatusTask(RaftNodeImpl.this));
+        }
     }
 
     private class HeartbeatTask extends RequireRoleTask {

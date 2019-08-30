@@ -1,7 +1,6 @@
 package com.type2labs.undersea.agent.runner;
 
 import com.type2labs.undersea.agent.Runner;
-import com.type2labs.undersea.common.monitor.model.VisualiserClient;
 import com.type2labs.undersea.monitor.Visualiser;
 import com.type2labs.undersea.utilities.Utility;
 import com.type2labs.undersea.utilities.testing.IgnoredOnCi;
@@ -22,7 +21,7 @@ public class RunnerTest {
         LoggerContext ctx = (LoggerContext) LogManager.getContext(false);
         Configuration config = ctx.getConfiguration();
         LoggerConfig loggerConfig = config.getLoggerConfig("io.netty");
-        loggerConfig.setLevel(Level.ERROR);
+        loggerConfig.setLevel(Level.INFO);
         ctx.updateLoggers();
     }
 
@@ -40,16 +39,16 @@ public class RunnerTest {
     @IgnoredOnCi
     public void testRunner() throws InterruptedException {
         String testProperties = "src/test/resources/test.properties";
-
         Visualiser visualiser = new Visualiser();
-
         Runner runner = new Runner(testProperties);
 
         runner.setup();
         runner.start();
         runner.onParsed(testProperties);
 
-        Thread.sleep(1000);
+        Thread.sleep(10000);
+
+        System.out.println("RunnerTest: Shutting down");
 
         runner.shutdown();
         visualiser.shutdown();

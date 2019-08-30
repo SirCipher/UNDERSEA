@@ -1,6 +1,7 @@
 package com.type2labs.undersea.agent;
 
 import com.type2labs.undersea.common.agent.Agent;
+import com.type2labs.undersea.common.agent.AgentMetaData;
 import com.type2labs.undersea.common.cluster.Client;
 import com.type2labs.undersea.common.cluster.ClusterState;
 import com.type2labs.undersea.common.config.UnderseaRuntimeConfig;
@@ -95,13 +96,27 @@ public class Runner extends AbstractRunner {
             for (Agent agentA : super.getAgents()) {
                 RaftNodeImpl raftNodeA = agentA.services().getService(RaftNodeImpl.class);
 
+                // TODO: Replace with MRS
+                if ((boolean) agentA.metadata().getProperty(AgentMetaData.PropertyKey.IS_MASTER_NODE)) {
+                    continue;
+                }
+
                 for (Agent agentB : super.getAgents()) {
                     RaftNodeImpl raftNodeB = agentB.services().getService(RaftNodeImpl.class);
+                    // TODO: Replace with MRS
+                    if ((boolean) agentB.metadata().getProperty(AgentMetaData.PropertyKey.IS_MASTER_NODE)) {
+                        continue;
+                    }
 
                     if (raftNodeA != raftNodeB) {
                         raftNodeA.state().discoverNode(raftNodeB);
                     }
                 }
+            }
+
+            for (Agent agent : super.getAgents()) {
+                RaftNodeImpl raftNode = agent.services().getService(RaftNodeImpl.class);
+                raftNode.startVotingRound();
             }
         }
     }

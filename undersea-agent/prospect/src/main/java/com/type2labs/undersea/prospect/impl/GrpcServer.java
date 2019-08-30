@@ -65,7 +65,7 @@ public class GrpcServer implements Closeable {
         ExecutorService serverExecutor = ExecutorUtils.newExecutor(executorThreads, agentName + "-grpc-server-%d");
         this.server = builder.executor(serverExecutor).build();
 
-        logger.info(agentName + ": gRPC available at  " + socketAddress.getHostString() + ":" + port, raftNode.agent());
+        logger.info(agentName + ": gRPC server available at  " + socketAddress.getHostString() + ":" + port, raftNode.agent());
     }
 
     /**
@@ -104,7 +104,7 @@ public class GrpcServer implements Closeable {
         String name = parentNode.name();
 
         logger.info(name + ": shutting down gRPC server", parentNode.agent());
-        server.shutdown();
+        server.shutdownNow();
         logger.info(name + ": shutdown gRPC server", parentNode.agent());
     }
 

@@ -19,6 +19,9 @@ import java.util.function.BooleanSupplier;
 
 /**
  * Created by Thomas Klapwijk on 2019-08-08.
+ * <p>
+ * TODO: AgentServices should have a prerequisites method that starts all services before the service itself and
+ * checks for circular dependencies
  */
 @ThreadSafe
 public class ServiceManager {
@@ -98,7 +101,12 @@ public class ServiceManager {
 
     /**
      * Sends a {@link Transaction} to all {@link AgentService}s to notify them that a service has transitioned to
-     * {@link ServiceState#FAILED}
+     * {@link ServiceState#FAILED}.
+     * <p>
+     * {@link AgentService}s should always internally handle errors in case of an error. If an {@link AgentService}
+     * encounters an error, then the error is caught by the {@link ServiceManager} and this method is invoked and all
+     * registered {@link AgentService}s are notified that a particular service has failed, ensuring that other
+     * services can perform the required operations before the system possibly exists.
      *
      * @param service that has failed
      */
@@ -117,6 +125,7 @@ public class ServiceManager {
 
     /**
      * Waits for an {@link AgentService} to transition from it's current state to the supplier's new state.
+     * <p>
      *
      * @param supplier   to poll on
      * @param service    to wait to transition
@@ -134,13 +143,17 @@ public class ServiceManager {
 
             while (!supplier.getAsBoolean()) {
                 if (System.currentTimeMillis() - start > startupTimeout) {
+                    transitionService(service.getClass(), ServiceState.FAILED);
+
                     String message = String.format(agent.name() + ": service "
                             + service.getClass().getSimpleName() + " did not transition in the allocated time" +
                             " %s ms", startupTimeout) + ". Attempted to go from " + starting + " to " + successful;
                     logger.error(message, agent);
+
                     throw new ServiceManagerException(message);
                 }
             }
+
             logger.info("Agent " + agent.name() + " started service: " + service.getClass().getSimpleName(),
                     agent);
 

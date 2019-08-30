@@ -92,7 +92,7 @@ public class ControllerImpl implements Controller {
         effector.run();
 
         double endTime = (System.currentTimeMillis() - start) / 1000.0 * simulationSpeed;
-        logger.info(endTime + "\tApplied?\t" + effector.getReply() + "\n");
+        logger.info(endTime + "\tApplied?\t" + effector.getReply());
         knowledge.addToEndTimeList(endTime);
     }
 

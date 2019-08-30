@@ -37,8 +37,6 @@ public class VoteTask implements Runnable {
 
         logger.info(raftNode.name() + " starting voting", raftNode.agent());
 
-        raftNode.toCandidate();
-
         ConcurrentMap<PeerId, Client> localNodes = raftNode.agent().clusterClients();
 
         if (localNodes.size() == 0) {
@@ -48,9 +46,11 @@ public class VoteTask implements Runnable {
         for (Client client : localNodes.values()) {
             RaftClient raftClient = (RaftClient) client;
 
+            int nextTerm = raftNode.state().getTerm() + 1;
+
             RaftProtos.VoteRequest request = RaftProtos.VoteRequest.newBuilder()
                     .setClient(GrpcUtil.toProtoClient(raftNode))
-                    .setTerm(raftNode.state().getTerm() + 1)
+                    .setTerm(nextTerm)
                     .build();
 
             raftClient.requestVote(request, new FutureCallback<RaftProtos.VoteResponse>() {
@@ -67,7 +67,7 @@ public class VoteTask implements Runnable {
                     }
 
                     if (candidate.wonRound()) {
-                        raftNode.toLeader();
+                        raftNode.toLeader(raftNode.state().getTerm() + 1);
                     }
                 }
 

@@ -29,9 +29,11 @@ public class AcquireStatusTask implements Runnable {
 
         if (localNodes.size() == 0) {
             logger.info(raftNode.name() + " has no local nodes", raftNode.agent());
-            raftNode.schedule(new AcquireStatusTask(raftNode), 500);
+            raftNode.schedule(new AcquireStatusTask(raftNode), 100);
             return;
         }
+
+        raftNode.toCandidate();
 
         for (Client localNode : localNodes) {
             RaftClient raftClient = (RaftClient) localNode;
@@ -59,6 +61,11 @@ public class AcquireStatusTask implements Runnable {
                     ClusterState.ClientState agentInfo = new ClusterState.ClientState(localNode, false);
                     clusterState.setAgentInformation(localNode, agentInfo);
                 }
+            }
+
+            // TODO: Will this be stale?
+            if (clusterState.heardFromAllNodes()) {
+                raftNode.execute(new VoteTask(raftNode, raftNode.state().getTerm()));
             }
 
         }

@@ -158,7 +158,7 @@ public class Transaction {
             Objects.requireNonNull(services, "Transaction destination services cannot be null");
             Objects.requireNonNull(statusCode, "Transaction status code cannot be null");
             Objects.requireNonNull(executorService, "Executor service cannot be null");
-            Objects.requireNonNull(caller, "Caller service cannot be null");
+            Objects.requireNonNull(caller, "Invoked by cannot be null");
         }
 
         public Builder withData(TransactionData data) {

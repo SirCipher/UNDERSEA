@@ -32,12 +32,12 @@ public class RaftState {
     public RaftState(RaftNode parent) {
         this.parent = parent;
         this.localNodes = parent.agent().clusterClients();
-        this.clusterState = new ClusterState(parent, term);
     }
 
-    public void initCandidate() {
+    public void initCandidate(int term) {
         this.candidate = new Candidate((localNodes.size() - 1));
         this.votedFor = null;
+        this.clusterState = new ClusterState(parent, term, localNodes.size());
     }
 
     public Candidate getCandidate() {
@@ -96,8 +96,8 @@ public class RaftState {
         }
 
         public void vote(Client client) {
-            this.voters.add(client);
             logger.info(parent.name() + " registering vote for: " + client);
+            this.voters.add(client);
         }
 
         public boolean wonRound() {
