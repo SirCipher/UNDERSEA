@@ -18,4 +18,6 @@ void *runServer2(UUV uuv);
 
 void closeServer();
 
+long writeData(const std::string& outputStr) ;
+
 #endif /* CLIENTSERVER_SERVERLOOP_H_ */

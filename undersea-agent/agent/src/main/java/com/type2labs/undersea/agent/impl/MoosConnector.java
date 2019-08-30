@@ -7,6 +7,7 @@ import com.type2labs.undersea.common.service.hardware.NetworkInterface;
 import com.type2labs.undersea.common.service.transaction.Transaction;
 import com.type2labs.undersea.utilities.exception.NotSupportedException;
 import com.type2labs.undersea.utilities.exception.UnderseaException;
+import com.type2labs.undersea.utilities.executor.ThrowableExecutor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -29,23 +30,28 @@ public class MoosConnector implements NetworkInterface {
     private PrintWriter out;
     private BufferedReader in;
     private boolean started = false;
+    private ThrowableExecutor executor = ThrowableExecutor.newSingleThreadExecutor(logger);
 
     @Override
     public void initialise(Agent parentAgent) {
         this.agent = parentAgent;
+
+        // This is a to be finished
+        listenOnInbound();
+    }
+
+    private void listenOnInbound() {
+        executor.submit(() -> {
+            /**
+             * todo: open another port and pass the input to the task executor service to handle
+             */
+        });
     }
 
     private void connectToServer() {
         int retries = 20;
         int port = (int) agent.metadata().getProperty(AgentMetaData.PropertyKey.HARDWARE_PORT);
-//        int port = 9025;
         Exception exception = null;
-
-//        try {
-//            Thread.sleep(2000);
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        }
 
         for (int i = 0; i < retries; i++) {
             try {
@@ -91,9 +97,15 @@ public class MoosConnector implements NetworkInterface {
     }
 
     @Override
-    public void write(String message) {
+    public String write(String message) {
         out.println(message);
         out.flush();
+
+        String response = read();
+
+        logger.info(agent.name() + ": received: " + response);
+
+        return response;
     }
 
     @Override

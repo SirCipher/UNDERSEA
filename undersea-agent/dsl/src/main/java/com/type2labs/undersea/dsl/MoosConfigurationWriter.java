@@ -225,7 +225,8 @@ class MoosConfigurationWriter {
         vehicleBlock.append("\t CommsTick = " + 4 + "\n");
         vehicleBlock.append("\t MAX_APPCAST_EVENTS = 25 \n");
         vehicleBlock.append("\t NAME = " + agent.getName() + "\n");
-        vehicleBlock.append("\t PORT = $(SUUVPORT)\n");
+        vehicleBlock.append("\t PORT = $(SUUV_PORT)\n");
+        vehicleBlock.append("\t INBOUND_PORT = $(INBOUND_SUUV_PORT)\n");
 
         StringBuilder sensorsStr = new StringBuilder();
 

@@ -60,7 +60,8 @@ class EnvironmentBuilder {
             nsPlugArgs.add("VPORT=" + (vPort += 10));
             nsPlugArgs.add("SHARE_LISTEN=" + (++vPort));
             nsPlugArgs.add("SHORE_LISTEN=" + shoreListen);
-            nsPlugArgs.add("SUUVPORT=" + (++vPort));
+            nsPlugArgs.add("SUUV_PORT=" + (++vPort));
+            nsPlugArgs.add("INBOUND_SUUV_PORT=" + (++vPort));
 
             agent.metadata().setProperty(AgentMetaData.PropertyKey.HARDWARE_PORT, vPort);
 

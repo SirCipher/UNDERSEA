@@ -119,7 +119,7 @@ void closeServer() {
 
 void *runServer2(UUV uuv) {
     //contains the number of characters read or written
-    int n;
+    long n;
 
     std::cout << "Starting server" << std::endl;
 
@@ -147,7 +147,7 @@ void *runServer2(UUV uuv) {
 //		 printf("Message: %s\n",buffer);
 
         string inputStr = buffer;
-        string outputStr = "Unknown Command. Doing nothing!\n";
+        string outputStr = "";
 
         if (strcmp(buffer, "###") == 0) {
             outputStr = "###\n";
@@ -212,7 +212,6 @@ void *runServer2(UUV uuv) {
             std::cout << "Forwarding message: " << inputStr << std::endl;
 
             inputStr = inputStr.substr(4);
-            std::cout << inputStr << std::endl;
 
             std::istringstream iss(inputStr);
             std::string key;
@@ -222,9 +221,12 @@ void *runServer2(UUV uuv) {
             std::getline(iss, value, ':');
 
             uuv.ForwardMessage(key, value);
+        } else {
+            outputStr = "Unknown command: " + inputStr + "\n";
         }
 
-        n = write(newsockfd, outputStr.c_str(), outputStr.length());
+        n = writeData(outputStr);
+
         if (n < 0)
             error("ERROR writing to socket");
 
@@ -239,4 +241,9 @@ void *runServer2(UUV uuv) {
     close(sockfd);
 
     return nullptr;
+}
+
+long writeData(const std::string &outputStr) {
+    std::cout << "Writing: " << outputStr << std::endl;
+    return write(newsockfd, outputStr.c_str(), outputStr.length());
 }

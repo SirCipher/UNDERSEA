@@ -18,8 +18,9 @@ public interface NetworkInterface extends AgentService {
      * Writes a message to the physical network the agent is operating on
      *
      * @param message to write
+     * @return
      */
-    void write(String message);
+    String write(String message);
 
 
 }

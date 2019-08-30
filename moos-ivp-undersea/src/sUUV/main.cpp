@@ -21,9 +21,6 @@ int main(int argc, char *argv[]) {
     string mission_file;
     string run_command = argv[0];
 
-//    freopen("output.txt", "w", stdout);
-//    freopen("error.txt", "w", stderr);
-
     cout << "Starting" << endl;
 
 

@@ -42,6 +42,11 @@ public class AgentMetaData {
         /**
          * int
          */
+        INBOUND_HARDWARE_PORT,
+
+        /**
+         * int
+         */
         SERVER_PORT,
 
         /**

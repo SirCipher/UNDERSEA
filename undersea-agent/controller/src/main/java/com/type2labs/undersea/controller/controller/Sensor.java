@@ -51,16 +51,18 @@ public class Sensor {
             if (rate == 0)
                 rate = 0.2;
 
-           knowledge.setSensorRate(sensorData[0], rate);
-           knowledge.setSensorReadings(sensorData[0], Integer.parseInt(sensorData[2]));
-           knowledge.setSensorAccurateReadings(sensorData[0], Integer.parseInt(sensorData[3]));
-
+            knowledge.setSensorRate(sensorData[0], rate);
+            knowledge.setSensorReadings(sensorData[0], Integer.parseInt(sensorData[2]));
+            knowledge.setSensorAccurateReadings(sensorData[0], Integer.parseInt(sensorData[3]));
         }
     }
 
     public void run() {
         networkInterface.write(command);
         reply = networkInterface.read();
-        parseReply(reply);
+
+        if (reply != null) {
+            parseReply(reply);
+        }
     }
 }

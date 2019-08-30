@@ -50,6 +50,7 @@ private: // Configuration variables
     std::vector<std::string> m_uuv_sensors;
     double M_TIME_WINDOW;
     int PORT;
+    int INBOUND_PORT;
 
 
 private: // State variables

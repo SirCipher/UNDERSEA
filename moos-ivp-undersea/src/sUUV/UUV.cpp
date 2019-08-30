@@ -67,6 +67,10 @@ bool UUV::OnStartUp() {
                 if (isNumber(value)) {
                     PORT = atoi(value.c_str());
                 }
+            } else if (param == "INBOUND_PORT") {
+                if (isNumber(value)) {
+                    INBOUND_PORT = atoi(value.c_str());
+                }
             } else {
                 //throw a configuration warning
                 reportUnhandledConfigWarning(original_line);
@@ -75,6 +79,12 @@ bool UUV::OnStartUp() {
     } else {
         reportConfigWarning("No configuration block found for " + GetAppName());
     }
+
+    std::string outputFileName = "output_" + m_uuv_name + ".txt";
+    std::string errorFileName = "error_" + m_uuv_name + ".txt";
+
+    freopen(outputFileName.c_str(), "w", stdout);
+    freopen(outputFileName.c_str(), "w", stderr);
 
     m_timewarp = GetMOOSTimeWarp();
 
@@ -140,20 +150,17 @@ bool UUV::OnNewMail(MOOSMSG_LIST &NewMail) {
 
         string key = msg.GetKey();
 
-        if (key.compare("WPT_STAT") == 0) {
-            std::cout << msg.GetString() << std::endl;
+        if (key == "WPT_STAT") {
+            std::cout << "Value = " << msg.GetString() << std::endl;
+            if (key.find("completed") != std::string::npos) {
+                writeData(msg.GetString());
+            }
         } else {
             double value = msg.GetDouble();
             if (find(m_uuv_sensors.begin(), m_uuv_sensors.end(), key) != m_uuv_sensors.end()) {
                 m_sensors_map[key].newReading(value);
             }
         }
-
-
-
-//        if(key == "WPT_STAT"){
-//            std:cout<<
-//        }
 
     }
 
@@ -204,6 +211,7 @@ bool UUV::Iterate() {
 bool UUV::buildReport() {
     m_msgs << "UUV name:\t" << m_uuv_name << endl;
     m_msgs << "UUV port:\t" << PORT << endl << endl;
+    m_msgs << "UUV inbound port:\t" << INBOUND_PORT << endl << endl;
     m_msgs << "UUV Sensors (" << m_uuv_sensors.size() << ")" << endl;
     m_msgs << "------------------------------------------------" << endl;
 

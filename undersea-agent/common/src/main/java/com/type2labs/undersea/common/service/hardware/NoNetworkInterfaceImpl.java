@@ -15,8 +15,9 @@ public class NoNetworkInterfaceImpl implements NetworkInterface {
     }
 
     @Override
-    public void write(String message) {
+    public String write(String message) {
 
+        return message;
     }
 
     @Override
