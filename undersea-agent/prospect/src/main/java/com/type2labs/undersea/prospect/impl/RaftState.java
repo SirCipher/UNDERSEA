@@ -63,6 +63,8 @@ public class RaftState {
         InetSocketAddress address = node.server().getSocketAddress();
         localNodes.computeIfAbsent(node.parent().peerId(), n -> new RaftClientImpl(parent, address,
                 node.parent().peerId()));
+
+        logger.info(parent.name() + ": discovered: " + node.parent().peerId(), parent);
     }
 
     public ConcurrentMap<PeerId, Client> localNodes() {

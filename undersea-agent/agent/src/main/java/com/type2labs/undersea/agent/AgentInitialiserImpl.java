@@ -94,13 +94,8 @@ public class AgentInitialiserImpl implements AgentInitialiser {
             serviceManager.registerService(new HardwareInterface(), ServiceManager.ServiceExecutionPriority.HIGH);
 
             if (!(boolean) value.metadata().getProperty(AgentMetaData.PropertyKey.IS_MASTER_NODE)) {
-                serviceManager.registerService(ControllerImpl.PMCimpl(), ServiceManager.ServiceExecutionPriority.LOW);
-
-                /*
-                 * Needs to be started after the hardware interface and to allow enough time for the interface to
-                 * have started
-                 */
                 serviceManager.registerService(new MoosConnector(), ServiceManager.ServiceExecutionPriority.MEDIUM);
+                serviceManager.registerService(ControllerImpl.PMCimpl(), ServiceManager.ServiceExecutionPriority.LOW);
             }
 
             monitor.setVisualiser(new VisualiserClientImpl());

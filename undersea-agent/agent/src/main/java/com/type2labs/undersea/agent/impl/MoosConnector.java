@@ -117,7 +117,7 @@ public class MoosConnector implements NetworkInterface {
 
     @Override
     public long transitionTimeout() {
-        return 1000;
+        return 10000;
     }
 
     @Override

@@ -147,7 +147,7 @@ public class RaftNodeImpl implements RaftNode {
         Transaction transaction = new Transaction.Builder(agent)
                 .forService(MissionManager.class)
                 .withStatus(TransactionStatusCode.ELECTED_LEADER)
-                .forExecutorService(listeningExecutorService)
+                .usingExecutorService(listeningExecutorService)
                 .build();
 
         Set<ListenableFuture<?>> futures = agent.services().commitTransaction(transaction);

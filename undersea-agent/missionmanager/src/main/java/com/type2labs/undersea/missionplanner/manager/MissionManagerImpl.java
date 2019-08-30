@@ -156,8 +156,11 @@ public class MissionManagerImpl implements MissionManager {
                 }
             });
         } else {
-            throw new NotSupportedException(MissionManagerImpl.class.getSimpleName()
-                    + " does not support status code: " + statusCode);
+            String message =
+                    MissionManagerImpl.class.getSimpleName() + " does not support status code: " + statusCode + ". " +
+                            "Called by: " + transaction.getCaller();
+            logger.error(message);
+            throw new NotSupportedException(message);
         }
     }
 

@@ -29,6 +29,11 @@ public class Transaction {
     private final Agent agent;
 
     /**
+     * The service that created the transaction
+     */
+    private final AgentService caller;
+
+    /**
      * The services that the transaction should be executed on. If the transaction is to be executed on many services
      * then a thread pool executor may be preferred over a a single thread executor
      */
@@ -51,18 +56,18 @@ public class Transaction {
                         Collection<Class<? extends AgentService>> destinationServices,
                         Enum<? extends TransactionStatusCode> code,
                         TransactionData transactionData,
-                        ListeningExecutorService executorService) {
+                        ListeningExecutorService executorService, AgentService caller) {
         this.agent = agent;
         this.destinationServices = destinationServices;
         this.statusCode = code;
         this.transactionData = transactionData;
         this.executorService = executorService;
+        this.caller = caller;
     }
 
     public Agent getAgent() {
         return agent;
     }
-
 
     public Collection<Class<? extends AgentService>> getDestinationServices() {
         return destinationServices;
@@ -70,6 +75,22 @@ public class Transaction {
 
     public ListeningExecutorService getExecutorService() {
         return executorService;
+    }
+
+    @Override
+    public String toString() {
+        return "Transaction{" +
+                "executorService=" + executorService +
+                ", agent=" + agent +
+                ", caller=" + caller +
+                ", destinationServices=" + destinationServices +
+                ", statusCode=" + statusCode +
+                ", transactionData=" + transactionData +
+                '}';
+    }
+
+    public AgentService getCaller() {
+        return caller;
     }
 
     public Enum<? extends TransactionStatusCode> getStatusCode() {
@@ -84,16 +105,6 @@ public class Transaction {
         return transactionData;
     }
 
-    @Override
-    public String toString() {
-        return "Transaction{" +
-                "agent=" + agent +
-                ", destinationServices=" + destinationServices +
-                ", statusCode=" + statusCode +
-                ", transactionData=" + transactionData +
-                '}';
-    }
-
     public static class Builder {
 
         private Agent agent;
@@ -101,6 +112,7 @@ public class Transaction {
         private Enum<? extends TransactionStatusCode> statusCode;
         private TransactionData data;
         private ListeningExecutorService executorService;
+        private AgentService caller;
 
         public Builder(Agent agent) {
             this.agent = agent;
@@ -108,7 +120,12 @@ public class Transaction {
 
         public Transaction build() {
             validate();
-            return new Transaction(agent, services, statusCode, data, executorService);
+            return new Transaction(agent, services, statusCode, data, executorService, caller);
+        }
+
+        public Builder invokedBy(AgentService caller) {
+            this.caller = caller;
+            return this;
         }
 
         public Builder forAllServices() {
@@ -121,7 +138,7 @@ public class Transaction {
             return this;
         }
 
-        public Builder forExecutorService(ListeningExecutorService executorService) {
+        public Builder usingExecutorService(ListeningExecutorService executorService) {
             this.executorService = executorService;
             return this;
         }
@@ -141,6 +158,7 @@ public class Transaction {
             Objects.requireNonNull(services, "Transaction destination services cannot be null");
             Objects.requireNonNull(statusCode, "Transaction status code cannot be null");
             Objects.requireNonNull(executorService, "Executor service cannot be null");
+            Objects.requireNonNull(caller, "Caller service cannot be null");
         }
 
         public Builder withData(TransactionData data) {

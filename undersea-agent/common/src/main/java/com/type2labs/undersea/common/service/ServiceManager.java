@@ -43,12 +43,48 @@ public class ServiceManager {
 
     private Agent agent;
     private boolean started = false;
+    private ServiceManagerTransactionService serviceManagerTransactionService;
 
     private static class ServiceManagerException extends RuntimeException {
         private static final long serialVersionUID = -8357603298883501831L;
 
         ServiceManagerException(String s) {
             super(s);
+        }
+    }
+
+    private static class ServiceManagerTransactionService implements AgentService {
+
+        private Agent agent;
+
+        @Override
+        public void shutdown() {
+
+        }
+
+        @Override
+        public boolean started() {
+            return true;
+        }
+
+        @Override
+        public ListenableFuture<?> executeTransaction(Transaction transaction) {
+            return null;
+        }
+
+        @Override
+        public void initialise(Agent parentAgent) {
+            this.agent = parentAgent;
+        }
+
+        @Override
+        public Agent parent() {
+            return agent;
+        }
+
+        @Override
+        public void run() {
+
         }
     }
 
@@ -72,7 +108,8 @@ public class ServiceManager {
                 .forAllRunningServices()
                 .withStatus(TransactionStatusCode.SERVICE_FAILED)
                 .withData(TransactionData.from(service))
-                .forExecutorService(MoreExecutors.newDirectExecutorService())
+                .usingExecutorService(MoreExecutors.newDirectExecutorService()).forAllServices()
+                .invokedBy(serviceManagerTransactionService)
                 .build();
 
         commitTransaction(transaction);
@@ -97,11 +134,11 @@ public class ServiceManager {
 
             while (!supplier.getAsBoolean()) {
                 if (System.currentTimeMillis() - start > startupTimeout) {
-                    transitionService(service.getClass(), ServiceState.FAILED);
-
-                    throw new ServiceManagerException(String.format(agent.name() + ": service "
+                    String message = String.format(agent.name() + ": service "
                             + service.getClass().getSimpleName() + " did not transition in the allocated time" +
-                            " %s ms", startupTimeout) + ". Attempted to go from " + starting + " to " + successful);
+                            " %s ms", startupTimeout) + ". Attempted to go from " + starting + " to " + successful;
+                    logger.error(message, agent);
+                    throw new ServiceManagerException(message);
                 }
             }
             logger.info("Agent " + agent.name() + " started service: " + service.getClass().getSimpleName(),
@@ -254,6 +291,9 @@ public class ServiceManager {
 
     public void setAgent(Agent agent) {
         this.agent = agent;
+        this.serviceManagerTransactionService = new ServiceManagerTransactionService();
+        serviceManagerTransactionService.initialise(agent);
+
         logger.info("Agent " + agent.name() + " service manager assigned", agent);
     }
 
@@ -331,6 +371,7 @@ public class ServiceManager {
             try {
                 agentService.run();
             } catch (final Throwable t) {
+                t.printStackTrace();
                 transitionService(agentService.getClass(), ServiceState.FAILED);
                 throw t;
             }

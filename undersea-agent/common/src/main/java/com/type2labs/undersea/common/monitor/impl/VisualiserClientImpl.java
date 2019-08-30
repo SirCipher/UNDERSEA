@@ -23,23 +23,24 @@ public class VisualiserClientImpl implements VisualiserClient {
     private final InetSocketAddress visualiserAddress = new InetSocketAddress("localhost", 5050);
     private Agent parent;
     private boolean enabled = false;
-    private ObjectOutputStream oos;
 
     private synchronized void _write(Object data) {
+        ObjectOutputStream oos;
+        SocketChannel channel;
+
         try {
-            SocketChannel channel = SocketChannel.open();
+            channel = SocketChannel.open();
 
             channel.configureBlocking(true);
             channel.socket().setKeepAlive(false);
             channel.connect(visualiserAddress);
-
-            while (!channel.finishConnect()) {
-                // TODO: Set timeout
-            }
+            channel.finishConnect();
 
             oos = new ObjectOutputStream(channel.socket().getOutputStream());
         } catch (IOException e) {
             e.printStackTrace();
+            logger.error(parent.name() + ": failed to connect to visualiser", e);
+            return;
         }
 
         try {
@@ -47,6 +48,14 @@ public class VisualiserClientImpl implements VisualiserClient {
             oos.flush();
         } catch (IOException e) {
             e.printStackTrace();
+            logger.error(parent.name() + ": failed to send message to visualiser", e);
+        }
+
+        try {
+            oos.close();
+            channel.close();
+        } catch (IOException e) {
+            logger.error(parent.name() + ": failed to close channel", e);
         }
     }
 

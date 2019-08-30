@@ -78,6 +78,7 @@ public class ScheduledThrowableExecutor extends ScheduledThreadPoolExecutor {
                 try {
                     return callable.call();
                 } catch (Throwable t) {
+                    t.printStackTrace();
                     ueh.uncaughtException(Thread.currentThread(), t);
                     throw t;
                 }
@@ -90,6 +91,7 @@ public class ScheduledThrowableExecutor extends ScheduledThreadPoolExecutor {
             try {
                 runnable.run();
             } catch (final Throwable t) {
+                t.printStackTrace();
                 ueh.uncaughtException(Thread.currentThread(), t);
                 throw t;
             }
