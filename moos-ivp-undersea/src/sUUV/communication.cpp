@@ -69,6 +69,7 @@ void new_connection(Args args) {
         std::cerr << "Error reading from socket:" << args.port << std::endl;
         return;
     }
+
     std::string inputStr = buffer;
     std::cout << "Received: " << inputStr << std::endl;
 
@@ -155,9 +156,13 @@ void new_connection(Args args) {
 
         r = send(args.port, outputStr.c_str(), strlen(outputStr.c_str()), 0);
 
+        std::cout << "Sending: " << outputStr << std::endl;
+
+
         if (r < 0) {
             break;
         }
+
         sleep(1);
     }
 

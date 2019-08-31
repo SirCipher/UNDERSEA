@@ -64,7 +64,7 @@ bool UUV::OnStartUp() {
             } else if (param == "PORT") {
                 if (isNumber(value)) {
                     PORT = atoi(value.c_str());
-                    std::cout << "PORT=" << INBOUND_PORT << std::endl;
+                    std::cout << "PORT=" << PORT << std::endl;
                 }
             } else if (param == "INBOUND_PORT") {
                 if (isNumber(value)) {
@@ -300,6 +300,7 @@ void UUV::initServer() {
 //	int n = pthread_create(&thread, NULL, runServer, NULL);
     std::cout << "Initialising server" << std::endl;
 
+//    PORT=9015;
 
     int n = pthread_create(&thread, nullptr, reinterpret_cast<void *(*)(void *)>(run_server), this);
 }

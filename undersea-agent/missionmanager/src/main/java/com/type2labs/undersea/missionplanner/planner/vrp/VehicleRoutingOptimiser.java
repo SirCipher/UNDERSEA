@@ -55,9 +55,9 @@ public class VehicleRoutingOptimiser implements MissionPlanner {
 
         try {
             MatlabUtils.initialise();
-            logger.info("Initialising delaunay decomposer");
+            logger.info(parentAgent.name() + ": initialising delaunay decomposer", parentAgent);
             DelaunayDecomposer decomposer = new DelaunayDecomposer();
-            logger.info("Initialised delaunay decomposer");
+            logger.info(parentAgent.name() + ": initialised delaunay decomposer", parentAgent);
 
             MWNumericArray numericArray = (MWNumericArray) decomposer.decompose(1, xArray, yArray, sensorRange)[0];
             results = (double[][]) numericArray.toDoubleArray();
@@ -71,6 +71,8 @@ public class VehicleRoutingOptimiser implements MissionPlanner {
         } finally {
             MWApplication.terminate();
         }
+
+        logger.info(parentAgent.name() + ": finished decomposing mission area", parentAgent);
 
         return results;
     }

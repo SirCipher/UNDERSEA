@@ -54,6 +54,10 @@ public class MoosConnector implements NetworkInterface {
         });
     }
 
+    private void doWithRetries(){
+
+    }
+
     private void connectToServer() {
         int retries = 20;
         int port = (int) agent.metadata().getProperty(AgentMetaData.PropertyKey.HARDWARE_PORT);
@@ -86,6 +90,7 @@ public class MoosConnector implements NetworkInterface {
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException ignored) {
+                ignored.printStackTrace();
             }
         }
 

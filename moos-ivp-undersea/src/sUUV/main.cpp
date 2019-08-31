@@ -11,9 +11,6 @@
 #include "UUV.h"
 #include "UUV_Info.h"
 #include "Utilities.h"
-#include "server/serverLoop.h"
-
-void dotest();
 
 using namespace std;
 
