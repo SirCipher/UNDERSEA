@@ -90,7 +90,6 @@ public class MoosConnector implements NetworkInterface {
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException ignored) {
-                ignored.printStackTrace();
             }
         }
 
