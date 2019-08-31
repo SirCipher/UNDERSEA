@@ -11,7 +11,7 @@ SET(SRC
         main.cpp
         Utilities.cpp
         server/serverLoop.cpp
-        )
+        communication.cpp communication.h)
 
 ADD_EXECUTABLE(sUUV ${SRC})
 

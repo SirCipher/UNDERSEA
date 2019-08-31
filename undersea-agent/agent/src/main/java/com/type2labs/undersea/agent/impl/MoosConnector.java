@@ -35,9 +35,6 @@ public class MoosConnector implements NetworkInterface {
     @Override
     public void initialise(Agent parentAgent) {
         this.agent = parentAgent;
-
-        // This is a to be finished
-        listenOnInbound();
     }
 
     private void listenOnInbound() {
@@ -45,6 +42,15 @@ public class MoosConnector implements NetworkInterface {
             /**
              * todo: open another port and pass the input to the task executor service to handle
              */
+            int port = (int) agent.metadata().getProperty(AgentMetaData.PropertyKey.INBOUND_HARDWARE_PORT);
+
+            try {
+                Socket socket = new Socket("localhost", port);
+                System.out.println("Connected to inbound");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
         });
     }
 
@@ -52,6 +58,8 @@ public class MoosConnector implements NetworkInterface {
         int retries = 20;
         int port = (int) agent.metadata().getProperty(AgentMetaData.PropertyKey.HARDWARE_PORT);
         Exception exception = null;
+
+        logger.info(agent.name() + ": connecting to MOOS server on: " + port, agent);
 
         for (int i = 0; i < retries; i++) {
             try {
@@ -62,6 +70,9 @@ public class MoosConnector implements NetworkInterface {
                 started = true;
 
                 logger.info(agent.name() + ": connected to MOOS server", agent);
+
+                // "Assume" MOOS is running
+                listenOnInbound();
 
                 return;
             } catch (IOException e) {
@@ -97,7 +108,7 @@ public class MoosConnector implements NetworkInterface {
     }
 
     @Override
-    public String write(String message) {
+    public synchronized String write(String message) {
         out.println(message);
         out.flush();
 

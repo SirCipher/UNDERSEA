@@ -1,9 +1,10 @@
 package com.type2labs.undersea.agent;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.net.Socket;
 
 /**
  * Created by Thomas Klapwijk on 2019-08-24.
@@ -11,22 +12,18 @@ import java.io.InputStreamReader;
 public class Test {
 
     public static void main(String[] args) throws InterruptedException, IOException {
-        Runtime rt = Runtime.getRuntime();
+        for (int i = 0; i < 10; i++) {
+            try (Socket socket = new Socket("localhost", 11111)) {
+                PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
+                BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
-        ProcessBuilder pb = new ProcessBuilder(new String[]{"/Volumes/MiniMudkipz/dev/PACS/moos-ivp/bin/pMarineViewer"
-                , "meta_shoreside.moos"});
-        pb.directory(new File("missions/test_01/"));
-        pb.redirectErrorStream(true);
+                out.println("keks");
+                out.flush();
+                System.out.println(in.readLine());
 
-        Process process = pb.start();
-
-        String line;
-        BufferedReader in = new BufferedReader(
-                new InputStreamReader(process.getInputStream()));
-        while ((line = in.readLine()) != null) {
-            System.out.println(line);
+                Thread.sleep(100);
+            }
         }
-
     }
 
 }

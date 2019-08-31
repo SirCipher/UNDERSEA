@@ -112,7 +112,7 @@ class MoosConfigurationWriter {
         shoreside.append("\n");
         shoreside.append("\tRun = MOOSDB\t\t\t@ NewConsole = false\n");
         shoreside.append("\tRun = pMarineViewer\t\t@ NewConsole = false\n");
-        shoreside.append("\tRun = pLogger\t\t\t@ NewConsole = false\n");
+        shoreside.append("\t//Run = pLogger\t\t\t@ NewConsole = false\n");
         shoreside.append("\tRun = pShare\t\t\t@ NewConsole = false\n");
         shoreside.append("\tRun = pHostInfo\t\t\t@ NewConsole = false\n");
         shoreside.append("\tRun = uFldShoreBroker\t@ NewConsole = false\n");

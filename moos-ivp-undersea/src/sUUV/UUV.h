@@ -49,8 +49,6 @@ private: // Configuration variables
     std::string m_uuv_name; //uuv name
     std::vector<std::string> m_uuv_sensors;
     double M_TIME_WINDOW;
-    int PORT;
-    int INBOUND_PORT;
 
 
 private: // State variables
@@ -105,12 +103,15 @@ public:
         double time;
         double other;
 
+
     };
 
     typedef std::map<std::string, Sensor> sensorsMap;
 
     sensorsMap m_sensors_map;
 
+    int PORT;
+    int INBOUND_PORT;
 
 };
 

@@ -9,7 +9,7 @@
 #include "MBUtils.h"
 #include "UUV.h"
 #include "Utilities.h"
-#include "server/serverLoop.h"
+#include "communication.h"
 #include <pthread.h>
 
 using namespace std;
@@ -26,8 +26,6 @@ UUV::UUV() {
     m_uuv_speed = 4;
 
     M_TIME_WINDOW = 10;
-
-    PORT = 8888;
 }
 
 
@@ -66,10 +64,12 @@ bool UUV::OnStartUp() {
             } else if (param == "PORT") {
                 if (isNumber(value)) {
                     PORT = atoi(value.c_str());
+                    std::cout << "PORT=" << INBOUND_PORT << std::endl;
                 }
             } else if (param == "INBOUND_PORT") {
                 if (isNumber(value)) {
                     INBOUND_PORT = atoi(value.c_str());
+                    std::cout << "INBOUND_PORT=" << INBOUND_PORT << std::endl;
                 }
             } else {
                 //throw a configuration warning
@@ -78,20 +78,24 @@ bool UUV::OnStartUp() {
         }
     } else {
         reportConfigWarning("No configuration block found for " + GetAppName());
+        std::cerr << "No configuration block found for " + GetAppName() << std::endl;
     }
 
     std::string outputFileName = "output_" + m_uuv_name + ".txt";
     std::string errorFileName = "error_" + m_uuv_name + ".txt";
 
-    freopen(outputFileName.c_str(), "w", stdout);
-    freopen(outputFileName.c_str(), "w", stderr);
+//    freopen(outputFileName.c_str(), "w", stdout);
+//    freopen(outputFileName.c_str(), "w", stderr);
 
     m_timewarp = GetMOOSTimeWarp();
 
     //init sensors map
     initSensorsMap();
+
     //init controller server
     initServer();
+
+    std::cout << "Finished configuration" << std::endl;
 
     return (true);
 }
@@ -153,7 +157,7 @@ bool UUV::OnNewMail(MOOSMSG_LIST &NewMail) {
         if (key == "WPT_STAT") {
             std::cout << "Value = " << msg.GetString() << std::endl;
             if (key.find("completed") != std::string::npos) {
-                writeData(msg.GetString());
+//                writeData(msg.GetString());
             }
         } else {
             double value = msg.GetDouble();
@@ -290,11 +294,14 @@ void UUV::initSensorsMap() {
 // Procedure: initServer
 //---------------------------------------------------------
 void UUV::initServer() {
-    initialiseServer(PORT);
+//    initialiseServer(PORT);
     pthread_t thread;
 
 //	int n = pthread_create(&thread, NULL, runServer, NULL);
-    int n = pthread_create(&thread, nullptr, reinterpret_cast<void *(*)(void *)>(runServer2), this);
+    std::cout << "Initialising server" << std::endl;
+
+
+    int n = pthread_create(&thread, nullptr, reinterpret_cast<void *(*)(void *)>(run_server), this);
 }
 
 //---------------------------------------------------------

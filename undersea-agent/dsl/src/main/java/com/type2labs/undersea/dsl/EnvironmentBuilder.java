@@ -44,6 +44,7 @@ class EnvironmentBuilder {
         nsPlugArgs.add("VNAME=shoreside");
         nsPlugArgs.add("SHARE_LISTEN=" + shoreListen);
         nsPlugArgs.add("VPORT=" + vPort++);
+        nsPlugArgs.add("INBOUND_SUUV_PORT=" + vPort++);
 
         nsplug(shoreside.getMetaFileName(), shoreside.getMetaFileName(), nsPlugArgs);
 
@@ -60,10 +61,15 @@ class EnvironmentBuilder {
             nsPlugArgs.add("VPORT=" + (vPort += 10));
             nsPlugArgs.add("SHARE_LISTEN=" + (++vPort));
             nsPlugArgs.add("SHORE_LISTEN=" + shoreListen);
-            nsPlugArgs.add("SUUV_PORT=" + (++vPort));
-            nsPlugArgs.add("INBOUND_SUUV_PORT=" + (++vPort));
 
-            agent.metadata().setProperty(AgentMetaData.PropertyKey.HARDWARE_PORT, vPort);
+            int suuvPort = ++vPort;
+            int inbound_uuvPort = ++vPort;
+
+            nsPlugArgs.add("SUUV_PORT=" + suuvPort);
+            nsPlugArgs.add("INBOUND_SUUV_PORT=" + inbound_uuvPort);
+
+            agent.metadata().setProperty(AgentMetaData.PropertyKey.HARDWARE_PORT, suuvPort);
+            agent.metadata().setProperty(AgentMetaData.PropertyKey.INBOUND_HARDWARE_PORT, inbound_uuvPort);
 
             logger.info("-----------------------------------------");
             nsplug(agent.getMetaFileName(), agent.getMetaFileName(), nsPlugArgs);

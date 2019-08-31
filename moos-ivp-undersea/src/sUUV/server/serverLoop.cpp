@@ -144,10 +144,9 @@ void *runServer2(UUV uuv) {
             error("ERROR client closed the socket ");
 
         buffer[strlen(buffer) - 1] = '\0';
-//		 printf("Message: %s\n",buffer);
 
         string inputStr = buffer;
-        string outputStr = "";
+        string outputStr;
 
         if (strcmp(buffer, "###") == 0) {
             outputStr = "###\n";
