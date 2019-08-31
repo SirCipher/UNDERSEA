@@ -31,4 +31,8 @@ void new_connection(Args args);
 
 void run_server(UUV uuv);
 
+const char *prependPort(int port);
+
+void init_outbound(UUV uuv);
+
 #endif //IVP_EXTEND_COMMUNICATION_H

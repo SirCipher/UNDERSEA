@@ -73,115 +73,116 @@ void new_connection(Args args) {
     std::string inputStr = buffer;
     std::cout << "Received: " << inputStr << std::endl;
 
-    while (!isclosed(args.port)) {
-        string inputStr = buffer;
-        string outputStr;
-        auto sensMap = args.uuv->m_sensors_map;
+    string outputStr;
+    auto sensMap = args.uuv->m_sensors_map;
 
-        if (strcmp(buffer, "###") == 0) {
-            outputStr = "###\n";
-            std::cout << "Received shutdown request" << std::endl;
-            serverRunning = false;
-        } else if (strcmp(buffer, "SENSORS") == 0) {
-            outputStr.clear();
-            for (auto &it : sensMap) {
+    if (strcmp(buffer, "###") == 0) {
+        outputStr = "###\n";
+        std::cout << "Received shutdown request" << std::endl;
+        serverRunning = false;
+    } else if (strcmp(buffer, "SENSORS") == 0) {
+        outputStr.clear();
+        for (auto &it : sensMap) {
 //				outputStr += it->first +"="+ doubleToString(it->second.averageRate,2) +",";
 
-                //if it's not the dummy element that resembles the speed in sensors map
-                if (it.first.find("SPEED") == string::npos) {
-                    outputStr += it.second.getSummary() + ",";
-                }
-                //reset sensors information
-                it.second.reset();
+            //if it's not the dummy element that resembles the speed in sensors map
+            if (it.first.find("SPEED") == string::npos) {
+                outputStr += it.second.getSummary() + ",";
             }
-            outputStr.replace(outputStr.length() - 1, 1, "\n");
-        } else if (inputStr.find("SPEED") != string::npos) {
-            //input string is in the form "SPEED=3.6,SENSOR1=-1,SENSOR2=0,..."
-            char *dup = strdup(inputStr.c_str());
-            char *token = strtok(dup, ",");
-            vector<string> uuvElements;
+            //reset sensors information
+            it.second.reset();
+        }
+        outputStr.replace(outputStr.length() - 1, 1, "\n");
+    } else if (inputStr.find("SPEED") != string::npos) {
+        //input string is in the form "SPEED=3.6,SENSOR1=-1,SENSOR2=0,..."
+        char *dup = strdup(inputStr.c_str());
+        char *token = strtok(dup, ",");
+        vector<string> uuvElements;
 
-            while (token != nullptr) {
-                uuvElements.emplace_back(token);
+        while (token != nullptr) {
+            uuvElements.emplace_back(token);
+            // the call is treated as a subsequent calls to strtok:
+            // the function continues from where it left in previous invocation
+            token = strtok(nullptr, ",");
+        }
+        free(dup);
+
+        //iterate over tokens and extract the desired values from each token
+        for (const string &str : uuvElements) {
+            char *dup2 = strdup(str.c_str());
+            char *token2 = strtok(dup2, "=");
+            vector<string> v;
+            while (token2 != nullptr) {
+                v.emplace_back(token2);
                 // the call is treated as a subsequent calls to strtok:
                 // the function continues from where it left in previous invocation
-                token = strtok(nullptr, ",");
+                token2 = strtok(nullptr, ",");
             }
-            free(dup);
-
-            //iterate over tokens and extract the desired values from each token
-            for (const string &str : uuvElements) {
-                char *dup2 = strdup(str.c_str());
-                char *token2 = strtok(dup2, "=");
-                vector<string> v;
-                while (token2 != nullptr) {
-                    v.emplace_back(token2);
-                    // the call is treated as a subsequent calls to strtok:
-                    // the function continues from where it left in previous invocation
-                    token2 = strtok(nullptr, ",");
-                }
-                free(dup2);
-                if (v.size() == 2) {
-                    if (v.at(0).find("SPEED") != string::npos) {//SPEED=3.22
-                        auto it = sensMap.find(v.at(0));
-                        if (it != sensMap.end()) {
-                            it->second.other = stod(v.at(1));
-                        }
-                    } else if (v.at(0).find("SENSOR") != string::npos) {
-                        auto it = sensMap.find(v.at(0));
-                        if (it != sensMap.end()) {
-                            it->second.state = stod(v.at(1));
-                        }
+            free(dup2);
+            if (v.size() == 2) {
+                if (v.at(0).find("SPEED") != string::npos) {//SPEED=3.22
+                    auto it = sensMap.find(v.at(0));
+                    if (it != sensMap.end()) {
+                        it->second.other = stod(v.at(1));
+                    }
+                } else if (v.at(0).find("SENSOR") != string::npos) {
+                    auto it = sensMap.find(v.at(0));
+                    if (it != sensMap.end()) {
+                        it->second.state = stod(v.at(1));
                     }
                 }
             }
-
-            outputStr = "OK\n";
-        } else if (inputStr.rfind("FWD", 0) == 0) {
-            std::cout << "Forwarding message: " << inputStr << std::endl;
-
-            inputStr = inputStr.substr(4);
-
-            std::istringstream iss(inputStr);
-            std::string key;
-            std::getline(iss, key, ':');
-
-            std::string value;
-            std::getline(iss, value, ':');
-
-            args.uuv->ForwardMessage(key, value);
-        } else {
-            outputStr = "Unknown command: " + inputStr + "\n";
         }
 
-        r = send(args.port, outputStr.c_str(), strlen(outputStr.c_str()), 0);
+        outputStr = "OK\n";
+    } else if (inputStr.rfind("FWD", 0) == 0) {
+        std::cout << "Forwarding message: " << inputStr << std::endl;
 
-        std::cout << "Sending: " << outputStr << std::endl;
+        inputStr = inputStr.substr(4);
 
+        std::istringstream iss(inputStr);
+        std::string key;
+        std::getline(iss, key, ':');
 
-        if (r < 0) {
-            break;
-        }
+        std::string value;
+        std::getline(iss, value, ':');
 
-        sleep(1);
+        args.uuv->ForwardMessage(key, value);
+    } else {
+        outputStr = "Unknown command: " + inputStr + "\n";
     }
 
+    std::cout << "Sending: " << outputStr << std::endl;
+
+    send(args.port, outputStr.c_str(), strlen(outputStr.c_str()), 0);
+
+
     close(args.port);
+}
+
+const char *prependPort(int port) {
+    std::stringstream stream;
+    stream << port;
+    std::string str = stream.str().insert(0, ":");
+
+    return str.c_str();
+}
+
+void init_outbound(UUV uuv) {
+    // TODO: Initialise outbound server
 }
 
 void run_server(UUV uuv) {
     signal(SIGPIPE, SIG_IGN);
 
-    std::stringstream stream;
-    stream << uuv.PORT;
-    std::string str = stream.str().insert(0, ":");
+    const char *port = prependPort(uuv.PORT);
+    std::cout << "Initialising server on port: " << port << std::endl;
 
-    int sock = make_accept_sock(str.c_str());
-    std::cout << "Running server on: " << str << std::endl;
+    int sock = make_accept_sock(port);
+
+    std::cout << "Server listening on port: " << port << std::endl;
 
     while (serverRunning) {
-        std::cout << "Listening server on: " << str << std::endl;
-
         int new_sock = accept(sock, nullptr, nullptr);
 
         Args args{

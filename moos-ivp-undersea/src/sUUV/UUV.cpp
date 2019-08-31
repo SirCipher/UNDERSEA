@@ -294,14 +294,7 @@ void UUV::initSensorsMap() {
 // Procedure: initServer
 //---------------------------------------------------------
 void UUV::initServer() {
-//    initialiseServer(PORT);
     pthread_t thread;
-
-//	int n = pthread_create(&thread, NULL, runServer, NULL);
-    std::cout << "Initialising server" << std::endl;
-
-//    PORT=9015;
-
     int n = pthread_create(&thread, nullptr, reinterpret_cast<void *(*)(void *)>(run_server), this);
 }
 

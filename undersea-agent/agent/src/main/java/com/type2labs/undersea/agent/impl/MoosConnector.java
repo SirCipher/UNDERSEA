@@ -39,11 +39,11 @@ public class MoosConnector implements NetworkInterface {
 
     private void listenOnInbound() {
         executor.submit(() -> {
-            /**
+            /*
              * todo: open another port and pass the input to the task executor service to handle
              */
-            int port = (int) agent.metadata().getProperty(AgentMetaData.PropertyKey.INBOUND_HARDWARE_PORT);
-
+//            int port = (int) agent.metadata().getProperty(AgentMetaData.PropertyKey.INBOUND_HARDWARE_PORT);
+int port = 9080;
             try {
                 Socket socket = new Socket("localhost", port);
                 System.out.println("Connected to inbound");
@@ -60,7 +60,8 @@ public class MoosConnector implements NetworkInterface {
 
     private void connectToServer() {
         int retries = 20;
-        int port = (int) agent.metadata().getProperty(AgentMetaData.PropertyKey.HARDWARE_PORT);
+//        int port = (int) agent.metadata().getProperty(AgentMetaData.PropertyKey.HARDWARE_PORT);
+        int port = 9079;
         Exception exception = null;
 
         logger.info(agent.name() + ": connecting to MOOS server on: " + port, agent);
@@ -75,16 +76,11 @@ public class MoosConnector implements NetworkInterface {
 
                 logger.info(agent.name() + ": connected to MOOS server", agent);
 
-                // "Assume" MOOS is running
                 listenOnInbound();
 
                 return;
             } catch (IOException e) {
-                // Excuse the first few attempts as the server may not have started yet
-                if (i > 10) {
-                    logger.warn(agent.name() + ": failed to connect to server, retrying", e);
-                    exception = e;
-                }
+                exception = e;
             }
 
             try {
