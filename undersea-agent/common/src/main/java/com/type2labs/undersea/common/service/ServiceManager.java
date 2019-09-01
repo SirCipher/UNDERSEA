@@ -127,14 +127,16 @@ public class ServiceManager {
      * Waits for an {@link AgentService} to transition from it's current state to the supplier's new state.
      * <p>
      *
-     * @param supplier   to poll on
-     * @param service    to wait to transition
-     * @param starting   {@link ServiceState}
-     * @param successful {@link ServiceState} to set if the service transitions successfully
+     * @param supplier      to poll on
+     * @param service       to wait to transition
+     * @param serviceFuture associated with the {@link AgentService}
+     * @param starting      {@link ServiceState}
+     * @param successful    {@link ServiceState} to set if the service transitions successfully
      * @return true if the service transitioned successfully. False only if the thread throws an exception
      */
     private synchronized boolean _waitForTransition(BooleanSupplier supplier, AgentService service,
-                                                    ServiceState starting, ServiceState successful) {
+                                                    ScheduledFuture<?> serviceFuture, ServiceState starting,
+                                                    ServiceState successful) {
         long startupTimeout = service.transitionTimeout();
         transitionService(service.getClass(), starting);
 
@@ -144,6 +146,7 @@ public class ServiceManager {
             while (!supplier.getAsBoolean()) {
                 if (System.currentTimeMillis() - start > startupTimeout) {
                     transitionService(service.getClass(), ServiceState.FAILED);
+                    serviceFuture.cancel(true);
 
                     String message = String.format(agent.name() + ": service "
                             + service.getClass().getSimpleName() + " did not transition in the allocated time" +
@@ -366,7 +369,8 @@ public class ServiceManager {
         ScheduledFuture<?> future = serviceExecutor.schedule(wrapAgentService(agentService), 1, TimeUnit.NANOSECONDS);
 
         //noinspection StatementWithEmptyBody
-        while (!_waitForTransition(agentService::started, agentService, ServiceState.STARTING, ServiceState.RUNNING)) {
+        while (!_waitForTransition(agentService::started, agentService, future, ServiceState.STARTING,
+                ServiceState.RUNNING)) {
         }
 
         scheduledFutures.put(service, future);

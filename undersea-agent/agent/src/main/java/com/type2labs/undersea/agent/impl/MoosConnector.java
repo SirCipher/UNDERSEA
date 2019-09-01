@@ -2,6 +2,7 @@ package com.type2labs.undersea.agent.impl;
 
 import com.google.common.util.concurrent.ListenableFuture;
 import com.type2labs.undersea.common.agent.Agent;
+import com.type2labs.undersea.common.agent.AgentMetaData;
 import com.type2labs.undersea.common.service.hardware.NetworkInterface;
 import com.type2labs.undersea.common.service.transaction.Transaction;
 import com.type2labs.undersea.utilities.exception.NotSupportedException;
@@ -57,8 +58,8 @@ public class MoosConnector implements NetworkInterface {
 
     private Socket connectToServer() {
         int retries = 20;
-//        int port = (int) agent.metadata().getProperty(AgentMetaData.PropertyKey.HARDWARE_PORT);
-        int port = 9080;
+        int port = (int) agent.metadata().getProperty(AgentMetaData.PropertyKey.HARDWARE_PORT);
+//        int port = 9080;
         Exception exception = null;
 
         logger.info(agent.name() + ": connecting to MOOS server on: " + port, agent);
@@ -127,6 +128,15 @@ public class MoosConnector implements NetworkInterface {
         return response;
     }
 
+    /**
+     * Run during initialisation of this class and attempts to open a connection with the sUUV module. If a
+     * connection is established, then an {@code ACQ} message is sent to the module and {@code ACQ} is expected to be
+     * returned. If this is not the case, then this service is terminated.
+     * <p>
+     * During initialisation of the {@link com.type2labs.undersea.common.service.ServiceManager} this class is given
+     * {@link MoosConnector#transitionTimeout()} to start and if this service fails, then it is terminated and so the
+     * socket blocking does not become an issue.
+     */
     @Override
     public void run() {
         Socket socket = connectToServer();
@@ -138,7 +148,7 @@ public class MoosConnector implements NetworkInterface {
             BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             String res = in.readLine();
 
-            if(!"ACQ".equals(res)){
+            if (!"ACQ".equals(res)) {
                 throw new RuntimeException("Failed to receive server acknowledgement");
             }
 

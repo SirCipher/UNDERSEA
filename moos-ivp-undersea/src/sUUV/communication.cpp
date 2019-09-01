@@ -71,7 +71,7 @@ void new_connection(Args args) {
     }
 
     std::string inputStr = buffer;
-    std::cout << "Received: " << inputStr << " and " << n << std::endl;
+    std::cout << "Received: " << inputStr << std::endl;
 
     string outputStr;
     auto sensMap = args.uuv->m_sensors_map;
@@ -81,12 +81,12 @@ void new_connection(Args args) {
         std::cout << "Received shutdown request" << std::endl;
         serverRunning = false;
     } else if (strcmp(buffer, "ACQ") == 0) {
+        // Acknowledge the client during their initialisation period
         outputStr = "ACQ\n";
     } else if (strcmp(buffer, "SENSORS") == 0) {
         outputStr.clear();
         for (auto &it : sensMap) {
-
-//				outputStr += it->first +"="+ doubleToString(it->second.averageRate,2) +",";
+            // outputStr += it->first +"="+ doubleToString(it->second.averageRate,2) +",";
 
             //if it's not the dummy element that resembles the speed in sensors map
             if (it.first.find("SPEED") == string::npos) {
@@ -180,7 +180,7 @@ void init_outbound(UUV uuv) {
 void run_server(UUV uuv) {
     signal(SIGPIPE, SIG_IGN);
 
-    const char *port = prependPort(9080);
+    const char *port = prependPort(uuv.PORT);
     std::cout << "Initialising server on port: " << port << std::endl;
 
     int sock = make_accept_sock(port);
