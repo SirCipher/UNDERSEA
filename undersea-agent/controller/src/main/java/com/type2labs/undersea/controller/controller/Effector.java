@@ -32,8 +32,7 @@ public class Effector {
     }
 
     public void run() {
-        networkInterface.write(command);
-        reply = networkInterface.read();
+        reply = networkInterface.write(command);
     }
 
     public void setCommand(String command) {

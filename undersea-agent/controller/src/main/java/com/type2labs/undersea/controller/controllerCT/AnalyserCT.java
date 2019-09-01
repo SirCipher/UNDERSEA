@@ -11,7 +11,7 @@ import java.util.ArrayList;
 public class AnalyserCT extends Analyser {
 
     static final int goalsN = 2;
-    private static ArrayList<Sensor> sensors;
+    private ArrayList<Sensor> sensors;
     final int sensorNum = 5;
     final int adaptPeriod = 100;
     int chosenSensor;

@@ -58,20 +58,20 @@ bool isclosed(int sock) {
 }
 
 void new_connection(Args args) {
-
     ssize_t r;
     char buffer[256];
 
     bzero(buffer, 256);
+
     int n = read(args.port, buffer, 255);
 
     if (n < 0) {
-        std::cerr << "Error reading from socket:" << args.port << std::endl;
+        std::cout << "Error reading from socket:" << args.port << std::endl;
         return;
     }
 
     std::string inputStr = buffer;
-    std::cout << "Received: " << inputStr << std::endl;
+    std::cout << "Received: " << inputStr << " and " << n << std::endl;
 
     string outputStr;
     auto sensMap = args.uuv->m_sensors_map;
@@ -80,9 +80,12 @@ void new_connection(Args args) {
         outputStr = "###\n";
         std::cout << "Received shutdown request" << std::endl;
         serverRunning = false;
+    } else if (strcmp(buffer, "ACQ") == 0) {
+        outputStr = "ACQ\n";
     } else if (strcmp(buffer, "SENSORS") == 0) {
         outputStr.clear();
         for (auto &it : sensMap) {
+
 //				outputStr += it->first +"="+ doubleToString(it->second.averageRate,2) +",";
 
             //if it's not the dummy element that resembles the speed in sensors map
@@ -92,7 +95,10 @@ void new_connection(Args args) {
             //reset sensors information
             it.second.reset();
         }
-        outputStr.replace(outputStr.length() - 1, 1, "\n");
+
+        if (outputStr.length() > 0) {
+            outputStr.replace(outputStr.length() - 1, 1, "\n");
+        }
     } else if (inputStr.find("SPEED") != string::npos) {
         //input string is in the form "SPEED=3.6,SENSOR1=-1,SENSOR2=0,..."
         char *dup = strdup(inputStr.c_str());
@@ -156,7 +162,6 @@ void new_connection(Args args) {
 
     send(args.port, outputStr.c_str(), strlen(outputStr.c_str()), 0);
 
-
     close(args.port);
 }
 
@@ -175,15 +180,20 @@ void init_outbound(UUV uuv) {
 void run_server(UUV uuv) {
     signal(SIGPIPE, SIG_IGN);
 
-    const char *port = prependPort(uuv.PORT);
+    const char *port = prependPort(9080);
     std::cout << "Initialising server on port: " << port << std::endl;
 
     int sock = make_accept_sock(port);
 
     std::cout << "Server listening on port: " << port << std::endl;
 
+    int requests = 0;
+
     while (serverRunning) {
         int new_sock = accept(sock, nullptr, nullptr);
+
+        requests++;
+        std::cout << "Total requests: " << requests << std::endl;
 
         Args args{
                 &uuv,

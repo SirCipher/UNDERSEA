@@ -8,19 +8,11 @@ import com.type2labs.undersea.common.service.AgentService;
 public interface NetworkInterface extends AgentService {
 
     /**
-     * Writes a request to the physical network that the agent is operating on and returns the response
-     *
-     * @return the response from the network
-     */
-    String read();
-
-    /**
      * Writes a message to the physical network the agent is operating on
      *
      * @param message to write
      * @return
      */
     String write(String message);
-
 
 }

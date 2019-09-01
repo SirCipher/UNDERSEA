@@ -9,14 +9,9 @@ public class NoNetworkInterfaceImpl implements NetworkInterface {
 
     private Agent parentAgent;
 
-    @Override
-    public String read() {
-        return "";
-    }
 
     @Override
     public String write(String message) {
-
         return message;
     }
 
