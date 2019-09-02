@@ -38,24 +38,19 @@ public class LocalAgentGroup implements Closeable {
     private final RaftNodeImpl[] raftNodes;
     private final List<Agent> agents = new ArrayList<>();
     private final Client[] clients;
-    private final RaftIntegrationImpl[] integrations;
 
     public LocalAgentGroup(int size, Set<AgentService> services, boolean withVisualiser, boolean withCallbacks) {
         raftNodes = new RaftNodeImpl[size];
         clients = new RaftClientImpl[size];
-        integrations = new RaftIntegrationImpl[size];
 
         RaftClusterConfig config = defaultConfig();
         AgentFactory agentFactory = new AgentFactory();
 
         for (int i = 0; i < size; i++) {
             String name = "agent:" + i;
-            RaftIntegrationImpl integration = new RaftIntegrationImpl("endpoint:" + i);
-            integrations[i] = integration;
             RaftNodeImpl raftNode = new RaftNodeImpl(
                     config,
                     "agent:" + i,
-                    integration,
                     new InetSocketAddress("localhost", 0),
                     PeerId.newId()
             );

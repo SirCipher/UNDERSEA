@@ -20,7 +20,7 @@ import com.type2labs.undersea.prospect.RaftClusterConfig;
 import com.type2labs.undersea.prospect.impl.DefaultCallbacks;
 import com.type2labs.undersea.prospect.impl.RaftIntegrationImpl;
 import com.type2labs.undersea.prospect.impl.RaftNodeImpl;
-import com.type2labs.undersea.prospect.model.MultiRoleState;
+import com.type2labs.undersea.common.consensus.MultiRoleState;
 import com.type2labs.undersea.seachain.BlockchainNetworkImpl;
 
 import java.io.File;
@@ -48,8 +48,7 @@ public class AgentInitialiserImpl implements AgentInitialiser {
 
             RaftNodeImpl raftNode = new RaftNodeImpl(
                     raftClusterConfig,
-                    agentProxy.getName(),
-                    new RaftIntegrationImpl(agentProxy.getName())
+                    agentProxy.getName()
             );
 
             ServiceManager serviceManager = new ServiceManager();

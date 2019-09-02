@@ -19,9 +19,9 @@ Behavior = BHV_Waypoint
   capture_line = true
   capture_radius = 0.1
   condition = MODE == SURVEYING
-  //endflag   = RETURN = true
+  endflag   = RETURN = true
   updates   = WAYPOINT_$(VNAME)_UPDATES
-  perpetual = true
+  perpetual = false
   speed = 2.0
   //points = $(POINTS)
 }

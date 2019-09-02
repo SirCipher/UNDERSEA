@@ -9,10 +9,12 @@ import com.type2labs.undersea.common.cost.CostConfiguration;
 import com.type2labs.undersea.common.cost.CostConfigurationImpl;
 import com.type2labs.undersea.common.missions.planner.impl.MissionParametersImpl;
 import com.type2labs.undersea.common.missions.planner.model.MissionParameters;
+import com.type2labs.undersea.common.missions.task.model.TaskStatus;
 import com.type2labs.undersea.common.runner.AbstractRunner;
 import com.type2labs.undersea.dsl.EnvironmentProperties;
 import com.type2labs.undersea.dsl.ParserEngine;
 import com.type2labs.undersea.dsl.uuv.model.DslAgentProxy;
+import com.type2labs.undersea.missionplanner.manager.MoosMissionManagerImpl;
 import com.type2labs.undersea.prospect.RaftClusterConfig;
 import com.type2labs.undersea.prospect.impl.RaftNodeImpl;
 import com.type2labs.undersea.utilities.Utility;
@@ -94,7 +96,7 @@ public class Runner extends AbstractRunner {
 
         if (localNodeDiscovery) {
             for (Agent agentA : super.getAgents()) {
-                while(!agentA.services().isHealthy()){
+                while (!agentA.services().isHealthy()) {
                     Thread.sleep(500);
                 }
 
@@ -106,12 +108,12 @@ public class Runner extends AbstractRunner {
                 }
 
                 for (Agent agentB : super.getAgents()) {
-                    while(!agentB.services().isHealthy()){
+                    while (!agentB.services().isHealthy()) {
                         Thread.sleep(500);
                     }
 
                     RaftNodeImpl raftNodeB = agentB.services().getService(RaftNodeImpl.class);
-                    if(raftNodeB.multiRole().isLeader()){
+                    if (raftNodeB.multiRole().isLeader()) {
                         continue;
                     }
 
@@ -152,4 +154,18 @@ public class Runner extends AbstractRunner {
         return environmentProperties.getAllAgents();
     }
 
+    public boolean missionComplete() {
+        boolean completed = true;
+
+        for (Agent agent : super.getAgents()) {
+            MoosMissionManagerImpl missionManager = agent.services().getService(MoosMissionManagerImpl.class);
+            if (missionManager.getAssignedTasks().size() == 0) {
+                return false;
+            }
+
+            completed &= missionManager.getAssignedTasks().stream().filter(e -> e.getTaskStatus() == TaskStatus.COMPLETED).count() == missionManager.getAssignedTasks().size();
+        }
+
+        return completed;
+    }
 }

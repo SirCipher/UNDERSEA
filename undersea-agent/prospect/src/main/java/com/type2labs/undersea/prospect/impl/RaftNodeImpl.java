@@ -8,19 +8,18 @@ import com.google.common.util.concurrent.MoreExecutors;
 import com.type2labs.undersea.common.agent.Agent;
 import com.type2labs.undersea.common.cluster.Client;
 import com.type2labs.undersea.common.cluster.PeerId;
+import com.type2labs.undersea.common.consensus.MultiRoleState;
 import com.type2labs.undersea.common.consensus.RaftRole;
 import com.type2labs.undersea.common.missions.planner.model.AgentMission;
 import com.type2labs.undersea.common.missions.planner.model.GeneratedMission;
 import com.type2labs.undersea.common.missions.planner.model.MissionManager;
 import com.type2labs.undersea.common.monitor.model.Monitor;
+import com.type2labs.undersea.common.service.transaction.LifecycleEvent;
 import com.type2labs.undersea.common.service.transaction.ServiceCallback;
 import com.type2labs.undersea.common.service.transaction.Transaction;
-import com.type2labs.undersea.common.service.transaction.LifecycleEvent;
 import com.type2labs.undersea.prospect.NodeLog;
 import com.type2labs.undersea.prospect.RaftClusterConfig;
 import com.type2labs.undersea.prospect.RaftProtos;
-import com.type2labs.undersea.prospect.model.MultiRoleState;
-import com.type2labs.undersea.prospect.model.RaftIntegration;
 import com.type2labs.undersea.prospect.model.RaftNode;
 import com.type2labs.undersea.prospect.networking.RaftClient;
 import com.type2labs.undersea.prospect.task.AcquireStatusTask;
@@ -36,7 +35,9 @@ import java.net.InetSocketAddress;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.concurrent.Executors;
 import java.util.concurrent.RejectedExecutionException;
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.stream.Collectors;
 
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
@@ -48,10 +49,10 @@ public class RaftNodeImpl implements RaftNode {
     // TODO: 20/08/2019 Migrate to 4 threads
     private final ThrowableExecutor singleThreadScheduledExecutor;
     private final ListeningExecutorService listeningExecutorService;
+    private final ScheduledExecutorService scheduledExecutor = Executors.newSingleThreadScheduledExecutor();
 
     private final String name;
     private final GrpcServer server;
-    private final RaftIntegration integration;
     private final RaftClusterConfig raftClusterConfig;
     private RaftState raftState;
     // This cannot be final as both an Agent and this class require it
@@ -71,21 +72,17 @@ public class RaftNodeImpl implements RaftNode {
         return listeningExecutorService;
     }
 
-    public RaftNodeImpl(RaftClusterConfig raftClusterConfig,
-                        String name,
-                        RaftIntegration integration) {
-        this(raftClusterConfig, name, integration, new InetSocketAddress(0), PeerId.newId());
+    public RaftNodeImpl(RaftClusterConfig raftClusterConfig, String name) {
+        this(raftClusterConfig, name, new InetSocketAddress(0), PeerId.newId());
     }
 
     public RaftNodeImpl(RaftClusterConfig raftClusterConfig,
                         String name,
-                        RaftIntegration integration,
                         InetSocketAddress address,
                         PeerId peerId) {
         this.peerId = peerId;
         this.raftClusterConfig = raftClusterConfig;
         this.name = name;
-        this.integration = integration;
 
         if (address.getPort() == 0 && !raftClusterConfig.autoPortDiscoveryEnabled()) {
             throw new IllegalArgumentException("Auto port discovery is not enabled");
@@ -121,11 +118,6 @@ public class RaftNodeImpl implements RaftNode {
     @Override
     public MultiRoleState multiRole() {
         return multiRoleState;
-    }
-
-    @Override
-    public RaftIntegration integration() {
-        return integration;
     }
 
     @Override
@@ -241,10 +233,6 @@ public class RaftNodeImpl implements RaftNode {
         return agent.services().getService(Monitor.class);
     }
 
-    public GrpcServer getServer() {
-        return server;
-    }
-
     @Override
     public void run() {
         if (agent == null) {
@@ -258,9 +246,15 @@ public class RaftNodeImpl implements RaftNode {
         started = true;
     }
 
+
     @Override
     public void schedule(Runnable task, long delayInMillis) {
-        integration.schedule(task, delayInMillis, MILLISECONDS);
+
+        try {
+            scheduledExecutor.schedule(task, delayInMillis, MILLISECONDS);
+        } catch (RejectedExecutionException e) {
+            logger.error(e);
+        }
     }
 
     private void scheduleHeartbeat() {

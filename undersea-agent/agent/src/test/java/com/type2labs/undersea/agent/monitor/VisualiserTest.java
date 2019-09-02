@@ -38,8 +38,7 @@ public class VisualiserTest {
         UnderseaRuntimeConfig config = new UnderseaRuntimeConfig();
         RaftNodeImpl raftNode = new RaftNodeImpl(
                 new RaftClusterConfig(config),
-                name,
-                new RaftIntegrationImpl(name)
+                name
         );
 
         ServiceManager serviceManager = new ServiceManager();

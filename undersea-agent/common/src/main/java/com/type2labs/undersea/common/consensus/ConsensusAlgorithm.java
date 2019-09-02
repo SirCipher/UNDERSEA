@@ -10,4 +10,6 @@ public interface ConsensusAlgorithm extends AgentService {
 
     RaftRole getRaftRole();
 
+    MultiRoleState multiRole();
+
 }

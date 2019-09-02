@@ -29,7 +29,6 @@ public class UnderseaAgentTest {
         RaftNodeImpl raftNode = new RaftNodeImpl(
                 new RaftClusterConfig(new UnderseaRuntimeConfig()),
                 "test",
-                new RaftIntegrationImpl("test"),
                 new InetSocketAddress("localhost", 5000),
                 PeerId.newId()
         );

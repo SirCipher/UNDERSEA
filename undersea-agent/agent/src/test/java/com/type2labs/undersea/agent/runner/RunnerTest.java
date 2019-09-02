@@ -47,7 +47,9 @@ public class RunnerTest {
 
         runner.onParsed(testProperties);
 
-        Thread.sleep(30000);
+        while (!runner.missionComplete()){
+            Thread.sleep(500);
+        }
 
         System.out.println("RunnerTest: Shutting down");
 

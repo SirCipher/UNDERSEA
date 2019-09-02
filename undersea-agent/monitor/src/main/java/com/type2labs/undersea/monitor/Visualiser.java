@@ -96,7 +96,7 @@ public class Visualiser {
         c.fill = GridBagConstraints.HORIZONTAL;
 
         // TODO: Address should be the MOOS address
-        String[] columnNames = {"Address", "Raft Peer ID", "Name", "Raft Role", "No. Tasks", "No. Completed Tasks"};
+        String[] columnNames = {"Address", "Raft Peer ID", "Name", "Multi-Role status", "Raft Role", "No. Tasks", "No. Completed Tasks"};
         DefaultTableModel model = new DefaultTableModel(new Object[0][0], columnNames);
         table = new JTable(model) {
             @Override
@@ -299,6 +299,7 @@ public class Visualiser {
                                 clientSocket.getRemoteSocketAddress(),
                                 agentState.getRaftPeerId(),
                                 agentState.getName(),
+                                agentState.getMultiRoleStatus(),
                                 agentState.getRaftRole(),
                                 agentState.getNoTasks(),
                                 agentState.getCompletedTasks()});
@@ -309,9 +310,10 @@ public class Visualiser {
                             model.setValueAt(clientSocket.getRemoteSocketAddress(), rowId, 0);
                             model.setValueAt(agentState.getRaftPeerId(), rowId, 1);
                             model.setValueAt(agentState.getName(), rowId, 2);
-                            model.setValueAt(agentState.getRaftRole(), rowId, 3);
-                            model.setValueAt(agentState.getNoTasks(), rowId, 4);
-                            model.setValueAt(agentState.getCompletedTasks(), rowId, 5);
+                            model.setValueAt(agentState.getMultiRoleStatus(), rowId, 3);
+                            model.setValueAt(agentState.getRaftRole(), rowId, 4);
+                            model.setValueAt(agentState.getNoTasks(), rowId, 5);
+                            model.setValueAt(agentState.getCompletedTasks(), rowId, 6);
                         }
                     }
                 } else if (received instanceof LogMessage) {

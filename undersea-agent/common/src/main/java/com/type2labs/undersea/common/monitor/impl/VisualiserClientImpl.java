@@ -63,14 +63,18 @@ public class VisualiserClientImpl implements VisualiserClient {
     }
 
     private VisualiserData agentState() {
-        ConsensusAlgorithm raftNode = parent.services().getService(ConsensusAlgorithm.class);
-        String raftRole = String.valueOf(raftNode.getRaftRole());
-
+        ConsensusAlgorithm consensusAlgorithm = parent.services().getService(ConsensusAlgorithm.class);
+        String raftRole = String.valueOf(consensusAlgorithm.getRaftRole());
+        String multiRoleStatus = String.valueOf(consensusAlgorithm.multiRole().getStatus());
         MissionManager missionPlanner = parent.services().getService(MissionManager.class);
         List<Task> assignedTasks = missionPlanner.getAssignedTasks();
-        int completedTasks = Math.toIntExact(assignedTasks.stream().filter(t -> t.getTaskStatus() == TaskStatus.COMPLETED).count());
 
-        return new VisualiserData(parent.name(), parent.peerId().toString(), raftRole, assignedTasks.size(), completedTasks);
+        int completedTasks =
+                Math.toIntExact(assignedTasks.stream().filter(t -> t.getTaskStatus() == TaskStatus.COMPLETED).count());
+
+        return new VisualiserData(parent.name(), parent.peerId().toString(), multiRoleStatus, raftRole,
+                assignedTasks.size(),
+                completedTasks);
     }
 
     @Override
