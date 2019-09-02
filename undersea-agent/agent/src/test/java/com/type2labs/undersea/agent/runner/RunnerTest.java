@@ -47,9 +47,13 @@ public class RunnerTest {
 
         runner.onParsed(testProperties);
 
-        while (!runner.missionComplete()){
-            Thread.sleep(500);
-        }
+        // TODO: 02/09/2019
+//        while (!runner.missionComplete()){
+//            Thread.sleep(500);
+//        }
+        
+        
+        Thread.sleep(30000);
 
         System.out.println("RunnerTest: Shutting down");
 

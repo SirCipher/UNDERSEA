@@ -49,7 +49,7 @@ public class VehicleRoutingOptimiserTest {
         agentFactory.populateCluster(agent, agents);
         agents.add(agent);
 
-        MissionParameters missionParameters = new MissionParametersImpl(1, area, 20);
+        MissionParameters missionParameters = new MissionParametersImpl(1, area, 50);
         missionParameters.setClients(new ArrayList<>(agent.clusterClients().values()));
         missionParameters.getClients().add(new Client() {
 

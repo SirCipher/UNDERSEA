@@ -10,7 +10,6 @@ import com.type2labs.undersea.common.cluster.Client;
 import com.type2labs.undersea.common.cluster.ClusterState;
 import com.type2labs.undersea.common.missions.PlannerException;
 import com.type2labs.undersea.common.missions.planner.impl.AgentMissionImpl;
-import com.type2labs.undersea.common.missions.planner.model.AgentMission;
 import com.type2labs.undersea.common.missions.planner.model.GeneratedMission;
 import com.type2labs.undersea.common.missions.planner.model.MissionParameters;
 import com.type2labs.undersea.common.missions.planner.model.MissionPlanner;
@@ -163,11 +162,8 @@ public class VehicleRoutingOptimiser implements MissionPlanner {
             }
 
             logger.info(route + manager.indexToNode(index));
-            logger.info("Distance of the route: " + routeDistance + "m");
             maxRouteDistance = Math.max(routeDistance, maxRouteDistance);
         }
-
-        logger.info("Maximum of the route distances: " + maxRouteDistance + "m");
     }
 
     @Override
