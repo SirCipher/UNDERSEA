@@ -12,10 +12,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.annotation.concurrent.NotThreadSafe;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import java.io.*;
+import java.net.ServerSocket;
 import java.net.Socket;
 
 /**
@@ -28,50 +26,56 @@ public class MoosConnector implements NetworkInterface {
 
     private Agent agent;
     private boolean aquiredConnection = false;
-    private ThrowableExecutor executor = ThrowableExecutor.newSingleThreadExecutor(logger);
+    private final ThrowableExecutor clientProcessingPool = ThrowableExecutor.newSingleThreadExecutor(logger);
+    private boolean shutdown;
 
     @Override
     public void initialise(Agent parentAgent) {
         this.agent = parentAgent;
     }
 
-    private void listenOnInbound() {
-        executor.submit(() -> {
-            /*
-             * todo: open another port and pass the input to the task executor service to handle
-             */
-//            int port = (int) agent.metadata().getProperty(AgentMetaData.PropertyKey.INBOUND_HARDWARE_PORT);
-            int port = 9080;
+    public void listenOnInbound() {
+        Thread serverThread = new Thread(() -> {
             try {
-                Socket socket = new Socket("localhost", port);
-                System.out.println("Connected to inbound");
+                int port = (int) agent.metadata().getProperty(AgentMetaData.PropertyKey.INBOUND_HARDWARE_PORT);
+
+                ServerSocket serverSocket = new ServerSocket(port);
+                logger.info(agent.name() + ": initialised MOOS connector inbound server", agent);
+
+                while (!shutdown) {
+                    Socket clientSocket = serverSocket.accept();
+                    logger.info("Processing request from: " + clientSocket.getPort());
+                    clientProcessingPool.execute(() -> {
+                        try {
+                            InputStream is = clientSocket.getInputStream();
+                            BufferedReader in = new BufferedReader(new InputStreamReader(is));
+
+                            logger.info(agent.name() + ": received {" + in.readLine() + "} on inbound", agent);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    });
+                }
+
+                logger.info(agent.name() + ": shutdown inbound server", agent);
             } catch (IOException e) {
+                logger.error("Unable to process client request", e);
                 e.printStackTrace();
             }
-
         });
-    }
 
-    private void doWithRetries() {
-
+        serverThread.start();
     }
 
     private Socket connectToServer() {
         int retries = 20;
         int port = (int) agent.metadata().getProperty(AgentMetaData.PropertyKey.HARDWARE_PORT);
-//        int port = 9080;
         Exception exception = null;
-
-        logger.info(agent.name() + ": connecting to MOOS server on: " + port, agent);
 
         for (int i = 0; i < retries; i++) {
             try {
                 Socket socket = new Socket("localhost", port);
                 aquiredConnection = true;
-
-                logger.info(agent.name() + ": connected to MOOS server", agent);
-
-//                listenOnInbound();
 
                 return socket;
             } catch (IOException e) {
@@ -110,6 +114,7 @@ public class MoosConnector implements NetworkInterface {
         out.flush();
 
         String response;
+
         try {
             response = in.readLine();
         } catch (IOException e) {
@@ -155,6 +160,8 @@ public class MoosConnector implements NetworkInterface {
             in.close();
             out.close();
             socket.close();
+
+            listenOnInbound();
         } catch (IOException e) {
             throw new RuntimeException(agent.name() + ": failed to close socket during initialisation", e);
         }
@@ -162,7 +169,7 @@ public class MoosConnector implements NetworkInterface {
 
     @Override
     public void shutdown() {
-
+        shutdown = true;
     }
 
     @Override

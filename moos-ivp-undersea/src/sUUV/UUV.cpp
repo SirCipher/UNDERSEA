@@ -155,9 +155,12 @@ bool UUV::OnNewMail(MOOSMSG_LIST &NewMail) {
         string key = msg.GetKey();
 
         if (key == "WPT_STAT") {
-            std::cout << "Value = " << msg.GetString() << std::endl;
-            if (key.find("completed") != std::string::npos) {
-//                writeData(msg.GetString());
+            std::string rcv = msg.GetString()+"\n";
+
+            if (rcv.find("completed") != std::string::npos) {
+                std::cout << "Sending completed notice = " << rcv << std::endl;
+
+                write_data(this, rcv.c_str());
             }
         } else {
             double value = msg.GetDouble();

@@ -20,7 +20,6 @@ int main(int argc, char *argv[]) {
 
     cout << "Starting" << endl;
 
-
     for (int i = 1; i < argc; i++) {
         string argi = argv[i];
         if ((argi == "-v") || (argi == "--version") || (argi == "-version"))

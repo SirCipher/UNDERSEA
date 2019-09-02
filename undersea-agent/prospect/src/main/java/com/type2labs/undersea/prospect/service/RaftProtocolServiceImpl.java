@@ -117,9 +117,9 @@ public class RaftProtocolServiceImpl extends RaftProtocolServiceGrpc.RaftProtoco
         manager.addTasks(agentMission.getTasks());
     }
 
-    private <U extends AbstractMessage> void sendAbstractAsyncMessage(StreamObserver<U> responseObserver,
-                                                                      Supplier<U> supplier) {
-        final CompletableFuture<U> future = CompletableFuture.supplyAsync(supplier, executor);
+    private <M extends AbstractMessage> void sendAbstractAsyncMessage(StreamObserver<M> responseObserver,
+                                                                      Supplier<M> supplier) {
+        final CompletableFuture<M> future = CompletableFuture.supplyAsync(supplier, executor);
 
         future.whenComplete((result, e) -> {
             if (e == null) {

@@ -57,6 +57,25 @@ bool isclosed(int sock) {
     return n == 0;
 }
 
+void send_to_server(const char *msg, UUV uuv) {
+    int sock = 0;
+    struct sockaddr_in serv_addr{};
+
+    if ((sock = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
+        std::cerr << "Socket creation error" << std::endl;
+        return;
+    }
+
+    serv_addr.sin_family = AF_INET;
+    serv_addr.sin_port = htons(uuv.INBOUND_PORT);
+
+    if (connect(sock, (struct sockaddr *) &serv_addr, sizeof(serv_addr)) < 0) {
+        std::cerr << "Connection Failed" << std::endl;
+    }
+
+    send(sock, msg, strlen(msg), 0);
+}
+
 void new_connection(Args args) {
     ssize_t r;
     char buffer[256];
@@ -66,7 +85,7 @@ void new_connection(Args args) {
     int n = read(args.port, buffer, 255);
 
     if (n < 0) {
-        std::cout << "Error reading from socket:" << args.port << std::endl;
+        std::cerr << "Error reading from socket:" << args.port << std::endl;
         return;
     }
 
@@ -154,6 +173,8 @@ void new_connection(Args args) {
         std::getline(iss, value, ':');
 
         args.uuv->ForwardMessage(key, value);
+
+        outputStr = "OK";
     } else {
         outputStr = "Unknown command: " + inputStr + "\n";
     }
@@ -173,9 +194,28 @@ const char *prependPort(int port) {
     return str.c_str();
 }
 
-void init_outbound(UUV uuv) {
-    // TODO: Initialise outbound server
-}
+void write_data(UUV *uuv, const char*  msg) {
+    int sock = 0;
+    int port = uuv->INBOUND_PORT;
+    struct sockaddr_in serv_addr{};
+
+    if ((sock = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
+        std::cerr << "Socket creation error" << std::endl;
+        return;
+    }
+
+    serv_addr.sin_family = AF_INET;
+    serv_addr.sin_port = htons(port);
+
+    if (connect(sock, (struct sockaddr *) &serv_addr, sizeof(serv_addr)) < 0) {
+        std::cerr << "Connection Failed" << std::endl;
+    }
+
+    send(sock, msg, strlen(msg), 0);
+
+    sleep(0);
+
+    close(port);}
 
 void run_server(UUV uuv) {
     signal(SIGPIPE, SIG_IGN);

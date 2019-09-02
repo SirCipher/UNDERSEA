@@ -22,7 +22,7 @@ public class VisualiserClientImpl implements VisualiserClient {
 
     private final InetSocketAddress visualiserAddress = new InetSocketAddress("localhost", 5050);
     private Agent parent;
-    private boolean enabled = false;
+    private static boolean enabled = false;
 
     private synchronized void _write(Object data) {
         ObjectOutputStream oos;
@@ -38,7 +38,7 @@ public class VisualiserClientImpl implements VisualiserClient {
 
             oos = new ObjectOutputStream(channel.socket().getOutputStream());
         } catch (IOException e) {
-            e.printStackTrace();
+            enabled = false;
             logger.error(parent.name() + ": failed to connect to visualiser", e);
             return;
         }
@@ -47,8 +47,7 @@ public class VisualiserClientImpl implements VisualiserClient {
             oos.writeObject(data);
             oos.flush();
         } catch (IOException e) {
-            e.printStackTrace();
-            logger.error(parent.name() + ": failed to send message to visualiser", e);
+            logger.error(parent.name() + ": failed to send message {" + data + "} to visualiser. Disabling", e);
         }
 
         try {
@@ -66,8 +65,7 @@ public class VisualiserClientImpl implements VisualiserClient {
         MissionManager missionPlanner = parent.services().getService(MissionManager.class);
         int noTasks = missionPlanner.getTasks().size();
 
-        return new VisualiserData(parent.name(), parent.peerId().toString(), raftRole, noTasks,
-                new double[]{0, 0});
+        return new VisualiserData(parent.name(), parent.peerId().toString(), raftRole, noTasks, new double[]{0, 0});
     }
 
     @Override

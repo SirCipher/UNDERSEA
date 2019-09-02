@@ -25,14 +25,12 @@ typedef struct {
 
 int make_accept_sock(const char *servspec);
 
-bool isclosed(int sock);
-
 void new_connection(Args args);
 
 void run_server(UUV uuv);
 
 const char *prependPort(int port);
 
-void init_outbound(UUV uuv);
+void write_data(UUV *uuv, const char* msg);
 
 #endif //IVP_EXTEND_COMMUNICATION_H
