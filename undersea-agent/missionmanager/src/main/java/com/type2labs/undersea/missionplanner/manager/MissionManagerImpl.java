@@ -1,6 +1,9 @@
 package com.type2labs.undersea.missionplanner.manager;
 
-import com.google.common.util.concurrent.*;
+import com.google.common.util.concurrent.Futures;
+import com.google.common.util.concurrent.ListenableFuture;
+import com.google.common.util.concurrent.ListeningExecutorService;
+import com.google.common.util.concurrent.MoreExecutors;
 import com.type2labs.undersea.common.agent.Agent;
 import com.type2labs.undersea.common.missions.PlannerException;
 import com.type2labs.undersea.common.missions.planner.model.GeneratedMission;
@@ -8,11 +11,14 @@ import com.type2labs.undersea.common.missions.planner.model.MissionManager;
 import com.type2labs.undersea.common.missions.planner.model.MissionPlanner;
 import com.type2labs.undersea.common.missions.task.model.Task;
 import com.type2labs.undersea.common.missions.task.model.TaskExecutor;
+import com.type2labs.undersea.common.missions.task.model.TaskStatus;
+import com.type2labs.undersea.common.service.transaction.LifecycleEvent;
+import com.type2labs.undersea.common.service.transaction.ServiceCallback;
 import com.type2labs.undersea.common.service.transaction.Transaction;
-import com.type2labs.undersea.common.service.transaction.TransactionStatusCode;
 import com.type2labs.undersea.missionplanner.task.executor.MeasureExecutor;
 import com.type2labs.undersea.missionplanner.task.executor.SurveyExecutor;
 import com.type2labs.undersea.missionplanner.task.executor.WaypointExecutor;
+import com.type2labs.undersea.utilities.concurrent.SimpleFutureCallback;
 import com.type2labs.undersea.utilities.exception.NotSupportedException;
 import com.type2labs.undersea.utilities.executor.ThrowableExecutor;
 import org.apache.logging.log4j.LogManager;
@@ -20,10 +26,7 @@ import org.apache.logging.log4j.Logger;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Created by Thomas Klapwijk on 2019-08-23.
@@ -32,79 +35,94 @@ public class MissionManagerImpl implements MissionManager {
 
     private static final Logger logger = LogManager.getLogger(MissionManagerImpl.class);
     private final MissionPlanner missionPlanner;
-    private final ListeningExecutorService singleThreadExecutor;
-    private final Map<Task, ListenableFuture<?>> activeTasks = new ConcurrentHashMap<>();
+    private final ListeningExecutorService taskExecutor;
 
     private Agent agent;
-    private List<Task> tasks = new ArrayList<>();
-    private GeneratedMission missionAssigned;
-    private int currentTask = 0;
+    private List<Task> assignedTasks = new ArrayList<>();
+    private Task currentTask;
 
     public MissionManagerImpl(MissionPlanner missionPlanner) {
         this.missionPlanner = missionPlanner;
-        this.singleThreadExecutor = MoreExecutors.listeningDecorator(ThrowableExecutor.newSingleThreadExecutor(logger));
+        this.taskExecutor = MoreExecutors.listeningDecorator(ThrowableExecutor.newSingleThreadExecutor(logger));
+    }
+
+    private void runTask(Task task) {
+        TaskExecutor taskExecutor;
+
+        switch (task.getTaskType()) {
+            case SURVEY:
+                taskExecutor = new SurveyExecutor(task);
+                break;
+            case WAYPOINT:
+                taskExecutor = new WaypointExecutor(task);
+                break;
+            case MEASURE:
+                taskExecutor = new MeasureExecutor(task);
+                break;
+            default:
+                throw new IllegalArgumentException(task.getTaskType() + " is not supported by " + MissionManagerImpl.class.getSimpleName());
+        }
+
+        taskExecutor.initialise(agent);
+
+        ListenableFuture<?> listenableFuture = this.taskExecutor.submit(taskExecutor);
+
+        Futures.addCallback(listenableFuture, new SimpleFutureCallback<Object>() {
+            @Override
+            public void onSuccess(@Nullable Object result) {
+                currentTask = task;
+            }
+        }, this.taskExecutor);
     }
 
     @Override
     public void addTasks(List<Task> tasks) {
-        this.tasks.addAll(tasks);
+        this.assignedTasks.addAll(tasks);
 
-        for (Task t : tasks) {
-            TaskExecutor taskExecutor;
-
-            switch (t.getTaskType()) {
-                case SURVEY:
-                    taskExecutor = new SurveyExecutor(t);
-                    break;
-                case WAYPOINT:
-                    taskExecutor = new WaypointExecutor(t);
-                    break;
-                case MEASURE:
-                    taskExecutor = new MeasureExecutor(t);
-                    break;
-                default:
-                    throw new IllegalArgumentException(t.getTaskType() + " is not supported by " + MissionManagerImpl.class.getSimpleName());
-            }
-
-            taskExecutor.initialise(agent);
-
-            ListenableFuture<?> listenableFuture = singleThreadExecutor.submit(taskExecutor);
-            activeTasks.put(t, listenableFuture);
-
-            Futures.addCallback(listenableFuture, new FutureCallback<Object>() {
-                @Override
-                public void onSuccess(@Nullable Object result) {
-                    activeTasks.remove(t);
-                }
-
-                @Override
-                public void onFailure(Throwable throwable) {
-                    activeTasks.remove(t);
-                    // TODO: 2019-08-24 Handle properly...
-                    throw new RuntimeException(throwable);
-                }
-            }, singleThreadExecutor);
+        if (currentTask == null && assignedTasks.size() > 0) {
+            runTask(assignedTasks.get(0));
         }
     }
 
     @Override
-    public void cancelAllTasks() {
-        activeTasks.forEach((key, value) -> value.cancel(true));
-    }
-
-    @Override
-    public List<Task> getTasks() {
-        return tasks;
+    public List<Task> getAssignedTasks() {
+        return assignedTasks;
     }
 
     @Override
     public boolean missionHasBeenAssigned() {
-        return tasks != null && tasks.size() > 0;
+        return assignedTasks != null && assignedTasks.size() > 0;
     }
 
     @Override
     public MissionPlanner missionPlanner() {
         return missionPlanner;
+    }
+
+    @Override
+    public void notify(String message) {
+        if (message == null) {
+            return;
+        }
+
+        if ("WPT_INDEX".equals(message)) {
+            handleWaypointIndexUpdate(message);
+        }
+    }
+
+    private void handleWaypointIndexUpdate(String message) {
+        int index = message.charAt(message.length() - 1);
+
+        // If we're on our way to the first waypoint
+        if (index == 0) {
+            return;
+        }
+
+        currentTask.setTaskStatus(TaskStatus.COMPLETED);
+
+        logger.info(agent.name() + ": completed task " + index, agent);
+
+        currentTask = assignedTasks.get(index);
     }
 
     @Override
@@ -125,7 +143,7 @@ public class MissionManagerImpl implements MissionManager {
 
     @Override
     public void shutdown() {
-        activeTasks.forEach((key, value) -> value.cancel(false));
+
     }
 
     @Override
@@ -134,8 +152,8 @@ public class MissionManagerImpl implements MissionManager {
     }
 
     /**
-     * Execues a given {@link Transaction} on the mission planner. Supported {@link TransactionStatusCode}s are:
-     * {@link TransactionStatusCode#ELECTED_LEADER} - which will generate a mission in accordance with the current
+     * Execues a given {@link Transaction} on the mission planner. Supported {@link LifecycleEvent}s are:
+     * {@link LifecycleEvent#ELECTED_LEADER} - which will generate a mission in accordance with the current
      * cluster state.
      *
      * @param transaction to execute on the mission planner
@@ -143,10 +161,10 @@ public class MissionManagerImpl implements MissionManager {
      */
     @Override
     public ListenableFuture<?> executeTransaction(Transaction transaction) {
-        logger.info("Received transaction: " + transaction);
-        TransactionStatusCode statusCode = (TransactionStatusCode) transaction.getStatusCode();
+        logger.info(agent.name() + ":received transaction: " + transaction, agent);
+        LifecycleEvent statusCode = (LifecycleEvent) transaction.getStatusCode();
 
-        if (statusCode == TransactionStatusCode.ELECTED_LEADER) {
+        if (statusCode == LifecycleEvent.ELECTED_LEADER) {
             return transaction.getExecutorService().submit(() -> {
                 try {
                     GeneratedMission generatedMission = missionPlanner.generate();
@@ -163,6 +181,11 @@ public class MissionManagerImpl implements MissionManager {
             logger.error(message);
             throw new NotSupportedException(message);
         }
+    }
+
+    @Override
+    public void registerCallback(ServiceCallback serviceCallback) {
+
     }
 
 }

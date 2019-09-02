@@ -35,7 +35,7 @@ public class RaftState {
     }
 
     public void initCandidate(int term) {
-        this.candidate = new Candidate((localNodes.size() - 1));
+        this.candidate = new Candidate((localNodes.size()));
         this.votedFor = null;
         this.clusterState = new ClusterState(parent, term, localNodes.size());
     }

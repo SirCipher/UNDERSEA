@@ -2,6 +2,7 @@ package com.type2labs.undersea.common.service;
 
 import com.google.common.util.concurrent.ListenableFuture;
 import com.type2labs.undersea.common.agent.AgentAware;
+import com.type2labs.undersea.common.service.transaction.ServiceCallback;
 import com.type2labs.undersea.common.service.transaction.Transaction;
 
 /**
@@ -41,6 +42,9 @@ public interface AgentService extends Runnable, AgentAware {
     default long transitionTimeout() {
         return ServiceManager.DEFAULT_TRANSITION_TIMEOUT;
     }
+
+
+    void registerCallback(ServiceCallback serviceCallback);
 
 
 }

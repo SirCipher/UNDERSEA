@@ -17,6 +17,7 @@ import com.type2labs.undersea.dsl.uuv.model.DslAgentProxy;
 import com.type2labs.undersea.missionplanner.manager.MissionManagerImpl;
 import com.type2labs.undersea.missionplanner.planner.vrp.VehicleRoutingOptimiser;
 import com.type2labs.undersea.prospect.RaftClusterConfig;
+import com.type2labs.undersea.prospect.impl.DefaultCallbacks;
 import com.type2labs.undersea.prospect.impl.RaftIntegrationImpl;
 import com.type2labs.undersea.prospect.impl.RaftNodeImpl;
 import com.type2labs.undersea.prospect.model.MultiRoleState;
@@ -51,7 +52,6 @@ public class AgentInitialiserImpl implements AgentInitialiser {
                     new RaftIntegrationImpl(agentProxy.getName())
             );
 
-
             ServiceManager serviceManager = new ServiceManager();
 
             serviceManager.registerService(raftNode);
@@ -65,6 +65,9 @@ public class AgentInitialiserImpl implements AgentInitialiser {
             Agent underseaAgent = agentFactory.createWith(raftClusterConfig.getUnderseaRuntimeConfig(), key,
                     serviceManager,
                     new AgentStatus(key, new ArrayList<>()));
+
+            raftNode.registerCallback(DefaultCallbacks.defaultMissionCallback(underseaAgent, raftNode,
+                    raftClusterConfig));
 
             Properties properties = environmentProperties.getRunnerProperties();
             AgentMetaData metaData = value.metadata();

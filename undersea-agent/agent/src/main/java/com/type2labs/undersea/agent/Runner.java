@@ -76,7 +76,7 @@ public class Runner extends AbstractRunner {
         this.agentInitialiser = (AgentInitialiserImpl) super.getAgentInitialiser();
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
         if (args == null || args.length != 1) {
             throw new IllegalArgumentException("Configuration file must be provided");
         }
@@ -88,12 +88,16 @@ public class Runner extends AbstractRunner {
         runner.onParsed(args[0]);
     }
 
-    public void onParsed(String args) {
+    public void onParsed(String args) throws InterruptedException {
         Properties properties = Utility.getPropertiesByName(args);
         boolean localNodeDiscovery = Boolean.parseBoolean(Utility.getProperty(properties, "config.localnodediscovery"));
 
         if (localNodeDiscovery) {
             for (Agent agentA : super.getAgents()) {
+                while(!agentA.services().isHealthy()){
+                    Thread.sleep(500);
+                }
+
                 RaftNodeImpl raftNodeA = agentA.services().getService(RaftNodeImpl.class);
 
                 // TODO: Replace with MRS
@@ -102,9 +106,12 @@ public class Runner extends AbstractRunner {
                 }
 
                 for (Agent agentB : super.getAgents()) {
+                    while(!agentB.services().isHealthy()){
+                        Thread.sleep(500);
+                    }
+
                     RaftNodeImpl raftNodeB = agentB.services().getService(RaftNodeImpl.class);
-                    // TODO: Replace with MRS
-                    if ((boolean) agentB.metadata().getProperty(AgentMetaData.PropertyKey.IS_MASTER_NODE)) {
+                    if(raftNodeB.multiRole().isLeader()){
                         continue;
                     }
 

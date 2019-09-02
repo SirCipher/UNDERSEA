@@ -112,7 +112,6 @@ class MoosConfigurationWriter {
         shoreside.append("\n");
         shoreside.append("\tRun = MOOSDB\t\t\t@ NewConsole = false\n");
         shoreside.append("\tRun = pMarineViewer\t\t@ NewConsole = false\n");
-        //shoreside.append("\t//Run = pLogger\t\t\t@ NewConsole = false\n");
         shoreside.append("\tRun = pShare\t\t\t@ NewConsole = false\n");
         shoreside.append("\tRun = pHostInfo\t\t\t@ NewConsole = false\n");
         shoreside.append("\tRun = uFldShoreBroker\t@ NewConsole = false\n");
@@ -120,7 +119,6 @@ class MoosConfigurationWriter {
 
         shoreside.append("#include plug_pShare.moos\n");
         shoreside.append("#include plug_pHostInfo.moos\n");
-        //shoreside.append("#include plug_pLogger.moos\n");
 
         shoreside.append("//------------------------------------\n");
         shoreside.append("// uFldShoreBroker Configuration Block\n");
@@ -196,7 +194,6 @@ class MoosConfigurationWriter {
         vehicleBlock.append("\tMSBetweenLaunches = 200\n");
         vehicleBlock.append("\tRun = MOOSDB         @ NewConsole = false\n");
         vehicleBlock.append("\tRun = uSimMarine     @ NewConsole = false\n");
-        //vehicleBlock.append("\tRun = pLogger        @ NewConsole = false\n");
         vehicleBlock.append("\tRun = pNodeReporter  @ NewConsole = false\n");
         vehicleBlock.append("\tRun = pMarinePID     @ NewConsole = false\n");
         vehicleBlock.append("\tRun = pHelmIvP       @ NewConsole = false\n");
@@ -242,7 +239,6 @@ class MoosConfigurationWriter {
         vehicleBlock.append("\t SENSORS = ").append(sensorsStr).append("\n").append("}\n");
 
         vehicleBlock.append("#include plug_uSimMarine.moos\n");
-        //vehicleBlock.append("#include plug_pLogger.moos\n");
         vehicleBlock.append("#include plug_pNodeReporter.moos\n");
         vehicleBlock.append("#include plug_pMarinePID.moos\n");
         vehicleBlock.append("#include plug_pHelmIvP_" + agent.getName() + ".moos\n");

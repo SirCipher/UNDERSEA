@@ -4,6 +4,7 @@ import com.google.common.util.concurrent.ListenableFuture;
 import com.type2labs.undersea.common.agent.Agent;
 import com.type2labs.undersea.common.logger.LogMessage;
 import com.type2labs.undersea.common.monitor.model.VisualiserClient;
+import com.type2labs.undersea.common.service.transaction.ServiceCallback;
 import com.type2labs.undersea.common.service.transaction.Transaction;
 
 import java.io.IOException;
@@ -48,6 +49,11 @@ public class NoVisualiser implements VisualiserClient {
     @Override
     public long transitionTimeout() {
         return 0;
+    }
+
+    @Override
+    public void registerCallback(ServiceCallback serviceCallback) {
+
     }
 
     @Override

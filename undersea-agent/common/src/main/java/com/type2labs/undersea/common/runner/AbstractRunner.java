@@ -3,11 +3,13 @@ package com.type2labs.undersea.common.runner;
 import com.type2labs.undersea.common.agent.Agent;
 import com.type2labs.undersea.common.agent.AgentMetaData;
 import com.type2labs.undersea.utilities.Utility;
+import com.type2labs.undersea.utilities.executor.ExecutorUtils;
 
 import java.io.FileNotFoundException;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.ExecutorService;
 
 /**
  * Created by Thomas Klapwijk on 2019-08-24.
@@ -45,9 +47,12 @@ public abstract class AbstractRunner {
         _setup();
     }
 
-    public void start(){
+    public void start() {
         agents.stream().filter(a -> (boolean) a.metadata().getProperty(AgentMetaData.PropertyKey.IS_MASTER_NODE)).forEach(a -> a.services().startServices());
-        agents.stream().filter(a -> !(boolean) a.metadata().getProperty(AgentMetaData.PropertyKey.IS_MASTER_NODE)).forEach(a -> a.services().startServices());
+
+        ExecutorService executorService = ExecutorUtils.newExecutor(agents.size(), "abstract-runner-%d");
+
+        agents.stream().filter(a -> !(boolean) a.metadata().getProperty(AgentMetaData.PropertyKey.IS_MASTER_NODE)).forEach(a -> executorService.submit(() -> a.services().startServices()));
     }
 
     private void _setup() {

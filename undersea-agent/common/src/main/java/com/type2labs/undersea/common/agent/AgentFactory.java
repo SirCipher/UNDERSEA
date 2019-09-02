@@ -98,6 +98,20 @@ public class AgentFactory implements AbstractFactory<Agent> {
         };
     }
 
+    public Agent createWithName(String name) {
+        ServiceManager serviceManager = new ServiceManager();
+        AgentStatus agentStatus = new AgentStatus(name, new ArrayList<>());
+
+        return new AbstractAgent(new UnderseaRuntimeConfig(), name, serviceManager, agentStatus, PeerId.newId()) {
+            private static final long serialVersionUID = -2866679824255773653L;
+
+            @Override
+            public List<Pair<String, String>> status() {
+                return new ArrayList<>();
+            }
+        };
+    }
+
     @Override
     public List<Agent> createN(int n) {
         List<Agent> dslAgents = new ArrayList<>(n);

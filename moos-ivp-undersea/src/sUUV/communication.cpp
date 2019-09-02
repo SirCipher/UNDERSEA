@@ -78,11 +78,11 @@ void send_to_server(const char *msg, UUV uuv) {
 
 void new_connection(Args args) {
     ssize_t r;
-    char buffer[256];
+    char buffer[4096];
 
-    bzero(buffer, 256);
+    bzero(buffer, 4096);
 
-    int n = read(args.port, buffer, 255);
+    int n = read(args.port, buffer, 4096);
 
     if (n < 0) {
         std::cerr << "Error reading from socket:" << args.port << std::endl;
@@ -167,10 +167,9 @@ void new_connection(Args args) {
 
         std::istringstream iss(inputStr);
         std::string key;
-        std::getline(iss, key, ':');
+        std::getline(iss, key, '=');
 
-        std::string value;
-        std::getline(iss, value, ':');
+        std::string value = inputStr.substr(key.length()+1);
 
         args.uuv->ForwardMessage(key, value);
 

@@ -3,9 +3,10 @@ package com.type2labs.undersea.common.service;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.MoreExecutors;
 import com.type2labs.undersea.common.agent.Agent;
+import com.type2labs.undersea.common.service.transaction.LifecycleEvent;
+import com.type2labs.undersea.common.service.transaction.ServiceCallback;
 import com.type2labs.undersea.common.service.transaction.Transaction;
 import com.type2labs.undersea.common.service.transaction.TransactionData;
-import com.type2labs.undersea.common.service.transaction.TransactionStatusCode;
 import com.type2labs.undersea.utilities.executor.ScheduledThrowableExecutor;
 import com.type2labs.undersea.utilities.executor.ThrowableExecutor;
 import org.apache.commons.lang3.tuple.Pair;
@@ -45,7 +46,7 @@ public class ServiceManager {
     private ThrowableExecutor serviceInitialiser = ThrowableExecutor.newSingleThreadExecutor(logger);
 
     private Agent agent;
-    private boolean started = false;
+    private volatile boolean started = false;
     private ServiceManagerTransactionService serviceManagerTransactionService;
 
     private static class ServiceManagerException extends RuntimeException {
@@ -73,6 +74,11 @@ public class ServiceManager {
         @Override
         public ListenableFuture<?> executeTransaction(Transaction transaction) {
             return null;
+        }
+
+        @Override
+        public void registerCallback(ServiceCallback serviceCallback) {
+
         }
 
         @Override
@@ -114,7 +120,7 @@ public class ServiceManager {
         // This does not currently take care of notifying the target services as to why/how the service failed
         Transaction transaction = new Transaction.Builder(agent)
                 .forAllRunningServices()
-                .withStatus(TransactionStatusCode.SERVICE_FAILED)
+                .withStatus(LifecycleEvent.SERVICE_FAILED)
                 .withData(TransactionData.from(service))
                 .usingExecutorService(MoreExecutors.newDirectExecutorService()).forAllServices()
                 .invokedBy(serviceManagerTransactionService)

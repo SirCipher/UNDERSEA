@@ -3,7 +3,9 @@ package com.type2labs.undersea.agent.impl;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.type2labs.undersea.common.agent.Agent;
 import com.type2labs.undersea.common.agent.AgentMetaData;
+import com.type2labs.undersea.common.missions.planner.model.MissionManager;
 import com.type2labs.undersea.common.service.hardware.NetworkInterface;
+import com.type2labs.undersea.common.service.transaction.ServiceCallback;
 import com.type2labs.undersea.common.service.transaction.Transaction;
 import com.type2labs.undersea.utilities.exception.NotSupportedException;
 import com.type2labs.undersea.utilities.exception.UnderseaException;
@@ -41,6 +43,8 @@ public class MoosConnector implements NetworkInterface {
 
                 ServerSocket serverSocket = new ServerSocket(port);
                 logger.info(agent.name() + ": initialised MOOS connector inbound server", agent);
+                MissionManager missionPlanner = agent.services().getService(MissionManager.class);
+
 
                 while (!shutdown) {
                     Socket clientSocket = serverSocket.accept();
@@ -49,8 +53,11 @@ public class MoosConnector implements NetworkInterface {
                         try {
                             InputStream is = clientSocket.getInputStream();
                             BufferedReader in = new BufferedReader(new InputStreamReader(is));
+                            String rcv = in.readLine();
 
-                            logger.info(agent.name() + ": received {" + in.readLine() + "} on inbound", agent);
+                            logger.info(agent.name() + ": received {" + rcv + "} on inbound", agent);
+                            missionPlanner.notify(rcv);
+                            clientSocket.close();
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
@@ -157,6 +164,8 @@ public class MoosConnector implements NetworkInterface {
                 throw new RuntimeException("Failed to receive server acknowledgement");
             }
 
+            logger.info(agent.name() + ": received server acknowledgement", agent);
+
             in.close();
             out.close();
             socket.close();
@@ -170,11 +179,17 @@ public class MoosConnector implements NetworkInterface {
     @Override
     public void shutdown() {
         shutdown = true;
+        clientProcessingPool.shutdownNow();
     }
 
     @Override
     public long transitionTimeout() {
         return 10000;
+    }
+
+    @Override
+    public void registerCallback(ServiceCallback serviceCallback) {
+
     }
 
     @Override

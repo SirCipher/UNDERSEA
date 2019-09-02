@@ -8,18 +8,38 @@ import java.util.Arrays;
 
 public class TaskImpl implements Task {
 
+    // TODO: 02/09/2019 split to class
     private double[] coordinates;
     private double progress;
     private TaskType taskType;
     private TaskStatus taskStatus = TaskStatus.TODO;
+    private String points;
 
     public TaskImpl() {
 
     }
 
+    public String getPoints() {
+        return points;
+    }
+
+    public TaskImpl(String points, TaskType taskType) {
+        this.points = points;
+        this.taskType = taskType;
+    }
+
     public TaskImpl(double[] coordinates, TaskType taskType) {
         this.coordinates = coordinates;
         this.taskType = taskType;
+    }
+
+    @Override
+    public void setTaskStatus(TaskStatus taskStatus) {
+        this.taskStatus = taskStatus;
+
+        if (taskStatus == TaskStatus.COMPLETED) {
+            this.progress = 100;
+        }
     }
 
     @Override

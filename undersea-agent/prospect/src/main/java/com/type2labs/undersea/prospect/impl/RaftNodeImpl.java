@@ -2,7 +2,6 @@ package com.type2labs.undersea.prospect.impl;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.common.util.concurrent.MoreExecutors;
@@ -13,10 +12,10 @@ import com.type2labs.undersea.common.consensus.RaftRole;
 import com.type2labs.undersea.common.missions.planner.model.AgentMission;
 import com.type2labs.undersea.common.missions.planner.model.GeneratedMission;
 import com.type2labs.undersea.common.missions.planner.model.MissionManager;
-import com.type2labs.undersea.common.missions.planner.model.MissionParameters;
 import com.type2labs.undersea.common.monitor.model.Monitor;
+import com.type2labs.undersea.common.service.transaction.ServiceCallback;
 import com.type2labs.undersea.common.service.transaction.Transaction;
-import com.type2labs.undersea.common.service.transaction.TransactionStatusCode;
+import com.type2labs.undersea.common.service.transaction.LifecycleEvent;
 import com.type2labs.undersea.prospect.NodeLog;
 import com.type2labs.undersea.prospect.RaftClusterConfig;
 import com.type2labs.undersea.prospect.RaftProtos;
@@ -24,7 +23,6 @@ import com.type2labs.undersea.prospect.model.MultiRoleState;
 import com.type2labs.undersea.prospect.model.RaftIntegration;
 import com.type2labs.undersea.prospect.model.RaftNode;
 import com.type2labs.undersea.prospect.networking.RaftClient;
-import com.type2labs.undersea.prospect.networking.RaftClientImpl;
 import com.type2labs.undersea.prospect.task.AcquireStatusTask;
 import com.type2labs.undersea.prospect.task.RequireRoleTask;
 import com.type2labs.undersea.prospect.util.GrpcUtil;
@@ -36,8 +34,10 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.net.InetSocketAddress;
 import java.util.ArrayList;
-import java.util.Set;
+import java.util.Collection;
+import java.util.List;
 import java.util.concurrent.RejectedExecutionException;
+import java.util.stream.Collectors;
 
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 
@@ -62,6 +62,14 @@ public class RaftNodeImpl implements RaftNode {
 
     private long lastHeartbeatTime;
     private PeerId peerId;
+
+    public ThrowableExecutor getSingleThreadScheduledExecutor() {
+        return singleThreadScheduledExecutor;
+    }
+
+    public ListeningExecutorService getListeningExecutorService() {
+        return listeningExecutorService;
+    }
 
     public RaftNodeImpl(RaftClusterConfig raftClusterConfig,
                         String name,
@@ -139,32 +147,26 @@ public class RaftNodeImpl implements RaftNode {
         role = RaftRole.LEADER;
         logger.info(name + " is now the leader", agent);
 
-        MissionParameters parameters = config().getUnderseaRuntimeConfig().missionParameters();
-
-        parameters.setClients(new ArrayList<>(parent().clusterClients().values()));
-        parameters.getClients().add(RaftClientImpl.ofSelf(this));
-
-        Transaction transaction = new Transaction.Builder(agent)
-                .forService(MissionManager.class)
-                .withStatus(TransactionStatusCode.ELECTED_LEADER)
-                .usingExecutorService(listeningExecutorService)
-                .invokedBy(this)
-                .build();
-
-        Set<ListenableFuture<?>> futures = agent.services().commitTransaction(transaction);
-
-        for (ListenableFuture<?> future : futures) {
-            Futures.addCallback(future, new SimpleFutureCallback<Object>() {
-                @Override
-                public void onSuccess(@Nullable Object result) {
-                    distributeMission((GeneratedMission) result);
-                }
-
-            }, singleThreadScheduledExecutor);
-        }
+        handleLifecycleCallback(LifecycleEvent.ELECTED_LEADER);
 
         getMonitor().update();
         scheduleHeartbeat();
+    }
+
+    private void handleLifecycleCallback(LifecycleEvent statusCode) {
+        Collection<ServiceCallback> transactions =
+                serviceCallbacks.stream().filter(c -> c.getStatusCode() == statusCode).collect(Collectors.toList());
+
+        for (ServiceCallback t : transactions) {
+            t.getCallback().get();
+        }
+    }
+
+    private List<ServiceCallback> serviceCallbacks = new ArrayList<>();
+
+    @Override
+    public void registerCallback(ServiceCallback serviceCallback) {
+        this.serviceCallbacks.add(serviceCallback);
     }
 
     @Override
@@ -199,7 +201,7 @@ public class RaftNodeImpl implements RaftNode {
         return raftClusterConfig;
     }
 
-    private void distributeMission(GeneratedMission result) {
+    void distributeMission(GeneratedMission result) {
         agent.clusterClients();
 
         ObjectMapper mapper = new ObjectMapper();
@@ -232,15 +234,10 @@ public class RaftNodeImpl implements RaftNode {
                 }
             });
         }
-
     }
 
     private Monitor getMonitor() {
         return (Monitor) agent.services().getService(Monitor.class);
-    }
-
-    public RaftRole getRole() {
-        return role;
     }
 
     public GrpcServer getServer() {

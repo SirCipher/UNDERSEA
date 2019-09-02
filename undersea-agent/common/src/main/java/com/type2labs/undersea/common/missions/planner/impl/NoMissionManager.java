@@ -5,6 +5,7 @@ import com.type2labs.undersea.common.agent.Agent;
 import com.type2labs.undersea.common.missions.planner.model.MissionManager;
 import com.type2labs.undersea.common.missions.planner.model.MissionPlanner;
 import com.type2labs.undersea.common.missions.task.model.Task;
+import com.type2labs.undersea.common.service.transaction.ServiceCallback;
 import com.type2labs.undersea.common.service.transaction.Transaction;
 
 import java.util.ArrayList;
@@ -21,7 +22,12 @@ public class NoMissionManager implements MissionManager {
     }
 
     @Override
-    public List<Task> getTasks() {
+    public void notify(String message) {
+
+    }
+
+    @Override
+    public List<Task> getAssignedTasks() {
         return new ArrayList<>();
     }
 
@@ -32,11 +38,6 @@ public class NoMissionManager implements MissionManager {
 
     @Override
     public void addTasks(List<Task> tasks) {
-
-    }
-
-    @Override
-    public void cancelAllTasks() {
 
     }
 
@@ -63,6 +64,11 @@ public class NoMissionManager implements MissionManager {
     @Override
     public long transitionTimeout() {
         return 0;
+    }
+
+    @Override
+    public void registerCallback(ServiceCallback serviceCallback) {
+
     }
 
     @Override

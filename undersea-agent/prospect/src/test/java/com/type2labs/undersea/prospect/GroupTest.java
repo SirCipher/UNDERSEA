@@ -35,16 +35,24 @@ public class GroupTest {
     }
 
     // TODO: 19/08/2019
-//    @Test
-    public void testElection() {
-        int count = 3;
+    @Test
+    public void testElection() throws InterruptedException {
+        int count = 2;
 
         try (LocalAgentGroup localAgentGroup = new LocalAgentGroup(count)) {
             localAgentGroup.doManualDiscovery();
             localAgentGroup.start();
 
+
+            for (RaftNodeImpl raftNode : localAgentGroup.getRaftNodes()) {
+                raftNode.startVotingRound();
+            }
+
+
+            Thread.sleep(5000);
             RaftNodeImpl raftNode = (RaftNodeImpl) localAgentGroup.getLeaderNode();
-            raftNode.toLeader();
+
+            assertNotNull(raftNode);
         }
     }
 

@@ -127,6 +127,7 @@ void UUV::RegisterVariables() {
 
     // For waypoint updates
     Register("WPT_STAT", 0);
+    Register("WPT_INDEX", 0);
 }
 
 
@@ -155,13 +156,24 @@ bool UUV::OnNewMail(MOOSMSG_LIST &NewMail) {
         string key = msg.GetKey();
 
         if (key == "WPT_STAT") {
-            std::string rcv = msg.GetString()+"\n";
+            std::string rcv = msg.GetString() + "\n";
 
             if (rcv.find("completed") != std::string::npos) {
                 std::cout << "Sending completed notice = " << rcv << std::endl;
 
                 write_data(this, rcv.c_str());
             }
+        } else if (key == "WPT_INDEX") {
+            std::ostringstream strs;
+            strs << msg.GetDouble();
+            std::string waypoint_index = strs.str();
+
+            std::string index = "WPT_INDEX=" + waypoint_index + "\n";
+
+
+            std::cout << index << std::endl;
+            write_data(this, index.c_str());
+
         } else {
             double value = msg.GetDouble();
             if (find(m_uuv_sensors.begin(), m_uuv_sensors.end(), key) != m_uuv_sensors.end()) {
@@ -355,4 +367,6 @@ void UUV::sendNotifications() {
 
 void UUV::ForwardMessage(const std::string &key, const std::string &value) {
     Notify(key, value);
+    Notify("RETURN", false);
+    Notify("DEPLOY", true);
 }

@@ -5,6 +5,7 @@ import com.type2labs.undersea.common.agent.Agent;
 import com.type2labs.undersea.common.agent.AgentMetaData;
 import com.type2labs.undersea.common.controller.Controller;
 import com.type2labs.undersea.common.service.hardware.NetworkInterface;
+import com.type2labs.undersea.common.service.transaction.ServiceCallback;
 import com.type2labs.undersea.common.service.transaction.Transaction;
 import com.type2labs.undersea.controller.controller.*;
 import com.type2labs.undersea.controller.controllerPMC.AnalyserPMC;
@@ -111,6 +112,11 @@ public class ControllerImpl implements Controller {
     @Override
     public ListenableFuture<?> executeTransaction(Transaction transaction) {
         throw new NotSupportedException();
+    }
+
+    @Override
+    public void registerCallback(ServiceCallback serviceCallback) {
+
     }
 
 }

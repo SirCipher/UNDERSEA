@@ -14,4 +14,6 @@ public interface Task {
 
     TaskType getTaskType();
 
+    void setTaskStatus(TaskStatus taskStatus);
+
 }

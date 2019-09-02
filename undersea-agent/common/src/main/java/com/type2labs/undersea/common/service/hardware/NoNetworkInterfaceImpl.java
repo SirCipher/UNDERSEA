@@ -2,6 +2,7 @@ package com.type2labs.undersea.common.service.hardware;
 
 import com.google.common.util.concurrent.ListenableFuture;
 import com.type2labs.undersea.common.agent.Agent;
+import com.type2labs.undersea.common.service.transaction.ServiceCallback;
 import com.type2labs.undersea.common.service.transaction.Transaction;
 import com.type2labs.undersea.utilities.exception.NotSupportedException;
 
@@ -33,6 +34,11 @@ public class NoNetworkInterfaceImpl implements NetworkInterface {
     @Override
     public long transitionTimeout() {
         return 0;
+    }
+
+    @Override
+    public void registerCallback(ServiceCallback serviceCallback) {
+
     }
 
     @Override

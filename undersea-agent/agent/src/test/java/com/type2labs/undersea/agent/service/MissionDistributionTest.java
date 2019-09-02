@@ -26,7 +26,7 @@ public class MissionDistributionTest {
                 new NoNetworkInterfaceImpl()
         );
 
-        try (LocalAgentGroup localAgentGroup = new LocalAgentGroup(count, services, true)) {
+        try (LocalAgentGroup localAgentGroup = new LocalAgentGroup(count, services, true, false)) {
             localAgentGroup.doManualDiscovery();
             localAgentGroup.start();
 

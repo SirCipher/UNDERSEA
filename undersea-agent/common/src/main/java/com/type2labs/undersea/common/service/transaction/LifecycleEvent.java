@@ -1,9 +1,9 @@
 package com.type2labs.undersea.common.service.transaction;
 
 /**
- * enum for services to extend for their own status codes
+ * enum for services to extend for their own lifecycle events
  */
-public enum TransactionStatusCode {
+public enum LifecycleEvent {
 
     /**
      * Denotes that the agent has just been elected the leader of a cluster

@@ -7,7 +7,6 @@ ProcessConfig = uProcessWatch
   CommsTick = 2
   
   WATCH     = uSimMarine
-  //WATCH     = pLogger
   WATCH     = pNodeReporter
   WATCH     = pMarinePID
   WATCH     = pHelmIvP

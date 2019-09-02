@@ -27,6 +27,7 @@ import org.apache.logging.log4j.Logger;
 
 import javax.annotation.concurrent.NotThreadSafe;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 
@@ -89,13 +90,21 @@ public class VehicleRoutingOptimiser implements MissionPlanner {
             ClusterState.ClientState clientState = client.state();
             List<Task> tasks = new ArrayList<>();
 
+            StringBuilder points = new StringBuilder();
+
             while (!routing.isEnd(index)) {
                 index = assignment.value(routing.nextVar(index));
                 int ind = manager.indexToNode(index);
-                TaskImpl task = new TaskImpl(centroids[ind], TaskType.WAYPOINT);
 
-                tasks.add(task);
+                points.append(Arrays.toString(centroids[ind])).append(":");
             }
+
+            if (points.toString().endsWith(":")) {
+                points = new StringBuilder(points.substring(0, points.length() - 1));
+            }
+
+            TaskImpl task = new TaskImpl(points.toString(), TaskType.WAYPOINT);
+            tasks.add(task);
 
             AgentMission agentMission = new AgentMissionImpl(clientState.getClient(), tasks);
             mission.addAgentMission(agentMission);

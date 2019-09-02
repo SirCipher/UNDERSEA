@@ -7,6 +7,7 @@ import com.type2labs.undersea.common.logger.LogMessage;
 import com.type2labs.undersea.common.missions.planner.model.MissionManager;
 import com.type2labs.undersea.common.monitor.VisualiserData;
 import com.type2labs.undersea.common.monitor.model.VisualiserClient;
+import com.type2labs.undersea.common.service.transaction.ServiceCallback;
 import com.type2labs.undersea.common.service.transaction.Transaction;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -63,7 +64,7 @@ public class VisualiserClientImpl implements VisualiserClient {
         String raftRole = String.valueOf(raftNode.getRaftRole());
 
         MissionManager missionPlanner = parent.services().getService(MissionManager.class);
-        int noTasks = missionPlanner.getTasks().size();
+        int noTasks = missionPlanner.getAssignedTasks().size();
 
         return new VisualiserData(parent.name(), parent.peerId().toString(), raftRole, noTasks, new double[]{0, 0});
     }
@@ -120,6 +121,11 @@ public class VisualiserClientImpl implements VisualiserClient {
     @Override
     public long transitionTimeout() {
         return 0;
+    }
+
+    @Override
+    public void registerCallback(ServiceCallback serviceCallback) {
+
     }
 
     @Override

@@ -44,6 +44,7 @@ public class RunnerTest {
 
         runner.setup();
         runner.start();
+
         runner.onParsed(testProperties);
 
         Thread.sleep(30000);

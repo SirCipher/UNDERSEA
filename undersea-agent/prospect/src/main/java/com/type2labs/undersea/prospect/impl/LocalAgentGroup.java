@@ -8,6 +8,7 @@ import com.type2labs.undersea.common.cluster.Client;
 import com.type2labs.undersea.common.cluster.ClusterState;
 import com.type2labs.undersea.common.cluster.PeerId;
 import com.type2labs.undersea.common.config.UnderseaRuntimeConfig;
+import com.type2labs.undersea.common.consensus.RaftRole;
 import com.type2labs.undersea.common.cost.CostConfiguration;
 import com.type2labs.undersea.common.cost.CostConfigurationImpl;
 import com.type2labs.undersea.common.missions.planner.impl.MissionParametersImpl;
@@ -39,7 +40,7 @@ public class LocalAgentGroup implements Closeable {
     private final Client[] clients;
     private final RaftIntegrationImpl[] integrations;
 
-    public LocalAgentGroup(int size, Set<AgentService> services, boolean withVisualiser) {
+    public LocalAgentGroup(int size, Set<AgentService> services, boolean withVisualiser, boolean withCallbacks) {
         raftNodes = new RaftNodeImpl[size];
         clients = new RaftClientImpl[size];
         integrations = new RaftIntegrationImpl[size];
@@ -67,6 +68,11 @@ public class LocalAgentGroup implements Closeable {
             serviceManager.registerService(raftNode);
             serviceManager.registerServices(services);
 
+
+            if (withCallbacks) {
+                raftNode.registerCallback(DefaultCallbacks.defaultMissionCallback(agent, raftNode, config));
+            }
+
             if (withVisualiser) {
                 Monitor monitor = new MonitorImpl();
                 VisualiserClient client = new VisualiserClientImpl();
@@ -89,8 +95,8 @@ public class LocalAgentGroup implements Closeable {
         config.getUnderseaRuntimeConfig().missionParameters(missionParameters);
     }
 
-    public LocalAgentGroup(int size, Set<AgentService> services) {
-        this(size, services, false);
+    private LocalAgentGroup(int size, Set<AgentService> services) {
+        this(size, services, false, false);
     }
 
     public LocalAgentGroup(int size) {
@@ -152,9 +158,24 @@ public class LocalAgentGroup implements Closeable {
         }
     }
 
-    // TODO
     public RaftNode getLeaderNode() {
-        return raftNodes[0];
+        int count = 0;
+        RaftNode match = null;
+
+        for (RaftNodeImpl raftNode : raftNodes) {
+            if (raftNode.getRaftRole() == RaftRole.LEADER) {
+                match = raftNode;
+                count++;
+            }
+        }
+
+        if (count == 1) {
+            return match;
+        } else if (count > 1) {
+            throw new RuntimeException("More than one leader elected");
+        } else {
+            throw new RuntimeException("Failed to find leader");
+        }
     }
 
     public RaftNodeImpl[] getRaftNodes() {

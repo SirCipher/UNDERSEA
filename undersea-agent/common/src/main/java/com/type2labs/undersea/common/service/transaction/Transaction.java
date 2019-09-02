@@ -13,7 +13,7 @@ import java.util.Objects;
  * A transportable object for performing operations between services.
  * <p>
  * An example transaction is the consensus service achieving becoming the leader and requesting
- * {@link TransactionStatusCode#ELECTED_LEADER} the mission planner perform mission decomposition.
+ * {@link LifecycleEvent#ELECTED_LEADER} the mission planner perform mission decomposition.
  */
 public class Transaction {
 
@@ -44,17 +44,17 @@ public class Transaction {
      * implementations may
      * implement their own status codes.
      */
-    private final Enum<? extends TransactionStatusCode> statusCode;
+    private final Enum<? extends LifecycleEvent> statusCode;
 
     /**
      * A corresponding object that may be used for performing the transaction. This may be {@code null} and the
-     * {@link TransactionStatusCode} may be enough to achieve the desired output.
+     * {@link LifecycleEvent} may be enough to achieve the desired output.
      */
     private TransactionData transactionData;
 
     private Transaction(Agent agent,
                         Collection<Class<? extends AgentService>> destinationServices,
-                        Enum<? extends TransactionStatusCode> code,
+                        Enum<? extends LifecycleEvent> code,
                         TransactionData transactionData,
                         ListeningExecutorService executorService, AgentService caller) {
         this.agent = agent;
@@ -93,7 +93,7 @@ public class Transaction {
         return caller;
     }
 
-    public Enum<? extends TransactionStatusCode> getStatusCode() {
+    public Enum<? extends LifecycleEvent> getStatusCode() {
         return statusCode;
     }
 
@@ -109,7 +109,7 @@ public class Transaction {
 
         private Agent agent;
         private Collection<Class<? extends AgentService>> services = new HashSet<>();
-        private Enum<? extends TransactionStatusCode> statusCode;
+        private Enum<? extends LifecycleEvent> statusCode;
         private TransactionData data;
         private ListeningExecutorService executorService;
         private AgentService caller;
@@ -166,7 +166,7 @@ public class Transaction {
             return this;
         }
 
-        public Builder withStatus(TransactionStatusCode status) {
+        public Builder withStatus(LifecycleEvent status) {
             this.statusCode = status;
             return this;
         }
