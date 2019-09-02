@@ -11,7 +11,7 @@ import com.type2labs.undersea.common.missions.planner.impl.MissionParametersImpl
 import com.type2labs.undersea.common.missions.planner.model.MissionManager;
 import com.type2labs.undersea.common.missions.planner.model.MissionParameters;
 import com.type2labs.undersea.common.missions.planner.model.MissionPlanner;
-import com.type2labs.undersea.missionplanner.manager.MissionManagerImpl;
+import com.type2labs.undersea.missionplanner.manager.MoosMissionManagerImpl;
 import com.type2labs.undersea.missionplanner.model.GeneratedMissionImpl;
 import com.type2labs.undersea.utilities.Utility;
 import org.junit.Assert;
@@ -37,7 +37,7 @@ public class VehicleRoutingOptimiserTest {
     @Test
     public void testRun() {
         MissionPlanner missionPlanner = new VehicleRoutingOptimiser();
-        MissionManager missionManager = new MissionManagerImpl(missionPlanner);
+        MissionManager missionManager = new MoosMissionManagerImpl(missionPlanner);
         UnderseaRuntimeConfig config = new UnderseaRuntimeConfig();
         AgentFactory agentFactory = new AgentFactory();
         Agent agent = agentFactory.createWith(config);

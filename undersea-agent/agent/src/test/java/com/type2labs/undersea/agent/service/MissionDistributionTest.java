@@ -4,7 +4,7 @@ import com.google.common.collect.Sets;
 import com.type2labs.undersea.common.cluster.ClusterState;
 import com.type2labs.undersea.common.service.AgentService;
 import com.type2labs.undersea.common.service.hardware.NoNetworkInterfaceImpl;
-import com.type2labs.undersea.missionplanner.manager.MissionManagerImpl;
+import com.type2labs.undersea.missionplanner.manager.MoosMissionManagerImpl;
 import com.type2labs.undersea.missionplanner.planner.vrp.VehicleRoutingOptimiser;
 import com.type2labs.undersea.prospect.impl.LocalAgentGroup;
 import com.type2labs.undersea.prospect.impl.RaftNodeImpl;
@@ -22,7 +22,7 @@ public class MissionDistributionTest {
 
         int count = 5;
         Set<AgentService> services = Sets.newHashSet(
-                new MissionManagerImpl(new VehicleRoutingOptimiser()),
+                new MoosMissionManagerImpl(new VehicleRoutingOptimiser()),
                 new NoNetworkInterfaceImpl()
         );
 

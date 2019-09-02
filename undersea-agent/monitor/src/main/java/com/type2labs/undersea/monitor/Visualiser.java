@@ -96,7 +96,7 @@ public class Visualiser {
         c.fill = GridBagConstraints.HORIZONTAL;
 
         // TODO: Address should be the MOOS address
-        String[] columnNames = {"Address", "Raft Peer ID", "Name", "Raft Role", "No. Tasks", "Pos (X,Y)"};
+        String[] columnNames = {"Address", "Raft Peer ID", "Name", "Raft Role", "No. Tasks", "No. Completed Tasks"};
         DefaultTableModel model = new DefaultTableModel(new Object[0][0], columnNames);
         table = new JTable(model) {
             @Override
@@ -301,7 +301,7 @@ public class Visualiser {
                                 agentState.getName(),
                                 agentState.getRaftRole(),
                                 agentState.getNoTasks(),
-                                Arrays.toString(agentState.getPos())});
+                                agentState.getCompletedTasks()});
                     } else {
                         int rowId = getRowByAgentName(agentName);
 
@@ -311,7 +311,7 @@ public class Visualiser {
                             model.setValueAt(agentState.getName(), rowId, 2);
                             model.setValueAt(agentState.getRaftRole(), rowId, 3);
                             model.setValueAt(agentState.getNoTasks(), rowId, 4);
-                            model.setValueAt(Arrays.toString(agentState.getPos()), rowId, 5);
+                            model.setValueAt(agentState.getCompletedTasks(), rowId, 5);
                         }
                     }
                 } else if (received instanceof LogMessage) {

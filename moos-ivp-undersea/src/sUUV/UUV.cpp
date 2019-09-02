@@ -169,9 +169,8 @@ bool UUV::OnNewMail(MOOSMSG_LIST &NewMail) {
             std::string waypoint_index = strs.str();
 
             std::string index = "WPT_INDEX=" + waypoint_index + "\n";
-
-
             std::cout << index << std::endl;
+            
             write_data(this, index.c_str());
 
         } else {

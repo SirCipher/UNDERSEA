@@ -17,6 +17,8 @@ public interface MissionManager extends AgentService {
      */
     void addTasks(List<Task> tasks);
 
+    void assignMission(AgentMission mission);
+
     /**
      * Returns all tasks that have been assigned to this agent
      *

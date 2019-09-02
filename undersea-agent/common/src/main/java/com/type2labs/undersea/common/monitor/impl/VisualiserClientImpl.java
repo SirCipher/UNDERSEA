@@ -5,6 +5,8 @@ import com.type2labs.undersea.common.agent.Agent;
 import com.type2labs.undersea.common.consensus.ConsensusAlgorithm;
 import com.type2labs.undersea.common.logger.LogMessage;
 import com.type2labs.undersea.common.missions.planner.model.MissionManager;
+import com.type2labs.undersea.common.missions.task.model.Task;
+import com.type2labs.undersea.common.missions.task.model.TaskStatus;
 import com.type2labs.undersea.common.monitor.VisualiserData;
 import com.type2labs.undersea.common.monitor.model.VisualiserClient;
 import com.type2labs.undersea.common.service.transaction.ServiceCallback;
@@ -16,6 +18,7 @@ import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.net.InetSocketAddress;
 import java.nio.channels.SocketChannel;
+import java.util.List;
 
 public class VisualiserClientImpl implements VisualiserClient {
 
@@ -64,9 +67,10 @@ public class VisualiserClientImpl implements VisualiserClient {
         String raftRole = String.valueOf(raftNode.getRaftRole());
 
         MissionManager missionPlanner = parent.services().getService(MissionManager.class);
-        int noTasks = missionPlanner.getAssignedTasks().size();
+        List<Task> assignedTasks = missionPlanner.getAssignedTasks();
+        int completedTasks = Math.toIntExact(assignedTasks.stream().filter(t -> t.getTaskStatus() == TaskStatus.COMPLETED).count());
 
-        return new VisualiserData(parent.name(), parent.peerId().toString(), raftRole, noTasks, new double[]{0, 0});
+        return new VisualiserData(parent.name(), parent.peerId().toString(), raftRole, assignedTasks.size(), completedTasks);
     }
 
     @Override

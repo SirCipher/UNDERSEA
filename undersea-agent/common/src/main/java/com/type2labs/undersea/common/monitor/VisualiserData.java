@@ -9,15 +9,19 @@ public class VisualiserData implements Serializable {
     private final String raftPeerId;
     private final String raftRole;
     private final int noTasks;
-    private final double[] pos;
+    private final int completedTasks;
 
 
-    public VisualiserData(String name, String raftPeerId, String raftRole, int noTasks, double[] pos) {
+    public int getCompletedTasks() {
+        return completedTasks;
+    }
+
+    public VisualiserData(String name, String raftPeerId, String raftRole, int noTasks, int completedTasks) {
         this.name = name;
         this.raftPeerId = raftPeerId;
         this.raftRole = raftRole;
         this.noTasks = noTasks;
-        this.pos = pos;
+        this.completedTasks = completedTasks;
     }
 
     public String getRaftPeerId() {
@@ -36,7 +40,4 @@ public class VisualiserData implements Serializable {
         return noTasks;
     }
 
-    public double[] getPos() {
-        return pos;
-    }
 }

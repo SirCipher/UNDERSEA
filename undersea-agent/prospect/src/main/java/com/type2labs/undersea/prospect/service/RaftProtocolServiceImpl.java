@@ -114,7 +114,7 @@ public class RaftProtocolServiceImpl extends RaftProtocolServiceGrpc.RaftProtoco
                 .build());
 
         MissionManager manager = raftNode.agent().services().getService(MissionManager.class);
-        manager.addTasks(agentMission.getTasks());
+        manager.assignMission(agentMission);
     }
 
     private <M extends AbstractMessage> void sendAbstractAsyncMessage(StreamObserver<M> responseObserver,

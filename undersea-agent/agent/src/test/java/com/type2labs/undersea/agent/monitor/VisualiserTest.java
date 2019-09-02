@@ -10,7 +10,7 @@ import com.type2labs.undersea.common.monitor.impl.MonitorImpl;
 import com.type2labs.undersea.common.monitor.impl.VisualiserClientImpl;
 import com.type2labs.undersea.common.monitor.model.Monitor;
 import com.type2labs.undersea.common.service.ServiceManager;
-import com.type2labs.undersea.missionplanner.manager.MissionManagerImpl;
+import com.type2labs.undersea.missionplanner.manager.MoosMissionManagerImpl;
 import com.type2labs.undersea.missionplanner.planner.vrp.VehicleRoutingOptimiser;
 import com.type2labs.undersea.monitor.Visualiser;
 import com.type2labs.undersea.prospect.RaftClusterConfig;
@@ -45,7 +45,7 @@ public class VisualiserTest {
         ServiceManager serviceManager = new ServiceManager();
         serviceManager.registerService(raftNode);
 
-        MissionManager missionManager = new MissionManagerImpl(new VehicleRoutingOptimiser());
+        MissionManager missionManager = new MoosMissionManagerImpl(new VehicleRoutingOptimiser());
         serviceManager.registerService(missionManager);
 
         config.missionParameters(new MissionParametersImpl(0, new double[0][0], 10));

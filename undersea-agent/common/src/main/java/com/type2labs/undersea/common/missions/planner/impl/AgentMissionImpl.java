@@ -14,9 +14,18 @@ public class AgentMissionImpl implements AgentMission {
     @JsonIgnore
     private Client assignee;
     private double progress = 0;
+    private String points;
 
     public AgentMissionImpl() {
 
+    }
+
+    public String getPoints() {
+        return points;
+    }
+
+    public void setPoints(String points) {
+        this.points = points;
     }
 
     public AgentMissionImpl(Client assignee, List<Task> tasks) {

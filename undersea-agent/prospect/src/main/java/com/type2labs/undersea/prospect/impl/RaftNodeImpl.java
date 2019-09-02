@@ -219,7 +219,8 @@ public class RaftNodeImpl implements RaftNode {
 
             if (raftClient.isSelf()) {
                 MissionManager manager = agent.services().getService(MissionManager.class);
-                manager.addTasks(agentMission.getTasks());
+                manager.assignMission(agentMission);
+
                 continue;
             }
 
@@ -237,7 +238,7 @@ public class RaftNodeImpl implements RaftNode {
     }
 
     private Monitor getMonitor() {
-        return (Monitor) agent.services().getService(Monitor.class);
+        return agent.services().getService(Monitor.class);
     }
 
     public GrpcServer getServer() {
