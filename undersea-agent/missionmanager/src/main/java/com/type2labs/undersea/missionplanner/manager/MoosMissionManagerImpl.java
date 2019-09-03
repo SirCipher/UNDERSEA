@@ -5,6 +5,8 @@ import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.common.util.concurrent.MoreExecutors;
 import com.type2labs.undersea.common.agent.Agent;
+import com.type2labs.undersea.common.logger.LogEntry;
+import com.type2labs.undersea.common.logger.LogService;
 import com.type2labs.undersea.common.missions.PlannerException;
 import com.type2labs.undersea.common.missions.planner.impl.AgentMissionImpl;
 import com.type2labs.undersea.common.missions.planner.model.AgentMission;
@@ -45,6 +47,7 @@ public class MoosMissionManagerImpl implements MissionManager {
     private List<Task> assignedTasks = new ArrayList<>();
     private Task currentTask;
     private AgentMission missionAssigned;
+    private LogService logService;
 
     public MoosMissionManagerImpl(MissionPlanner missionPlanner) {
         this.missionPlanner = missionPlanner;
@@ -166,7 +169,11 @@ public class MoosMissionManagerImpl implements MissionManager {
             }
         }
 
-        assignedTasks.get(index).setTaskStatus(TaskStatus.COMPLETED);
+
+        Task task = assignedTasks.get(index);
+        task.setTaskStatus(TaskStatus.COMPLETED);
+
+        agent.log(new LogEntry(task));
 
         if (index == assignedTasks.size() - 1) {
             logger.info(agent.name() + ": completed all tasks", agent);

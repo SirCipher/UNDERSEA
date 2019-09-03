@@ -3,7 +3,7 @@ package com.type2labs.undersea.common.monitor.impl;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.type2labs.undersea.common.agent.Agent;
 import com.type2labs.undersea.common.consensus.ConsensusAlgorithm;
-import com.type2labs.undersea.common.logger.LogMessage;
+import com.type2labs.undersea.common.logger.VisualiserMessage;
 import com.type2labs.undersea.common.missions.planner.model.MissionManager;
 import com.type2labs.undersea.common.missions.task.model.Task;
 import com.type2labs.undersea.common.missions.task.model.TaskStatus;
@@ -150,12 +150,12 @@ public class VisualiserClientImpl implements VisualiserClient {
 
     @Override
     public void write(String data) {
-        LogMessage logMessage = new LogMessage(parent.name(), data + "\n");
-        write(logMessage);
+        VisualiserMessage visualiserMessage = new VisualiserMessage(parent.name(), data + "\n");
+        write(visualiserMessage);
     }
 
     @Override
-    public void write(LogMessage data) {
+    public void write(VisualiserMessage data) {
         if (!enabled) {
             return;
         }

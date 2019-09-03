@@ -2,13 +2,13 @@ package com.type2labs.undersea.common.logger;
 
 import java.io.Serializable;
 
-public class LogMessage implements Serializable {
+public class VisualiserMessage implements Serializable {
 
     private static final long serialVersionUID = 9070444023024621142L;
     private final String peerId;
     private final Object message;
 
-    public LogMessage(String peerId, Object message) {
+    public VisualiserMessage(String peerId, Object message) {
         this.peerId = peerId;
         this.message = message;
     }

@@ -1,6 +1,6 @@
 package com.type2labs.undersea.monitor;
 
-import com.type2labs.undersea.common.logger.LogMessage;
+import com.type2labs.undersea.common.logger.VisualiserMessage;
 import com.type2labs.undersea.common.monitor.VisualiserData;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -270,7 +270,6 @@ public class Visualiser {
                 ois = new ObjectInputStream(inputStream);
                 handleData(ois);
             } catch (SocketTimeoutException ignored) {
-                ignored.printStackTrace();
             } catch (IOException e) {
                 e.printStackTrace();
                 return;
@@ -318,26 +317,22 @@ public class Visualiser {
                             model.setValueAt(agentState.getCompletedTasks(), rowId, 7);
                         }
                     }
-                } else if (received instanceof LogMessage) {
-                    LogMessage logMessage = (LogMessage) received;
+                } else if (received instanceof VisualiserMessage) {
+                    VisualiserMessage visualiserMessage = (VisualiserMessage) received;
 
-                    String currentValue = logs.get(logMessage.getPeerId());
+                    String currentValue = logs.get(visualiserMessage.getPeerId());
                     if (currentValue == null) {
                         currentValue = "";
                     }
 
-                    currentValue += logMessage.getMessage();
+                    currentValue += visualiserMessage.getMessage();
 
-                    logs.put(logMessage.getPeerId(), currentValue);
+                    logs.put(visualiserMessage.getPeerId(), currentValue);
 
-                    if (currentLog != null && currentLog.equals(logMessage.getPeerId())) {
+                    if (currentLog != null && currentLog.equals(visualiserMessage.getPeerId())) {
                         logArea.setText(currentValue);
                     }
                 }
-            } catch (EOFException ignored) {
-                // Connection is always kept open so this is expected
-                ignored.printStackTrace();
-
             } catch (IOException | ClassNotFoundException e) {
                 e.printStackTrace();
             }

@@ -7,6 +7,7 @@ import com.type2labs.undersea.common.agent.AgentFactory;
 import com.type2labs.undersea.common.agent.AgentMetaData;
 import com.type2labs.undersea.common.agent.AgentStatus;
 import com.type2labs.undersea.common.consensus.MultiRoleState;
+import com.type2labs.undersea.common.logger.LogServiceImpl;
 import com.type2labs.undersea.common.monitor.impl.MonitorImpl;
 import com.type2labs.undersea.common.monitor.impl.VisualiserClientImpl;
 import com.type2labs.undersea.common.monitor.model.Monitor;
@@ -44,13 +45,11 @@ public class AgentInitialiserImpl implements AgentInitialiser {
 
         agents.forEach((key, value) -> {
             DslAgentProxy agentProxy = (DslAgentProxy) value;
-
-
-
             ServiceManager serviceManager = new ServiceManager();
 
             serviceManager.registerService(new BlockchainNetworkImpl());
             serviceManager.registerService(new MoosMissionManagerImpl(new VehicleRoutingOptimiser()));
+            serviceManager.registerService(new LogServiceImpl());
 
             Monitor monitor = new MonitorImpl();
             monitor.setVisualiser(new VisualiserClientImpl());

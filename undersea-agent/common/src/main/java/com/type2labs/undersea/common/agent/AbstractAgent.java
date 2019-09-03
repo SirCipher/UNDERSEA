@@ -7,6 +7,8 @@ import com.type2labs.undersea.common.cluster.PeerId;
 import com.type2labs.undersea.common.config.UnderseaRuntimeConfig;
 import com.type2labs.undersea.common.consensus.ConsensusAlgorithm;
 import com.type2labs.undersea.common.controller.Controller;
+import com.type2labs.undersea.common.logger.LogEntry;
+import com.type2labs.undersea.common.logger.LogService;
 import com.type2labs.undersea.common.missions.planner.model.MissionManager;
 import com.type2labs.undersea.common.service.ServiceManager;
 import org.apache.logging.log4j.LogManager;
@@ -131,5 +133,14 @@ public abstract class AbstractAgent implements Agent {
     @Override
     public PeerId peerId() {
         return peerId;
+    }
+
+    @Override
+    public void log(LogEntry logEntry) {
+        LogService logService = services.getService(LogService.class);
+
+        if (logService != null) {
+            logService.add(logEntry);
+        }
     }
 }

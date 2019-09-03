@@ -4,6 +4,7 @@ package com.type2labs.undersea.common.agent;
 import com.type2labs.undersea.common.cluster.Client;
 import com.type2labs.undersea.common.cluster.PeerId;
 import com.type2labs.undersea.common.config.UnderseaRuntimeConfig;
+import com.type2labs.undersea.common.logger.LogEntry;
 import com.type2labs.undersea.common.service.ServiceManager;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.LogManager;
@@ -195,6 +196,11 @@ public class AgentImpl implements Agent {
     @Override
     public PeerId peerId() {
         return null;
+    }
+
+    @Override
+    public void log(LogEntry logEntry) {
+
     }
 
     public String getHost() {

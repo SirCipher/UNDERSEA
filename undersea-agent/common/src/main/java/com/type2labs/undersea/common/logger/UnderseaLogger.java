@@ -67,13 +67,13 @@ public class UnderseaLogger extends AbstractAppender {
         }
 
         String message = new String(getLayout().toByteArray(event));
-        LogMessage logMessage = new LogMessage(agent.peerId().toString(), message);
+        VisualiserMessage visualiserMessage = new VisualiserMessage(agent.peerId().toString(), message);
         VisualiserClient visualiserClient = monitor.visualiser();
 
         try {
-            visualiserClient.write(logMessage);
+            visualiserClient.write(visualiserMessage);
         } catch (IOException e) {
-            throw new RuntimeException("Failed to send message: " + logMessage, e);
+            throw new RuntimeException("Failed to send message: " + visualiserMessage, e);
         }
 
     }

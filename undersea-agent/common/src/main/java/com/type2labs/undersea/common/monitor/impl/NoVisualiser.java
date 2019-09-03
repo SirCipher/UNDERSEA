@@ -2,7 +2,7 @@ package com.type2labs.undersea.common.monitor.impl;
 
 import com.google.common.util.concurrent.ListenableFuture;
 import com.type2labs.undersea.common.agent.Agent;
-import com.type2labs.undersea.common.logger.LogMessage;
+import com.type2labs.undersea.common.logger.VisualiserMessage;
 import com.type2labs.undersea.common.monitor.model.VisualiserClient;
 import com.type2labs.undersea.common.service.transaction.ServiceCallback;
 import com.type2labs.undersea.common.service.transaction.Transaction;
@@ -17,7 +17,7 @@ public class NoVisualiser implements VisualiserClient {
     }
 
     @Override
-    public void write(LogMessage data) throws IOException {
+    public void write(VisualiserMessage data) throws IOException {
 
     }
 
