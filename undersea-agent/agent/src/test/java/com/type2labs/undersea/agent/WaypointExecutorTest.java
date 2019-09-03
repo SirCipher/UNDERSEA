@@ -1,12 +1,5 @@
 package com.type2labs.undersea.agent;
 
-import com.type2labs.undersea.agent.impl.MoosConnector;
-import com.type2labs.undersea.common.agent.Agent;
-import com.type2labs.undersea.common.agent.AgentFactory;
-import com.type2labs.undersea.common.missions.task.impl.TaskImpl;
-import com.type2labs.undersea.common.missions.task.model.Task;
-import com.type2labs.undersea.common.missions.task.model.TaskType;
-import com.type2labs.undersea.missionplanner.task.executor.WaypointExecutor;
 import com.type2labs.undersea.utilities.testing.IgnoredOnCi;
 import org.junit.Test;
 

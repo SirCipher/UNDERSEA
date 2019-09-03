@@ -58,6 +58,7 @@ public class VoteTask implements Runnable {
                 public void onSuccess(RaftProtos.VoteResponse result) {
                     PeerId nomineeId = PeerId.valueOf(result.getNominee().getRaftPeerId());
                     PeerId responderId = PeerId.valueOf(result.getClient().getRaftPeerId());
+
                     RaftState.Candidate candidate = raftNode.state().getCandidate();
 
                     // Grant vote if we were nominated

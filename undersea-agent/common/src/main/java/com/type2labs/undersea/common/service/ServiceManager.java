@@ -4,7 +4,6 @@ import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.MoreExecutors;
 import com.type2labs.undersea.common.agent.Agent;
 import com.type2labs.undersea.common.monitor.model.Monitor;
-import com.type2labs.undersea.common.monitor.model.VisualiserClient;
 import com.type2labs.undersea.common.service.transaction.LifecycleEvent;
 import com.type2labs.undersea.common.service.transaction.ServiceCallback;
 import com.type2labs.undersea.common.service.transaction.Transaction;
@@ -48,61 +47,16 @@ public class ServiceManager {
     private Agent agent;
 
     private volatile boolean started = false;
+    private volatile boolean starting = false;
+    private ServiceManagerTransactionService serviceManagerTransactionService;
+
+    public ServiceManager() {
+        Runtime.getRuntime().addShutdownHook(new Thread(this::shutdownServices));
+        scheduledExecutor = ScheduledThrowableExecutor.newSingleThreadExecutor(logger);
+    }
 
     public boolean isStarting() {
         return starting;
-    }
-
-    private volatile boolean starting = false;
-
-    private ServiceManagerTransactionService serviceManagerTransactionService;
-
-    private static class ServiceManagerException extends RuntimeException {
-        private static final long serialVersionUID = -8357603298883501831L;
-
-        ServiceManagerException(String s) {
-            super(s);
-        }
-    }
-
-    private static class ServiceManagerTransactionService implements AgentService {
-
-        private Agent agent;
-
-        @Override
-        public void shutdown() {
-
-        }
-
-        @Override
-        public boolean started() {
-            return true;
-        }
-
-        @Override
-        public ListenableFuture<?> executeTransaction(Transaction transaction) {
-            return null;
-        }
-
-        @Override
-        public void registerCallback(ServiceCallback serviceCallback) {
-
-        }
-
-        @Override
-        public void initialise(Agent parentAgent) {
-            this.agent = parentAgent;
-        }
-
-        @Override
-        public Agent parent() {
-            return agent;
-        }
-
-        @Override
-        public void run() {
-
-        }
     }
 
     private void transitionService(Class<? extends AgentService> service, ServiceState status) {
@@ -184,11 +138,6 @@ public class ServiceManager {
         } catch (InterruptedException | ExecutionException e) {
             return false;
         }
-    }
-
-    public ServiceManager() {
-        Runtime.getRuntime().addShutdownHook(new Thread(this::shutdownServices));
-        scheduledExecutor = ScheduledThrowableExecutor.newSingleThreadExecutor(logger);
     }
 
     public Set<ListenableFuture<?>> commitTransaction(Transaction transaction) {
@@ -487,6 +436,54 @@ public class ServiceManager {
             this.priority = priority;
         }
 
+    }
+
+    private static class ServiceManagerException extends RuntimeException {
+        private static final long serialVersionUID = -8357603298883501831L;
+
+        ServiceManagerException(String s) {
+            super(s);
+        }
+    }
+
+    private static class ServiceManagerTransactionService implements AgentService {
+
+        private Agent agent;
+
+        @Override
+        public void shutdown() {
+
+        }
+
+        @Override
+        public boolean started() {
+            return true;
+        }
+
+        @Override
+        public ListenableFuture<?> executeTransaction(Transaction transaction) {
+            return null;
+        }
+
+        @Override
+        public void registerCallback(ServiceCallback serviceCallback) {
+
+        }
+
+        @Override
+        public void initialise(Agent parentAgent) {
+            this.agent = parentAgent;
+        }
+
+        @Override
+        public Agent parent() {
+            return agent;
+        }
+
+        @Override
+        public void run() {
+
+        }
     }
 
 }

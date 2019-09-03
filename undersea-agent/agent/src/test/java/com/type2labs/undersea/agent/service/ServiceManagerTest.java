@@ -12,11 +12,9 @@ import com.type2labs.undersea.common.service.AgentService;
 import com.type2labs.undersea.common.service.ServiceManager;
 import com.type2labs.undersea.common.service.transaction.ServiceCallback;
 import com.type2labs.undersea.common.service.transaction.Transaction;
-import org.junit.Test;
 
 import java.util.ArrayList;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
 public class ServiceManagerTest {
@@ -37,7 +35,8 @@ public class ServiceManagerTest {
                 new AgentStatus(name, new ArrayList<>()),
                 PeerId.newId());
     }
-//
+
+    //
 //    @Test
     public void testServiceCancellation() throws InterruptedException {
         UnderseaAgent agent = getAgent();

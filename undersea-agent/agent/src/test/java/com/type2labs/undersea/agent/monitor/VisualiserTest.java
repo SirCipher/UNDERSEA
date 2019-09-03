@@ -14,7 +14,6 @@ import com.type2labs.undersea.missionplanner.manager.MoosMissionManagerImpl;
 import com.type2labs.undersea.missionplanner.planner.vrp.VehicleRoutingOptimiser;
 import com.type2labs.undersea.monitor.Visualiser;
 import com.type2labs.undersea.prospect.RaftClusterConfig;
-import com.type2labs.undersea.prospect.impl.RaftIntegrationImpl;
 import com.type2labs.undersea.prospect.impl.RaftNodeImpl;
 import com.type2labs.undersea.prospect.model.RaftNode;
 import com.type2labs.undersea.utilities.testing.IgnoredOnCi;

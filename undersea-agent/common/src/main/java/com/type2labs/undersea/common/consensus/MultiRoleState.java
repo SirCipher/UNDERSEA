@@ -27,10 +27,6 @@ public class MultiRoleState {
         return leader;
     }
 
-    public void setLeader(Client leader) {
-        this.leader = leader;
-    }
-
     public Status getStatus() {
         return status;
     }
@@ -41,6 +37,10 @@ public class MultiRoleState {
 
     public boolean isLeader() {
         return status == Status.LEADER;
+    }
+
+    public void setLeader(Client leader) {
+        this.leader = leader;
     }
 
     public enum Status {

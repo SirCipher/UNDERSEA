@@ -25,6 +25,11 @@ public class HardwareInterface implements AgentService {
 
     private Agent agent;
     private Process process;
+    private boolean started = false;
+
+    public HardwareInterface() {
+        Runtime.getRuntime().addShutdownHook(new Thread(this::shutdown));
+    }
 
     @Override
     public long transitionTimeout() {
@@ -34,10 +39,6 @@ public class HardwareInterface implements AgentService {
     @Override
     public void registerCallback(ServiceCallback serviceCallback) {
 
-    }
-
-    public HardwareInterface() {
-        Runtime.getRuntime().addShutdownHook(new Thread(this::shutdown));
     }
 
     @Override
@@ -80,8 +81,6 @@ public class HardwareInterface implements AgentService {
 
         logger.info(agent.name() + ": started agent server", agent);
     }
-
-    private boolean started = false;
 
     @Override
     public void shutdown() {

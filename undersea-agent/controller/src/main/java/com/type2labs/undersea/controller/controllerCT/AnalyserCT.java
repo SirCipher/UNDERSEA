@@ -11,15 +11,15 @@ import java.util.ArrayList;
 public class AnalyserCT extends Analyser {
 
     static final int goalsN = 2;
-    private ArrayList<Sensor> sensors;
     final int sensorNum = 5;
     final int adaptPeriod = 100;
+    private final Knowledge knowledge;
     int chosenSensor;
     double[] consumed = new double[goalsN + 1];
     double consumedSpeed;
+    private ArrayList<Sensor> sensors;
     private double currentStep;
     private SimCAAdaptationEngine simca;
-    private final Knowledge knowledge;
 
     public AnalyserCT(Knowledge knowledge) {
         super(knowledge);

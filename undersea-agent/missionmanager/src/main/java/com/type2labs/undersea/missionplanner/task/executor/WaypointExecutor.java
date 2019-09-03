@@ -1,7 +1,6 @@
 package com.type2labs.undersea.missionplanner.task.executor;
 
 import com.type2labs.undersea.common.agent.Agent;
-import com.type2labs.undersea.common.missions.task.impl.TaskImpl;
 import com.type2labs.undersea.common.missions.task.model.Task;
 import com.type2labs.undersea.common.missions.task.model.TaskExecutor;
 import com.type2labs.undersea.common.missions.task.model.TaskType;

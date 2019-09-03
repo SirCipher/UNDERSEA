@@ -7,16 +7,16 @@ public class ServiceCallback {
     private final LifecycleEvent statusCode;
     private final Supplier<?> callback;
 
+    public ServiceCallback(LifecycleEvent statusCode, Supplier<?> callback) {
+        this.statusCode = statusCode;
+        this.callback = callback;
+    }
+
     public LifecycleEvent getStatusCode() {
         return statusCode;
     }
 
     public Supplier<?> getCallback() {
         return callback;
-    }
-
-    public ServiceCallback(LifecycleEvent statusCode, Supplier<?> callback) {
-        this.statusCode = statusCode;
-        this.callback = callback;
     }
 }

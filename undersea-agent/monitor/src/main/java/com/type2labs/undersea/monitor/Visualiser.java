@@ -60,7 +60,6 @@ public class Visualiser {
 
                 while (!shutdown) {
                     Socket clientSocket = serverSocket.accept();
-                    logger.info("Processing request from: " + clientSocket.getPort());
                     clientProcessingPool.execute(new ClientTask(clientSocket));
                 }
 

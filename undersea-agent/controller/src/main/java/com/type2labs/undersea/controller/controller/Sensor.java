@@ -58,7 +58,7 @@ public class Sensor {
     }
 
     public void run() {
-        reply =networkInterface.write(command);
+        reply = networkInterface.write(command);
 
         if (reply != null) {
             parseReply(reply);

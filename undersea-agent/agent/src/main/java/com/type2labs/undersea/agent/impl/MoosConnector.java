@@ -25,10 +25,9 @@ import java.net.Socket;
 public class MoosConnector implements NetworkInterface {
 
     private static final Logger logger = LogManager.getLogger(MoosConnector.class);
-
+    private final ThrowableExecutor clientProcessingPool = ThrowableExecutor.newSingleThreadExecutor(logger);
     private Agent agent;
     private boolean aquiredConnection = false;
-    private final ThrowableExecutor clientProcessingPool = ThrowableExecutor.newSingleThreadExecutor(logger);
     private boolean shutdown;
 
     @Override

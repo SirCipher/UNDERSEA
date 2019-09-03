@@ -19,7 +19,7 @@ import java.util.Set;
 
 public class DefaultCallbacks {
 
-    public static ServiceCallback defaultMissionCallback(Agent agent, RaftNodeImpl raftNode, RaftClusterConfig config){
+    public static ServiceCallback defaultMissionCallback(Agent agent, RaftNodeImpl raftNode, RaftClusterConfig config) {
         return new ServiceCallback(LifecycleEvent.ELECTED_LEADER, () -> {
             MissionParameters parameters = config.getUnderseaRuntimeConfig().missionParameters();
 

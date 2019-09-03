@@ -45,14 +45,10 @@ public class AgentInitialiserImpl implements AgentInitialiser {
         agents.forEach((key, value) -> {
             DslAgentProxy agentProxy = (DslAgentProxy) value;
 
-            RaftNodeImpl raftNode = new RaftNodeImpl(
-                    raftClusterConfig,
-                    agentProxy.getName()
-            );
+
 
             ServiceManager serviceManager = new ServiceManager();
 
-            serviceManager.registerService(raftNode);
             serviceManager.registerService(new BlockchainNetworkImpl());
             serviceManager.registerService(new MoosMissionManagerImpl(new VehicleRoutingOptimiser()));
 
@@ -63,6 +59,14 @@ public class AgentInitialiserImpl implements AgentInitialiser {
             Agent underseaAgent = agentFactory.createWith(raftClusterConfig.getUnderseaRuntimeConfig(), key,
                     serviceManager,
                     new AgentStatus(key, new ArrayList<>()));
+
+            RaftNodeImpl raftNode = new RaftNodeImpl(
+                    raftClusterConfig,
+                    agentProxy.getName(),
+                    underseaAgent.peerId()
+            );
+
+            serviceManager.registerService(raftNode);
 
             raftNode.registerCallback(DefaultCallbacks.defaultMissionCallback(underseaAgent, raftNode,
                     raftClusterConfig));

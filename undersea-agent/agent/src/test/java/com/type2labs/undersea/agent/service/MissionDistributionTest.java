@@ -13,7 +13,6 @@ import org.junit.Test;
 import java.util.Set;
 
 import static com.type2labs.undersea.utilities.testing.TestUtil.assertTrueEventually;
-import static org.junit.Assert.assertNotNull;
 
 public class MissionDistributionTest {
 

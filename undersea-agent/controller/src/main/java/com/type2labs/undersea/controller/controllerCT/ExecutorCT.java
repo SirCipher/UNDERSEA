@@ -1,7 +1,6 @@
 package com.type2labs.undersea.controller.controllerCT;
 
 
-import com.type2labs.undersea.common.agent.AbstractAgent;
 import com.type2labs.undersea.controller.controller.Executor;
 import com.type2labs.undersea.controller.controller.Knowledge;
 import org.apache.logging.log4j.LogManager;
@@ -27,7 +26,7 @@ public class ExecutorCT extends Executor {
     public void run() {
 //		System.out.println("Executor.run()");
         //construct command
-        String sp = "SPEED=" +   (getKnowledge().getUUVspeed());
+        String sp = "SPEED=" + (getKnowledge().getUUVspeed());
         String s1 = "SENSOR1=" + (getKnowledge().getSensorState("SENSOR1"));
         String s2 = "SENSOR2=" + (getKnowledge().getSensorState("SENSOR2"));
         String s3 = "SENSOR3=" + (getKnowledge().getSensorState("SENSOR3"));

@@ -20,10 +20,6 @@ public abstract class AbstractRunner {
     private final String configurationFileLocation;
     private List<Agent> agents;
 
-    public List<Agent> getAgents() {
-        return agents;
-    }
-
     public AbstractRunner(String configurationFileLocation, AgentInitialiser agentInitialiser) {
         try {
             Utility.fileExists(configurationFileLocation, false, false);
@@ -33,6 +29,10 @@ public abstract class AbstractRunner {
 
         this.configurationFileLocation = configurationFileLocation;
         this.agentInitialiser = Objects.requireNonNull(agentInitialiser);
+    }
+
+    public List<Agent> getAgents() {
+        return agents;
     }
 
     protected abstract void generateFiles();

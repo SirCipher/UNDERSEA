@@ -41,7 +41,7 @@ public class Runner extends AbstractRunner {
         this.agentInitialiser = (AgentInitialiserImpl) super.getAgentInitialiser();
     }
 
-    private static RaftClusterConfig defaultConfig(String configurationFileLocation){
+    private static RaftClusterConfig defaultConfig(String configurationFileLocation) {
         UnderseaRuntimeConfig underseaRuntimeConfig = new UnderseaRuntimeConfig();
         RaftClusterConfig raftClusterConfig = new RaftClusterConfig(underseaRuntimeConfig);
 
@@ -177,7 +177,7 @@ public class Runner extends AbstractRunner {
             completed &= missionManager.getAssignedTasks().stream().filter(e -> e.getTaskStatus() == TaskStatus.COMPLETED).count() == missionManager.getAssignedTasks().size();
         }
 
-        if(completed){
+        if (completed) {
             logger.info("Mission complete");
         }
 

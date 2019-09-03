@@ -2,15 +2,14 @@ package com.type2labs.undersea.controller.controller;
 
 public abstract class Executor {
 
-    public Knowledge getKnowledge() {
-        return knowledge;
-    }
-
     private final Knowledge knowledge;
     protected String command;
-
     public Executor(Knowledge knowledge) {
-        this.knowledge=knowledge;
+        this.knowledge = knowledge;
+    }
+
+    public Knowledge getKnowledge() {
+        return knowledge;
     }
 
     /**

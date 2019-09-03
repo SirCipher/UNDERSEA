@@ -148,8 +148,11 @@ public class VehicleRoutingOptimiser implements MissionPlanner {
         long maxRouteDistance = 0;
 
         for (int i = 0; i < manager.getNumberOfVehicles(); ++i) {
+            Client client = ((GeneratedMissionImpl) generatedMission).getMissionParameters().getClients().get(i);
+
+
             long index = routing.start(i);
-            logger.info("Route for Vehicle " + (i + 1) + ":");
+            logger.info("Route for client: " + client.peerId());
             long routeDistance = 0;
             String route = "";
 

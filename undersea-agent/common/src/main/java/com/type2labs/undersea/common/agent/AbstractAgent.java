@@ -8,12 +8,10 @@ import com.type2labs.undersea.common.config.UnderseaRuntimeConfig;
 import com.type2labs.undersea.common.consensus.ConsensusAlgorithm;
 import com.type2labs.undersea.common.controller.Controller;
 import com.type2labs.undersea.common.missions.planner.model.MissionManager;
-import com.type2labs.undersea.common.service.AgentService;
 import com.type2labs.undersea.common.service.ServiceManager;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.Iterator;
 import java.util.concurrent.*;
 
 public abstract class AbstractAgent implements Agent {

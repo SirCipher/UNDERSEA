@@ -3,10 +3,6 @@ package com.type2labs.undersea.common.config;
 import com.type2labs.undersea.common.cost.CostCalculator;
 import com.type2labs.undersea.common.cost.CostConfiguration;
 import com.type2labs.undersea.common.missions.planner.model.MissionParameters;
-import com.type2labs.undersea.common.monitor.model.VisualiserClient;
-
-import java.util.HashMap;
-import java.util.Map;
 
 import static com.type2labs.undersea.utilities.preconditions.Preconditions.isNotNull;
 

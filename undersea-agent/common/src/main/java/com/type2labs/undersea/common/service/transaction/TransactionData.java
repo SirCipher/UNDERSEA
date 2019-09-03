@@ -11,12 +11,12 @@ public class TransactionData<T> {
         this.data = data;
     }
 
-    public T getData() {
-        return data;
+    public static <T> TransactionData from(T t) {
+        return new TransactionData<>(t);
     }
 
-    public  static <T> TransactionData from(T t) {
-        return new TransactionData<>(t);
+    public T getData() {
+        return data;
     }
 
 }

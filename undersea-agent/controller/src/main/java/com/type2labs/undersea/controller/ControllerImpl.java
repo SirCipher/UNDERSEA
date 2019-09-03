@@ -32,6 +32,15 @@ public class ControllerImpl implements Controller {
     private NetworkInterface networkInterface;
     private long start = System.currentTimeMillis();
 
+    private ControllerImpl(Knowledge knowledge, Monitor monitor, Analyser analyser, Planner planner,
+                           Executor executor) {
+        this.knowledge = knowledge;
+        this.monitor = monitor;
+        this.analyser = analyser;
+        this.planner = planner;
+        this.executor = executor;
+    }
+
     public static Controller PMCimpl() {
         Knowledge knowledge = new Knowledge();
 
@@ -41,16 +50,6 @@ public class ControllerImpl implements Controller {
                 new PlannerPMC(knowledge),
                 new ExecutorPMC(knowledge)
         );
-    }
-
-
-    private ControllerImpl(Knowledge knowledge, Monitor monitor, Analyser analyser, Planner planner,
-                           Executor executor) {
-        this.knowledge = knowledge;
-        this.monitor = monitor;
-        this.analyser = analyser;
-        this.planner = planner;
-        this.executor = executor;
     }
 
     @Override

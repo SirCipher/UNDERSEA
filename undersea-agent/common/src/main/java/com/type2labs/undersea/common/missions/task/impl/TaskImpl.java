@@ -25,15 +25,6 @@ public class TaskImpl implements Task {
     }
 
     @Override
-    public void setTaskStatus(TaskStatus taskStatus) {
-        this.taskStatus = taskStatus;
-
-        if (taskStatus == TaskStatus.COMPLETED) {
-            this.progress = 100;
-        }
-    }
-
-    @Override
     public TaskType getTaskType() {
         return taskType;
     }
@@ -50,6 +41,15 @@ public class TaskImpl implements Task {
     @Override
     public TaskStatus getTaskStatus() {
         return taskStatus;
+    }
+
+    @Override
+    public void setTaskStatus(TaskStatus taskStatus) {
+        this.taskStatus = taskStatus;
+
+        if (taskStatus == TaskStatus.COMPLETED) {
+            this.progress = 100;
+        }
     }
 
     @Override

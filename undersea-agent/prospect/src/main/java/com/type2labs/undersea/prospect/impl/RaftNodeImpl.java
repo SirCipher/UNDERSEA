@@ -63,17 +63,14 @@ public class RaftNodeImpl implements RaftNode {
 
     private long lastHeartbeatTime;
     private PeerId peerId;
-
-    public ThrowableExecutor getSingleThreadScheduledExecutor() {
-        return singleThreadScheduledExecutor;
-    }
-
-    public ListeningExecutorService getListeningExecutorService() {
-        return listeningExecutorService;
-    }
+    private List<ServiceCallback> serviceCallbacks = new ArrayList<>();
 
     public RaftNodeImpl(RaftClusterConfig raftClusterConfig, String name) {
         this(raftClusterConfig, name, new InetSocketAddress(0), PeerId.newId());
+    }
+
+    public RaftNodeImpl(RaftClusterConfig raftClusterConfig, String name, PeerId peerId) {
+        this(raftClusterConfig, name, new InetSocketAddress(0), peerId);
     }
 
     public RaftNodeImpl(RaftClusterConfig raftClusterConfig,
@@ -94,6 +91,14 @@ public class RaftNodeImpl implements RaftNode {
         this.listeningExecutorService =
                 MoreExecutors.listeningDecorator(ThrowableExecutor.newSingleThreadExecutor(logger));
         this.multiRoleState = new MultiRoleState();
+    }
+
+    public ThrowableExecutor getSingleThreadScheduledExecutor() {
+        return singleThreadScheduledExecutor;
+    }
+
+    public ListeningExecutorService getListeningExecutorService() {
+        return listeningExecutorService;
     }
 
     @Override
@@ -153,8 +158,6 @@ public class RaftNodeImpl implements RaftNode {
             t.getCallback().get();
         }
     }
-
-    private List<ServiceCallback> serviceCallbacks = new ArrayList<>();
 
     @Override
     public void registerCallback(ServiceCallback serviceCallback) {

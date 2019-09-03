@@ -24,10 +24,9 @@ import java.util.List;
 public class VisualiserClientImpl implements VisualiserClient {
 
     private static final Logger logger = LogManager.getLogger(VisualiserClientImpl.class);
-
+    private static boolean enabled = false;
     private final InetSocketAddress visualiserAddress = new InetSocketAddress("localhost", 5050);
     private Agent parent;
-    private static boolean enabled = false;
 
     private synchronized void _write(Object data) {
         ObjectOutputStream oos;
@@ -86,7 +85,7 @@ public class VisualiserClientImpl implements VisualiserClient {
                 multiRoleStatus,
                 serviceManagerStatus,
                 raftRole,
-                assignedTasks.size() == 0 ? 0 : assignedTasks.size() - 1,
+                assignedTasks.size(),
                 completedTasks);
     }
 
