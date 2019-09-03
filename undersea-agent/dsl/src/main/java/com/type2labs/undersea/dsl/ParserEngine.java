@@ -37,9 +37,9 @@ public class ParserEngine {
 
     private SensorsParser createSensorParser() throws IOException {
         // create a CharStream that reads from standard input
-
         String sensorsFile = Utility.getProperty(ParserEngine.properties, "config.sensors");
-        CharStream codePointCharStream = CharStreams.fromFileName(sensorsFile);
+        CharStream codePointCharStream =
+                CharStreams.fromFileName(properties.get("pwd") + File.separator + sensorsFile);
 
         // create a lexer that feeds off of input CharStream
         SensorsLexer lexer = new SensorsLexer(codePointCharStream);
@@ -70,7 +70,7 @@ public class ParserEngine {
     private UUVParser createUUVParser() throws IOException {
         // create a CharStream that reads from standard input
         String missionFile = Utility.getProperty(ParserEngine.properties, "config.mission");
-        CharStream codePointCharStream = CharStreams.fromFileName(missionFile);
+        CharStream codePointCharStream = CharStreams.fromFileName(properties.get("pwd") + File.separator + missionFile);
 
         // create a lexer that feeds off of input CharStream
         UUVLexer lexer = new UUVLexer(codePointCharStream);

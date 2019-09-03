@@ -1,0 +1,16 @@
+//----------------------------------
+// uProcessWatch Configuration Block
+//----------------------------------
+ProcessConfig = uProcessWatch
+{
+  AppTick   = 2
+  CommsTick = 2
+  
+  WATCH     = uSimMarine
+  WATCH     = pNodeReporter
+  WATCH     = pMarinePID
+  WATCH     = pHelmIvP
+
+  NOWATCH=uXMS*
+  NOWATCH=uMAC*
+}

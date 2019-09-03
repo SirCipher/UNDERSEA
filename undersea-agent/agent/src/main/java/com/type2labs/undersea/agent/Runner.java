@@ -21,6 +21,7 @@ import com.type2labs.undersea.utilities.Utility;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Map;
 import java.util.Properties;
@@ -33,11 +34,16 @@ public class Runner extends AbstractRunner {
     private static final Logger logger = LogManager.getLogger(Runner.class);
     private ParserEngine parserEngine;
     private AgentInitialiserImpl agentInitialiser;
-    private static RaftClusterConfig raftClusterConfig;
-    private static UnderseaRuntimeConfig underseaRuntimeConfig = new UnderseaRuntimeConfig();
 
-    static {
-        raftClusterConfig = new RaftClusterConfig(underseaRuntimeConfig);
+    public Runner(String configurationFileLocation) {
+        super(configurationFileLocation, new AgentInitialiserImpl(defaultConfig(configurationFileLocation)));
+
+        this.agentInitialiser = (AgentInitialiserImpl) super.getAgentInitialiser();
+    }
+
+    private static RaftClusterConfig defaultConfig(String configurationFileLocation){
+        UnderseaRuntimeConfig underseaRuntimeConfig = new UnderseaRuntimeConfig();
+        RaftClusterConfig raftClusterConfig = new RaftClusterConfig(underseaRuntimeConfig);
 
         CostConfiguration costConfiguration = new CostConfigurationImpl();
         costConfiguration.setCostCalculator((ClusterState clusterState) -> {
@@ -63,19 +69,15 @@ public class Runner extends AbstractRunner {
 
         underseaRuntimeConfig.setCostConfiguration(costConfiguration);
 
-        Properties properties = Utility.getPropertiesByName("../resources/runner.properties");
+        Properties properties = Utility.getPropertiesByName(configurationFileLocation);
         double[][] area = Utility.propertyKeyTo2dDoubleArray(properties, "environment.area");
 
         MissionParameters missionParameters = new MissionParametersImpl(0, area, 40);
         underseaRuntimeConfig.missionParameters(missionParameters);
 
         underseaRuntimeConfig.enableVisualiser(true);
-    }
 
-    public Runner(String configurationFileLocation) {
-        super(configurationFileLocation, new AgentInitialiserImpl(raftClusterConfig));
-
-        this.agentInitialiser = (AgentInitialiserImpl) super.getAgentInitialiser();
+        return raftClusterConfig;
     }
 
     public static void main(String[] args) throws InterruptedException {
@@ -138,6 +140,8 @@ public class Runner extends AbstractRunner {
     @Override
     protected Map<String, DslAgentProxy> parseDsl(String configurationFileLoation) {
         Properties properties = Utility.getPropertiesByName(configurationFileLoation);
+        properties.put("pwd", new File(configurationFileLoation).getAbsoluteFile().getParent());
+
         logger.info("Initialised " + properties.size() + " properties");
 
         parserEngine = new ParserEngine(properties);
