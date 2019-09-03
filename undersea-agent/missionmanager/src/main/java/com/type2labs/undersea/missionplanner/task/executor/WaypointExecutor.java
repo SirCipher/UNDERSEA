@@ -35,10 +35,6 @@ public class WaypointExecutor implements TaskExecutor {
     public void initialise(Agent parentAgent) {
         this.agent = parentAgent;
         this.networkInterface = agent.services().getService(NetworkInterface.class);
-
-        if (networkInterface == null) {
-            throw new ServiceNotRegisteredException(NetworkInterface.class, WaypointExecutor.class);
-        }
     }
 
     @Override

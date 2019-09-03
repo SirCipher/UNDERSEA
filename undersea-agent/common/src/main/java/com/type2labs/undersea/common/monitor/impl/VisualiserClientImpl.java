@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.net.InetSocketAddress;
 import java.nio.channels.SocketChannel;
+import java.util.ArrayList;
 import java.util.List;
 
 public class VisualiserClientImpl implements VisualiserClient {
@@ -63,14 +64,27 @@ public class VisualiserClientImpl implements VisualiserClient {
     }
 
     private VisualiserData agentState() {
-        ConsensusAlgorithm consensusAlgorithm = parent.services().getService(ConsensusAlgorithm.class);
-        String raftRole = String.valueOf(consensusAlgorithm.getRaftRole());
-        String multiRoleStatus = String.valueOf(consensusAlgorithm.multiRole().getStatus());
-        MissionManager missionPlanner = parent.services().getService(MissionManager.class);
-        List<Task> assignedTasks = missionPlanner.getAssignedTasks();
+        ServiceManager serviceManager = parent.services();
+
+        ConsensusAlgorithm consensusAlgorithm = serviceManager.getService(ConsensusAlgorithm.class);
+
+        String raftRole = "";
+        String multiRoleStatus = "";
+
+        if (consensusAlgorithm != null) {
+            raftRole = String.valueOf(consensusAlgorithm.getRaftRole());
+            multiRoleStatus = String.valueOf(consensusAlgorithm.multiRole().getStatus());
+        }
+
+        MissionManager missionPlanner = serviceManager.getService(MissionManager.class);
+        List<Task> assignedTasks = new ArrayList<>();
+
+        if(missionPlanner!=null){
+            assignedTasks = missionPlanner.getAssignedTasks();
+        }
 
         String serviceManagerStatus;
-        ServiceManager serviceManager = parent.services();
+
         if (serviceManager.isStarting()) {
             serviceManagerStatus = "STARTING";
         } else {

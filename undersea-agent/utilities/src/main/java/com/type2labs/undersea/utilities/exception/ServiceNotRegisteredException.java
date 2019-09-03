@@ -7,6 +7,12 @@ import java.util.Objects;
  */
 public class ServiceNotRegisteredException extends RuntimeException {
 
+    private static final long serialVersionUID = 2974497035142592479L;
+
+    public ServiceNotRegisteredException(String message) {
+        super(message);
+    }
+
     public ServiceNotRegisteredException(Class<?> service, Class<?> caller) {
         super(Objects.requireNonNull(service).getSimpleName()
                 + " is not registered. It is required by: "

@@ -5,6 +5,9 @@ import com.type2labs.undersea.common.agent.AgentAware;
 import com.type2labs.undersea.common.service.transaction.ServiceCallback;
 import com.type2labs.undersea.common.service.transaction.Transaction;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
 /**
  * Created by Thomas Klapwijk on 2019-08-08.
  */
@@ -13,7 +16,8 @@ public interface AgentService extends Runnable, AgentAware {
     /**
      * Signals that the service should start the shutdown procedure. This must be a non-blocking process
      */
-    void shutdown();
+    default void shutdown() {
+    }
 
     /**
      * Whether or not the service has started successfully. This is polled during startup before starting the next
@@ -22,7 +26,9 @@ public interface AgentService extends Runnable, AgentAware {
      *
      * @return whether or not the service has successfully started
      */
-    boolean started();
+    default boolean started() {
+        return true;
+    }
 
     /**
      * Executes a transaction on the service and returns the result
@@ -30,7 +36,9 @@ public interface AgentService extends Runnable, AgentAware {
      * @param transaction to execute
      * @return scheduled future
      */
-    ListenableFuture<?> executeTransaction(Transaction transaction);
+    default ListenableFuture<?> executeTransaction(Transaction transaction) {
+        return null;
+    }
 
     /**
      * The time (in milliseconds) that the {@link ServiceManager} should wait before assuming that there has been an
@@ -44,7 +52,17 @@ public interface AgentService extends Runnable, AgentAware {
     }
 
 
-    void registerCallback(ServiceCallback serviceCallback);
+    default void registerCallback(ServiceCallback serviceCallback) {
+    }
+
+    /**
+     * Denotes the services that this {@link AgentService} requires in order to run correctly.
+     *
+     * @return the required services
+     */
+    default Collection<Class<? extends AgentService>> requiredServices() {
+        return new ArrayList<>();
+    }
 
 
 }

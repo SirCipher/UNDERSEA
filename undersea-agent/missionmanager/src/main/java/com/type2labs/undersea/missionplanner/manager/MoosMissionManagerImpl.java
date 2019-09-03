@@ -5,8 +5,10 @@ import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.common.util.concurrent.MoreExecutors;
 import com.type2labs.undersea.common.agent.Agent;
-import com.type2labs.undersea.common.logger.LogEntry;
-import com.type2labs.undersea.common.logger.LogService;
+import com.type2labs.undersea.common.blockchain.BlockchainNetwork;
+import com.type2labs.undersea.common.consensus.ConsensusAlgorithm;
+import com.type2labs.undersea.common.logger.model.LogEntry;
+import com.type2labs.undersea.common.logger.model.LogService;
 import com.type2labs.undersea.common.missions.PlannerException;
 import com.type2labs.undersea.common.missions.planner.impl.AgentMissionImpl;
 import com.type2labs.undersea.common.missions.planner.model.AgentMission;
@@ -17,6 +19,9 @@ import com.type2labs.undersea.common.missions.task.model.Task;
 import com.type2labs.undersea.common.missions.task.model.TaskExecutor;
 import com.type2labs.undersea.common.missions.task.model.TaskStatus;
 import com.type2labs.undersea.common.monitor.model.Monitor;
+import com.type2labs.undersea.common.service.AgentService;
+import com.type2labs.undersea.common.service.ServiceManager;
+import com.type2labs.undersea.common.service.hardware.NetworkInterface;
 import com.type2labs.undersea.common.service.transaction.LifecycleEvent;
 import com.type2labs.undersea.common.service.transaction.ServiceCallback;
 import com.type2labs.undersea.common.service.transaction.Transaction;
@@ -32,6 +37,8 @@ import org.apache.logging.log4j.Logger;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -169,11 +176,13 @@ public class MoosMissionManagerImpl implements MissionManager {
             }
         }
 
-
         Task task = assignedTasks.get(index);
         task.setTaskStatus(TaskStatus.COMPLETED);
 
-        agent.log(new LogEntry(task));
+        ServiceManager serviceManager = agent.services();
+        ConsensusAlgorithm consensusAlgorithm = serviceManager.getService(ConsensusAlgorithm.class, true);
+
+        agent.log(new LogEntry(task, consensusAlgorithm.term()));
 
         if (index == assignedTasks.size() - 1) {
             logger.info(agent.name() + ": completed all tasks", agent);
@@ -244,6 +253,11 @@ public class MoosMissionManagerImpl implements MissionManager {
     @Override
     public void registerCallback(ServiceCallback serviceCallback) {
 
+    }
+
+    @Override
+    public Collection<Class<? extends AgentService>> requiredServices() {
+        return Arrays.asList(ConsensusAlgorithm.class, NetworkInterface.class, BlockchainNetwork.class);
     }
 
 }

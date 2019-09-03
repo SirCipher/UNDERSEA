@@ -7,7 +7,6 @@ import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.common.util.concurrent.MoreExecutors;
 import com.type2labs.undersea.common.agent.Agent;
 import com.type2labs.undersea.common.cluster.Client;
-import com.type2labs.undersea.common.cluster.PeerId;
 import com.type2labs.undersea.common.consensus.MultiRoleState;
 import com.type2labs.undersea.common.consensus.RaftRole;
 import com.type2labs.undersea.common.missions.planner.model.AgentMission;
@@ -50,34 +49,25 @@ public class RaftNodeImpl implements RaftNode {
     private final ThrowableExecutor singleThreadScheduledExecutor;
     private final ListeningExecutorService listeningExecutorService;
     private final ScheduledExecutorService scheduledExecutor = Executors.newSingleThreadScheduledExecutor();
-
     private final String name;
     private final GrpcServer server;
     private final RaftClusterConfig raftClusterConfig;
+
     private RaftState raftState;
-    // This cannot be final as both an Agent and this class require it
+    private List<ServiceCallback> serviceCallbacks = new ArrayList<>();
     private Agent agent;
     private RaftRole role = RaftRole.CANDIDATE;
     private MultiRoleState multiRoleState;
     private boolean started = false;
-
     private long lastHeartbeatTime;
-    private PeerId peerId;
-    private List<ServiceCallback> serviceCallbacks = new ArrayList<>();
 
     public RaftNodeImpl(RaftClusterConfig raftClusterConfig, String name) {
-        this(raftClusterConfig, name, new InetSocketAddress(0), PeerId.newId());
-    }
-
-    public RaftNodeImpl(RaftClusterConfig raftClusterConfig, String name, PeerId peerId) {
-        this(raftClusterConfig, name, new InetSocketAddress(0), peerId);
+        this(raftClusterConfig, name, new InetSocketAddress(0));
     }
 
     public RaftNodeImpl(RaftClusterConfig raftClusterConfig,
                         String name,
-                        InetSocketAddress address,
-                        PeerId peerId) {
-        this.peerId = peerId;
+                        InetSocketAddress address) {
         this.raftClusterConfig = raftClusterConfig;
         this.name = name;
 
@@ -126,6 +116,11 @@ public class RaftNodeImpl implements RaftNode {
     }
 
     @Override
+    public int term() {
+        return state().getTerm();
+    }
+
+    @Override
     public String name() {
         return name;
     }
@@ -144,17 +139,17 @@ public class RaftNodeImpl implements RaftNode {
         role = RaftRole.LEADER;
         logger.info(name + " is now the leader", agent);
 
-        handleLifecycleCallback(LifecycleEvent.ELECTED_LEADER);
+        fireLifecycleCallbacks(LifecycleEvent.ELECTED_LEADER);
 
         getMonitor().update();
         scheduleHeartbeat();
     }
 
-    private void handleLifecycleCallback(LifecycleEvent statusCode) {
-        Collection<ServiceCallback> transactions =
+    private void fireLifecycleCallbacks(LifecycleEvent statusCode) {
+        Collection<ServiceCallback> callbacks =
                 serviceCallbacks.stream().filter(c -> c.getStatusCode() == statusCode).collect(Collectors.toList());
 
-        for (ServiceCallback t : transactions) {
+        for (ServiceCallback t : callbacks) {
             t.getCallback().get();
         }
     }

@@ -12,4 +12,6 @@ public interface ConsensusAlgorithm extends AgentService {
 
     MultiRoleState multiRole();
 
+    int term();
+
 }

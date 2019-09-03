@@ -48,6 +48,12 @@ public class MoosConnector implements NetworkInterface {
                 while (!shutdown) {
                     Socket clientSocket = serverSocket.accept();
                     logger.info("Processing request from: " + clientSocket.getPort());
+
+                    // Shutdown may have already occurred but we haven't caught it as we've been blocked
+                    if (shutdown) {
+                        return;
+                    }
+
                     clientProcessingPool.execute(() -> {
                         try {
                             InputStream is = clientSocket.getInputStream();

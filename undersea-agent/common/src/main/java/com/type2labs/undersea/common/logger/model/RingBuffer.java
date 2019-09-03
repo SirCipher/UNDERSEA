@@ -1,4 +1,7 @@
-package com.type2labs.undersea.common.logger;
+package com.type2labs.undersea.common.logger.model;
+
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Based on http://tutorials.jenkov.com/java-performance/ring-buffer.html
@@ -18,7 +21,7 @@ public class RingBuffer<T> {
         this.elements = t;
     }
 
-    RingBuffer() {
+    public RingBuffer() {
         this(1000);
     }
 
@@ -37,6 +40,11 @@ public class RingBuffer<T> {
 
     public int remainingCapacity() {
         return this.capacity - this.available;
+    }
+
+    public List<T> readBetween(int startIndex){
+        T[] ts = Arrays.copyOfRange(elements, startIndex, elements.length);
+        return Arrays.asList(ts);
     }
 
     T read(int index) {

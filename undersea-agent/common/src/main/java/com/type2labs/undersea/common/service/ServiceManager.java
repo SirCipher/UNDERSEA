@@ -5,9 +5,10 @@ import com.google.common.util.concurrent.MoreExecutors;
 import com.type2labs.undersea.common.agent.Agent;
 import com.type2labs.undersea.common.monitor.model.Monitor;
 import com.type2labs.undersea.common.service.transaction.LifecycleEvent;
-import com.type2labs.undersea.common.service.transaction.ServiceCallback;
 import com.type2labs.undersea.common.service.transaction.Transaction;
 import com.type2labs.undersea.common.service.transaction.TransactionData;
+import com.type2labs.undersea.utilities.exception.NotSupportedException;
+import com.type2labs.undersea.utilities.exception.ServiceNotRegisteredException;
 import com.type2labs.undersea.utilities.executor.ScheduledThrowableExecutor;
 import com.type2labs.undersea.utilities.executor.ThrowableExecutor;
 import org.apache.commons.lang3.tuple.Pair;
@@ -73,8 +74,8 @@ public class ServiceManager {
      * <p>
      * {@link AgentService}s should always internally handle errors in case of an error. If an {@link AgentService}
      * encounters an error, then the error is caught by the {@link ServiceManager} and this method is invoked and all
-     * registered {@link AgentService}s are notified that a particular service has failed, ensuring that other
-     * services can perform the required operations before the system possibly exists.
+     * registered and running {@link AgentService}s are notified that a particular service has failed, ensuring that
+     * other services can perform the required operations before the system possibly exits.
      *
      * @param service that has failed
      */
@@ -88,7 +89,16 @@ public class ServiceManager {
                 .invokedBy(serviceManagerTransactionService)
                 .build();
 
-        commitTransaction(transaction);
+        Set<ListenableFuture<?>> futures = commitTransaction(transaction);
+        futures.forEach(e -> {
+            try {
+                e.get();
+            } catch (InterruptedException | ExecutionException ex) {
+                ex.printStackTrace();
+            } catch (NotSupportedException ignored) {
+
+            }
+        });
     }
 
     /**
@@ -174,7 +184,19 @@ public class ServiceManager {
         return null;
     }
 
+    public <T extends AgentService> T getService(Class<T> s, boolean required) {
+        AgentService agentService = getService(s);
+
+        if (required && agentService == null) {
+            throw new NullPointerException("Required service " + s.getSimpleName() + " is missing");
+        }
+
+        return (T) agentService;
+    }
+
     public <T extends AgentService> T getService(Class<T> s) {
+        Objects.requireNonNull(s);
+
         for (Map.Entry<Class<? extends AgentService>, Pair<AgentService, ServiceExecutionPriority>> e :
                 services.entrySet()) {
             if (s.isAssignableFrom(e.getKey())) {
@@ -272,7 +294,7 @@ public class ServiceManager {
         this.serviceManagerTransactionService = new ServiceManagerTransactionService();
         serviceManagerTransactionService.initialise(agent);
 
-        logger.info("Agent " + agent.name() + " service manager assigned", agent);
+        logger.info(agent.name() + ": service manager assigned", agent);
     }
 
     public synchronized void shutdownService(Class<? extends AgentService> service, AgentService agentService) {
@@ -288,7 +310,7 @@ public class ServiceManager {
             agentService.shutdown();
         }
 
-        logger.info("Agent: " + agent.name() + " shutting down service: " + service.getSimpleName(), agent);
+        logger.info(agent.name() + ": shutting down service: " + service.getSimpleName(), agent);
     }
 
     public void shutdownServices() {
@@ -319,14 +341,14 @@ public class ServiceManager {
                 TimeUnit.MILLISECONDS);
         scheduledFutures.put(service.getClass(), scheduledFuture);
 
-        logger.info("Agent: " + agent.name() + ", started repeating service: " + service.getClass().getSimpleName() + " at period: " + period, agent);
+        logger.info(agent.name() + ": started repeating service: " + service.getClass().getSimpleName() + " at period: " + period, agent);
     }
 
     private synchronized void startService(Class<? extends AgentService> service) {
         AgentService agentService = getService(service);
         agentService.initialise(agent);
 
-        logger.info("Agent " + agent.name() + " starting service: " + agentService.getClass().getSimpleName(), agent);
+        logger.info(agent.name() + ": starting service: " + agentService.getClass().getSimpleName(), agent);
 
         ScheduledFuture<?> future = serviceExecutor.schedule(wrapAgentService(agentService), 1, TimeUnit.NANOSECONDS);
 
@@ -362,6 +384,8 @@ public class ServiceManager {
             throw new IllegalStateException("Service manager already started, cannot start again");
         }
 
+        processRequiredServices();
+
         starting = true;
 
         serviceExecutor = ScheduledThrowableExecutor.newExecutor(services.size(), logger);
@@ -375,6 +399,34 @@ public class ServiceManager {
         started = true;
 
         updateVisualiser();
+    }
+
+    private synchronized void processRequiredServices() {
+        Set<Class<? extends AgentService>> missingServices = new HashSet<>();
+
+        for (Map.Entry<Class<? extends AgentService>, Pair<AgentService, ServiceExecutionPriority>> e :
+                services.entrySet()) {
+            Collection<Class<? extends AgentService>> requirements = e.getValue().getKey().requiredServices();
+
+            for (Class<? extends AgentService> required : requirements) {
+                if (getService(required) == null) {
+                    missingServices.add(required);
+                }
+            }
+        }
+
+        if (missingServices.size() > 0) {
+            StringBuilder msg = new StringBuilder(agent.name() + ": " + missingServices.size() + " missing services." +
+                    " Missing:\n");
+
+            for (Class<? extends AgentService> clazz : missingServices) {
+                msg.append(clazz.getSimpleName());
+            }
+
+            throw new ServiceNotRegisteredException(msg.toString());
+        } else {
+            logger.info(agent.name() + ": all required services are registered", agent);
+        }
     }
 
     public void updateVisualiser() {
@@ -452,21 +504,6 @@ public class ServiceManager {
 
         @Override
         public void shutdown() {
-
-        }
-
-        @Override
-        public boolean started() {
-            return true;
-        }
-
-        @Override
-        public ListenableFuture<?> executeTransaction(Transaction transaction) {
-            return null;
-        }
-
-        @Override
-        public void registerCallback(ServiceCallback serviceCallback) {
 
         }
 

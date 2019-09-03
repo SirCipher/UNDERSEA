@@ -51,8 +51,7 @@ public class LocalAgentGroup implements Closeable {
             RaftNodeImpl raftNode = new RaftNodeImpl(
                     config,
                     "agent:" + i,
-                    new InetSocketAddress("localhost", 0),
-                    PeerId.newId()
+                    new InetSocketAddress("localhost", 0)
             );
 
             ServiceManager serviceManager = new ServiceManager();

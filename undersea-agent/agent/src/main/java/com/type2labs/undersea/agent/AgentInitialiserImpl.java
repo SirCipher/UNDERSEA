@@ -48,7 +48,6 @@ public class AgentInitialiserImpl implements AgentInitialiser {
             ServiceManager serviceManager = new ServiceManager();
 
             serviceManager.registerService(new BlockchainNetworkImpl());
-            serviceManager.registerService(new MoosMissionManagerImpl(new VehicleRoutingOptimiser()));
             serviceManager.registerService(new LogServiceImpl());
 
             Monitor monitor = new MonitorImpl();
@@ -61,8 +60,7 @@ public class AgentInitialiserImpl implements AgentInitialiser {
 
             RaftNodeImpl raftNode = new RaftNodeImpl(
                     raftClusterConfig,
-                    agentProxy.getName(),
-                    underseaAgent.peerId()
+                    agentProxy.getName()
             );
 
             serviceManager.registerService(raftNode);
@@ -102,6 +100,7 @@ public class AgentInitialiserImpl implements AgentInitialiser {
             if (!(boolean) value.metadata().getProperty(AgentMetaData.PropertyKey.IS_MASTER_NODE)) {
                 serviceManager.registerService(new MoosConnector(), ServiceManager.ServiceExecutionPriority.MEDIUM);
                 serviceManager.registerService(ControllerImpl.PMCimpl(), ServiceManager.ServiceExecutionPriority.LOW);
+                serviceManager.registerService(new MoosMissionManagerImpl(new VehicleRoutingOptimiser()));
             }
 
             monitor.setVisualiser(new VisualiserClientImpl());

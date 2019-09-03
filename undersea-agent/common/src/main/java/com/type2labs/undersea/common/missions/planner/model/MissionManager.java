@@ -42,5 +42,4 @@ public interface MissionManager extends AgentService {
 
     void notify(String message);
 
-
 }
