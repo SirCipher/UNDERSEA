@@ -53,17 +53,21 @@ message Tuple {
 
 message AppendEntryRequest {
     RaftPeerProto client = 1;
-    LogEntryProto logEntry = 2;
-    uint32 term = 3;
-    uint32 prevLogIndex = 4;
+    RaftPeerProto leader = 2;
+    repeated LogEntryProto logEntry = 3;
+
+    uint32 term = 4;
+    uint32 prevLogIndex = 5;
 }
 
 message AppendEntryResponse {
     RaftPeerProto client = 1;
+    uint32 term = 2;
 }
 
 message LogEntryProto {
     string data = 1;
+    uint32 term = 2;
 }
 
 message VoteRequest {

@@ -18,10 +18,11 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class LogServiceImpl implements LogService {
 
-    private Agent agent;
-    private final RingBuffer<LogEntry> ringBuffer = new RingBuffer<>();
     private static final Logger logger = LogManager.getLogger(LogServiceImpl.class);
+    private final RingBuffer<LogEntry> ringBuffer = new RingBuffer<>();
+
     private Map<Client, Integer> clientIndexMap = new ConcurrentHashMap<>();
+    private Agent agent;
 
     @Override
     public void shutdown() {
@@ -31,11 +32,6 @@ public class LogServiceImpl implements LogService {
     @Override
     public boolean started() {
         return true;
-    }
-
-    @Override
-    public ListenableFuture<?> executeTransaction(Transaction transaction) {
-        return null;
     }
 
     @Override
@@ -59,14 +55,24 @@ public class LogServiceImpl implements LogService {
     }
 
     @Override
-    public synchronized void add(LogEntry logEntry) {
+    public void add(LogEntry logEntry) {
         ringBuffer.put(logEntry);
         logger.info(agent.name() + ": adding log message: " + logEntry, agent);
     }
 
     @Override
     public List<LogEntry> read(int index) {
-        return ringBuffer.readBetween(index);
+        return ringBuffer.readBetween(index, getEndIndex(index));
+    }
+
+    private int getEndIndex(int index) {
+        int batchSize = agent.config().getLogBatchSize();
+
+        if (index + batchSize > size()) {
+            return size() - 1;
+        } else {
+            return index;
+        }
     }
 
     @Override
@@ -78,10 +84,16 @@ public class LogServiceImpl implements LogService {
             return new ArrayList<>();
         }
 
-        List<LogEntry> entries = ringBuffer.readBetween(index);
-        clientIndexMap.put(client, size());
+        int endIndex = getEndIndex(index);
+        List<LogEntry> entries = ringBuffer.readBetween(index, endIndex);
+        clientIndexMap.put(client, endIndex);
 
         return entries;
+    }
+
+    @Override
+    public void appendEntries(List<LogEntry> logEntries) {
+
     }
 
     @Override

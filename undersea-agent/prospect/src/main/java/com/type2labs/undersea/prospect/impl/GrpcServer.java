@@ -66,7 +66,7 @@ public class GrpcServer implements Closeable {
         this.server = builder.executor(serverExecutor).build();
 
         logger.info(agentName + ": gRPC server available at  " + socketAddress.getHostString() + ":" + port,
-                raftNode.agent());
+                raftNode.parent());
     }
 
     /**
@@ -84,7 +84,7 @@ public class GrpcServer implements Closeable {
             server.start();
         } catch (IOException e) {
             logger.error(parentNode.name() + " failed to start. Attempted to use port: " + socketAddress.getPort(),
-                    parentNode.agent());
+                    parentNode.parent());
             e.printStackTrace();
             throw new RuntimeException("Failed to start", e);
         }
@@ -104,9 +104,9 @@ public class GrpcServer implements Closeable {
     public void close() {
         String name = parentNode.name();
 
-        logger.info(name + ": shutting down gRPC server", parentNode.agent());
+        logger.info(name + ": shutting down gRPC server", parentNode.parent());
         server.shutdownNow();
-        logger.info(name + ": shutdown gRPC server", parentNode.agent());
+        logger.info(name + ": shutdown gRPC server", parentNode.parent());
     }
 
 }

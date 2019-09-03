@@ -35,12 +35,12 @@ public class VoteTask implements Runnable {
             logger.info("Node: " + raftNode.name() + " has already voted during this term. For: " + raftNode.state().getVotedFor() + ". Not voting again");
         }
 
-        logger.info(raftNode.name() + " starting voting", raftNode.agent());
+        logger.info(raftNode.name() + " starting voting", raftNode.parent());
 
-        ConcurrentMap<PeerId, Client> localNodes = raftNode.agent().clusterClients();
+        ConcurrentMap<PeerId, Client> localNodes = raftNode.parent().clusterClients();
 
         if (localNodes.size() == 0) {
-            logger.warn(raftNode.name() + " has no peers", raftNode.agent());
+            logger.warn(raftNode.name() + " has no peers", raftNode.parent());
         }
 
         for (Client client : localNodes.values()) {

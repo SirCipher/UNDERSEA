@@ -4,6 +4,7 @@ import com.google.common.util.concurrent.ListenableFuture;
 import com.type2labs.undersea.common.agent.AgentAware;
 import com.type2labs.undersea.common.service.transaction.ServiceCallback;
 import com.type2labs.undersea.common.service.transaction.Transaction;
+import com.type2labs.undersea.utilities.exception.NotSupportedException;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -14,9 +15,21 @@ import java.util.Collection;
 public interface AgentService extends Runnable, AgentAware {
 
     /**
+     * Denotes that a service's requirement is critical to the {@link com.type2labs.undersea.common.agent.Agent}'s
+     * operation. Without it, the required duties cannot be performed. If a service fails, such as one which is
+     * performing a non-mission-critical task, then the {@link ServiceManager} will not start to shutdown the agent.
+     *
+     * @return whether or not the service is critical
+     */
+    default boolean isCritical() {
+        return true;
+    }
+
+    /**
      * Signals that the service should start the shutdown procedure. This must be a non-blocking process
      */
     default void shutdown() {
+
     }
 
     /**
@@ -37,12 +50,12 @@ public interface AgentService extends Runnable, AgentAware {
      * @return scheduled future
      */
     default ListenableFuture<?> executeTransaction(Transaction transaction) {
-        return null;
+        throw new NotSupportedException();
     }
 
     /**
      * The time (in milliseconds) that the {@link ServiceManager} should wait before assuming that there has been an
-     * error during a state transition. See {@link ServiceManager#ServiceState}. Transition events occur when a
+     * error during a state transition. See {@link ServiceManager.ServiceState}. Transition events occur when a
      * service is starting and stopping.
      *
      * @return the transition timeout
@@ -53,6 +66,7 @@ public interface AgentService extends Runnable, AgentAware {
 
 
     default void registerCallback(ServiceCallback serviceCallback) {
+
     }
 
     /**
@@ -63,6 +77,5 @@ public interface AgentService extends Runnable, AgentAware {
     default Collection<Class<? extends AgentService>> requiredServices() {
         return new ArrayList<>();
     }
-
 
 }

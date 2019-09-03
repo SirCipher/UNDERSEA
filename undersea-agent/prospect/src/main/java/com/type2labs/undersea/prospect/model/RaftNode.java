@@ -8,8 +8,6 @@ import com.type2labs.undersea.prospect.impl.RaftState;
 
 public interface RaftNode extends ConsensusAlgorithm {
 
-    Agent agent();
-
     void execute(Runnable task);
 
     RaftRole getRaftRole();

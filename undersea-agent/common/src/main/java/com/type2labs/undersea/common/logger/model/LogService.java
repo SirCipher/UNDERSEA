@@ -19,6 +19,8 @@ public interface LogService extends AgentService {
 
     List<LogEntry> readNextForClient(Client client);
 
+    void appendEntries(List<LogEntry> logEntries);
+
     int size();
 
 }

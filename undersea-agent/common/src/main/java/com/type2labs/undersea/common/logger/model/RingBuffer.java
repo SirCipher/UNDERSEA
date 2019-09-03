@@ -13,7 +13,7 @@ public class RingBuffer<T> {
     private int writePos = 0;
     private int available = 0;
 
-    private RingBuffer(int capacity) {
+    public RingBuffer(int capacity) {
         this.capacity = capacity;
 
         @SuppressWarnings("unchecked")
@@ -42,12 +42,12 @@ public class RingBuffer<T> {
         return this.capacity - this.available;
     }
 
-    public List<T> readBetween(int startIndex){
-        T[] ts = Arrays.copyOfRange(elements, startIndex, elements.length);
+    public List<T> readBetween(int startIndex, int endIndex) {
+        T[] ts = Arrays.copyOfRange(elements, startIndex, endIndex);
         return Arrays.asList(ts);
     }
 
-    T read(int index) {
+    public T read(int index) {
         return elements[index];
     }
 

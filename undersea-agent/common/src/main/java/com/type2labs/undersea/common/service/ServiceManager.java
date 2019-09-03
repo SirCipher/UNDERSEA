@@ -96,13 +96,14 @@ public class ServiceManager {
             } catch (InterruptedException | ExecutionException ex) {
                 ex.printStackTrace();
             } catch (NotSupportedException ignored) {
-
             }
         });
     }
 
     /**
-     * Waits for an {@link AgentService} to transition from it's current state to the supplier's new state.
+     * Waits for an {@link AgentService} to transition from it's current state to the supplier's new state. If the
+     * {@link AgentService#transitionTimeout()} if exceeded, then the {@link AgentService} is transitioned to
+     * {@link ServiceState#FAILED} and all registered services are notified of the failure.
      * <p>
      *
      * @param supplier      to poll on
@@ -131,7 +132,9 @@ public class ServiceManager {
                             " %s ms", startupTimeout) + ". Attempted to go from " + starting + " to " + successful;
                     logger.error(message, agent);
 
-                    throw new ServiceManagerException(message);
+                    if (service.isCritical()) {
+                        throw new ServiceManagerException(message);
+                    }
                 }
             }
 
@@ -341,7 +344,8 @@ public class ServiceManager {
                 TimeUnit.MILLISECONDS);
         scheduledFutures.put(service.getClass(), scheduledFuture);
 
-        logger.info(agent.name() + ": started repeating service: " + service.getClass().getSimpleName() + " at period: " + period, agent);
+        logger.info(agent.name() + ": started repeating service: " + service.getClass().getSimpleName() + " at " +
+                "period: " + period, agent);
     }
 
     private synchronized void startService(Class<? extends AgentService> service) {

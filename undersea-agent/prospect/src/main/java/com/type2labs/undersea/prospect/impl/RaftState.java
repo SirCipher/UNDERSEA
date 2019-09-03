@@ -3,7 +3,6 @@ package com.type2labs.undersea.prospect.impl;
 import com.type2labs.undersea.common.cluster.Client;
 import com.type2labs.undersea.common.cluster.ClusterState;
 import com.type2labs.undersea.common.cluster.PeerId;
-import com.type2labs.undersea.prospect.NodeLog;
 import com.type2labs.undersea.prospect.model.RaftNode;
 import com.type2labs.undersea.prospect.networking.RaftClientImpl;
 import org.apache.logging.log4j.LogManager;
@@ -22,16 +21,15 @@ public class RaftState {
     /**
      * Endpoint voted for during last term
      */
-    private final NodeLog nodeLog = new NodeLog();
     private final RaftNode parent;
     private Client votedFor;
     private int term;
     private Candidate candidate;
     private ClusterState clusterState;
 
-    public RaftState(RaftNode parent) {
-        this.parent = parent;
-        this.localNodes = parent.agent().clusterClients();
+    public RaftState(RaftNode agent) {
+        this.parent = agent;
+        this.localNodes = agent.parent().clusterClients();
     }
 
     public void initCandidate(int term) {

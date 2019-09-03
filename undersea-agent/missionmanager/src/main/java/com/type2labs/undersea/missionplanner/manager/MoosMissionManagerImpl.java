@@ -187,7 +187,7 @@ public class MoosMissionManagerImpl implements MissionManager {
         if (index == assignedTasks.size() - 1) {
             logger.info(agent.name() + ": completed all tasks", agent);
         } else {
-            logger.info(agent.name() + ": completed task " + index, agent);
+            logger.info(agent.name() + ": completed task " + (index + 1), agent);
         }
     }
 

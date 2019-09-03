@@ -13,6 +13,7 @@ import com.type2labs.undersea.common.monitor.impl.VisualiserClientImpl;
 import com.type2labs.undersea.common.monitor.model.Monitor;
 import com.type2labs.undersea.common.runner.AgentInitialiser;
 import com.type2labs.undersea.common.service.ServiceManager;
+import com.type2labs.undersea.common.service.hardware.NoNetworkInterfaceImpl;
 import com.type2labs.undersea.controller.ControllerImpl;
 import com.type2labs.undersea.dsl.EnvironmentProperties;
 import com.type2labs.undersea.dsl.uuv.model.DslAgentProxy;
@@ -49,6 +50,7 @@ public class AgentInitialiserImpl implements AgentInitialiser {
 
             serviceManager.registerService(new BlockchainNetworkImpl());
             serviceManager.registerService(new LogServiceImpl());
+            serviceManager.registerService(new MoosMissionManagerImpl(new VehicleRoutingOptimiser()));
 
             Monitor monitor = new MonitorImpl();
             monitor.setVisualiser(new VisualiserClientImpl());
@@ -100,7 +102,8 @@ public class AgentInitialiserImpl implements AgentInitialiser {
             if (!(boolean) value.metadata().getProperty(AgentMetaData.PropertyKey.IS_MASTER_NODE)) {
                 serviceManager.registerService(new MoosConnector(), ServiceManager.ServiceExecutionPriority.MEDIUM);
                 serviceManager.registerService(ControllerImpl.PMCimpl(), ServiceManager.ServiceExecutionPriority.LOW);
-                serviceManager.registerService(new MoosMissionManagerImpl(new VehicleRoutingOptimiser()));
+            } else {
+                serviceManager.registerService(new NoNetworkInterfaceImpl());
             }
 
             monitor.setVisualiser(new VisualiserClientImpl());

@@ -9,14 +9,15 @@ import com.type2labs.undersea.common.agent.Agent;
 import com.type2labs.undersea.common.cluster.Client;
 import com.type2labs.undersea.common.consensus.MultiRoleState;
 import com.type2labs.undersea.common.consensus.RaftRole;
+import com.type2labs.undersea.common.logger.model.LogService;
 import com.type2labs.undersea.common.missions.planner.model.AgentMission;
 import com.type2labs.undersea.common.missions.planner.model.GeneratedMission;
 import com.type2labs.undersea.common.missions.planner.model.MissionManager;
 import com.type2labs.undersea.common.monitor.model.Monitor;
+import com.type2labs.undersea.common.service.AgentService;
 import com.type2labs.undersea.common.service.transaction.LifecycleEvent;
 import com.type2labs.undersea.common.service.transaction.ServiceCallback;
 import com.type2labs.undersea.common.service.transaction.Transaction;
-import com.type2labs.undersea.prospect.NodeLog;
 import com.type2labs.undersea.prospect.RaftClusterConfig;
 import com.type2labs.undersea.prospect.RaftProtos;
 import com.type2labs.undersea.prospect.model.RaftNode;
@@ -32,6 +33,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.net.InetSocketAddress;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.Executors;
@@ -92,8 +94,8 @@ public class RaftNodeImpl implements RaftNode {
     }
 
     @Override
-    public Agent agent() {
-        return agent;
+    public Collection<Class<? extends AgentService>> requiredServices() {
+        return Arrays.asList(LogService.class, MissionManager.class);
     }
 
     @Override
@@ -165,6 +167,8 @@ public class RaftNodeImpl implements RaftNode {
         raftState.setTerm(term);
         logger.info(name + " is now a follower", agent);
 
+        scheduleHeartbeat();
+
         getMonitor().update();
     }
 
@@ -192,8 +196,6 @@ public class RaftNodeImpl implements RaftNode {
     }
 
     void distributeMission(GeneratedMission result) {
-        agent.clusterClients();
-
         ObjectMapper mapper = new ObjectMapper();
 
         for (AgentMission agentMission : result.subMissions()) {
@@ -260,17 +262,12 @@ public class RaftNodeImpl implements RaftNode {
         schedule(new HeartbeatTask(), 500);
     }
 
-    /**
-     * Used as heartbeat also
-     *
-     * @param follower
-     */
     private void sendMissionUpdateRequest(Client follower) {
-        RaftProtos.AppendEntryRequest.Builder builder = RaftProtos.AppendEntryRequest.newBuilder();
-        builder.setLogEntry(new NodeLog.LogEntry().toLogEntryProto());
-
-        RaftProtos.AppendEntryRequest request = builder.build();
-
+//        RaftProtos.AppendEntryRequest.Builder builder = RaftProtos.AppendEntryRequest.newBuilder();
+//        builder.setLogEntry(new NodeLog.LogEntry().toLogEntryProto());
+//
+//        RaftProtos.AppendEntryRequest request = builder.build();
+//
 //        AppendEntryServiceGrpc.AppendEntryServiceStub futureStub = AppendEntryServiceGrpc.newStub(follower.channel());
 //        futureStub.appendEntry(request, new StreamObserver<RaftProtos.AppendEntryResponse>() {
 //            @Override
@@ -288,7 +285,7 @@ public class RaftNodeImpl implements RaftNode {
 //                System.out.println("Completed update request");
 //            }
 //        });
-
+//
 //        logger.info("Sending heartbeat to: " + follower.name(), agent);
     }
 

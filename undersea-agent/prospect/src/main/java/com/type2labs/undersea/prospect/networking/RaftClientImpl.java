@@ -80,7 +80,7 @@ public class RaftClientImpl implements RaftClient {
             channel.awaitTermination(3000, TimeUnit.MILLISECONDS);
         } catch (InterruptedException e) {
             e.printStackTrace();
-            logger.error(consensusAlgorithm.agent().name() + ": failed to shutdown channel successfully", e);
+            logger.error(consensusAlgorithm.parent().name() + ": failed to shutdown channel successfully", e);
         }
     }
 

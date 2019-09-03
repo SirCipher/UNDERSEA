@@ -12,6 +12,16 @@ public class UnderseaRuntimeConfig {
     private boolean visualiserEnabled = true;
     private MissionParameters missionParameters;
     private CostConfiguration costConfiguration;
+    private int logBatchSize = 10;
+
+    public int getLogBatchSize() {
+        return logBatchSize;
+    }
+
+    public UnderseaRuntimeConfig withLogBatchSize(int logBatchSize){
+        this.logBatchSize = logBatchSize;
+        return this;
+    }
 
     public UnderseaRuntimeConfig missionParameters(MissionParameters missionParameters) {
         this.missionParameters = missionParameters;
