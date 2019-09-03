@@ -44,16 +44,11 @@ public class RunnerTest {
 
         runner.setup();
         runner.start();
-
         runner.onParsed(testProperties);
 
-        // TODO: 02/09/2019
-//        while (!runner.missionComplete()){
-//            Thread.sleep(500);
-//        }
-
-
-        Thread.sleep(90000);
+        while (!runner.missionComplete()){
+            Thread.sleep(500);
+        }
 
         System.out.println("RunnerTest: Shutting down");
 

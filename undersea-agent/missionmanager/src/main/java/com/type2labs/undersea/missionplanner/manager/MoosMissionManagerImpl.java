@@ -125,7 +125,7 @@ public class MoosMissionManagerImpl implements MissionManager {
 
     @Override
     public boolean missionHasBeenAssigned() {
-        return assignedTasks != null && assignedTasks.size() > 0;
+        return missionAssigned != null;
     }
 
     @Override
@@ -139,7 +139,7 @@ public class MoosMissionManagerImpl implements MissionManager {
             return;
         }
 
-        if (message.contains("WPT_INDEX")) {
+        if (message.contains("WPT_INDEX") || message.contains("completed")) {
             handleWaypointIndexUpdate(message);
         }
 
@@ -151,14 +151,22 @@ public class MoosMissionManagerImpl implements MissionManager {
     }
 
     private void handleWaypointIndexUpdate(String message) {
-        int index = Integer.parseInt(message.split("=")[1]);
+        int index;
 
-        // If we're on our way to the first waypoint
-        if (index == 0) {
-            return;
+        if (message.contains("completed")) {
+            index = assignedTasks.size() - 1;
+        } else {
+            index = Integer.parseInt(message.split("=")[1]);
+
+            // If we're on our way to the first waypoint
+            if (index == 0) {
+                return;
+            } else {
+                index -= 1;
+            }
         }
 
-        assignedTasks.get(index - 1).setTaskStatus(TaskStatus.COMPLETED);
+        assignedTasks.get(index).setTaskStatus(TaskStatus.COMPLETED);
 
         logger.info(agent.name() + ": completed task " + index, agent);
     }

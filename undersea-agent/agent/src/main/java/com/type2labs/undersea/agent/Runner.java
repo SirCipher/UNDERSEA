@@ -158,12 +158,23 @@ public class Runner extends AbstractRunner {
         boolean completed = true;
 
         for (Agent agent : super.getAgents()) {
+            if (agent.name().equals("shoreside")) {
+                continue;
+            }
+
             MoosMissionManagerImpl missionManager = agent.services().getService(MoosMissionManagerImpl.class);
-            if (missionManager.getAssignedTasks().size() == 0) {
-                return false;
+            while (!missionManager.missionHasBeenAssigned()) {
+                try {
+                    Thread.sleep(500);
+                } catch (InterruptedException ignored) {
+                }
             }
 
             completed &= missionManager.getAssignedTasks().stream().filter(e -> e.getTaskStatus() == TaskStatus.COMPLETED).count() == missionManager.getAssignedTasks().size();
+        }
+
+        if(completed){
+            logger.info("Mission complete");
         }
 
         return completed;
