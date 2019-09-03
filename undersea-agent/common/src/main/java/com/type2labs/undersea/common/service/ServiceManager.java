@@ -3,6 +3,8 @@ package com.type2labs.undersea.common.service;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.MoreExecutors;
 import com.type2labs.undersea.common.agent.Agent;
+import com.type2labs.undersea.common.monitor.model.Monitor;
+import com.type2labs.undersea.common.monitor.model.VisualiserClient;
 import com.type2labs.undersea.common.service.transaction.LifecycleEvent;
 import com.type2labs.undersea.common.service.transaction.ServiceCallback;
 import com.type2labs.undersea.common.service.transaction.Transaction;
@@ -33,7 +35,6 @@ public class ServiceManager {
      * more time is required.
      */
     static final long DEFAULT_TRANSITION_TIMEOUT = 2000;
-
     private static final Logger logger = LogManager.getLogger(ServiceManager.class);
 
     private final Map<Class<? extends AgentService>, Pair<AgentService, ServiceExecutionPriority>> services =
@@ -44,9 +45,16 @@ public class ServiceManager {
     private ScheduledExecutorService serviceExecutor;
     private ScheduledExecutorService scheduledExecutor;
     private ThrowableExecutor serviceInitialiser = ThrowableExecutor.newSingleThreadExecutor(logger);
-
     private Agent agent;
+
     private volatile boolean started = false;
+
+    public boolean isStarting() {
+        return starting;
+    }
+
+    private volatile boolean starting = false;
+
     private ServiceManagerTransactionService serviceManagerTransactionService;
 
     private static class ServiceManagerException extends RuntimeException {
@@ -228,7 +236,6 @@ public class ServiceManager {
         return null;
     }
 
-
     public Collection<Class<? extends AgentService>> getServiceClasses() {
         return services.keySet();
     }
@@ -406,6 +413,8 @@ public class ServiceManager {
             throw new IllegalStateException("Service manager already started, cannot start again");
         }
 
+        starting = true;
+
         serviceExecutor = ScheduledThrowableExecutor.newExecutor(services.size(), logger);
 
         for (Map.Entry<Class<? extends AgentService>, Pair<AgentService, ServiceExecutionPriority>> e :
@@ -413,7 +422,18 @@ public class ServiceManager {
             startService(e.getKey());
         }
 
+        starting = false;
         started = true;
+
+        updateVisualiser();
+    }
+
+    public void updateVisualiser() {
+        Monitor monitor = getService(Monitor.class);
+
+        if (monitor != null) {
+            monitor.update();
+        }
     }
 
     /**

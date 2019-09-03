@@ -78,8 +78,7 @@ public class VehicleRoutingOptimiser implements MissionPlanner {
     }
 
     private GeneratedMission distributeMission(PlanDataModel model, Assignment assignment, RoutingModel routing,
-                                               RoutingIndexManager manager,
-                                               MissionParameters missionParameters) {
+                                               RoutingIndexManager manager, MissionParameters missionParameters) {
         double[][] centroids = missionParameters.getCentroids();
         GeneratedMission mission = new GeneratedMissionImpl(model, assignment, routing, manager, missionParameters);
 

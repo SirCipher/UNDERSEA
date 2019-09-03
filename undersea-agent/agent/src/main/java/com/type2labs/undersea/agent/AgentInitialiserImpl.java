@@ -6,6 +6,7 @@ import com.type2labs.undersea.common.agent.Agent;
 import com.type2labs.undersea.common.agent.AgentFactory;
 import com.type2labs.undersea.common.agent.AgentMetaData;
 import com.type2labs.undersea.common.agent.AgentStatus;
+import com.type2labs.undersea.common.consensus.MultiRoleState;
 import com.type2labs.undersea.common.monitor.impl.MonitorImpl;
 import com.type2labs.undersea.common.monitor.impl.VisualiserClientImpl;
 import com.type2labs.undersea.common.monitor.model.Monitor;
@@ -18,9 +19,7 @@ import com.type2labs.undersea.missionplanner.manager.MoosMissionManagerImpl;
 import com.type2labs.undersea.missionplanner.planner.vrp.VehicleRoutingOptimiser;
 import com.type2labs.undersea.prospect.RaftClusterConfig;
 import com.type2labs.undersea.prospect.impl.DefaultCallbacks;
-import com.type2labs.undersea.prospect.impl.RaftIntegrationImpl;
 import com.type2labs.undersea.prospect.impl.RaftNodeImpl;
-import com.type2labs.undersea.common.consensus.MultiRoleState;
 import com.type2labs.undersea.seachain.BlockchainNetworkImpl;
 
 import java.io.File;
@@ -72,7 +71,6 @@ public class AgentInitialiserImpl implements AgentInitialiser {
             AgentMetaData metaData = value.metadata();
             metaData.setProperty(AgentMetaData.PropertyKey.SIMULATION_SPEED,
                     environmentProperties.getEnvironmentValue(EnvironmentProperties.EnvironmentValue.SIMULATION_SPEED));
-
 
             if (value.name().equals("shoreside")) {
                 metaData.setProperty(AgentMetaData.PropertyKey.IS_MASTER_NODE, true);

@@ -24,7 +24,6 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
@@ -96,7 +95,9 @@ public class Visualiser {
         c.fill = GridBagConstraints.HORIZONTAL;
 
         // TODO: Address should be the MOOS address
-        String[] columnNames = {"Address", "Raft Peer ID", "Name", "Multi-Role status", "Raft Role", "No. Tasks", "No. Completed Tasks"};
+        String[] columnNames = {"Address", "Raft Peer ID", "Name", "Multi-Role status", "Service Manager Status",
+                "Raft Role", "No. Tasks", "No" +
+                ". Completed Tasks"};
         DefaultTableModel model = new DefaultTableModel(new Object[0][0], columnNames);
         table = new JTable(model) {
             @Override
@@ -300,6 +301,7 @@ public class Visualiser {
                                 agentState.getRaftPeerId(),
                                 agentState.getName(),
                                 agentState.getMultiRoleStatus(),
+                                agentState.getServiceManagerStatus(),
                                 agentState.getRaftRole(),
                                 agentState.getNoTasks(),
                                 agentState.getCompletedTasks()});
@@ -311,9 +313,10 @@ public class Visualiser {
                             model.setValueAt(agentState.getRaftPeerId(), rowId, 1);
                             model.setValueAt(agentState.getName(), rowId, 2);
                             model.setValueAt(agentState.getMultiRoleStatus(), rowId, 3);
-                            model.setValueAt(agentState.getRaftRole(), rowId, 4);
-                            model.setValueAt(agentState.getNoTasks(), rowId, 5);
-                            model.setValueAt(agentState.getCompletedTasks(), rowId, 6);
+                            model.setValueAt(agentState.getServiceManagerStatus(), rowId, 4);
+                            model.setValueAt(agentState.getRaftRole(), rowId, 5);
+                            model.setValueAt(agentState.getNoTasks(), rowId, 6);
+                            model.setValueAt(agentState.getCompletedTasks(), rowId, 7);
                         }
                     }
                 } else if (received instanceof LogMessage) {

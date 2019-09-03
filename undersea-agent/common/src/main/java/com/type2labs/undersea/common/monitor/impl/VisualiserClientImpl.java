@@ -9,6 +9,7 @@ import com.type2labs.undersea.common.missions.task.model.Task;
 import com.type2labs.undersea.common.missions.task.model.TaskStatus;
 import com.type2labs.undersea.common.monitor.VisualiserData;
 import com.type2labs.undersea.common.monitor.model.VisualiserClient;
+import com.type2labs.undersea.common.service.ServiceManager;
 import com.type2labs.undersea.common.service.transaction.ServiceCallback;
 import com.type2labs.undersea.common.service.transaction.Transaction;
 import org.apache.logging.log4j.LogManager;
@@ -69,11 +70,23 @@ public class VisualiserClientImpl implements VisualiserClient {
         MissionManager missionPlanner = parent.services().getService(MissionManager.class);
         List<Task> assignedTasks = missionPlanner.getAssignedTasks();
 
+        String serviceManagerStatus;
+        ServiceManager serviceManager = parent.services();
+        if (serviceManager.isStarting()) {
+            serviceManagerStatus = "STARTING";
+        } else {
+            serviceManagerStatus = serviceManager.isHealthy() ? "HEALTHY" : "UNHEALTHY";
+        }
+
         int completedTasks =
                 Math.toIntExact(assignedTasks.stream().filter(t -> t.getTaskStatus() == TaskStatus.COMPLETED).count());
 
-        return new VisualiserData(parent.name(), parent.peerId().toString(), multiRoleStatus, raftRole,
-                assignedTasks.size(),
+        return new VisualiserData(parent.name(),
+                parent.peerId().toString(),
+                multiRoleStatus,
+                serviceManagerStatus,
+                raftRole,
+                assignedTasks.size() == 0 ? 0 : assignedTasks.size() - 1,
                 completedTasks);
     }
 

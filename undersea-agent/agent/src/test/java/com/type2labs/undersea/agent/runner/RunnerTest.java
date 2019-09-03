@@ -51,9 +51,9 @@ public class RunnerTest {
 //        while (!runner.missionComplete()){
 //            Thread.sleep(500);
 //        }
-        
-        
-        Thread.sleep(30000);
+
+
+        Thread.sleep(90000);
 
         System.out.println("RunnerTest: Shutting down");
 

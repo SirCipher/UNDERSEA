@@ -151,14 +151,14 @@ public class MoosMissionManagerImpl implements MissionManager {
     }
 
     private void handleWaypointIndexUpdate(String message) {
-        int index = Character.getNumericValue(message.charAt(message.length() - 1));
+        int index = Integer.parseInt(message.split("=")[1]);
 
         // If we're on our way to the first waypoint
         if (index == 0) {
             return;
         }
 
-        assignedTasks.get(index).setTaskStatus(TaskStatus.COMPLETED);
+        assignedTasks.get(index - 1).setTaskStatus(TaskStatus.COMPLETED);
 
         logger.info(agent.name() + ": completed task " + index, agent);
     }

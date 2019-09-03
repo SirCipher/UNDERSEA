@@ -8,10 +8,22 @@ public class VisualiserData implements Serializable {
     private final String name;
     private final String raftPeerId;
     private final String multiRoleStatus;
+    private final String serviceManagerStatus;
     private final String raftRole;
     private final int noTasks;
     private final int completedTasks;
 
+    public VisualiserData(String name, String raftPeerId, String multiRoleStatus, String serviceManagerStatus,
+                          String raftRole, int noTasks,
+                          int completedTasks) {
+        this.name = name;
+        this.raftPeerId = raftPeerId;
+        this.multiRoleStatus = multiRoleStatus;
+        this.serviceManagerStatus = serviceManagerStatus;
+        this.raftRole = raftRole;
+        this.noTasks = noTasks;
+        this.completedTasks = completedTasks;
+    }
 
     public int getCompletedTasks() {
         return completedTasks;
@@ -21,13 +33,8 @@ public class VisualiserData implements Serializable {
         return multiRoleStatus;
     }
 
-    public VisualiserData(String name, String raftPeerId, String multiRoleStatus, String raftRole, int noTasks, int completedTasks) {
-        this.name = name;
-        this.raftPeerId = raftPeerId;
-        this.multiRoleStatus = multiRoleStatus;
-        this.raftRole = raftRole;
-        this.noTasks = noTasks;
-        this.completedTasks = completedTasks;
+    public String getServiceManagerStatus() {
+        return serviceManagerStatus;
     }
 
     public String getRaftPeerId() {
