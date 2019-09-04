@@ -104,10 +104,14 @@ public class VehicleRoutingOptimiser implements MissionPlanner {
                 points = new StringBuilder(points.substring(0, points.length() - 1));
             }
 
-            AgentMissionImpl agentMission = new AgentMissionImpl(clientState.getClient(), tasks);
-            agentMission.setPoints(points.toString());
+            try {
+                AgentMissionImpl agentMission = new AgentMissionImpl(clientState.getClient(), tasks);
+                agentMission.setPoints(points.toString());
 
-            mission.addAgentMission(agentMission);
+                mission.addAgentMission(agentMission);
+            } catch (Exception e){
+                e.printStackTrace();
+            }
         }
 
         return mission;

@@ -38,5 +38,11 @@ public enum LifecycleEvent {
     /**
      * Denotes that an {@link com.type2labs.undersea.common.service.AgentService} has failed in some capacity
      */
-    SERVICE_FAILED
+    SERVICE_FAILED,
+
+    /**
+     * Denotes that the {@link com.type2labs.undersea.common.logger.model.LogService} has received an entry that
+     * matches the target service
+     */
+    APPEND_REQUEST,
 }

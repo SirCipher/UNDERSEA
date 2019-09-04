@@ -8,6 +8,7 @@ import com.type2labs.undersea.common.service.transaction.ServiceCallback;
 import com.type2labs.undersea.common.service.transaction.Transaction;
 
 import java.io.IOException;
+import java.util.concurrent.ExecutorService;
 
 public class NoVisualiser implements VisualiserClient {
 

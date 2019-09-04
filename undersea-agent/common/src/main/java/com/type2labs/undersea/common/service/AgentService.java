@@ -5,9 +5,11 @@ import com.type2labs.undersea.common.agent.AgentAware;
 import com.type2labs.undersea.common.service.transaction.ServiceCallback;
 import com.type2labs.undersea.common.service.transaction.Transaction;
 import com.type2labs.undersea.utilities.exception.NotSupportedException;
+import com.type2labs.undersea.utilities.executor.ThrowableExecutor;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.concurrent.ExecutorService;
 
 /**
  * Created by Thomas Klapwijk on 2019-08-08.
@@ -52,6 +54,10 @@ public interface AgentService extends Runnable, AgentAware {
     default ListenableFuture<?> executeTransaction(Transaction transaction) {
         throw new NotSupportedException();
     }
+
+   default ExecutorService transactionExecutor() {
+        return ThrowableExecutor.newSingleThreadExecutor();
+   }
 
     /**
      * The time (in milliseconds) that the {@link ServiceManager} should wait before assuming that there has been an

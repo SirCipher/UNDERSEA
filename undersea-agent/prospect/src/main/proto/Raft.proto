@@ -68,6 +68,7 @@ message AppendEntryResponse {
 message LogEntryProto {
     string data = 1;
     uint32 term = 2;
+    string className = 3;
 }
 
 message VoteRequest {

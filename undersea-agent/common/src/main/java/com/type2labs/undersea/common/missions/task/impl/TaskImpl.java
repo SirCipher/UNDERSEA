@@ -5,6 +5,8 @@ import com.type2labs.undersea.common.missions.task.model.TaskStatus;
 import com.type2labs.undersea.common.missions.task.model.TaskType;
 
 import java.util.Arrays;
+import java.util.Objects;
+import java.util.UUID;
 
 public class TaskImpl implements Task {
 
@@ -13,6 +15,7 @@ public class TaskImpl implements Task {
     private double progress;
     private TaskType taskType;
     private TaskStatus taskStatus = TaskStatus.TODO;
+    private UUID uuid;
 
     public TaskImpl() {
 
@@ -22,11 +25,17 @@ public class TaskImpl implements Task {
     public TaskImpl(double[] coordinates, TaskType taskType) {
         this.coordinates = coordinates;
         this.taskType = taskType;
+        this.uuid = UUID.randomUUID();
     }
 
     @Override
     public TaskType getTaskType() {
         return taskType;
+    }
+
+    @Override
+    public UUID getUuid() {
+        return uuid;
     }
 
     public void setTaskType(TaskType taskType) {
@@ -71,4 +80,16 @@ public class TaskImpl implements Task {
         this.coordinates = coordinates;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        TaskImpl task = (TaskImpl) o;
+        return Objects.equals(getUuid(), task.getUuid());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getUuid());
+    }
 }

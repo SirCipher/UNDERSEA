@@ -157,7 +157,6 @@ public class Transaction {
             Objects.requireNonNull(agent, "Transaction sender cannot be null");
             Objects.requireNonNull(services, "Transaction destination services cannot be null");
             Objects.requireNonNull(statusCode, "Transaction status code cannot be null");
-            Objects.requireNonNull(executorService, "Executor service cannot be null");
             Objects.requireNonNull(caller, "Invoked by cannot be null");
         }
 

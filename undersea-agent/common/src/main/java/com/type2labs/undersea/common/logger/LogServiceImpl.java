@@ -1,15 +1,21 @@
 package com.type2labs.undersea.common.logger;
 
+import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.type2labs.undersea.common.agent.Agent;
 import com.type2labs.undersea.common.cluster.Client;
 import com.type2labs.undersea.common.logger.model.LogEntry;
 import com.type2labs.undersea.common.logger.model.LogService;
 import com.type2labs.undersea.common.logger.model.RingBuffer;
+import com.type2labs.undersea.common.service.ServiceManager;
+import com.type2labs.undersea.common.service.transaction.LifecycleEvent;
 import com.type2labs.undersea.common.service.transaction.ServiceCallback;
 import com.type2labs.undersea.common.service.transaction.Transaction;
+import com.type2labs.undersea.common.service.transaction.TransactionData;
+import com.type2labs.undersea.utilities.concurrent.SimpleFutureCallback;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +29,7 @@ public class LogServiceImpl implements LogService {
 
     private Map<Client, Integer> clientIndexMap = new ConcurrentHashMap<>();
     private Agent agent;
+    private ServiceManager serviceManager;
 
     @Override
     public void shutdown() {
@@ -42,6 +49,7 @@ public class LogServiceImpl implements LogService {
     @Override
     public void initialise(Agent parentAgent) {
         this.agent = parentAgent;
+        this.serviceManager = agent.services();
     }
 
     @Override
@@ -91,9 +99,32 @@ public class LogServiceImpl implements LogService {
         return entries;
     }
 
+    private Transaction transactionFromEntry(LogEntry logEntry) {
+        return new Transaction.Builder(agent)
+                .invokedBy(this)
+                .forService(logEntry.getAgentService().getClass())
+                .withStatus(LifecycleEvent.APPEND_REQUEST)
+                .withData(TransactionData.from(logEntry.getMessage()))
+                .build();
+    }
+
     @Override
     public void appendEntries(List<LogEntry> logEntries) {
+        logEntries.forEach(e -> {
+            ringBuffer.put(e);
 
+            Transaction transaction = transactionFromEntry(e);
+
+            for (ListenableFuture<?> future : serviceManager.commitTransaction(transaction)) {
+                Futures.addCallback(future, new SimpleFutureCallback<Object>() {
+                    @Override
+                    public void onSuccess(@Nullable Object result) {
+                        logger.info(agent.name() + ": appending log entry: " + e.toString(), agent);
+                    }
+
+                }, e.getAgentService().transactionExecutor());
+            }
+        });
     }
 
     @Override

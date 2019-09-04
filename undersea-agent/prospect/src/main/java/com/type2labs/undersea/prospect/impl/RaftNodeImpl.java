@@ -9,6 +9,7 @@ import com.type2labs.undersea.common.agent.Agent;
 import com.type2labs.undersea.common.cluster.Client;
 import com.type2labs.undersea.common.consensus.MultiRoleState;
 import com.type2labs.undersea.common.consensus.RaftRole;
+import com.type2labs.undersea.common.logger.model.LogEntry;
 import com.type2labs.undersea.common.logger.model.LogService;
 import com.type2labs.undersea.common.missions.planner.model.AgentMission;
 import com.type2labs.undersea.common.missions.planner.model.GeneratedMission;
@@ -187,8 +188,10 @@ public class RaftNodeImpl implements RaftNode {
 
     private void broadcastMissionProgress() {
         for (Client follower : state().localNodes().values()) {
-            sendMissionUpdateRequest(follower);
+            sendMissionUpdateRequest((RaftClient) follower);
         }
+
+        lastHeartbeatTime = System.currentTimeMillis();
     }
 
     public RaftClusterConfig config() {
@@ -262,31 +265,33 @@ public class RaftNodeImpl implements RaftNode {
         schedule(new HeartbeatTask(), 500);
     }
 
-    private void sendMissionUpdateRequest(Client follower) {
-//        RaftProtos.AppendEntryRequest.Builder builder = RaftProtos.AppendEntryRequest.newBuilder();
-//        builder.setLogEntry(new NodeLog.LogEntry().toLogEntryProto());
-//
-//        RaftProtos.AppendEntryRequest request = builder.build();
-//
-//        AppendEntryServiceGrpc.AppendEntryServiceStub futureStub = AppendEntryServiceGrpc.newStub(follower.channel());
-//        futureStub.appendEntry(request, new StreamObserver<RaftProtos.AppendEntryResponse>() {
-//            @Override
-//            public void onNext(RaftProtos.AppendEntryResponse value) {
-//                System.out.println(value);
-//            }
-//
-//            @Override
-//            public void onError(Throwable t) {
-//                t.printStackTrace();
-//            }
-//
-//            @Override
-//            public void onCompleted() {
-//                System.out.println("Completed update request");
-//            }
-//        });
-//
-//        logger.info("Sending heartbeat to: " + follower.name(), agent);
+    private void sendMissionUpdateRequest(RaftClient follower) {
+        LogService logService = parent().services().getService(LogService.class);
+        List<LogEntry> logEntries = logService.readNextForClient(follower);
+        List<RaftProtos.LogEntryProto> protoEntries = new ArrayList<>(logEntries.size());
+
+        for (LogEntry e : logEntries) {
+            RaftProtos.LogEntryProto.Builder builder = RaftProtos.LogEntryProto.newBuilder();
+            builder.setData(e.mapObject());
+            builder.setTerm(e.getTerm());
+            builder.setClassName(MissionManager.class.getSimpleName());
+
+            protoEntries.add(builder.build());
+        }
+
+        RaftProtos.AppendEntryRequest request = RaftProtos.AppendEntryRequest.newBuilder()
+                .setClient(GrpcUtil.toProtoClient(this))
+                .setLeader(GrpcUtil.toProtoClient(this))
+                .addAllLogEntry(protoEntries)
+                .build();
+
+        follower.appendEntry(request, new SimpleFutureCallback<RaftProtos.AppendEntryResponse>() {
+            @Override
+            public void onSuccess(RaftProtos.@Nullable AppendEntryResponse result) {
+//                logger.info(agent.name() + ": successfully sent request. Response: {" + result + "}", agent);
+            }
+        });
+
     }
 
     public void shutdown() {
@@ -323,6 +328,7 @@ public class RaftNodeImpl implements RaftNode {
     }
 
     private class HeartbeatTask extends RequireRoleTask {
+
         HeartbeatTask() {
             super(RaftNodeImpl.this, RaftRole.LEADER);
         }
@@ -331,10 +337,9 @@ public class RaftNodeImpl implements RaftNode {
         protected void innerRun() {
             if (lastHeartbeatTime < System.currentTimeMillis() - RaftClusterConfig.HEARTBEAT_PERIOD) {
                 broadcastMissionProgress();
-            } else {
-                broadcastMissionProgress();
-                scheduleHeartbeat();
             }
+
+            scheduleHeartbeat();
         }
     }
 }

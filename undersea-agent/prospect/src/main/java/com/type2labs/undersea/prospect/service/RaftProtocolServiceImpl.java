@@ -10,6 +10,7 @@ import com.type2labs.undersea.common.logger.model.LogService;
 import com.type2labs.undersea.common.missions.planner.impl.AgentMissionImpl;
 import com.type2labs.undersea.common.missions.planner.model.AgentMission;
 import com.type2labs.undersea.common.missions.planner.model.MissionManager;
+import com.type2labs.undersea.common.service.AgentService;
 import com.type2labs.undersea.prospect.RaftProtocolServiceGrpc;
 import com.type2labs.undersea.prospect.RaftProtos;
 import com.type2labs.undersea.prospect.model.RaftNode;
@@ -71,7 +72,10 @@ public class RaftProtocolServiceImpl extends RaftProtocolServiceGrpc.RaftProtoco
             List<LogEntry> logEntries = new ArrayList<>(request.getLogEntryCount());
 
             for (RaftProtos.LogEntryProto proto : request.getLogEntryList()) {
-                logEntries.add(new LogEntry(proto.getData(), proto.getTerm()));
+                AgentService agentService =
+                        raftNode.parent().services().getService(LogEntry.forName(proto.getClassName()));
+
+                logEntries.add(new LogEntry(proto.getData(), proto.getTerm(), agentService));
             }
 
             LogService logService = raftNode.parent().services().getService(LogService.class);
