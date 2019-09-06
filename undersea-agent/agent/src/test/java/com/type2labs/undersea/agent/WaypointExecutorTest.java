@@ -1,26 +1,10 @@
 package com.type2labs.undersea.agent;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.type2labs.undersea.common.logger.model.LogEntry;
-import com.type2labs.undersea.common.missions.task.impl.TaskImpl;
-import com.type2labs.undersea.common.service.transaction.TransactionData;
 import com.type2labs.undersea.utilities.testing.IgnoredOnCi;
 import org.junit.Test;
 
 public class WaypointExecutorTest {
 
-    @Test
-    public void lolz() throws JsonProcessingException {
-        ObjectMapper objectMapper = new ObjectMapper();
-
-
-        TransactionData transactionData = TransactionData.from(new LogEntry(new TaskImpl(), 0, null).getMessage());
-
-
-        String s = objectMapper.writeValueAsString(TransactionData.from(new TaskImpl()));
-        System.out.println(s);
-    }
 
     @Test
     @IgnoredOnCi

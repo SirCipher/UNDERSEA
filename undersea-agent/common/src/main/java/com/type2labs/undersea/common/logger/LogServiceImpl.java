@@ -104,7 +104,7 @@ public class LogServiceImpl implements LogService {
                 .invokedBy(this)
                 .forService(logEntry.getAgentService().getClass())
                 .withStatus(LifecycleEvent.APPEND_REQUEST)
-                .withData(TransactionData.from(logEntry.getMessage()))
+                .withPrimaryData(TransactionData.from(logEntry.getData()))
                 .build();
     }
 

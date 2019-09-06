@@ -6,19 +6,19 @@ package com.type2labs.undersea.common.service.transaction;
 public class TransactionData<T> {
 
     private final T data;
-    private String clazz;
+    private String className;
 
     private TransactionData(T data) {
         this.data = data;
-        clazz = data.getClass().getCanonicalName();
+        className = data.getClass().getCanonicalName();
     }
 
     public static <T> TransactionData from(T t) {
         return new TransactionData<>(t);
     }
 
-    public String getClazz() {
-        return clazz;
+    public String getClassName() {
+        return className;
     }
 
     public T getData() {

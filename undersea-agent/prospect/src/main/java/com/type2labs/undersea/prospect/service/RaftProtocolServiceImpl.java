@@ -73,9 +73,9 @@ public class RaftProtocolServiceImpl extends RaftProtocolServiceGrpc.RaftProtoco
 
             for (RaftProtos.LogEntryProto proto : request.getLogEntryList()) {
                 AgentService agentService =
-                        raftNode.parent().services().getService(LogEntry.forName(proto.getClassName()));
+                        raftNode.parent().services().getService(LogEntry.forName(proto.getAgentService()));
 
-                logEntries.add(new LogEntry(proto.getData(), proto.getTerm(), agentService));
+                logEntries.add(new LogEntry(proto.getData(), proto.getValue(), proto.getTerm(), agentService));
             }
 
             LogService logService = raftNode.parent().services().getService(LogService.class);

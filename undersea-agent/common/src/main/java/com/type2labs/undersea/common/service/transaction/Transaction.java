@@ -50,17 +50,29 @@ public class Transaction {
      * A corresponding object that may be used for performing the transaction. This may be {@code null} and the
      * {@link LifecycleEvent} may be enough to achieve the desired output.
      */
-    private TransactionData transactionData;
+    private TransactionData primaryTransactionData;
+
+    /**
+     * A corresponding object that may be used for performing the transaction. This may be {@code null} and the
+     * {@link LifecycleEvent} may be enough to achieve the desired output.
+     */
+    private TransactionData secondaryTransactionData;
+
+    public TransactionData getSecondaryTransactionData() {
+        return secondaryTransactionData;
+    }
 
     private Transaction(Agent agent,
                         Collection<Class<? extends AgentService>> destinationServices,
                         Enum<? extends LifecycleEvent> code,
-                        TransactionData transactionData,
+                        TransactionData primaryTransactionData,
+                        TransactionData secondaryTransactionData,
                         ListeningExecutorService executorService, AgentService caller) {
         this.agent = agent;
         this.destinationServices = destinationServices;
         this.statusCode = code;
-        this.transactionData = transactionData;
+        this.primaryTransactionData = primaryTransactionData;
+        this.secondaryTransactionData = secondaryTransactionData;
         this.executorService = executorService;
         this.caller = caller;
     }
@@ -85,7 +97,8 @@ public class Transaction {
                 ", caller=" + caller +
                 ", destinationServices=" + destinationServices +
                 ", statusCode=" + statusCode +
-                ", transactionData=" + transactionData +
+                ", primaryTransactionData=" + primaryTransactionData +
+                ", secondaryTransactionData=" + secondaryTransactionData +
                 '}';
     }
 
@@ -97,12 +110,8 @@ public class Transaction {
         return statusCode;
     }
 
-    public boolean hasTransactionData() {
-        return transactionData != null;
-    }
-
-    public TransactionData getTransactionData() {
-        return transactionData;
+    public TransactionData getPrimaryTransactionData() {
+        return primaryTransactionData;
     }
 
     public static class Builder {
@@ -110,7 +119,8 @@ public class Transaction {
         private Agent agent;
         private Collection<Class<? extends AgentService>> services = new HashSet<>();
         private Enum<? extends LifecycleEvent> statusCode;
-        private TransactionData data;
+        private TransactionData primaryTransactionData;
+        private TransactionData secondaryTransactionData;
         private ListeningExecutorService executorService;
         private AgentService caller;
 
@@ -120,7 +130,8 @@ public class Transaction {
 
         public Transaction build() {
             validate();
-            return new Transaction(agent, services, statusCode, data, executorService, caller);
+            return new Transaction(agent, services, statusCode, primaryTransactionData, secondaryTransactionData,
+                    executorService, caller);
         }
 
         public Builder invokedBy(AgentService caller) {
@@ -160,8 +171,13 @@ public class Transaction {
             Objects.requireNonNull(caller, "Invoked by cannot be null");
         }
 
-        public Builder withData(TransactionData data) {
-            this.data = data;
+        public Builder withPrimaryData(TransactionData primaryTransactionData) {
+            this.primaryTransactionData = primaryTransactionData;
+            return this;
+        }
+
+        public Builder withSecondaryData(TransactionData secondaryTransactionData) {
+            this.secondaryTransactionData = secondaryTransactionData;
             return this;
         }
 

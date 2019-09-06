@@ -7,6 +7,7 @@ import com.type2labs.undersea.prospect.RaftProtos;
 import com.type2labs.undersea.prospect.model.RaftNode;
 import com.type2labs.undersea.prospect.networking.RaftClient;
 import com.type2labs.undersea.prospect.util.GrpcUtil;
+import com.type2labs.undersea.utilities.lang.ReschedulableTask;
 import io.grpc.Status;
 import io.grpc.StatusRuntimeException;
 import org.apache.logging.log4j.LogManager;
@@ -29,7 +30,7 @@ public class AcquireStatusTask implements Runnable {
 
         if (localNodes.size() == 0) {
             logger.info(raftNode.name() + " has no local nodes", raftNode.parent());
-            raftNode.schedule(new AcquireStatusTask(raftNode), 100);
+            raftNode.schedule(ReschedulableTask.wrap(new AcquireStatusTask(raftNode)), 100);
             return;
         }
 

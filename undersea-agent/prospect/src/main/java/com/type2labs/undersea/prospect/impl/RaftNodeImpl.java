@@ -27,7 +27,9 @@ import com.type2labs.undersea.prospect.task.AcquireStatusTask;
 import com.type2labs.undersea.prospect.task.RequireRoleTask;
 import com.type2labs.undersea.prospect.util.GrpcUtil;
 import com.type2labs.undersea.utilities.concurrent.SimpleFutureCallback;
+import com.type2labs.undersea.utilities.exception.UnderseaException;
 import com.type2labs.undersea.utilities.executor.ThrowableExecutor;
+import com.type2labs.undersea.utilities.lang.ReschedulableTask;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -223,6 +225,7 @@ public class RaftNodeImpl implements RaftNode {
                     .setClient(GrpcUtil.toProtoClient(this))
                     .setMission(mission)
                     .build();
+
             raftClient.distributeMission(request, new SimpleFutureCallback<RaftProtos.DisributeMissionResponse>() {
                 @Override
                 public void onSuccess(RaftProtos.@Nullable DisributeMissionResponse result) {
@@ -244,25 +247,30 @@ public class RaftNodeImpl implements RaftNode {
         }
 
         server.start();
-//        startVotingRound();
-        logger.trace("Started node: " + name, agent);
         started = true;
+
+        logger.trace("Started node: " + name, agent);
     }
 
-
     @Override
-    public void schedule(Runnable task, long delayInMillis) {
-
+    public void schedule(ReschedulableTask task, long delayInMillis) {
         try {
             scheduledExecutor.schedule(task, delayInMillis, MILLISECONDS);
         } catch (RejectedExecutionException e) {
             logger.error(e);
+
+            if (task.getRunCount() > ReschedulableTask.maxRunCount) {
+                throw new UnderseaException("Attempted to run task " + task.getRunCount() + " times but failed");
+            }
+
+            task.incrementRunCount();
+            schedule(task, task.getRerunTimeWindow());
         }
     }
 
     private void scheduleHeartbeat() {
         broadcastMissionProgress();
-        schedule(new HeartbeatTask(), 500);
+        schedule(ReschedulableTask.wrap(new HeartbeatTask()), 500);
     }
 
     private void sendMissionUpdateRequest(RaftClient follower) {
@@ -272,9 +280,15 @@ public class RaftNodeImpl implements RaftNode {
 
         for (LogEntry e : logEntries) {
             RaftProtos.LogEntryProto.Builder builder = RaftProtos.LogEntryProto.newBuilder();
-            builder.setData(e.mapObject());
+            Object data = e.getData();
+
+            builder.setData(data == null ? null : data.toString());
+
+            Object value = e.getValue();
+            builder.setValue(value == null ? null : value.toString());
+
             builder.setTerm(e.getTerm());
-            builder.setClassName(MissionManager.class.getSimpleName());
+            builder.setAgentService(MissionManager.class.getSimpleName());
 
             protoEntries.add(builder.build());
         }

@@ -9,12 +9,28 @@ import com.type2labs.undersea.common.service.AgentService;
 public class LogEntry {
 
     private final int term;
-    private final Object message;
+    private final Object data;
+    private final Object value;
     private final AgentService agentService;
 
-    public LogEntry(Object message, int term, AgentService agentService) {
-        this.message = message;
+    @Override
+    public String toString() {
+        return "LogEntry{" +
+                "term=" + term +
+                ", data=" + data +
+                ", value=" + value +
+                ", agentService=" + agentService +
+                '}';
+    }
+
+    public Object getValue() {
+        return value;
+    }
+
+    public LogEntry(Object data, Object value, int term, AgentService agentService) {
+        this.data = data;
         this.term = term;
+        this.value = value.toString();
         this.agentService = agentService;
     }
 
@@ -27,15 +43,6 @@ public class LogEntry {
             default:
                 throw new IllegalArgumentException(className);
         }
-    }
-
-    @Override
-    public String toString() {
-        return "LogEntry{" +
-                "term=" + term +
-                ", message=" + message +
-                ", agentService=" + agentService +
-                '}';
     }
 
     public int getTerm() {
@@ -52,8 +59,8 @@ public class LogEntry {
         }
     }
 
-    public Object getMessage() {
-        return message;
+    public Object getData() {
+        return data;
     }
 
     public AgentService getAgentService() {

@@ -15,14 +15,21 @@ public class AgentMissionImpl implements AgentMission {
     private Client assignee;
     private double progress = 0;
     private String points;
+    private boolean started = false;
 
     public AgentMissionImpl() {
 
     }
 
+
     public AgentMissionImpl(Client assignee, List<Task> tasks) {
         this.assignee = assignee;
         this.tasks = tasks;
+    }
+
+    @Override
+    public void setStarted(boolean started) {
+        this.started = started;
     }
 
     public String getPoints() {
@@ -54,6 +61,11 @@ public class AgentMissionImpl implements AgentMission {
     @Override
     public double getProgress() {
         return 0;
+    }
+
+    @Override
+    public boolean started() {
+        return started;
     }
 
     public void setProgress(double progress) {

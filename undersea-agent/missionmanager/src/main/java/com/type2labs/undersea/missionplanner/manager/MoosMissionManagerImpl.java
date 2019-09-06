@@ -1,7 +1,5 @@
 package com.type2labs.undersea.missionplanner.manager;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
@@ -10,14 +8,12 @@ import com.type2labs.undersea.common.agent.Agent;
 import com.type2labs.undersea.common.blockchain.BlockchainNetwork;
 import com.type2labs.undersea.common.consensus.ConsensusAlgorithm;
 import com.type2labs.undersea.common.logger.model.LogEntry;
-import com.type2labs.undersea.common.logger.model.LogService;
 import com.type2labs.undersea.common.missions.PlannerException;
 import com.type2labs.undersea.common.missions.planner.impl.AgentMissionImpl;
 import com.type2labs.undersea.common.missions.planner.model.AgentMission;
 import com.type2labs.undersea.common.missions.planner.model.GeneratedMission;
 import com.type2labs.undersea.common.missions.planner.model.MissionManager;
 import com.type2labs.undersea.common.missions.planner.model.MissionPlanner;
-import com.type2labs.undersea.common.missions.task.impl.TaskImpl;
 import com.type2labs.undersea.common.missions.task.model.Task;
 import com.type2labs.undersea.common.missions.task.model.TaskExecutor;
 import com.type2labs.undersea.common.missions.task.model.TaskStatus;
@@ -28,14 +24,15 @@ import com.type2labs.undersea.common.service.hardware.NetworkInterface;
 import com.type2labs.undersea.common.service.transaction.LifecycleEvent;
 import com.type2labs.undersea.common.service.transaction.ServiceCallback;
 import com.type2labs.undersea.common.service.transaction.Transaction;
+import com.type2labs.undersea.common.service.transaction.TransactionData;
 import com.type2labs.undersea.missionplanner.task.executor.MeasureExecutor;
 import com.type2labs.undersea.missionplanner.task.executor.MoosWaypointExecutor;
 import com.type2labs.undersea.missionplanner.task.executor.SurveyExecutor;
 import com.type2labs.undersea.missionplanner.task.executor.WaypointExecutor;
 import com.type2labs.undersea.utilities.concurrent.SimpleFutureCallback;
 import com.type2labs.undersea.utilities.exception.NotSupportedException;
-import com.type2labs.undersea.utilities.exception.UnderseaException;
 import com.type2labs.undersea.utilities.executor.ThrowableExecutor;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -58,7 +55,6 @@ public class MoosMissionManagerImpl implements MissionManager {
     private List<Task> assignedTasks = new ArrayList<>();
     private Task currentTask;
     private AgentMission missionAssigned;
-    private LogService logService;
 
     public MoosMissionManagerImpl(MissionPlanner missionPlanner) {
         this.missionPlanner = missionPlanner;
@@ -174,6 +170,7 @@ public class MoosMissionManagerImpl implements MissionManager {
 
             // If we're on our way to the first waypoint
             if (index == 0) {
+                missionAssigned.setStarted(true);
                 return;
             } else {
                 index -= 1;
@@ -186,7 +183,7 @@ public class MoosMissionManagerImpl implements MissionManager {
         ServiceManager serviceManager = agent.services();
         ConsensusAlgorithm consensusAlgorithm = serviceManager.getService(ConsensusAlgorithm.class, true);
 
-        agent.log(new LogEntry(task, consensusAlgorithm.term(), this));
+        agent.log(new LogEntry(task.getUuid(), TaskStatus.COMPLETED, consensusAlgorithm.term(), this));
 
         if (index == assignedTasks.size() - 1) {
             logger.info(agent.name() + ": completed all tasks", agent);
@@ -231,7 +228,7 @@ public class MoosMissionManagerImpl implements MissionManager {
      */
     @Override
     public ListenableFuture<?> executeTransaction(Transaction transaction) {
-        logger.info(agent.name() + ":received transaction: " + transaction, agent);
+        logger.info(agent.name() + ": received transaction: " + transaction, agent);
         LifecycleEvent statusCode = (LifecycleEvent) transaction.getStatusCode();
 
         if (statusCode == LifecycleEvent.ELECTED_LEADER) {
@@ -239,6 +236,7 @@ public class MoosMissionManagerImpl implements MissionManager {
                 try {
                     GeneratedMission generatedMission = missionPlanner.generate();
                     missionPlanner.print(generatedMission);
+                    
                     return generatedMission;
                 } catch (PlannerException e) {
                     throw new RuntimeException(e);
@@ -249,35 +247,38 @@ public class MoosMissionManagerImpl implements MissionManager {
             return null;
         }
 
-        String message =
-                MoosMissionManagerImpl.class.getSimpleName() + " does not support status code: " + statusCode +
-                        ". " +
-                        "Called by: " + transaction.getCaller();
-        logger.error(message);
+        String message = MoosMissionManagerImpl.class.getSimpleName() + " does not support status code: " + statusCode +
+                ". Called by: " + transaction.getCaller();
+        logger.error(message, agent);
+
         throw new NotSupportedException(message);
     }
 
     private void handleAppendTransaction(Transaction transaction) {
-        Object data = transaction.getTransactionData().getData();
-        ObjectMapper objectMapper = new ObjectMapper();
-        Task taskModel;
+        TransactionData<?> uuidTransactionData = transaction.getPrimaryTransactionData();
+        String uuid = (String) uuidTransactionData.getData();
 
-        try {
-            taskModel = objectMapper.readValue(data.toString(), TaskImpl.class);
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
-
-        if (taskModel.getClass().isAssignableFrom(Task.class)) {
-            Task task = (Task) data;
+        if (!StringUtils.isEmpty(uuid)) {
             List<Task> subTasks = missionAssigned.getTasks();
 
             for (Task t : subTasks) {
-                if (t.equals(task)) {
+                if (t.getUuid().toString().equals(uuid)) {
+                    TransactionData<?> taskStatusTransactionData = transaction.getSecondaryTransactionData();
+                    TaskStatus newTaskStatus = TaskStatus.valueOf(taskStatusTransactionData.toString());
+
+                    t.setTaskStatus(newTaskStatus);
+
                     int index = subTasks.indexOf(t);
                     subTasks.set(index, t);
+
+                    logger.warn(agent.name() + ": updated task: " + uuid + " to new status: " + newTaskStatus,
+                            agent);
+
+                    return;
                 }
             }
+
+            logger.warn(agent.name() + ": failed to find matching UUID: " + uuid, agent);
         }
     }
 

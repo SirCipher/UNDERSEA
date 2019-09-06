@@ -1,5 +1,7 @@
 package com.type2labs.undersea.missionplanner.planner.vrp;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.type2labs.undersea.common.agent.Agent;
 import com.type2labs.undersea.common.agent.AgentFactory;
 import com.type2labs.undersea.common.cluster.Client;
@@ -84,6 +86,17 @@ public class VehicleRoutingOptimiserTest {
 
         try {
             GeneratedMissionImpl mission = (GeneratedMissionImpl) missionPlanner.generate();
+
+            ObjectMapper mapper = new ObjectMapper();
+
+            try {
+                String res = mapper.writeValueAsString(mission);
+
+                System.out.println(res);
+            } catch (JsonProcessingException e) {
+                e.printStackTrace();
+                Assert.fail();
+            }
 
             if (mission.getAssignment() == null) {
                 Assert.fail("No solution found");

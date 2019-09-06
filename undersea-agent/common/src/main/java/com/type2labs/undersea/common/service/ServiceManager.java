@@ -84,7 +84,7 @@ public class ServiceManager {
         Transaction transaction = new Transaction.Builder(agent)
                 .forAllRunningServices()
                 .withStatus(LifecycleEvent.SERVICE_FAILED)
-                .withData(TransactionData.from(service))
+                .withPrimaryData(TransactionData.from(service))
                 .usingExecutorService(MoreExecutors.newDirectExecutorService()).forAllServices()
                 .invokedBy(serviceManagerTransactionService)
                 .build();
