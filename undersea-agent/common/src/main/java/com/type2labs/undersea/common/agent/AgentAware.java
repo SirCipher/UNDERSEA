@@ -27,4 +27,5 @@ public interface AgentAware {
      * @return the associated agent
      */
     Agent parent();
+
 }

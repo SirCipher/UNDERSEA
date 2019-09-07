@@ -2,7 +2,6 @@ package com.type2labs.undersea.prospect.impl;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.common.util.concurrent.MoreExecutors;
 import com.type2labs.undersea.common.agent.Agent;
@@ -18,7 +17,6 @@ import com.type2labs.undersea.common.monitor.model.Monitor;
 import com.type2labs.undersea.common.service.AgentService;
 import com.type2labs.undersea.common.service.transaction.LifecycleEvent;
 import com.type2labs.undersea.common.service.transaction.ServiceCallback;
-import com.type2labs.undersea.common.service.transaction.Transaction;
 import com.type2labs.undersea.prospect.RaftClusterConfig;
 import com.type2labs.undersea.prospect.RaftProtos;
 import com.type2labs.undersea.prospect.model.RaftNode;
@@ -81,7 +79,6 @@ public class RaftNodeImpl implements RaftNode {
         }
 
         this.server = new GrpcServer(this, address);
-
         this.singleThreadScheduledExecutor = ThrowableExecutor.newSingleThreadExecutor(logger);
         this.listeningExecutorService =
                 MoreExecutors.listeningDecorator(ThrowableExecutor.newSingleThreadExecutor(logger));
@@ -200,14 +197,15 @@ public class RaftNodeImpl implements RaftNode {
         return raftClusterConfig;
     }
 
-    void distributeMission(GeneratedMission result) {
+    void distributeMission(GeneratedMission generatedMission) {
         ObjectMapper mapper = new ObjectMapper();
 
-        for (AgentMission agentMission : result.subMissions()) {
+        // Iterate over all the submissions in the mission and send them the parent mission.
+        for (AgentMission agentMission : generatedMission.subMissions()) {
             String mission;
 
             try {
-                mission = mapper.writeValueAsString(agentMission);
+                mission = mapper.writeValueAsString(generatedMission);
             } catch (JsonProcessingException e) {
                 throw new RuntimeException("Unable to process mission: " + agentMission, e);
             }
@@ -216,7 +214,7 @@ public class RaftNodeImpl implements RaftNode {
 
             if (raftClient.isSelf()) {
                 MissionManager manager = agent.services().getService(MissionManager.class);
-                manager.assignMission(agentMission);
+                manager.assignMission(generatedMission);
 
                 continue;
             }
@@ -257,14 +255,14 @@ public class RaftNodeImpl implements RaftNode {
         try {
             scheduledExecutor.schedule(task, delayInMillis, MILLISECONDS);
         } catch (RejectedExecutionException e) {
-            logger.error(e);
-
             if (task.getRunCount() > ReschedulableTask.maxRunCount) {
                 throw new UnderseaException("Attempted to run task " + task.getRunCount() + " times but failed");
-            }
+            } else {
+                logger.error("Failed to run task, scheduling", e);
 
-            task.incrementRunCount();
-            schedule(task, task.getRerunTimeWindow());
+                task.incrementRunCount();
+                schedule(task, task.getRerunTimeWindow());
+            }
         }
     }
 
@@ -316,11 +314,6 @@ public class RaftNodeImpl implements RaftNode {
     @Override
     public boolean started() {
         return started;
-    }
-
-    @Override
-    public ListenableFuture<?> executeTransaction(Transaction transaction) {
-        return null;
     }
 
     @Override

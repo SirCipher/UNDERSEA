@@ -1,11 +1,14 @@
-package com.type2labs.undersea.missionplanner.model;
+package com.type2labs.undersea.common.missions;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.ortools.constraintsolver.Assignment;
 import com.google.ortools.constraintsolver.RoutingIndexManager;
 import com.google.ortools.constraintsolver.RoutingModel;
 import com.type2labs.undersea.common.missions.planner.model.AgentMission;
 import com.type2labs.undersea.common.missions.planner.model.GeneratedMission;
 import com.type2labs.undersea.common.missions.planner.model.MissionParameters;
+import com.type2labs.undersea.common.missions.task.model.Task;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,12 +18,21 @@ import java.util.List;
  */
 public class GeneratedMissionImpl implements GeneratedMission {
 
-    private final PlanDataModel planDataModel;
-    private final Assignment assignment;
-    private final RoutingModel routingModel;
-    private final RoutingIndexManager routingIndexManager;
-    private final MissionParameters missionParameters;
+    @JsonIgnore
+    private PlanDataModel planDataModel;
+    @JsonIgnore
+    private Assignment assignment;
+    @JsonIgnore
+    private RoutingModel routingModel;
+    @JsonIgnore
+    private RoutingIndexManager routingIndexManager;
+    @JsonIgnore
+    private MissionParameters missionParameters;
     private List<AgentMission> missions = new ArrayList<>();
+
+    public GeneratedMissionImpl() {
+
+    }
 
     public GeneratedMissionImpl(PlanDataModel planDataModel, Assignment assignment, RoutingModel routingModel,
                                 RoutingIndexManager routingIndexManager,
@@ -41,20 +53,40 @@ public class GeneratedMissionImpl implements GeneratedMission {
         return assignment;
     }
 
+    public void setAssignment(Assignment assignment) {
+        this.assignment = assignment;
+    }
+
     public MissionParameters getMissionParameters() {
         return missionParameters;
+    }
+
+    public void setMissionParameters(MissionParameters missionParameters) {
+        this.missionParameters = missionParameters;
     }
 
     public PlanDataModel getPlanDataModel() {
         return planDataModel;
     }
 
+    public void setPlanDataModel(PlanDataModel planDataModel) {
+        this.planDataModel = planDataModel;
+    }
+
     public RoutingIndexManager getRoutingIndexManager() {
         return routingIndexManager;
     }
 
+    public void setRoutingIndexManager(RoutingIndexManager routingIndexManager) {
+        this.routingIndexManager = routingIndexManager;
+    }
+
     public RoutingModel getRoutingModel() {
         return routingModel;
+    }
+
+    public void setRoutingModel(RoutingModel routingModel) {
+        this.routingModel = routingModel;
     }
 
     @Override
@@ -63,9 +95,25 @@ public class GeneratedMissionImpl implements GeneratedMission {
         return 0;
     }
 
+    public void setMissions(List<AgentMission> missions) {
+        this.missions = missions;
+    }
+
     @Override
+    @JsonProperty("missions")
     public List<AgentMission> subMissions() {
         return missions;
+    }
+
+    @Override
+    public List<Task> allTasks() {
+        List<Task> allTasks = new ArrayList<>();
+
+        for (AgentMission agentMission : missions) {
+            allTasks.addAll(agentMission.getTasks());
+        }
+
+        return allTasks;
     }
 
 

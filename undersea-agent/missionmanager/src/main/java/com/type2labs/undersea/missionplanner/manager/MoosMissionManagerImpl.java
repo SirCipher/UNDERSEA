@@ -22,7 +22,6 @@ import com.type2labs.undersea.common.service.AgentService;
 import com.type2labs.undersea.common.service.ServiceManager;
 import com.type2labs.undersea.common.service.hardware.NetworkInterface;
 import com.type2labs.undersea.common.service.transaction.LifecycleEvent;
-import com.type2labs.undersea.common.service.transaction.ServiceCallback;
 import com.type2labs.undersea.common.service.transaction.Transaction;
 import com.type2labs.undersea.common.service.transaction.TransactionData;
 import com.type2labs.undersea.missionplanner.task.executor.MeasureExecutor;
@@ -41,6 +40,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by Thomas Klapwijk on 2019-08-23.
@@ -54,6 +54,7 @@ public class MoosMissionManagerImpl implements MissionManager {
     private Agent agent;
     private List<Task> assignedTasks = new ArrayList<>();
     private Task currentTask;
+    private GeneratedMission globalMission;
     private AgentMission missionAssigned;
 
     public MoosMissionManagerImpl(MissionPlanner missionPlanner) {
@@ -96,28 +97,39 @@ public class MoosMissionManagerImpl implements MissionManager {
     }
 
     @Override
-    public void assignMission(AgentMission agentMission) {
-        this.missionAssigned = agentMission;
-        this.assignedTasks.addAll(agentMission.getTasks());
+    public void assignMission(GeneratedMission globalMission) {
+        this.globalMission = globalMission;
+        List<AgentMission> agentMissions =
+                globalMission.subMissions().stream().filter(s -> s.peerId().equals(agent.peerId().toString())).collect(Collectors.toList());
+
+        if (agentMissions.size() > 0) {
+            this.missionAssigned = agentMissions.get(0);
+        }
+
+        for (AgentMission mission : agentMissions) {
+            assignedTasks.addAll(mission.getTasks());
+        }
 
         if (currentTask == null && assignedTasks.size() > 0) {
             /*
                 Due to having to work around how MOOS has been handling sequential point updates, the points are
                 having to be all sent at once and then the tasks updated afterwards.
              */
-            if (agentMission instanceof AgentMissionImpl) {
-                TaskExecutor taskExecutor = new MoosWaypointExecutor((AgentMissionImpl) agentMission);
-                taskExecutor.initialise(agent);
+            for (AgentMission agentMission : agentMissions) {
+                if (agentMission instanceof AgentMissionImpl) {
+                    TaskExecutor taskExecutor = new MoosWaypointExecutor((AgentMissionImpl) agentMission);
+                    taskExecutor.initialise(agent);
 
-                ListenableFuture<?> listenableFuture = this.taskExecutor.submit(taskExecutor);
+                    ListenableFuture<?> listenableFuture = this.taskExecutor.submit(taskExecutor);
 
-                Futures.addCallback(listenableFuture, new SimpleFutureCallback<Object>() {
-                    @Override
-                    public void onSuccess(@Nullable Object result) {
-                    }
-                }, this.taskExecutor);
-            } else {
-                runTask(assignedTasks.get(0));
+                    Futures.addCallback(listenableFuture, new SimpleFutureCallback<Object>() {
+                        @Override
+                        public void onSuccess(@Nullable Object result) {
+                        }
+                    }, this.taskExecutor);
+                } else {
+                    runTask(assignedTasks.get(0));
+                }
             }
         }
 
@@ -208,16 +220,6 @@ public class MoosMissionManagerImpl implements MissionManager {
 
     }
 
-    @Override
-    public void shutdown() {
-
-    }
-
-    @Override
-    public boolean started() {
-        return true;
-    }
-
     /**
      * Execues a given {@link Transaction} on the mission planner. Supported {@link LifecycleEvent}s are:
      * {@link LifecycleEvent#ELECTED_LEADER} - which will generate a mission in accordance with the current
@@ -236,7 +238,7 @@ public class MoosMissionManagerImpl implements MissionManager {
                 try {
                     GeneratedMission generatedMission = missionPlanner.generate();
                     missionPlanner.print(generatedMission);
-                    
+
                     return generatedMission;
                 } catch (PlannerException e) {
                     throw new RuntimeException(e);
@@ -259,19 +261,19 @@ public class MoosMissionManagerImpl implements MissionManager {
         String uuid = (String) uuidTransactionData.getData();
 
         if (!StringUtils.isEmpty(uuid)) {
-            List<Task> subTasks = missionAssigned.getTasks();
+            List<Task> subTasks = globalMission.allTasks();
 
             for (Task t : subTasks) {
                 if (t.getUuid().toString().equals(uuid)) {
                     TransactionData<?> taskStatusTransactionData = transaction.getSecondaryTransactionData();
-                    TaskStatus newTaskStatus = TaskStatus.valueOf(taskStatusTransactionData.toString());
+                    TaskStatus newTaskStatus = TaskStatus.valueOf(taskStatusTransactionData.getData().toString());
 
                     t.setTaskStatus(newTaskStatus);
 
                     int index = subTasks.indexOf(t);
                     subTasks.set(index, t);
 
-                    logger.warn(agent.name() + ": updated task: " + uuid + " to new status: " + newTaskStatus,
+                    logger.info(agent.name() + ": updated task: " + uuid + " to new status: " + newTaskStatus,
                             agent);
 
                     return;
@@ -280,11 +282,6 @@ public class MoosMissionManagerImpl implements MissionManager {
 
             logger.warn(agent.name() + ": failed to find matching UUID: " + uuid, agent);
         }
-    }
-
-    @Override
-    public void registerCallback(ServiceCallback serviceCallback) {
-
     }
 
     @Override

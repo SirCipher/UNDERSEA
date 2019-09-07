@@ -1,5 +1,6 @@
 package com.type2labs.undersea.common.missions.planner.impl;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.type2labs.undersea.common.cluster.Client;
 import com.type2labs.undersea.common.missions.planner.model.MissionParameters;
 
@@ -10,11 +11,15 @@ import java.util.List;
  */
 public class MissionParametersImpl implements MissionParameters {
 
-    private final int startingNode;
-    private final double[][] polygon;
+    private int startingNode;
+    private double[][] polygon;
     private List<Client> agents;
     private double minimumSensorRange;
     private double[][] centroids;
+
+    public MissionParametersImpl(){
+
+    }
 
     public MissionParametersImpl(int startingNode, double[][] polygon, int minimumSensorRange) {
         this.startingNode = startingNode;
@@ -56,6 +61,25 @@ public class MissionParametersImpl implements MissionParameters {
         this.centroids = centroids;
     }
 
+    public void setStartingNode(int startingNode) {
+        this.startingNode = startingNode;
+    }
+
+    public void setPolygon(double[][] polygon) {
+        this.polygon = polygon;
+    }
+
+    public List<Client> getAgents() {
+        return agents;
+    }
+
+    public void setAgents(List<Client> agents) {
+        this.agents = agents;
+    }
+
+    public void setMinimumSensorRange(double minimumSensorRange) {
+        this.minimumSensorRange = minimumSensorRange;
+    }
 
     public double[] getCentroid(int index) {
         return centroids[index];

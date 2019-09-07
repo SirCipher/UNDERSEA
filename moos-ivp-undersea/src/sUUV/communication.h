@@ -18,6 +18,8 @@
 #include <iostream>
 #include "UUV.h"
 
+static constexpr unsigned short INCOMING_SOCKET_DATA_BUF_SIZE = 4096;
+
 typedef struct {
     UUV *uuv;
     int port;

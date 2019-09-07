@@ -1,6 +1,7 @@
 package com.type2labs.undersea.common.missions.planner.impl;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.type2labs.undersea.common.cluster.Client;
 import com.type2labs.undersea.common.missions.planner.model.AgentMission;
 import com.type2labs.undersea.common.missions.task.model.Task;
@@ -13,6 +14,7 @@ public class AgentMissionImpl implements AgentMission {
     private List<Task> tasks;
     @JsonIgnore
     private Client assignee;
+    private String peerId;
     private double progress = 0;
     private String points;
     private boolean started = false;
@@ -21,10 +23,20 @@ public class AgentMissionImpl implements AgentMission {
 
     }
 
-
     public AgentMissionImpl(Client assignee, List<Task> tasks) {
         this.assignee = assignee;
+        this.peerId = assignee.peerId().toString();
         this.tasks = tasks;
+    }
+
+    @Override
+    @JsonProperty("peerId")
+    public String peerId() {
+        return peerId;
+    }
+
+    public void setPeerId(String peerId) {
+        this.peerId = peerId;
     }
 
     @Override
@@ -63,13 +75,13 @@ public class AgentMissionImpl implements AgentMission {
         return 0;
     }
 
+    public void setProgress(double progress) {
+        this.progress = progress;
+    }
+
     @Override
     public boolean started() {
         return started;
-    }
-
-    public void setProgress(double progress) {
-        this.progress = progress;
     }
 
     @Override

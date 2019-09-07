@@ -14,7 +14,7 @@ import com.type2labs.undersea.common.missions.planner.model.MissionManager;
 import com.type2labs.undersea.common.missions.planner.model.MissionParameters;
 import com.type2labs.undersea.common.missions.planner.model.MissionPlanner;
 import com.type2labs.undersea.missionplanner.manager.MoosMissionManagerImpl;
-import com.type2labs.undersea.missionplanner.model.GeneratedMissionImpl;
+import com.type2labs.undersea.common.missions.GeneratedMissionImpl;
 import com.type2labs.undersea.utilities.Utility;
 import org.junit.Assert;
 import org.junit.BeforeClass;

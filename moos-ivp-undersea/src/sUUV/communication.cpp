@@ -3,6 +3,7 @@
  */
 
 #include "communication.h"
+#include "Utilities.h"
 
 using namespace std;
 
@@ -12,7 +13,7 @@ bool serverRunning = true;
 int make_accept_sock(const char *servspec) {
     const int one = 1;
     struct addrinfo hints = {};
-    struct addrinfo *res = 0, *ai = 0, *ai4 = 0;
+    struct addrinfo *res = nullptr, *ai = nullptr, *ai4 = nullptr;
     char *node = strdup(servspec);
     char *service = strrchr(node, ':');
     int sock;
@@ -36,7 +37,7 @@ int make_accept_sock(const char *servspec) {
     bind(sock, ai->ai_addr, ai->ai_addrlen);
 
     if (listen(sock, 256) != 0) {
-        std::cerr << "Failed to start listening on: " << servspec << std::endl;
+        ASSERT(false, "Failed to start listening on: " << servspec);
     }
 
     freeaddrinfo(res);
@@ -49,7 +50,7 @@ bool isclosed(int sock) {
     FD_ZERO(&rfd);
     FD_SET(sock, &rfd);
     timeval tv = {0};
-    select(sock + 1, &rfd, 0, 0, &tv);
+    select(sock + 1, &rfd, nullptr, nullptr, &tv);
     if (!FD_ISSET(sock, &rfd))
         return false;
     int n = 0;
@@ -57,32 +58,11 @@ bool isclosed(int sock) {
     return n == 0;
 }
 
-void send_to_server(const char *msg, UUV uuv) {
-    int sock = 0;
-    struct sockaddr_in serv_addr{};
-
-    if ((sock = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
-        std::cerr << "Socket creation error" << std::endl;
-        return;
-    }
-
-    serv_addr.sin_family = AF_INET;
-    serv_addr.sin_port = htons(uuv.INBOUND_PORT);
-
-    if (connect(sock, (struct sockaddr *) &serv_addr, sizeof(serv_addr)) < 0) {
-        std::cerr << "Connection Failed" << std::endl;
-    }
-
-    send(sock, msg, strlen(msg), 0);
-}
-
 void new_connection(Args args) {
     ssize_t r;
-    char buffer[4096];
+    char buffer[INCOMING_SOCKET_DATA_BUF_SIZE] = {0};
 
-    bzero(buffer, 4096);
-
-    int n = read(args.port, buffer, 4096);
+    int n = read(args.port, buffer, INCOMING_SOCKET_DATA_BUF_SIZE);
 
     if (n < 0) {
         std::cerr << "Error reading from socket:" << args.port << std::endl;
@@ -153,7 +133,7 @@ void new_connection(Args args) {
                 } else if (v.at(0).find("SENSOR") != string::npos) {
                     auto it = sensMap.find(v.at(0));
                     if (it != sensMap.end()) {
-                        it->second.state = stod(v.at(1));
+                        it->second.state = static_cast<int>(stod(v.at(1)));
                     }
                 }
             }
@@ -169,7 +149,7 @@ void new_connection(Args args) {
         std::string key;
         std::getline(iss, key, '=');
 
-        std::string value = inputStr.substr(key.length()+1);
+        std::string value = inputStr.substr(key.length() + 1);
 
         args.uuv->ForwardMessage(key, value);
 
@@ -193,7 +173,7 @@ const char *prependPort(int port) {
     return str.c_str();
 }
 
-void write_data(UUV *uuv, const char*  msg) {
+void write_data(UUV *uuv, const char *msg) {
     int sock = 0;
     int port = uuv->INBOUND_PORT;
     struct sockaddr_in serv_addr{};
@@ -214,7 +194,8 @@ void write_data(UUV *uuv, const char*  msg) {
 
     sleep(0);
 
-    close(port);}
+    close(port);
+}
 
 void run_server(UUV uuv) {
     signal(SIGPIPE, SIG_IGN);

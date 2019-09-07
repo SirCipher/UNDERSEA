@@ -73,27 +73,27 @@ public class LogServiceImpl implements LogService {
         return ringBuffer.readBetween(index, getEndIndex(index));
     }
 
-    private int getEndIndex(int index) {
+    private int getEndIndex(int startIndex) {
         int batchSize = agent.config().getLogBatchSize();
 
-        if (index + batchSize > size()) {
+        if (startIndex + batchSize > size()) {
             return size() - 1;
         } else {
-            return index;
+            return startIndex + batchSize;
         }
     }
 
     @Override
     public synchronized List<LogEntry> readNextForClient(Client client) {
-        int index = clientIndexMap.computeIfAbsent(client, e -> 0);
+        int startIndex = clientIndexMap.computeIfAbsent(client, e -> 0);
 
         // If no new data to send
-        if (index == size()) {
+        if (startIndex == size()) {
             return new ArrayList<>();
         }
 
-        int endIndex = getEndIndex(index);
-        List<LogEntry> entries = ringBuffer.readBetween(index, endIndex);
+        int endIndex = getEndIndex(startIndex);
+        List<LogEntry> entries = ringBuffer.readBetween(startIndex, endIndex);
         clientIndexMap.put(client, endIndex);
 
         return entries;
@@ -105,6 +105,7 @@ public class LogServiceImpl implements LogService {
                 .forService(logEntry.getAgentService().getClass())
                 .withStatus(LifecycleEvent.APPEND_REQUEST)
                 .withPrimaryData(TransactionData.from(logEntry.getData()))
+                .withSecondaryData(TransactionData.from(logEntry.getValue()))
                 .build();
     }
 

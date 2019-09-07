@@ -1,5 +1,7 @@
 package com.type2labs.undersea.common.missions.planner.model;
 
+import com.type2labs.undersea.common.missions.task.model.Task;
+
 import java.util.List;
 
 /**
@@ -29,5 +31,7 @@ public interface GeneratedMission {
      * @return the missions
      */
     List<AgentMission> subMissions();
+
+    List<Task> allTasks();
 
 }

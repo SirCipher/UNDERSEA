@@ -36,7 +36,7 @@ protected:
     void RegisterVariables();
 
 private:
-    bool handleSensorsNames(std::string value);
+    bool handleSensorsNames(const std::string &value);
 
     void initSensorsMap();
 
@@ -110,9 +110,8 @@ public:
 
     sensorsMap m_sensors_map;
 
-    int PORT;
-    int INBOUND_PORT;
-
+    int PORT = 0;
+    int INBOUND_PORT = 0;
 };
 
 #endif

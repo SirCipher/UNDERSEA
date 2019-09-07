@@ -3,6 +3,7 @@ package com.type2labs.undersea.common.missions.planner.impl;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.type2labs.undersea.common.agent.Agent;
 import com.type2labs.undersea.common.missions.planner.model.AgentMission;
+import com.type2labs.undersea.common.missions.planner.model.GeneratedMission;
 import com.type2labs.undersea.common.missions.planner.model.MissionManager;
 import com.type2labs.undersea.common.missions.planner.model.MissionPlanner;
 import com.type2labs.undersea.common.missions.task.model.Task;
@@ -44,7 +45,7 @@ public class NoMissionManager implements MissionManager {
     }
 
     @Override
-    public void assignMission(AgentMission mission) {
+    public void assignMission(GeneratedMission mission) {
 
     }
 

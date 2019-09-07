@@ -48,11 +48,10 @@ bool UUV::OnStartUp() {
     std::cout << "Reading configuration file" << std::endl;
 
     if (m_MissionReader.GetConfiguration(GetAppName(), sParams)) {
-        list<string>::iterator p;
-        for (p = sParams.begin(); p != sParams.end(); p++) {
-            string original_line = *p;
-            string param = stripBlankEnds(toupper(biteString(*p, '=')));
-            string value = stripBlankEnds(*p);
+        for (auto &sParam : sParams) {
+            string original_line = sParam;
+            string param = stripBlankEnds(toupper(biteString(sParam, '=')));
+            string value = stripBlankEnds(sParam);
 
             if (param == "NAME") {
                 m_uuv_name = value;
@@ -137,11 +136,7 @@ void UUV::RegisterVariables() {
 bool UUV::OnNewMail(MOOSMSG_LIST &NewMail) {
     AppCastingMOOSApp::OnNewMail(NewMail);        // Add this line
 
-    MOOSMSG_LIST::iterator p;
-
-    for (p = NewMail.begin(); p != NewMail.end(); p++) {
-        CMOOSMsg &msg = *p;
-
+    for (auto & msg : NewMail) {
 #if 0 // Keep these around just for template
         string key   = msg.GetKey();
         string comm  = msg.GetCommunity();
@@ -194,20 +189,19 @@ bool UUV::Iterate() {
     AppCastingMOOSApp::Iterate();                  // Add this line
 
     //do app stuff here
-    m_iterations++;
+    ++m_iterations;
 
     m_current_iterate = MOOSTime(true);
 //	if (m_current_iterate - m_previous_iterate >= M_TIME_WINDOW){
 
     string outputString = doubleToString(m_current_iterate - GetAppStartTime(), 2) + ",";
 
-    //reset sensors
+    // reset sensors
     for (auto &it : m_sensors_map) {
         outputString += doubleToString(it.second.averageRate, 2) + ",";
         // reset sensors information
         it.second.reset();
     }
-
 
     //show visual hints on pMarineViewer
     sendNotifications();
@@ -257,7 +251,7 @@ bool UUV::buildReport() {
 // check if the provided string is in the format SENSOR_1SEart:end:degradationPercentage
 // e.g. 50:100:50
 //---------------------------------------------------------
-bool UUV::handleSensorsNames(string value) {
+bool UUV::handleSensorsNames(const string &value) {
     vector<string> v = parseString(removeWhite(value), ",");
 
     //check if all tokens are alphanumerics
@@ -319,7 +313,7 @@ void UUV::sendNotifications() {
     string yPosition = "-50";
 
     int xMiddlePosition = 75;
-    int xStartPosition = (m_uuv_sensors.size() / 2 * (-50)) + xMiddlePosition;
+    int xStartPosition = static_cast<int>(m_uuv_sensors.size() / 2 * (-50)) + xMiddlePosition;
 
     int index = 0;
     for (auto &it : m_sensors_map) {

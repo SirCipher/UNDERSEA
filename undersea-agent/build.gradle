@@ -87,6 +87,8 @@ allprojects {
 
         // https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind
         compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.10.0.pr1'
+
+        compile fileTree(dir: "${rootProject.projectDir}/../libraries/repo/ortools/", include: ['*.jar'])
     }
 
     tasks.withType(Test) {

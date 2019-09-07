@@ -7,8 +7,10 @@ import com.type2labs.undersea.common.cluster.Client;
 import com.type2labs.undersea.common.cluster.ClusterState;
 import com.type2labs.undersea.common.logger.model.LogEntry;
 import com.type2labs.undersea.common.logger.model.LogService;
+import com.type2labs.undersea.common.missions.GeneratedMissionImpl;
 import com.type2labs.undersea.common.missions.planner.impl.AgentMissionImpl;
 import com.type2labs.undersea.common.missions.planner.model.AgentMission;
+import com.type2labs.undersea.common.missions.planner.model.GeneratedMission;
 import com.type2labs.undersea.common.missions.planner.model.MissionManager;
 import com.type2labs.undersea.common.service.AgentService;
 import com.type2labs.undersea.prospect.RaftProtocolServiceGrpc;
@@ -108,16 +110,16 @@ public class RaftProtocolServiceImpl extends RaftProtocolServiceGrpc.RaftProtoco
                                   StreamObserver<RaftProtos.DisributeMissionResponse> responseObserver) {
         logger.info(raftNode.name() + " processing distribute mission request: " + request, raftNode.parent());
 
-        AgentMission agentMission;
+        GeneratedMission generatedMission;
 
         try {
             ObjectMapper mapper = new ObjectMapper();
-            agentMission = mapper.readValue(request.getMission(), AgentMissionImpl.class);
+            generatedMission = mapper.readValue(request.getMission(), GeneratedMissionImpl.class);
         } catch (JsonProcessingException e) {
-            throw new RuntimeException("Unable to process AgentMission: " + request.toString(), e);
+            throw new RuntimeException("Unable to process: " + request.toString(), e);
         }
 
-        logger.info(raftNode.name() + ": received mission: " + agentMission);
+        logger.info(raftNode.name() + ": received mission: " + generatedMission);
 
         sendAbstractAsyncMessage(responseObserver, () -> RaftProtos.DisributeMissionResponse.newBuilder()
                 .setClient(GrpcUtil.toProtoClient(raftNode))
@@ -125,7 +127,7 @@ public class RaftProtocolServiceImpl extends RaftProtocolServiceGrpc.RaftProtoco
                 .build());
 
         MissionManager manager = raftNode.parent().services().getService(MissionManager.class);
-        manager.assignMission(agentMission);
+        manager.assignMission(generatedMission);
     }
 
     private <M extends AbstractMessage> void sendAbstractAsyncMessage(StreamObserver<M> responseObserver,
