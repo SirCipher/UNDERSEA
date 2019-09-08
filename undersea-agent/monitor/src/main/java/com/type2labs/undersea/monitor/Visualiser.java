@@ -16,7 +16,6 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.Element;
 import java.awt.*;
-import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
@@ -95,7 +94,7 @@ public class Visualiser {
 
         // TODO: Address should be the MOOS address
         String[] columnNames = {"Address", "Raft Peer ID", "Name", "Multi-Role status", "Service Manager Status",
-                "Raft Role", "No. Tasks", "No" +
+                "Raft Role", "Leader Peer ID", "No. Tasks", "No" +
                 ". Completed Tasks"};
         DefaultTableModel model = new DefaultTableModel(new Object[0][0], columnNames);
         table = new JTable(model) {
@@ -301,6 +300,7 @@ public class Visualiser {
                                 agentState.getMultiRoleStatus(),
                                 agentState.getServiceManagerStatus(),
                                 agentState.getRaftRole(),
+                                agentState.getLeaderPeerId(),
                                 agentState.getNoTasks(),
                                 agentState.getCompletedTasks()});
                     } else {
@@ -313,8 +313,9 @@ public class Visualiser {
                             model.setValueAt(agentState.getMultiRoleStatus(), rowId, 3);
                             model.setValueAt(agentState.getServiceManagerStatus(), rowId, 4);
                             model.setValueAt(agentState.getRaftRole(), rowId, 5);
-                            model.setValueAt(agentState.getNoTasks(), rowId, 6);
-                            model.setValueAt(agentState.getCompletedTasks(), rowId, 7);
+                            model.setValueAt(agentState.getLeaderPeerId(), rowId, 6);
+                            model.setValueAt(agentState.getNoTasks(), rowId, 7);
+                            model.setValueAt(agentState.getCompletedTasks(), rowId, 8);
                         }
                     }
                 } else if (received instanceof VisualiserMessage) {

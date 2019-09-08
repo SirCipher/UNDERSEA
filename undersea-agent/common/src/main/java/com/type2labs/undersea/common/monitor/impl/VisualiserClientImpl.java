@@ -2,6 +2,7 @@ package com.type2labs.undersea.common.monitor.impl;
 
 import com.google.common.util.concurrent.ListenableFuture;
 import com.type2labs.undersea.common.agent.Agent;
+import com.type2labs.undersea.common.cluster.PeerId;
 import com.type2labs.undersea.common.consensus.ConsensusAlgorithm;
 import com.type2labs.undersea.common.logger.VisualiserMessage;
 import com.type2labs.undersea.common.missions.planner.model.MissionManager;
@@ -21,7 +22,6 @@ import java.net.InetSocketAddress;
 import java.nio.channels.SocketChannel;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
 
 public class VisualiserClientImpl implements VisualiserClient {
 
@@ -71,16 +71,25 @@ public class VisualiserClientImpl implements VisualiserClient {
 
         String raftRole = "";
         String multiRoleStatus = "";
+        String leaderPeerId = "N/A";
 
         if (consensusAlgorithm != null) {
             raftRole = String.valueOf(consensusAlgorithm.getRaftRole());
             multiRoleStatus = String.valueOf(consensusAlgorithm.multiRole().getStatus());
+
+            PeerId peerId = consensusAlgorithm.leaderPeerId();
+
+            if (peerId == null) {
+                leaderPeerId = "N/A";
+            } else {
+                leaderPeerId = String.valueOf(peerId);
+            }
         }
 
         MissionManager missionPlanner = serviceManager.getService(MissionManager.class);
         List<Task> assignedTasks = new ArrayList<>();
 
-        if(missionPlanner!=null){
+        if (missionPlanner != null) {
             assignedTasks = missionPlanner.getAssignedTasks();
         }
 
@@ -100,6 +109,7 @@ public class VisualiserClientImpl implements VisualiserClient {
                 multiRoleStatus,
                 serviceManagerStatus,
                 raftRole,
+                leaderPeerId,
                 assignedTasks.size(),
                 completedTasks);
     }

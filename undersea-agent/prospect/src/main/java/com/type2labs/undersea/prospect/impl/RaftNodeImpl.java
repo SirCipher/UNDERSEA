@@ -6,6 +6,7 @@ import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.common.util.concurrent.MoreExecutors;
 import com.type2labs.undersea.common.agent.Agent;
 import com.type2labs.undersea.common.cluster.Client;
+import com.type2labs.undersea.common.cluster.PeerId;
 import com.type2labs.undersea.common.consensus.MultiRoleState;
 import com.type2labs.undersea.common.consensus.RaftRole;
 import com.type2labs.undersea.common.logger.model.LogEntry;
@@ -21,6 +22,7 @@ import com.type2labs.undersea.prospect.RaftClusterConfig;
 import com.type2labs.undersea.prospect.RaftProtos;
 import com.type2labs.undersea.prospect.model.RaftNode;
 import com.type2labs.undersea.prospect.networking.RaftClient;
+import com.type2labs.undersea.prospect.networking.RaftClientImpl;
 import com.type2labs.undersea.prospect.task.AcquireStatusTask;
 import com.type2labs.undersea.prospect.task.RequireRoleTask;
 import com.type2labs.undersea.prospect.util.GrpcUtil;
@@ -123,6 +125,15 @@ public class RaftNodeImpl implements RaftNode {
     }
 
     @Override
+    public PeerId leaderPeerId() {
+        if(state()!=null && state().getLeader()!=null){
+            return state().getLeader().peerId();
+        } else {
+            return null;
+        }
+    }
+
+    @Override
     public String name() {
         return name;
     }
@@ -139,6 +150,7 @@ public class RaftNodeImpl implements RaftNode {
         }
 
         role = RaftRole.LEADER;
+        state().setLeader(RaftClientImpl.ofSelf(this));
         logger.info(name + " is now the leader", agent);
 
         fireLifecycleCallbacks(LifecycleEvent.ELECTED_LEADER);
