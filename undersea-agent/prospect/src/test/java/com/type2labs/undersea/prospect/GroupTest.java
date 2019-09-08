@@ -43,12 +43,6 @@ public class GroupTest {
             localAgentGroup.doManualDiscovery();
             localAgentGroup.start();
 
-
-            for (RaftNodeImpl raftNode : localAgentGroup.getRaftNodes()) {
-                raftNode.startVotingRound();
-            }
-
-
             Thread.sleep(5000);
             RaftNodeImpl raftNode = (RaftNodeImpl) localAgentGroup.getLeaderNode();
 

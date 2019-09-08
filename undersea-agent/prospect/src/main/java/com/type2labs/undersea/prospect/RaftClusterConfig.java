@@ -14,6 +14,10 @@ public class RaftClusterConfig implements UnderseaConfig {
     private boolean autoPortDiscovery = true;
     private int executorThreads = 4;
     private Deadline getStatusDeadline = Deadline.after(30, TimeUnit.SECONDS);
+    /**
+     * In seconds
+     */
+    private long statusDeadlineLong = 30;
 
     public RaftClusterConfig() {
     }
@@ -22,8 +26,13 @@ public class RaftClusterConfig implements UnderseaConfig {
         this.underseaRuntimeConfig = underseaRuntimeConfig;
     }
 
+    public long getStatusDeadlineLong() {
+        return statusDeadlineLong;
+    }
+
     public RaftClusterConfig setStatusDeadline(long duration, TimeUnit timeUnit) {
         this.getStatusDeadline = Deadline.after(duration, timeUnit);
+        this.statusDeadlineLong = duration;
         return this;
     }
 

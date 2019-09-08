@@ -11,18 +11,16 @@ public class ClusterState {
 
     private final Map<Client, ClientState> clusterState;
     private final ConsensusAlgorithm associatedAlg;
-    private final int term;
     private boolean calculatedCosts = false;
     private int clusterSize;
 
-    public ClusterState(ConsensusAlgorithm associatedAlg, int term, int clusterSize) {
+    public ClusterState(ConsensusAlgorithm associatedAlg, int clusterSize) {
         this.associatedAlg = associatedAlg;
-        this.term = term;
         this.clusterState = new HashMap<>(clusterSize);
         this.clusterSize = clusterSize;
     }
 
-    public void addSelf(Client self) {
+    private void addSelf(Client self) {
         ClientState agentInfo = new ClientState(self);
         List<Pair<String, String>> status = associatedAlg.parent().status();
 
@@ -151,12 +149,14 @@ public class ClusterState {
 
         @Override
         public String toString() {
-            return "AgentInfo{" +
-                    "speed=" + speed +
+            return "ClientState{" +
+                    "client=" + client +
+                    ", speed=" + speed +
                     ", remainingBattery=" + remainingBattery +
                     ", range=" + range +
                     ", accuracy=" + accuracy +
-                    ", endpoint=" + client +
+                    ", cost=" + cost +
+                    ", reachable=" + reachable +
                     '}';
         }
     }

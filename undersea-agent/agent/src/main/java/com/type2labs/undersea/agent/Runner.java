@@ -124,11 +124,6 @@ public class Runner extends AbstractRunner {
                     }
                 }
             }
-
-            for (Agent agent : super.getAgents()) {
-                RaftNodeImpl raftNode = agent.services().getService(RaftNodeImpl.class);
-                raftNode.startVotingRound();
-            }
         }
     }
 

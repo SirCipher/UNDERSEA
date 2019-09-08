@@ -8,8 +8,6 @@ import com.type2labs.undersea.common.cluster.ClusterState;
 import com.type2labs.undersea.common.logger.model.LogEntry;
 import com.type2labs.undersea.common.logger.model.LogService;
 import com.type2labs.undersea.common.missions.GeneratedMissionImpl;
-import com.type2labs.undersea.common.missions.planner.impl.AgentMissionImpl;
-import com.type2labs.undersea.common.missions.planner.model.AgentMission;
 import com.type2labs.undersea.common.missions.planner.model.GeneratedMission;
 import com.type2labs.undersea.common.missions.planner.model.MissionManager;
 import com.type2labs.undersea.common.service.AgentService;
@@ -67,7 +65,7 @@ public class RaftProtocolServiceImpl extends RaftProtocolServiceGrpc.RaftProtoco
         sendAbstractAsyncMessage(responseObserver, () -> {
             int requestTerm = request.getTerm();
 
-            if (requestTerm > raftNode.state().getTerm()) {
+            if (requestTerm > raftNode.state().getCurrentTerm()) {
                 raftNode.toFollower(requestTerm);
             }
 
@@ -83,7 +81,7 @@ public class RaftProtocolServiceImpl extends RaftProtocolServiceGrpc.RaftProtoco
             LogService logService = raftNode.parent().services().getService(LogService.class);
             logService.appendEntries(logEntries);
 
-            return RaftProtos.AppendEntryResponse.newBuilder().setTerm(raftNode.state().getTerm()).build();
+            return RaftProtos.AppendEntryResponse.newBuilder().setTerm(raftNode.state().getCurrentTerm()).build();
         });
     }
 

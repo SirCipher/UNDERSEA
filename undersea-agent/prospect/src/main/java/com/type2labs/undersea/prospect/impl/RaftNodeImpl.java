@@ -119,7 +119,7 @@ public class RaftNodeImpl implements RaftNode {
 
     @Override
     public int term() {
-        return state().getTerm();
+        return state().getCurrentTerm();
     }
 
     @Override
@@ -164,7 +164,7 @@ public class RaftNodeImpl implements RaftNode {
     @Override
     public void toFollower(int term) {
         role = RaftRole.FOLLOWER;
-        raftState.setTerm(term);
+        raftState.setCurrentTerm(term);
         logger.info(name + " is now a follower", agent);
 
         scheduleHeartbeat();
@@ -306,6 +306,7 @@ public class RaftNodeImpl implements RaftNode {
 
     }
 
+    @Override
     public void shutdown() {
         singleThreadScheduledExecutor.shutdown();
         server.close();
@@ -320,6 +321,11 @@ public class RaftNodeImpl implements RaftNode {
     public void initialise(Agent parentAgent) {
         this.agent = parentAgent;
         this.raftState = new RaftState(this);
+        scheduleVerifyLeaderTask();
+    }
+
+    private void scheduleVerifyLeaderTask() {
+        schedule(new VerifyLeaderTask(), 5000);
     }
 
     @Override
@@ -327,10 +333,17 @@ public class RaftNodeImpl implements RaftNode {
         return agent;
     }
 
-    public void startVotingRound() {
-        if (!multiRole().isLeader()) {
-            logger.info(agent.name() + " starting voting round", agent);
-            execute(new AcquireStatusTask(RaftNodeImpl.this));
+    private class VerifyLeaderTask extends ReschedulableTask {
+        @Override
+        public void innerRun() {
+            if (state().getLeader() == null) {
+                if (!multiRole().isLeader() && state().getCandidate() == null) {
+                    logger.info(agent.name() + " starting voting round", agent);
+                    execute(new AcquireStatusTask(RaftNodeImpl.this));
+                }
+            }
+
+            scheduleVerifyLeaderTask();
         }
     }
 

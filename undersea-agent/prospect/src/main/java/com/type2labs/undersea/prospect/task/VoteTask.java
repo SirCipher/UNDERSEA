@@ -46,7 +46,7 @@ public class VoteTask implements Runnable {
         for (Client client : localNodes.values()) {
             RaftClient raftClient = (RaftClient) client;
 
-            int nextTerm = raftNode.state().getTerm() + 1;
+            int nextTerm = raftNode.state().getCurrentTerm() + 1;
 
             RaftProtos.VoteRequest request = RaftProtos.VoteRequest.newBuilder()
                     .setClient(GrpcUtil.toProtoClient(raftNode))
@@ -68,7 +68,7 @@ public class VoteTask implements Runnable {
                     }
 
                     if (candidate.wonRound()) {
-                        raftNode.toLeader(raftNode.state().getTerm() + 1);
+                        raftNode.toLeader(raftNode.state().getCurrentTerm() + 1);
                     }
                 }
 

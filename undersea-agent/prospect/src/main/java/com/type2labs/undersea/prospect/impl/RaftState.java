@@ -18,14 +18,12 @@ public class RaftState {
     private static final Logger logger = LogManager.getLogger(RaftState.class);
 
     private final ConcurrentMap<PeerId, Client> localNodes;
-    /**
-     * Endpoint voted for during last term
-     */
     private final RaftNode parent;
     private Client votedFor;
-    private int term;
+    private int currentTerm;
     private Candidate candidate;
     private ClusterState clusterState;
+    private Client leader;
 
     public RaftState(RaftNode agent) {
         this.parent = agent;
@@ -35,7 +33,19 @@ public class RaftState {
     public void initCandidate(int term) {
         this.candidate = new Candidate((localNodes.size()));
         this.votedFor = null;
-        this.clusterState = new ClusterState(parent, term, localNodes.size());
+        this.clusterState = new ClusterState(parent, localNodes.size());
+    }
+
+    public void clearCandidate() {
+        this.candidate = null;
+    }
+
+    public Client getLeader() {
+        return leader;
+    }
+
+    public void setLeader(Client leader) {
+        this.leader = leader;
     }
 
     public Candidate getCandidate() {
@@ -44,6 +54,10 @@ public class RaftState {
 
     public Client getVotedFor() {
         return votedFor;
+    }
+
+    public int clusterSize() {
+        return clusterState.getMembers().size();
     }
 
     public ClusterState clusterState() {
@@ -73,12 +87,12 @@ public class RaftState {
         return localNodes.get(peerId);
     }
 
-    public int getTerm() {
-        return term;
+    public int getCurrentTerm() {
+        return currentTerm;
     }
 
-    public void setTerm(int term) {
-        this.term = term;
+    public void setCurrentTerm(int currentTerm) {
+        this.currentTerm = currentTerm;
     }
 
     public void setVote(Client votedFor) {
