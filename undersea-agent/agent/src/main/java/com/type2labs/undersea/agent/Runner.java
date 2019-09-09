@@ -56,11 +56,11 @@ public class Runner extends AbstractRunner {
                     continue;
                 }
 
-                double cost = ((a.getAccuracy() * accuracyWeighting)
-                        + (a.getRemainingBattery() * speedWeighting))
-                        / a.getRange();
+//                double cost = ((a.getAccuracy() * accuracyWeighting)
+//                        + (a.getRemainingBattery() * speedWeighting))
+//                        / a.getRange();
 
-                e.getValue().setCost(cost);
+                e.getValue().setCost(0);
             }
         });
 

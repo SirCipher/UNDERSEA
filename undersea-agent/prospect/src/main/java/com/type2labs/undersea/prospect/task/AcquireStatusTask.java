@@ -52,8 +52,7 @@ public class AcquireStatusTask implements Runnable {
 
                 response = raftClient.getStatus(request, config.getStatusDeadline());
 
-                ClusterState.ClientState agentInfo = new ClusterState.ClientState(localNode,
-                        GrpcUtil.protoTupleToPair(response.getStatusList()));
+                ClusterState.ClientState agentInfo = new ClusterState.ClientState(localNode, response.getCost());
                 clusterState.setAgentInformation(localNode, agentInfo);
             } catch (StatusRuntimeException e) {
                 Status.Code code = e.getStatus().getCode();

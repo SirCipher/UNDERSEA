@@ -4,4 +4,10 @@ public interface Subsystem {
 
     String name();
 
+    double rate();
+
+    double reliability();
+
+    double accuracy();
+
 }

@@ -24,15 +24,5 @@ public class GrpcUtil {
         return builder.build();
     }
 
-    public static List<Pair<String, String>> protoTupleToPair(List<RaftProtos.Tuple> input) {
-        List<Pair<String, String>> pairList = new ArrayList<>(input.size());
-
-        for (RaftProtos.Tuple t : input) {
-            pairList.add(Pair.of(t.getFieldType(), t.getValue()));
-        }
-
-        return pairList;
-    }
-
 
 }

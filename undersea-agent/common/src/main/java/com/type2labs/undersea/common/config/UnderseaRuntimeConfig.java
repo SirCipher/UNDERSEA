@@ -43,6 +43,10 @@ public class UnderseaRuntimeConfig {
         return this;
     }
 
+    public CostConfiguration getCostConfiguration() {
+        return costConfiguration;
+    }
+
     public UnderseaRuntimeConfig setCostConfiguration(CostConfiguration costConfiguration) {
         isNotNull(costConfiguration, "Cost configuration cannot be null");
         this.costConfiguration = costConfiguration;

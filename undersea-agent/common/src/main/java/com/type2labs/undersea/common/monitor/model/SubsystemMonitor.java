@@ -18,4 +18,5 @@ public interface SubsystemMonitor extends AgentService {
 
     void registerSpeedRange(Range speedRange);
 
+    double getCurrentCost();
 }

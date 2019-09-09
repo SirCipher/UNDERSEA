@@ -12,6 +12,7 @@ import com.type2labs.undersea.common.logger.model.LogService;
 import com.type2labs.undersea.common.missions.GeneratedMissionImpl;
 import com.type2labs.undersea.common.missions.planner.model.GeneratedMission;
 import com.type2labs.undersea.common.missions.planner.model.MissionManager;
+import com.type2labs.undersea.common.monitor.model.SubsystemMonitor;
 import com.type2labs.undersea.common.service.AgentService;
 import com.type2labs.undersea.prospect.RaftProtocolServiceGrpc;
 import com.type2labs.undersea.prospect.RaftProtos;
@@ -46,15 +47,10 @@ public class RaftProtocolServiceImpl extends RaftProtocolServiceGrpc.RaftProtoco
                           StreamObserver<RaftProtos.AcquireStatusResponse> responseObserver) {
         sendAbstractAsyncMessage(responseObserver, () -> {
             RaftProtos.AcquireStatusResponse.Builder builder = RaftProtos.AcquireStatusResponse.newBuilder();
-            List<Pair<String, String>> status = raftNode.parent().status();
+            SubsystemMonitor subsystemMonitor = raftNode.parent().services().getService(SubsystemMonitor.class);
+            double cost = subsystemMonitor.getCurrentCost();
 
-            for (Pair<String, String> p : status) {
-                RaftProtos.Tuple.Builder tupleBuilder = RaftProtos.Tuple.newBuilder();
-                tupleBuilder.setFieldType(p.getKey());
-                tupleBuilder.setValue(p.getValue());
-
-                builder.addStatus(tupleBuilder.build());
-            }
+            builder.setCost(cost);
 
             return builder.build();
         });

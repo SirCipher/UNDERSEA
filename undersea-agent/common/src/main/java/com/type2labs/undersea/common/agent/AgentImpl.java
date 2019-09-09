@@ -63,11 +63,6 @@ public class AgentImpl implements Agent {
     }
 
     @Override
-    public List<Pair<String, String>> status() {
-        return null;
-    }
-
-    @Override
     public String name() {
         return name;
     }

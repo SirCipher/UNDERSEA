@@ -44,18 +44,6 @@ public class UnderseaAgent extends AbstractAgent {
         );
     }
 
-    @Override
-    public List<Pair<String, String>> status() {
-        List<Pair<String, String>> status = new ArrayList<>();
-
-        status.add(Pair.of("speed", Double.toString(speed)));
-        status.add(Pair.of("remainingBattery", Double.toString(remainingBattery)));
-        status.add(Pair.of("range", Double.toString(range)));
-        status.add(Pair.of("accuracy", Double.toString(accuracy)));
-
-        return status;
-    }
-
     public void start() {
         services().startServices();
     }

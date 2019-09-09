@@ -99,7 +99,7 @@ public class RaftNodeImpl implements RaftNode {
 
     @Override
     public Collection<Class<? extends AgentService>> requiredServices() {
-        return Arrays.asList(LogService.class, MissionManager.class);
+        return Arrays.asList(LogService.class, MissionManager.class, SubsystemMonitor.class);
     }
 
     @Override

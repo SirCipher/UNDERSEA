@@ -55,12 +55,7 @@ message AcquireStatusRequest {
 
 message AcquireStatusResponse {
     RaftPeerProto client = 1;
-    repeated Tuple status = 2;
-}
-
-message Tuple {
-    string fieldType = 1;
-    string value = 2;
+    double cost = 2;
 }
 
 message AppendEntryRequest {

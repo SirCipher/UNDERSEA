@@ -77,6 +77,21 @@ public class Sensor implements Subsystem {
         return name;
     }
 
+    @Override
+    public double rate() {
+        return rate;
+    }
+
+    @Override
+    public double reliability() {
+        return reliability;
+    }
+
+    @Override
+    public double accuracy() {
+        return 100;
+    }
+
     public enum SensorType {
         SIDESCAN_SONAR, CONDUCTIVITY, TEMPERATURE, DEPTH;
     }
