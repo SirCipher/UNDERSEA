@@ -26,7 +26,7 @@ ProcessConfig = ANTLER
 	Run = pShare         @ NewConsole = false
 	Run = uTimerScript   @ NewConsole = false
 	Run = pHostInfo		 @ NewConsole = false
-	Run = sUUV           @ NewConsole = false ~sUUValpha
+	Run = sUUV           @ NewConsole = true ~sUUValpha
 	Run = uFldNodeBroker @ NewConsole = false
 	Run = sSensor		 @ NewConsole = false ~SENSOR1
 	Run = sSensor		 @ NewConsole = false ~SENSOR2

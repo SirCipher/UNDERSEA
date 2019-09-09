@@ -20,6 +20,18 @@ service RaftProtocolService {
     rpc DistributeMission (DistributeMissionRequest) returns (DisributeMissionResponse) {
 
     }
+
+    rpc LeaveCluster (LeaveClusterRequest) returns (Empty) {
+
+    }
+}
+
+message LeaveClusterRequest {
+    RaftPeerProto client = 1;
+}
+
+message Empty {
+
 }
 
 message DistributeMissionRequest {

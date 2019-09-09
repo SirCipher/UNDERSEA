@@ -1,5 +1,10 @@
 package com.type2labs.undersea.agent;
 
+import com.type2labs.undersea.common.agent.Agent;
+import com.type2labs.undersea.common.agent.AgentFactory;
+import com.type2labs.undersea.common.monitor.impl.VisualiserClientImpl;
+import com.type2labs.undersea.monitor.Visualiser;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -11,18 +16,18 @@ import java.net.Socket;
  */
 public class Test {
 
-    public static void main(String[] args) throws InterruptedException, IOException {
-        for (int i = 0; i < 10; i++) {
-            try (Socket socket = new Socket("localhost", 11111)) {
-                PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
-                BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+    public static void main(String[] args) {
+        new Visualiser();
 
-                out.println("keks");
-                out.flush();
-                System.out.println(in.readLine());
+        AgentFactory agentFactory = new AgentFactory();
 
-                Thread.sleep(100);
-            }
+        for (int i = 0; i < 5; i++) {
+            VisualiserClientImpl client = new VisualiserClientImpl();
+            Agent agent = agentFactory.create();
+            agent.config().enableVisualiser(true);
+
+            agent.services().registerService(client);
+            agent.services().startServices();
         }
     }
 

@@ -45,4 +45,9 @@ public enum LifecycleEvent {
      * matches the target service
      */
     APPEND_REQUEST,
+
+    /**
+     * Denotes that the agent should shutdown
+     */
+    SHUTDOWN
 }

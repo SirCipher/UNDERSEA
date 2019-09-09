@@ -79,6 +79,11 @@ public class RaftState {
         logger.info(parent.name() + ": discovered: " + node.parent().peerId(), parent);
     }
 
+    public void removeNode(PeerId peerId) {
+        localNodes.remove(peerId);
+        logger.info(parent.name() + ": removing peer: " + peerId, parent);
+    }
+
     public ConcurrentMap<PeerId, Client> localNodes() {
         return localNodes;
     }

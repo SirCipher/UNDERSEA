@@ -153,15 +153,28 @@ public class ServiceManager {
         }
     }
 
+    public Set<ListenableFuture<?>> commitTransactionFromLifecycleEvent(LifecycleEvent lifecycleEvent) {
+        Transaction transaction = new Transaction.Builder(agent)
+                .forAllRunningServices()
+                .invokedBy(serviceManagerTransactionService)
+                .withStatus(lifecycleEvent)
+                .build();
+
+        return commitTransaction(transaction);
+    }
+
     public Set<ListenableFuture<?>> commitTransaction(Transaction transaction) {
         Collection<Class<? extends AgentService>> destinationServices = transaction.getDestinationServices();
         Set<ListenableFuture<?>> futures = new HashSet<>(destinationServices.size());
 
         for (Class<? extends AgentService> service : destinationServices) {
             AgentService _registeredService = checkServiceAndThrow(service);
-            ListenableFuture<?> future = _registeredService.executeTransaction(transaction);
 
-            futures.add(future);
+            try {
+                ListenableFuture<?> future = _registeredService.executeTransaction(transaction);
+                futures.add(future);
+            } catch (NotSupportedException ignored) {
+            }
         }
 
         return Collections.unmodifiableSet(futures);
@@ -301,6 +314,10 @@ public class ServiceManager {
     }
 
     public synchronized void shutdownService(Class<? extends AgentService> service, AgentService agentService) {
+        if (serviceStates.get(service) == ServiceState.STOPPED) {
+            return;
+        }
+
         ScheduledFuture<?> scheduledFuture = getScheduledFuture(service);
 
         if (scheduledFuture != null) {
@@ -312,6 +329,8 @@ public class ServiceManager {
         if (agentService != null) {
             agentService.shutdown();
         }
+
+        serviceStates.put(service, ServiceState.STOPPED);
 
         logger.info(agent.name() + ": shutting down service: " + service.getSimpleName(), agent);
     }
@@ -346,6 +365,21 @@ public class ServiceManager {
 
         logger.info(agent.name() + ": started repeating service: " + service.getClass().getSimpleName() + " at " +
                 "period: " + period, agent);
+    }
+
+
+    /**
+     * Starts a repeating task for a given period. Repeating tasks will not return for the
+     * {@link ServiceManager#getService} method
+     *
+     * @param runnable to execute
+     * @param period   the period between successive executions
+     */
+    public synchronized void startRepeatingTask(Runnable runnable, long period) {
+        ScheduledFuture<?> scheduledFuture = scheduledExecutor.scheduleAtFixedRate(runnable, 1, period,
+                TimeUnit.MILLISECONDS);
+
+        logger.info(agent.name() + ": started repeating task at period: " + period, agent);
     }
 
     private synchronized void startService(Class<? extends AgentService> service) {

@@ -136,7 +136,7 @@ void UUV::RegisterVariables() {
 bool UUV::OnNewMail(MOOSMSG_LIST &NewMail) {
     AppCastingMOOSApp::OnNewMail(NewMail);        // Add this line
 
-    for (auto & msg : NewMail) {
+    for (auto &msg : NewMail) {
 #if 0 // Keep these around just for template
         string key   = msg.GetKey();
         string comm  = msg.GetCommunity();
@@ -165,7 +165,7 @@ bool UUV::OnNewMail(MOOSMSG_LIST &NewMail) {
 
             std::string index = "WPT_INDEX=" + waypoint_index + "\n";
             std::cout << index << std::endl;
-            
+
             write_data(this, index.c_str());
 
         } else {
@@ -360,6 +360,10 @@ void UUV::sendNotifications() {
 
 void UUV::ForwardMessage(const std::string &key, const std::string &value) {
     Notify(key, value);
-    Notify("RETURN", false);
-    Notify("DEPLOY", true);
+    Notify("RETURN", "false");
+    Notify("DEPLOY", "true");
+}
+
+void UUV::Shutdown() {
+    Notify("DEPLOY", "false");
 }

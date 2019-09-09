@@ -154,6 +154,8 @@ void new_connection(Args args) {
         args.uuv->ForwardMessage(key, value);
 
         outputStr = "OK";
+    } else if (inputStr.rfind("SHUTDOWN", 0) == 0) {
+        args.uuv->Shutdown();
     } else {
         outputStr = "Unknown command: " + inputStr + "\n";
     }

@@ -115,6 +115,7 @@ public class MoosConnector implements NetworkInterface {
         Socket socket = connectToServer();
         PrintWriter out;
         BufferedReader in;
+
         try {
             out = new PrintWriter(socket.getOutputStream(), false);
             in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
@@ -184,6 +185,8 @@ public class MoosConnector implements NetworkInterface {
 
     @Override
     public void shutdown() {
+        write("SHUTDOWN");
+
         shutdown = true;
         clientProcessingPool.shutdownNow();
     }

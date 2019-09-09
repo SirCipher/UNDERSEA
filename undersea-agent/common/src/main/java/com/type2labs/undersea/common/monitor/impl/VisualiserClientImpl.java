@@ -1,6 +1,5 @@
 package com.type2labs.undersea.common.monitor.impl;
 
-import com.google.common.util.concurrent.ListenableFuture;
 import com.type2labs.undersea.common.agent.Agent;
 import com.type2labs.undersea.common.cluster.PeerId;
 import com.type2labs.undersea.common.consensus.ConsensusAlgorithm;
@@ -11,14 +10,16 @@ import com.type2labs.undersea.common.missions.task.model.TaskStatus;
 import com.type2labs.undersea.common.monitor.VisualiserData;
 import com.type2labs.undersea.common.monitor.model.VisualiserClient;
 import com.type2labs.undersea.common.service.ServiceManager;
-import com.type2labs.undersea.common.service.transaction.ServiceCallback;
-import com.type2labs.undersea.common.service.transaction.Transaction;
+import com.type2labs.undersea.common.service.transaction.LifecycleEvent;
+import com.type2labs.undersea.utilities.exception.UnderseaException;
+import com.type2labs.undersea.utilities.networking.SimpleServer;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.io.IOException;
-import java.io.ObjectOutputStream;
+import java.io.*;
 import java.net.InetSocketAddress;
+import java.net.ServerSocket;
+import java.net.Socket;
 import java.nio.channels.SocketChannel;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +30,45 @@ public class VisualiserClientImpl implements VisualiserClient {
     private static boolean enabled = false;
     private final InetSocketAddress visualiserAddress = new InetSocketAddress("localhost", 5050);
     private Agent parent;
+    private int serverPort;
+    private boolean running = false;
+
+    private void runServer() {
+        ServerSocket s;
+        try {
+            s = new ServerSocket(0);
+            s.close();
+        } catch (IOException e) {
+            throw new UnderseaException(parent.name() + ": failed to start visualiser server", e);
+        }
+
+        serverPort = s.getLocalPort();
+
+        SimpleServer server = new SimpleServer(serverPort, this::processRequest, logger);
+        server.runServer();
+    }
+
+    private void processRequest(Socket socket) {
+        try {
+            InputStream inputStream = socket.getInputStream();
+            BufferedReader br = new BufferedReader(new InputStreamReader(inputStream));
+
+            String request = br.readLine();
+
+            logger.info(parent.name() + ": received message: " + request, this::parent);
+
+            LifecycleEvent lifecycleEvent = LifecycleEvent.valueOf(request);
+            if (lifecycleEvent == LifecycleEvent.SHUTDOWN) {
+                parent.services().shutdownServices();
+            }
+
+            inputStream.close();
+            br.close();
+            socket.close();
+        } catch (IOException e) {
+            logger.error(parent.name() + ": failed to read message from: " + socket.getLocalPort(), e);
+        }
+    }
 
     private synchronized void _write(Object data) {
         ObjectOutputStream oos;
@@ -72,6 +112,7 @@ public class VisualiserClientImpl implements VisualiserClient {
         String raftRole = "";
         String multiRoleStatus = "";
         String leaderPeerId = "N/A";
+        int noPeers = parent.clusterClients().size();
 
         if (consensusAlgorithm != null) {
             raftRole = String.valueOf(consensusAlgorithm.getRaftRole());
@@ -111,13 +152,16 @@ public class VisualiserClientImpl implements VisualiserClient {
                 raftRole,
                 leaderPeerId,
                 assignedTasks.size(),
-                completedTasks);
+                completedTasks,
+                serverPort,
+                noPeers);
     }
 
     @Override
     public void initialise(Agent parentAgent) {
         this.parent = parentAgent;
         enabled = parent.config().isVisualiserEnabled();
+
         run();
     }
 
@@ -127,12 +171,15 @@ public class VisualiserClientImpl implements VisualiserClient {
     }
 
     @Override
-    public void run() {
-        if (!enabled) {
+    public synchronized void run() {
+        if (!enabled || running) {
             return;
         }
 
-        sendVisualiserData();
+        running = true;
+
+        runServer();
+        parent.services().startRepeatingTask(this::sendVisualiserData, 500);
     }
 
     private void sendVisualiserData() {
@@ -149,34 +196,17 @@ public class VisualiserClientImpl implements VisualiserClient {
     }
 
     @Override
-    public void shutdown() {
-
-    }
-
-    @Override
-    public boolean started() {
-        return true;
-    }
-
-    @Override
-    public ListenableFuture<?> executeTransaction(Transaction transaction) {
-        return null;
-    }
-
-    @Override
-    public long transitionTimeout() {
-        return 0;
-    }
-
-    @Override
-    public void registerCallback(ServiceCallback serviceCallback) {
-
-    }
-
-    @Override
     public void write(String data) {
         VisualiserMessage visualiserMessage = new VisualiserMessage(parent.name(), data + "\n");
         write(visualiserMessage);
+    }
+
+    @Override
+    public void shutdown() {
+        VisualiserData visualiserData = agentState();
+        visualiserData.setServiceManagerStatus("SHUTDOWN");
+
+        _write(visualiserData);
     }
 
     @Override
@@ -189,12 +219,8 @@ public class VisualiserClientImpl implements VisualiserClient {
     }
 
     @Override
-    public void closeConnection() {
-
-    }
-
-    @Override
     public void update() {
         sendVisualiserData();
     }
+
 }

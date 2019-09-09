@@ -1,5 +1,6 @@
 package com.type2labs.undersea.missionplanner.manager;
 
+import com.google.common.graph.Network;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
@@ -56,6 +57,7 @@ public class MoosMissionManagerImpl implements MissionManager {
     private Task currentTask;
     private GeneratedMission globalMission;
     private AgentMission missionAssigned;
+    private NetworkInterface networkInterface;
 
     public MoosMissionManagerImpl(MissionPlanner missionPlanner) {
         this.missionPlanner = missionPlanner;
@@ -207,6 +209,7 @@ public class MoosMissionManagerImpl implements MissionManager {
     @Override
     public void initialise(Agent parentAgent) {
         this.agent = parentAgent;
+        this.networkInterface = parentAgent.services().getService(NetworkInterface.class);
         missionPlanner.initialise(parentAgent);
     }
 

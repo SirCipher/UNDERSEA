@@ -11,7 +11,6 @@ public interface VisualiserClient extends AgentService {
 
     void write(VisualiserMessage data) throws IOException;
 
-    void closeConnection() throws IOException;
-
     void update();
+
 }

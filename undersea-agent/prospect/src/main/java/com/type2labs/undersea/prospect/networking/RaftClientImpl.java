@@ -123,6 +123,12 @@ public class RaftClientImpl implements RaftClient {
     }
 
     @Override
+    public void alertLeavingCluster(RaftProtos.LeaveClusterRequest request, FutureCallback<RaftProtos.Empty> callback) {
+        ListenableFuture<RaftProtos.Empty> ignored = futureStub.leaveCluster(request);
+        Futures.addCallback(ignored, callback, clientExecutor);
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) {
             return true;

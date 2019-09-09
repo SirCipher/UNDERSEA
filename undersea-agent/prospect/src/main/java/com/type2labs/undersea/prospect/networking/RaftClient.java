@@ -29,4 +29,5 @@ public interface RaftClient extends Client {
     void distributeMission(RaftProtos.DistributeMissionRequest request,
                            FutureCallback<RaftProtos.DisributeMissionResponse> callback);
 
+    void alertLeavingCluster(RaftProtos.LeaveClusterRequest request, FutureCallback<RaftProtos.Empty> callback);
 }

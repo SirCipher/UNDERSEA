@@ -2,6 +2,8 @@ package com.type2labs.undersea.monitor;
 
 import com.type2labs.undersea.common.logger.VisualiserMessage;
 import com.type2labs.undersea.common.monitor.VisualiserData;
+import com.type2labs.undersea.common.service.transaction.LifecycleEvent;
+import com.type2labs.undersea.utilities.networking.SimpleServer;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -16,29 +18,30 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.Element;
 import java.awt.*;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.ObjectInputStream;
-import java.net.ServerSocket;
+import java.awt.event.ActionEvent;
+import java.io.*;
 import java.net.Socket;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 public class Visualiser {
 
     private static final Logger logger = LogManager.getLogger(Visualiser.class);
 
     // AgentName:Log
-    private Map<String, String> logs = new HashMap<>();
+    private Map<String, AgentInfo> agents = new HashMap<>();
     private JFrame frame;
     private JTextArea logArea;
     private JTable table;
     private String currentLog;
     private boolean shutdown = false;
+
+    private static class AgentInfo {
+        String log = "";
+        int port;
+    }
 
     public Visualiser() {
         startServer();
@@ -50,25 +53,34 @@ public class Visualiser {
     }
 
     private void startServer() {
-        final ExecutorService clientProcessingPool = Executors.newFixedThreadPool(10);
-
-        Thread serverThread = new Thread(() -> {
+        SimpleServer server = new SimpleServer(5050, (clientSocket) -> {
             try {
-                ServerSocket serverSocket = new ServerSocket(5050);
-                logger.info("Waiting for clients to connect...");
-
-                while (!shutdown) {
-                    Socket clientSocket = serverSocket.accept();
-                    clientProcessingPool.execute(new ClientTask(clientSocket));
-                }
-
-                logger.info("Shutting down visualiser");
-            } catch (IOException e) {
-                logger.error("Unable to process client request", e);
+                clientSocket.setSoTimeout(10000);
+            } catch (SocketException e) {
                 e.printStackTrace();
             }
-        });
-        serverThread.start();
+
+            InputStream inputStream;
+            ObjectInputStream ois;
+
+            try {
+                inputStream = clientSocket.getInputStream();
+                ois = new ObjectInputStream(inputStream);
+                handleData(ois);
+            } catch (SocketTimeoutException ignored) {
+            } catch (IOException e) {
+                e.printStackTrace();
+                return;
+            }
+
+            try {
+                clientSocket.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        }, logger);
+        server.runServer();
     }
 
     private void initGui() {
@@ -82,9 +94,16 @@ public class Visualiser {
         frame.setSize((int) (screenSize.width * 0.75), (int) (screenSize.height * 0.75));
         frame.setVisible(true);
 
-        MenuBar menu = new MenuBar();
-        menu.add(new Menu("File"));
-        frame.setMenuBar(menu);
+        MenuBar menuBar = new MenuBar();
+        Menu menu = new Menu("Agent Options");
+
+        MenuItem killAgentItem = new MenuItem("Kill Agent");
+        killAgentItem.addActionListener(this::killAgentAction);
+        menu.add(killAgentItem);
+
+        menuBar.add(menu);
+
+        frame.setMenuBar(menuBar);
 
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -92,10 +111,8 @@ public class Visualiser {
         GridBagConstraints c = new GridBagConstraints();
         c.fill = GridBagConstraints.HORIZONTAL;
 
-        // TODO: Address should be the MOOS address
-        String[] columnNames = {"Address", "Raft Peer ID", "Name", "Multi-Role status", "Service Manager Status",
-                "Raft Role", "Leader Peer ID", "No. Tasks", "No" +
-                ". Completed Tasks"};
+        String[] columnNames = {"Raft Peer ID", "Name", "Multi-Role status", "Service Manager Status",
+                "Raft Role", "Leader Peer ID", "No. Tasks", "No. Completed Tasks", "No. Peers"};
         DefaultTableModel model = new DefaultTableModel(new Object[0][0], columnNames);
         table = new JTable(model) {
             @Override
@@ -106,8 +123,10 @@ public class Visualiser {
 
         table.getSelectionModel().addListSelectionListener(event -> {
             if (table.getSelectedRow() > -1) {
-                String selected = (String) table.getValueAt(table.getSelectedRow(), 1);
-                logArea.setText(logs.get(selected));
+                String selected = (String) table.getValueAt(table.getSelectedRow(), 0);
+                AgentInfo agentInfo = agents.get(selected);
+
+                logArea.setText(agentInfo.log);
                 currentLog = selected;
             }
         });
@@ -124,35 +143,6 @@ public class Visualiser {
         west.gridy = 0;
 
         pane.add(scrollPane, west);
-
-        JPanel agentOptions = new JPanel();
-        agentOptions.setLayout(new GridLayout(3, 2, 10, 50));
-        agentOptions.setBorder(new BevelBorder(BevelBorder.LOWERED));
-
-        JTextField agentName = new JTextField("Name: ");
-        agentOptions.add(agentName);
-
-        JButton agentOptionsButton = new JButton("Kill agent");
-        agentOptions.add(agentOptionsButton);
-
-        agentOptionsButton = new JButton("Promote");
-        agentOptions.add(agentOptionsButton);
-
-        agentOptionsButton = new JButton("Demote");
-        agentOptions.add(agentOptionsButton);
-
-        agentOptionsButton = new JButton("Disable");
-        agentOptions.add(agentOptionsButton);
-
-        GridBagConstraints east = new GridBagConstraints();
-        east.anchor = GridBagConstraints.EAST;
-        east.fill = GridBagConstraints.BOTH;
-        east.weighty = 0.5;
-        east.weightx = 0.1;
-        east.gridx = 1;
-        east.gridy = 0;
-
-        pane.add(agentOptions, east);
 
         logArea = new JTextArea("Select an agent to view its logs");
         JScrollPane logScrollPane = new JScrollPane(logArea);
@@ -227,6 +217,33 @@ public class Visualiser {
         frame.setVisible(true);
     }
 
+    private void sendToAgent(AgentInfo agentInfo, String message) {
+        PrintStream ps;
+
+        try (Socket socket = new Socket("localhost", agentInfo.port);) {
+            OutputStream os = socket.getOutputStream();
+            ps = new PrintStream(os);
+
+            ps.println(message);
+            ps.flush();
+        } catch (IOException e) {
+            logger.error("Failed to open connection to agent on port: " + agentInfo.port, e);
+        }
+    }
+
+    private void killAgentAction(ActionEvent e) {
+        if (table.getSelectedRow() > -1) {
+            String selected = (String) table.getValueAt(table.getSelectedRow(), 0);
+            AgentInfo agentInfo = agents.get(selected);
+
+            if (agentInfo == null) {
+                return;
+            }
+
+            sendToAgent(agentInfo, LifecycleEvent.SHUTDOWN.toString());
+        }
+    }
+
     private int getRowByAgentName(String name) {
         DefaultTableModel model = (DefaultTableModel) table.getModel();
 
@@ -247,97 +264,68 @@ public class Visualiser {
         frame.dispose();
     }
 
-    private class ClientTask implements Runnable {
-        private final Socket clientSocket;
+    private synchronized void handleData(ObjectInputStream ois) {
+        try {
+            Object received = ois.readObject();
+            DefaultTableModel model = (DefaultTableModel) table.getModel();
 
-        private ClientTask(Socket clientSocket) {
-            this.clientSocket = clientSocket;
-            try {
-                clientSocket.setSoTimeout(10000);
-            } catch (SocketException e) {
-                e.printStackTrace();
-            }
-        }
+            if (received instanceof VisualiserData) {
+                VisualiserData agentState = (VisualiserData) received;
+                String agentName = agentState.getRaftPeerId();
+                AgentInfo agentInfo = agents.get(agentName);
 
-        @Override
-        public void run() {
-            InputStream inputStream;
-            ObjectInputStream ois;
+                if (agentInfo == null) {
+                    agentInfo = new AgentInfo();
+                    agentInfo.port = agentState.getPort();
 
-            try {
-                inputStream = clientSocket.getInputStream();
-                ois = new ObjectInputStream(inputStream);
-                handleData(ois);
-            } catch (SocketTimeoutException ignored) {
-            } catch (IOException e) {
-                e.printStackTrace();
-                return;
-            }
+                    agents.put(agentName, agentInfo);
 
-            try {
-                clientSocket.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
+                    model.addRow(new Object[]{
+                            agentState.getRaftPeerId(),
+                            agentState.getName(),
+                            agentState.getMultiRoleStatus(),
+                            agentState.getServiceManagerStatus(),
+                            agentState.getRaftRole(),
+                            agentState.getLeaderPeerId(),
+                            agentState.getNoTasks(),
+                            agentState.getCompletedTasks(),
+                            agentState.getNoPeers()
+                    });
+                } else {
+                    int rowId = getRowByAgentName(agentName);
 
-        private void handleData(ObjectInputStream ois) {
-            try {
-                Object received = ois.readObject();
-                DefaultTableModel model = (DefaultTableModel) table.getModel();
-
-                if (received instanceof VisualiserData) {
-                    VisualiserData agentState = (VisualiserData) received;
-                    String agentName = agentState.getName();
-
-                    if (!logs.containsKey(agentName)) {
-                        logs.put(agentName, "");
-
-                        model.addRow(new Object[]{
-                                clientSocket.getRemoteSocketAddress(),
-                                agentState.getRaftPeerId(),
-                                agentState.getName(),
-                                agentState.getMultiRoleStatus(),
-                                agentState.getServiceManagerStatus(),
-                                agentState.getRaftRole(),
-                                agentState.getLeaderPeerId(),
-                                agentState.getNoTasks(),
-                                agentState.getCompletedTasks()});
-                    } else {
-                        int rowId = getRowByAgentName(agentName);
-
-                        if (rowId != -1) {
-                            model.setValueAt(clientSocket.getRemoteSocketAddress(), rowId, 0);
-                            model.setValueAt(agentState.getRaftPeerId(), rowId, 1);
-                            model.setValueAt(agentState.getName(), rowId, 2);
-                            model.setValueAt(agentState.getMultiRoleStatus(), rowId, 3);
-                            model.setValueAt(agentState.getServiceManagerStatus(), rowId, 4);
-                            model.setValueAt(agentState.getRaftRole(), rowId, 5);
-                            model.setValueAt(agentState.getLeaderPeerId(), rowId, 6);
-                            model.setValueAt(agentState.getNoTasks(), rowId, 7);
-                            model.setValueAt(agentState.getCompletedTasks(), rowId, 8);
-                        }
-                    }
-                } else if (received instanceof VisualiserMessage) {
-                    VisualiserMessage visualiserMessage = (VisualiserMessage) received;
-
-                    String currentValue = logs.get(visualiserMessage.getPeerId());
-                    if (currentValue == null) {
-                        currentValue = "";
-                    }
-
-                    currentValue += visualiserMessage.getMessage();
-
-                    logs.put(visualiserMessage.getPeerId(), currentValue);
-
-                    if (currentLog != null && currentLog.equals(visualiserMessage.getPeerId())) {
-                        logArea.setText(currentValue);
+                    if (rowId != -1) {
+                        model.setValueAt(agentState.getRaftPeerId(), rowId, 0);
+                        model.setValueAt(agentState.getName(), rowId, 1);
+                        model.setValueAt(agentState.getMultiRoleStatus(), rowId, 2);
+                        model.setValueAt(agentState.getServiceManagerStatus(), rowId, 3);
+                        model.setValueAt(agentState.getRaftRole(), rowId, 4);
+                        model.setValueAt(agentState.getLeaderPeerId(), rowId, 5);
+                        model.setValueAt(agentState.getNoTasks(), rowId, 6);
+                        model.setValueAt(agentState.getCompletedTasks(), rowId, 7);
+                        model.setValueAt(agentState.getNoPeers(), rowId, 8);
                     }
                 }
-            } catch (IOException | ClassNotFoundException e) {
-                e.printStackTrace();
+            } else if (received instanceof VisualiserMessage) {
+                VisualiserMessage visualiserMessage = (VisualiserMessage) received;
+
+                AgentInfo agentInfo = agents.get(visualiserMessage.getPeerId());
+                if (agentInfo == null) {
+                    agentInfo = new AgentInfo();
+                }
+
+                agentInfo.log += visualiserMessage.getMessage();
+
+                agents.put(visualiserMessage.getPeerId(), agentInfo);
+
+                if (currentLog != null && currentLog.equals(visualiserMessage.getPeerId())) {
+                    logArea.setText(agentInfo.log);
+                }
             }
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
         }
     }
+
 
 }

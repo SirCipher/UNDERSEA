@@ -126,7 +126,7 @@ public class RaftNodeImpl implements RaftNode {
 
     @Override
     public PeerId leaderPeerId() {
-        if(state()!=null && state().getLeader()!=null){
+        if (state() != null && state().getLeader() != null) {
             return state().getLeader().peerId();
         } else {
             return null;
@@ -320,8 +320,27 @@ public class RaftNodeImpl implements RaftNode {
 
     @Override
     public void shutdown() {
+        alertLeavingCluster();
+
         singleThreadScheduledExecutor.shutdown();
         server.close();
+    }
+
+    private void alertLeavingCluster() {
+        for (Client follower : state().localNodes().values()) {
+            RaftClient raftClient = (RaftClient) follower;
+
+            RaftProtos.LeaveClusterRequest request = RaftProtos.LeaveClusterRequest.newBuilder()
+                    .setClient(GrpcUtil.toProtoClient(this))
+                    .build();
+
+            raftClient.alertLeavingCluster(request, new SimpleFutureCallback<RaftProtos.Empty>() {
+                @Override
+                public void onSuccess(RaftProtos.@Nullable Empty ignored) {
+
+                }
+            });
+        }
     }
 
     @Override
@@ -348,12 +367,16 @@ public class RaftNodeImpl implements RaftNode {
     private class VerifyLeaderTask extends ReschedulableTask {
         @Override
         public void innerRun() {
+            // If we don't have a leader
             if (state().getLeader() == null) {
                 if (!multiRole().isLeader() && state().getCandidate() == null) {
                     logger.info(agent.name() + " starting voting round", agent);
                     execute(new AcquireStatusTask(RaftNodeImpl.this));
                 }
             }
+//            else if (We haven't heard from the leader) {
+//
+//            }
 
             scheduleVerifyLeaderTask();
         }

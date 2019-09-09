@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.protobuf.AbstractMessage;
 import com.type2labs.undersea.common.cluster.Client;
 import com.type2labs.undersea.common.cluster.ClusterState;
+import com.type2labs.undersea.common.cluster.PeerId;
 import com.type2labs.undersea.common.logger.model.LogEntry;
 import com.type2labs.undersea.common.logger.model.LogService;
 import com.type2labs.undersea.common.missions.GeneratedMissionImpl;
@@ -59,6 +60,20 @@ public class RaftProtocolServiceImpl extends RaftProtocolServiceGrpc.RaftProtoco
         });
     }
 
+    private void handleLogEntries(RaftProtos.AppendEntryRequest request) {
+        List<LogEntry> logEntries = new ArrayList<>(request.getLogEntryCount());
+
+        for (RaftProtos.LogEntryProto proto : request.getLogEntryList()) {
+            AgentService agentService =
+                    raftNode.parent().services().getService(LogEntry.forName(proto.getAgentService()));
+
+            logEntries.add(new LogEntry(proto.getData(), proto.getValue(), proto.getTerm(), agentService));
+        }
+
+        LogService logService = raftNode.parent().services().getService(LogService.class);
+        logService.appendEntries(logEntries);
+    }
+
     @Override
     public void appendEntry(RaftProtos.AppendEntryRequest request,
                             StreamObserver<RaftProtos.AppendEntryResponse> responseObserver) {
@@ -69,20 +84,16 @@ public class RaftProtocolServiceImpl extends RaftProtocolServiceGrpc.RaftProtoco
                 raftNode.toFollower(requestTerm);
             }
 
-            List<LogEntry> logEntries = new ArrayList<>(request.getLogEntryCount());
-
-            for (RaftProtos.LogEntryProto proto : request.getLogEntryList()) {
-                AgentService agentService =
-                        raftNode.parent().services().getService(LogEntry.forName(proto.getAgentService()));
-
-                logEntries.add(new LogEntry(proto.getData(), proto.getValue(), proto.getTerm(), agentService));
-            }
-
-            LogService logService = raftNode.parent().services().getService(LogService.class);
-            logService.appendEntries(logEntries);
+            handleLogEntries(request);
 
             return RaftProtos.AppendEntryResponse.newBuilder().setTerm(raftNode.state().getCurrentTerm()).build();
         });
+    }
+
+    @Override
+    public void leaveCluster(RaftProtos.LeaveClusterRequest request,
+                             StreamObserver<RaftProtos.Empty> responseObserver) {
+        raftNode.state().removeNode(PeerId.valueOf(request.getClient().getRaftPeerId()));
     }
 
     @Override
