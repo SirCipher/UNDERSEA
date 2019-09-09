@@ -120,7 +120,7 @@ ProcessConfig = pHelmIvP
 	ok_skew			= any
 	active_start	= false
 	Domain			= course:0:359:360
-	Domain			= speed:0.0:1.0:40
+	Domain			= speed:0.0:1.0:50
 }
 //----------------------------------
 // uProcessWatch Configuration Block
@@ -197,11 +197,11 @@ ProcessConfig = uTimerScript
 //---------------------------------
 ProcessConfig = SENSOR1
 {
-	 AppTick			= 3.0
-	 CommsTick			= 3.0
+	 AppTick			= 2.0
+	 CommsTick			= 2.0
 	 MAX_APPCAST_EVENTS = 25 
 	 NAME				= SENSOR1
-	 RELIABILITY		= 0.9
+	 RELIABILITY		= 0.7
 	 CHANGE				= 10.0:50.0:2.0
 }
 
@@ -210,11 +210,11 @@ ProcessConfig = SENSOR1
 //---------------------------------
 ProcessConfig = SENSOR2
 {
-	 AppTick			= 3.0
-	 CommsTick			= 3.0
+	 AppTick			= 4.0
+	 CommsTick			= 4.0
 	 MAX_APPCAST_EVENTS = 25 
 	 NAME				= SENSOR2
-	 RELIABILITY		= 0.9
+	 RELIABILITY		= 0.8
 	 CHANGE				= 10.0:50.0:2.0
 }
 

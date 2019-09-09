@@ -23,7 +23,7 @@ public class SubsystemMonitorSpoofer extends SubsystemMonitorImpl {
             double decayFactor = parent().config().subsystemDecayTime();
             double systemTime = getElapsedTimeInMinutes();
 
-            return super.getStatus() * Math.exp(-decayFactor * systemTime * initCount);
+            return Math.pow((1 / super.getStatus() * Math.exp(-decayFactor * systemTime * initCount)), -1);
         }
     }
 
@@ -35,7 +35,5 @@ public class SubsystemMonitorSpoofer extends SubsystemMonitorImpl {
     public void monitorSubsystem(Subsystem subsystem) {
         super.monitorSubsystem(new DecayableSubsystemWrapper(subsystem));
     }
-
-
-
+    
 }

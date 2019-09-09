@@ -197,8 +197,8 @@ ProcessConfig = uTimerScript
 //---------------------------------
 ProcessConfig = SENSOR3
 {
-	 AppTick			= 3.0
-	 CommsTick			= 3.0
+	 AppTick			= 5.0
+	 CommsTick			= 5.0
 	 MAX_APPCAST_EVENTS = 25 
 	 NAME				= SENSOR3
 	 RELIABILITY		= 0.9
@@ -210,11 +210,11 @@ ProcessConfig = SENSOR3
 //---------------------------------
 ProcessConfig = SENSOR4
 {
-	 AppTick			= 3.0
-	 CommsTick			= 3.0
+	 AppTick			= 6.0
+	 CommsTick			= 6.0
 	 MAX_APPCAST_EVENTS = 25 
 	 NAME				= SENSOR4
-	 RELIABILITY		= 0.9
+	 RELIABILITY		= 1.0
 	 CHANGE				= 10.0:50.0:2.0
 }
 

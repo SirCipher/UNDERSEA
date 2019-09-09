@@ -3,6 +3,7 @@ package com.type2labs.undersea.common.agent;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class Sensor implements Subsystem {
 
@@ -11,9 +12,11 @@ public class Sensor implements Subsystem {
     private final double reliability;
     private final SensorType sensorType;
     private final List<Range> changesList = new ArrayList<>();
+    private double accuracy;
 
     public Sensor(String name, double rate, double reliability) {
         this(name, rate, reliability, SensorType.DEPTH);
+        this.accuracy = ThreadLocalRandom.current().nextDouble(100);
     }
 
     public Sensor(String name, double rate, double reliability, SensorType sensorType) {
@@ -89,7 +92,7 @@ public class Sensor implements Subsystem {
 
     @Override
     public double accuracy() {
-        return 100;
+        return accuracy;
     }
 
     public enum SensorType {

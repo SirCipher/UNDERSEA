@@ -76,6 +76,15 @@ public class ClusterState {
             this.client = client;
         }
 
+        @Override
+        public String toString() {
+            return "ClientState{" +
+                    "client=" + client +
+                    ", cost=" + cost +
+                    ", reachable=" + reachable +
+                    '}';
+        }
+
         public ClientState(Client client, double cost) {
             this.client = client;
             this.cost = cost;
@@ -101,7 +110,6 @@ public class ClusterState {
         public boolean isReachable() {
             return reachable;
         }
-
 
     }
 }
