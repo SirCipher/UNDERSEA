@@ -156,9 +156,7 @@ public class RaftNodeImpl implements RaftNode {
         logger.info(name + " is now the leader", agent);
 
         fireLifecycleCallbacks(LifecycleEvent.ELECTED_LEADER);
-
-        getMonitor().update();
-
+        agent.log(new LogEntry(leaderPeerId(), null, null, state().getCurrentTerm(), this));
         scheduleHeartbeat();
     }
 
@@ -167,7 +165,7 @@ public class RaftNodeImpl implements RaftNode {
                 serviceCallbacks.stream().filter(c -> c.getStatusCode() == statusCode).collect(Collectors.toList());
 
         for (ServiceCallback t : callbacks) {
-            t.getCallback().get();
+            t.call();
         }
     }
 
@@ -342,6 +340,8 @@ public class RaftNodeImpl implements RaftNode {
         this.started = true;
 
         server.start();
+
+        registerCallback(new ServiceCallback(LifecycleEvent.ELECTED_LEADER, () -> getMonitor().update()));
 
         UnderseaLogger.info(logger, agent, "Started node");
     }

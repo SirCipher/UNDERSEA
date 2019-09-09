@@ -1,17 +1,41 @@
 package com.type2labs.undersea.common.logger.model;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.type2labs.undersea.common.cluster.Client;
+import com.type2labs.undersea.common.cluster.PeerId;
 import com.type2labs.undersea.common.consensus.ConsensusAlgorithm;
 import com.type2labs.undersea.common.missions.planner.model.MissionManager;
 import com.type2labs.undersea.common.service.AgentService;
 
 public class LogEntry {
 
-    private final int term;
-    private final Object data;
-    private final Object value;
-    private final AgentService agentService;
+    private int term;
+    private PeerId leader;
+    private Object data;
+    private Object value;
+    private AgentService agentService;
+
+    public LogEntry(PeerId leader, Object data, Object value, int term, AgentService agentService) {
+        this.leader = leader;
+        this.data = data;
+        this.term = term;
+
+        if (value != null) {
+            this.value = value.toString();
+        }
+
+        this.agentService = agentService;
+    }
+
+    public static Class<? extends AgentService> forName(String className) {
+        switch (className.toUpperCase()) {
+            case "MISSIONMANAGER":
+                return MissionManager.class;
+            case "CONSENSUSALGORITHM":
+                return ConsensusAlgorithm.class;
+            default:
+                throw new IllegalArgumentException(className);
+        }
+    }
 
     @Override
     public String toString() {
@@ -27,36 +51,12 @@ public class LogEntry {
         return value;
     }
 
-    public LogEntry(Object data, Object value, int term, AgentService agentService) {
-        this.data = data;
-        this.term = term;
-        this.value = value.toString();
-        this.agentService = agentService;
-    }
-
-    public static Class<? extends AgentService> forName(String className) {
-        switch (className.toUpperCase()) {
-            case "MISSIONMANAGER":
-                return MissionManager.class;
-            case "CONSENSUSALGORITHM":
-                return ConsensusAlgorithm.class;
-            default:
-                throw new IllegalArgumentException(className);
-        }
+    public PeerId getLeader() {
+        return leader;
     }
 
     public int getTerm() {
         return term;
-    }
-
-    public String mapObject() {
-        ObjectMapper objectMapper = new ObjectMapper();
-        try {
-            return objectMapper.writeValueAsString(this);
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-            return null;
-        }
     }
 
     public Object getData() {

@@ -44,8 +44,6 @@ public class DefaultCallbacks {
 
                 }, raftNode.getSingleThreadScheduledExecutor());
             }
-
-            return null;
         });
     }
 

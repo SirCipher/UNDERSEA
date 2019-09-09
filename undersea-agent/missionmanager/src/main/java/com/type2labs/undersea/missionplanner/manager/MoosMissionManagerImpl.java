@@ -196,7 +196,7 @@ public class MoosMissionManagerImpl implements MissionManager {
         ServiceManager serviceManager = agent.services();
         ConsensusAlgorithm consensusAlgorithm = serviceManager.getService(ConsensusAlgorithm.class, true);
 
-        agent.log(new LogEntry(task.getUuid(), TaskStatus.COMPLETED, consensusAlgorithm.term(), this));
+        agent.log(new LogEntry(consensusAlgorithm.leaderPeerId(),task.getUuid(), TaskStatus.COMPLETED, consensusAlgorithm.term(), this));
 
         if (index == assignedTasks.size() - 1) {
             logger.info(agent.name() + ": completed all tasks", agent);

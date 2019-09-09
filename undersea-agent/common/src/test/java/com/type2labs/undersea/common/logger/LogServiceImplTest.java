@@ -43,13 +43,13 @@ public class LogServiceImplTest {
         }
 
         for (int i = 0; i < 100; i++) {
-            logService.add(new LogEntry(i, i, i, logService));
+            logService.add(new LogEntry(PeerId.newId(), i, i, i, logService));
         }
 
         List<LogEntry> logEntries;
 
         while ((logEntries = logService.readNextForClient(clients.get(0))) != null) {
-            for (LogEntry logEntry : logEntries){
+            for (LogEntry logEntry : logEntries) {
                 System.out.println(logEntry);
             }
         }

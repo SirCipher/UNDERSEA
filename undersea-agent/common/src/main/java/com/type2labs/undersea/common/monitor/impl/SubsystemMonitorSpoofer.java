@@ -35,5 +35,5 @@ public class SubsystemMonitorSpoofer extends SubsystemMonitorImpl {
     public void monitorSubsystem(Subsystem subsystem) {
         super.monitorSubsystem(new DecayableSubsystemWrapper(subsystem));
     }
-    
+
 }

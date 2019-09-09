@@ -63,7 +63,8 @@ public class RaftProtocolServiceImpl extends RaftProtocolServiceGrpc.RaftProtoco
             AgentService agentService =
                     raftNode.parent().services().getService(LogEntry.forName(proto.getAgentService()));
 
-            logEntries.add(new LogEntry(proto.getData(), proto.getValue(), proto.getTerm(), agentService));
+            logEntries.add(new LogEntry(raftNode.leaderPeerId(), proto.getData(), proto.getValue(),
+                    proto.getTerm(), agentService));
         }
 
         LogService logService = raftNode.parent().services().getService(LogService.class);
@@ -78,6 +79,20 @@ public class RaftProtocolServiceImpl extends RaftProtocolServiceGrpc.RaftProtoco
 
             if (requestTerm > raftNode.state().getCurrentTerm()) {
                 raftNode.toFollower(requestTerm);
+                UnderseaLogger.info(logger, raftNode.parent(), "Demoting to follower due to receiving a greater term: "
+                        + requestTerm);
+                return emptyAppendResponse();
+            }
+
+            PeerId peerId = PeerId.valueOf(request.getLeader().getRaftPeerId());
+            Client leader = raftNode.parent().clusterClients().get(peerId);
+
+            if (!leader.equals(raftNode.state().getLeader())) {
+                UnderseaLogger.info(logger, raftNode.parent(), "Setting leader: " + peerId);
+
+                raftNode.state().setLeader(leader);
+
+                return emptyAppendResponse();
             }
 
             handleLogEntries(request);
@@ -86,6 +101,10 @@ public class RaftProtocolServiceImpl extends RaftProtocolServiceGrpc.RaftProtoco
 
             return RaftProtos.AppendEntryResponse.newBuilder().setTerm(raftNode.state().getCurrentTerm()).build();
         });
+    }
+
+    private RaftProtos.AppendEntryResponse emptyAppendResponse() {
+        return RaftProtos.AppendEntryResponse.newBuilder().setClient(GrpcUtil.toProtoClient(raftNode)).build();
     }
 
     @Override
