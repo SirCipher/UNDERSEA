@@ -75,6 +75,8 @@ public class RaftProtocolServiceImpl extends RaftProtocolServiceGrpc.RaftProtoco
     public void appendEntry(RaftProtos.AppendEntryRequest request,
                             StreamObserver<RaftProtos.AppendEntryResponse> responseObserver) {
         sendAbstractAsyncMessage(responseObserver, () -> {
+            UnderseaLogger.info(logger, raftNode.parent(), "Received heartbeat request");
+
             int requestTerm = request.getTerm();
 
             if (requestTerm > raftNode.state().getCurrentTerm()) {
@@ -95,16 +97,18 @@ public class RaftProtocolServiceImpl extends RaftProtocolServiceGrpc.RaftProtoco
                 return emptyAppendResponse();
             }
 
-            handleLogEntries(request);
-
             raftNode.updateLastAppendRequestTime();
+            handleLogEntries(request);
 
             return RaftProtos.AppendEntryResponse.newBuilder().setTerm(raftNode.state().getCurrentTerm()).build();
         });
     }
 
     private RaftProtos.AppendEntryResponse emptyAppendResponse() {
-        return RaftProtos.AppendEntryResponse.newBuilder().setClient(GrpcUtil.toProtoClient(raftNode)).build();
+        return RaftProtos.AppendEntryResponse.newBuilder()
+                .setClient(GrpcUtil.toProtoClient(raftNode))
+                .setTerm(raftNode.term())
+                .build();
     }
 
     @Override
@@ -116,7 +120,7 @@ public class RaftProtocolServiceImpl extends RaftProtocolServiceGrpc.RaftProtoco
     @Override
     public void requestVote(RaftProtos.VoteRequest request, StreamObserver<RaftProtos.VoteResponse> responseObserver) {
         sendAbstractAsyncMessage(responseObserver, () -> {
-            Client self = RaftClientImpl.ofSelf(raftNode);
+            Client self = raftNode.self();
             Pair<Client, ClusterState.ClientState> nominee = raftNode.state().clusterState().getNominee(self);
 
             UnderseaLogger.info(logger, raftNode.parent(),

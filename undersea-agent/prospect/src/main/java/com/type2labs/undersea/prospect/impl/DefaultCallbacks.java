@@ -3,6 +3,7 @@ package com.type2labs.undersea.prospect.impl;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.type2labs.undersea.common.agent.Agent;
+import com.type2labs.undersea.common.cluster.Client;
 import com.type2labs.undersea.common.missions.planner.model.GeneratedMission;
 import com.type2labs.undersea.common.missions.planner.model.MissionManager;
 import com.type2labs.undersea.common.missions.planner.model.MissionParameters;
@@ -24,7 +25,7 @@ public class DefaultCallbacks {
             MissionParameters parameters = config.getUnderseaRuntimeConfig().missionParameters();
 
             parameters.setClients(new ArrayList<>(agent.clusterClients().values()));
-            parameters.getClients().add(RaftClientImpl.ofSelf(raftNode));
+            parameters.getClients().add(raftNode.self());
 
             Transaction transaction = new Transaction.Builder(agent)
                     .forService(MissionManager.class)

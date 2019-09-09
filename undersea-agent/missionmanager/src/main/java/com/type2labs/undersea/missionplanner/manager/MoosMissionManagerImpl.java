@@ -190,6 +190,10 @@ public class MoosMissionManagerImpl implements MissionManager {
             }
         }
 
+        if(true){
+            return;
+        }
+
         Task task = assignedTasks.get(index);
         task.setTaskStatus(TaskStatus.COMPLETED);
 
@@ -248,7 +252,6 @@ public class MoosMissionManagerImpl implements MissionManager {
             });
         } else if (statusCode == LifecycleEvent.APPEND_REQUEST) {
             handleAppendTransaction(transaction);
-            return null;
         }
 
         String message = MoosMissionManagerImpl.class.getSimpleName() + " does not support status code: " + statusCode +

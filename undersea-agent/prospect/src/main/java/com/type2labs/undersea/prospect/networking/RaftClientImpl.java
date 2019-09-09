@@ -36,6 +36,7 @@ public class RaftClientImpl implements RaftClient {
     private final PeerId clientId;
     private RaftNode consensusAlgorithm;
     private boolean isSelf = false;
+    private RaftClientImpl self;
 
     public RaftClientImpl(RaftNode consensusAlgorithm, InetSocketAddress socketAddress, PeerId peerId) {
         this.consensusAlgorithm = consensusAlgorithm;
@@ -51,11 +52,11 @@ public class RaftClientImpl implements RaftClient {
                 new ThreadFactoryBuilder().setNameFormat(consensusAlgorithm.parent().name() + "-rpc-client-%d").build());
     }
 
-    public static Client ofSelf(RaftNode raftNode) {
-        RaftClientImpl self = new RaftClientImpl(raftNode, new InetSocketAddress(0), raftNode.parent().peerId());
-        self.isSelf = true;
-        return self;
+    public RaftClientImpl(RaftNode consensusAlgorithm, InetSocketAddress socketAddress, PeerId peerId, boolean isSelf) {
+        this(consensusAlgorithm, socketAddress, peerId);
+        this.isSelf = isSelf;
     }
+
 
     @Override
     public ClusterState.ClientState state() {

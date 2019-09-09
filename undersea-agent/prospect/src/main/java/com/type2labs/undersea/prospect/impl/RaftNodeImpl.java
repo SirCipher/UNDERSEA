@@ -7,6 +7,7 @@ import com.google.common.util.concurrent.MoreExecutors;
 import com.type2labs.undersea.common.agent.Agent;
 import com.type2labs.undersea.common.cluster.Client;
 import com.type2labs.undersea.common.cluster.PeerId;
+import com.type2labs.undersea.common.consensus.ConsensusAlgorithm;
 import com.type2labs.undersea.common.consensus.MultiRoleState;
 import com.type2labs.undersea.common.consensus.RaftRole;
 import com.type2labs.undersea.common.logger.UnderseaLogger;
@@ -67,6 +68,7 @@ public class RaftNodeImpl implements RaftNode {
     private boolean started = false;
     private long lastHeartbeatTime;
     private long lastAppendRequestTime;
+    private RaftClientImpl selfRaftClientImpl;
 
     public RaftNodeImpl(RaftClusterConfig raftClusterConfig, String name) {
         this(raftClusterConfig, name, new InetSocketAddress(0));
@@ -152,11 +154,11 @@ public class RaftNodeImpl implements RaftNode {
         }
 
         role = RaftRole.LEADER;
-        state().setLeader(RaftClientImpl.ofSelf(this));
+        state().setLeader(selfRaftClientImpl);
         logger.info(name + " is now the leader", agent);
 
         fireLifecycleCallbacks(LifecycleEvent.ELECTED_LEADER);
-        agent.log(new LogEntry(leaderPeerId(), null, null, state().getCurrentTerm(), this));
+        agent.log(new LogEntry(leaderPeerId(), new Object(), new Object(), state().getCurrentTerm(), this));
         scheduleHeartbeat();
     }
 
@@ -264,6 +266,11 @@ public class RaftNodeImpl implements RaftNode {
         }
     }
 
+    @Override
+    public RaftClient self() {
+        return selfRaftClientImpl;
+    }
+
     private void scheduleHeartbeat() {
         schedule(ReschedulableTask.wrap(new HeartbeatTask()), 500);
     }
@@ -338,6 +345,7 @@ public class RaftNodeImpl implements RaftNode {
         this.agent = parentAgent;
         this.raftState = new RaftState(this);
         this.started = true;
+        this.selfRaftClientImpl = new RaftClientImpl(agent.services().getService(RaftNode.class), new InetSocketAddress(0), agent.peerId(), true);
 
         server.start();
 
