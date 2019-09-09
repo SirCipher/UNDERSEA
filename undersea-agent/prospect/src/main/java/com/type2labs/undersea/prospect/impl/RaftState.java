@@ -30,10 +30,11 @@ public class RaftState {
         this.localNodes = agent.parent().clusterClients();
     }
 
-    public void initCandidate(int term) {
-        this.candidate = new Candidate((localNodes.size()));
+    public void initCandidate() {
+        this.candidate = new Candidate(localNodes.size());
         this.votedFor = null;
         this.clusterState = new ClusterState(parent, localNodes.size());
+        this.currentTerm++;
     }
 
     public void clearCandidate() {

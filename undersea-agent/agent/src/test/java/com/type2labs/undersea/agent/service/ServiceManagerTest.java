@@ -6,8 +6,8 @@ import com.type2labs.undersea.common.agent.Agent;
 import com.type2labs.undersea.common.agent.AgentStatus;
 import com.type2labs.undersea.common.cluster.PeerId;
 import com.type2labs.undersea.common.config.UnderseaRuntimeConfig;
-import com.type2labs.undersea.common.monitor.impl.MonitorImpl;
-import com.type2labs.undersea.common.monitor.model.Monitor;
+import com.type2labs.undersea.common.monitor.impl.SubsystemMonitorImpl;
+import com.type2labs.undersea.common.monitor.model.SubsystemMonitor;
 import com.type2labs.undersea.common.service.AgentService;
 import com.type2labs.undersea.common.service.ServiceManager;
 import com.type2labs.undersea.common.service.transaction.ServiceCallback;
@@ -25,8 +25,8 @@ public class ServiceManagerTest {
         String name = "test";
 
         ServiceManager serviceManager = new ServiceManager();
-        Monitor monitor = new MonitorImpl();
-        serviceManager.registerService(monitor);
+        SubsystemMonitor subsystemMonitor = new SubsystemMonitorImpl();
+        serviceManager.registerService(subsystemMonitor);
         serviceManager.registerService(new ServiceSample());
 
         return new UnderseaAgent(new UnderseaRuntimeConfig(),

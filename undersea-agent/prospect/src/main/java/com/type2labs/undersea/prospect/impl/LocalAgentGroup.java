@@ -6,7 +6,6 @@ import com.type2labs.undersea.common.agent.AgentFactory;
 import com.type2labs.undersea.common.agent.AgentStatus;
 import com.type2labs.undersea.common.cluster.Client;
 import com.type2labs.undersea.common.cluster.ClusterState;
-import com.type2labs.undersea.common.cluster.PeerId;
 import com.type2labs.undersea.common.config.UnderseaRuntimeConfig;
 import com.type2labs.undersea.common.consensus.RaftRole;
 import com.type2labs.undersea.common.cost.CostConfiguration;
@@ -14,9 +13,9 @@ import com.type2labs.undersea.common.cost.CostConfigurationImpl;
 import com.type2labs.undersea.common.missions.planner.impl.MissionParametersImpl;
 import com.type2labs.undersea.common.missions.planner.impl.NoMissionManager;
 import com.type2labs.undersea.common.missions.planner.model.MissionParameters;
-import com.type2labs.undersea.common.monitor.impl.MonitorImpl;
+import com.type2labs.undersea.common.monitor.impl.SubsystemMonitorImpl;
 import com.type2labs.undersea.common.monitor.impl.VisualiserClientImpl;
-import com.type2labs.undersea.common.monitor.model.Monitor;
+import com.type2labs.undersea.common.monitor.model.SubsystemMonitor;
 import com.type2labs.undersea.common.monitor.model.VisualiserClient;
 import com.type2labs.undersea.common.service.AgentService;
 import com.type2labs.undersea.common.service.ServiceManager;
@@ -68,12 +67,12 @@ public class LocalAgentGroup implements Closeable {
             }
 
             if (withVisualiser) {
-                Monitor monitor = new MonitorImpl();
+                SubsystemMonitor subsystemMonitor = new SubsystemMonitorImpl();
                 VisualiserClient client = new VisualiserClientImpl();
-                monitor.setVisualiser(client);
+                subsystemMonitor.setVisualiser(client);
                 client.initialise(agent);
 
-                serviceManager.registerService(monitor);
+                serviceManager.registerService(subsystemMonitor);
             }
 
             raftNode.initialise(agent);
@@ -94,7 +93,7 @@ public class LocalAgentGroup implements Closeable {
     }
 
     public LocalAgentGroup(int size) {
-        this(size, Sets.newHashSet(new MonitorImpl(), new NoMissionManager()));
+        this(size, Sets.newHashSet(new SubsystemMonitorImpl(), new NoMissionManager()));
     }
 
     @Override

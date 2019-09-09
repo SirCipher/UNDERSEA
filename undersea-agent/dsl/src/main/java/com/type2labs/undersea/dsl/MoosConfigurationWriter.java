@@ -92,7 +92,7 @@ class MoosConfigurationWriter {
         for (Map.Entry<String, Sensor> entry : sensorFactory.getSensors().entrySet()) {
             Sensor sensor = entry.getValue();
             String filename = MoosConfigurationWriter.buildDir + "/plug_" + sensor.getName() + ".moos";
-            Utility.exportToFile(filename, sensor.toString(), false);
+            Utility.exportToFile(filename, sensor.toDslString(), false);
         }
     }
 
@@ -204,7 +204,7 @@ class MoosConfigurationWriter {
 
         String suuvProcName = "sUUV" + agent.name();
 
-        vehicleBlock.append("\tRun = sUUV           @ NewConsole = true ~" + suuvProcName + "\n");
+        vehicleBlock.append("\tRun = sUUV           @ NewConsole = false ~" + suuvProcName + "\n");
         vehicleBlock.append("\tRun = uFldNodeBroker @ NewConsole = false\n");
 
         for (Sensor sensor : agent.getSensors()) {

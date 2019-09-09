@@ -2,15 +2,12 @@ package com.type2labs.undersea.agent;
 
 import com.type2labs.undersea.agent.impl.HardwareInterface;
 import com.type2labs.undersea.agent.impl.MoosConnector;
-import com.type2labs.undersea.common.agent.Agent;
-import com.type2labs.undersea.common.agent.AgentFactory;
-import com.type2labs.undersea.common.agent.AgentMetaData;
-import com.type2labs.undersea.common.agent.AgentStatus;
+import com.type2labs.undersea.common.agent.*;
 import com.type2labs.undersea.common.consensus.MultiRoleState;
 import com.type2labs.undersea.common.logger.LogServiceImpl;
-import com.type2labs.undersea.common.monitor.impl.MonitorImpl;
+import com.type2labs.undersea.common.monitor.impl.SubsystemMonitorSpoofer;
 import com.type2labs.undersea.common.monitor.impl.VisualiserClientImpl;
-import com.type2labs.undersea.common.monitor.model.Monitor;
+import com.type2labs.undersea.common.monitor.model.SubsystemMonitor;
 import com.type2labs.undersea.common.runner.AgentInitialiser;
 import com.type2labs.undersea.common.service.ServiceManager;
 import com.type2labs.undersea.common.service.hardware.NoNetworkInterfaceImpl;
@@ -46,15 +43,22 @@ public class AgentInitialiserImpl implements AgentInitialiser {
 
         agents.forEach((key, value) -> {
             DslAgentProxy agentProxy = (DslAgentProxy) value;
+
             ServiceManager serviceManager = new ServiceManager();
 
             serviceManager.registerService(new BlockchainNetworkImpl());
             serviceManager.registerService(new LogServiceImpl());
             serviceManager.registerService(new MoosMissionManagerImpl(new VehicleRoutingOptimiser()));
 
-            Monitor monitor = new MonitorImpl();
-            monitor.setVisualiser(new VisualiserClientImpl());
-            serviceManager.registerService(monitor);
+            SubsystemMonitor subsystemMonitor = new SubsystemMonitorSpoofer();
+            subsystemMonitor.setVisualiser(new VisualiserClientImpl());
+            subsystemMonitor.registerSpeedRange(((DslAgentProxy) value).getSpeedRange());
+
+            for (Sensor sensor : ((DslAgentProxy) value).getSensors()) {
+                subsystemMonitor.monitorSubsystem(sensor);
+            }
+
+            serviceManager.registerService(subsystemMonitor);
 
             Agent underseaAgent = agentFactory.createWith(raftClusterConfig.getUnderseaRuntimeConfig(), key,
                     serviceManager,
@@ -106,7 +110,7 @@ public class AgentInitialiserImpl implements AgentInitialiser {
                 serviceManager.registerService(new NoNetworkInterfaceImpl());
             }
 
-            monitor.setVisualiser(new VisualiserClientImpl());
+            subsystemMonitor.setVisualiser(new VisualiserClientImpl());
 
             constructedAgents.add(underseaAgent);
         });

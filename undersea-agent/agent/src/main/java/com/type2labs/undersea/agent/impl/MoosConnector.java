@@ -3,6 +3,7 @@ package com.type2labs.undersea.agent.impl;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.type2labs.undersea.common.agent.Agent;
 import com.type2labs.undersea.common.agent.AgentMetaData;
+import com.type2labs.undersea.common.logger.UnderseaLogger;
 import com.type2labs.undersea.common.missions.planner.model.MissionManager;
 import com.type2labs.undersea.common.service.hardware.NetworkInterface;
 import com.type2labs.undersea.common.service.transaction.ServiceCallback;
@@ -120,7 +121,6 @@ public class MoosConnector implements NetworkInterface {
             out = new PrintWriter(socket.getOutputStream(), false);
             in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         } catch (IOException e) {
-            e.printStackTrace();
             throw new RuntimeException(e);
         }
 
@@ -132,7 +132,6 @@ public class MoosConnector implements NetworkInterface {
         try {
             response = in.readLine();
         } catch (IOException e) {
-            e.printStackTrace();
             throw new RuntimeException(e);
         }
 
@@ -142,7 +141,7 @@ public class MoosConnector implements NetworkInterface {
             throw new RuntimeException(e);
         }
 
-        logger.info(agent.name() + ": received: " + response);
+        UnderseaLogger.info(logger, agent, "received: " + response);
 
         return response;
     }
@@ -179,7 +178,7 @@ public class MoosConnector implements NetworkInterface {
 
             listenOnInbound();
         } catch (IOException e) {
-            throw new RuntimeException(agent.name() + ": failed to close socket during initialisation", e);
+            throw new RuntimeException(agent.name() + ": failed to close resources during initialisation", e);
         }
     }
 

@@ -6,9 +6,9 @@ import com.type2labs.undersea.common.cluster.PeerId;
 import com.type2labs.undersea.common.config.UnderseaRuntimeConfig;
 import com.type2labs.undersea.common.missions.planner.impl.MissionParametersImpl;
 import com.type2labs.undersea.common.missions.planner.model.MissionManager;
-import com.type2labs.undersea.common.monitor.impl.MonitorImpl;
+import com.type2labs.undersea.common.monitor.impl.SubsystemMonitorImpl;
 import com.type2labs.undersea.common.monitor.impl.VisualiserClientImpl;
-import com.type2labs.undersea.common.monitor.model.Monitor;
+import com.type2labs.undersea.common.monitor.model.SubsystemMonitor;
 import com.type2labs.undersea.common.service.ServiceManager;
 import com.type2labs.undersea.missionplanner.manager.MoosMissionManagerImpl;
 import com.type2labs.undersea.missionplanner.planner.vrp.VehicleRoutingOptimiser;
@@ -49,7 +49,7 @@ public class VisualiserTest {
         config.missionParameters(new MissionParametersImpl(0, new double[0][0], 10));
         config.enableVisualiser(true);
 
-        Monitor monitor = new MonitorImpl();
+        SubsystemMonitor subsystemMonitor = new SubsystemMonitorImpl();
         UnderseaAgent underseaAgent = new UnderseaAgent(config,
                 name,
                 serviceManager,
@@ -57,12 +57,12 @@ public class VisualiserTest {
                 PeerId.newId());
 
         VisualiserClientImpl visualiserClient = new VisualiserClientImpl();
-        monitor.setVisualiser(visualiserClient);
+        subsystemMonitor.setVisualiser(visualiserClient);
         visualiserClient.initialise(underseaAgent);
 
         raftNode.initialise(underseaAgent);
 
-        serviceManager.registerService(monitor);
+        serviceManager.registerService(subsystemMonitor);
 
         underseaAgent.start();
 

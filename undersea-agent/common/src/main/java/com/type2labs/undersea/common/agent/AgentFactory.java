@@ -8,7 +8,6 @@ import com.type2labs.undersea.common.config.UnderseaRuntimeConfig;
 import com.type2labs.undersea.common.service.ServiceManager;
 import com.type2labs.undersea.utilities.factory.AbstractFactory;
 import org.apache.commons.lang3.NotImplementedException;
-import org.apache.commons.lang3.tuple.Pair;
 
 import java.net.InetSocketAddress;
 import java.util.ArrayList;
@@ -58,12 +57,7 @@ public class AgentFactory implements AbstractFactory<Agent> {
     public Agent createWith(UnderseaRuntimeConfig config, String name, ServiceManager serviceManager,
                             AgentStatus agentStatus) {
         return new AbstractAgent(config, name, serviceManager, agentStatus, PeerId.newId()) {
-            private static final long serialVersionUID = -2866679824255773653L;
-
-            @Override
-            public List<Pair<String, String>> status() {
-                return new ArrayList<>();
-            }
+            private static final long serialVersionUID = 8743121047309335316L;
         };
     }
 
@@ -74,11 +68,6 @@ public class AgentFactory implements AbstractFactory<Agent> {
 
         return new AbstractAgent(config, name, serviceManager, agentStatus, PeerId.newId()) {
             private static final long serialVersionUID = -2866679824255773653L;
-
-            @Override
-            public List<Pair<String, String>> status() {
-                return new ArrayList<>();
-            }
         };
     }
 
@@ -90,11 +79,6 @@ public class AgentFactory implements AbstractFactory<Agent> {
 
         return new AbstractAgent(new UnderseaRuntimeConfig(), name, serviceManager, agentStatus, PeerId.newId()) {
             private static final long serialVersionUID = -2866679824255773653L;
-
-            @Override
-            public List<Pair<String, String>> status() {
-                return new ArrayList<>();
-            }
         };
     }
 
@@ -103,12 +87,7 @@ public class AgentFactory implements AbstractFactory<Agent> {
         AgentStatus agentStatus = new AgentStatus(name, new ArrayList<>());
 
         return new AbstractAgent(new UnderseaRuntimeConfig(), name, serviceManager, agentStatus, PeerId.newId()) {
-            private static final long serialVersionUID = -2866679824255773653L;
-
-            @Override
-            public List<Pair<String, String>> status() {
-                return new ArrayList<>();
-            }
+            private static final long serialVersionUID = -1087323467644961495L;
         };
     }
 

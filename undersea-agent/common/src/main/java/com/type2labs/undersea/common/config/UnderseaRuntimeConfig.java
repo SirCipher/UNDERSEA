@@ -13,12 +13,13 @@ public class UnderseaRuntimeConfig {
     private MissionParameters missionParameters;
     private CostConfiguration costConfiguration;
     private int logBatchSize = 10;
+    private double subsystemDecayTime = 0.1;
 
     public int getLogBatchSize() {
         return logBatchSize;
     }
 
-    public UnderseaRuntimeConfig withLogBatchSize(int logBatchSize){
+    public UnderseaRuntimeConfig withLogBatchSize(int logBatchSize) {
         this.logBatchSize = logBatchSize;
         return this;
     }
@@ -57,4 +58,7 @@ public class UnderseaRuntimeConfig {
         return costConfiguration.getCostCalculator();
     }
 
+    public double subsystemDecayTime() {
+        return subsystemDecayTime;
+    }
 }

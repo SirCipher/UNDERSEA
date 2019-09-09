@@ -19,8 +19,6 @@ public interface Agent extends Serializable {
 
     ServiceManager services();
 
-    List<Pair<String, String>> status();
-
     String name();
 
     void schedule(Runnable task);

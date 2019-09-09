@@ -2,7 +2,7 @@ package com.type2labs.undersea.common.logger;
 
 
 import com.type2labs.undersea.common.agent.Agent;
-import com.type2labs.undersea.common.monitor.model.Monitor;
+import com.type2labs.undersea.common.monitor.model.SubsystemMonitor;
 import com.type2labs.undersea.common.monitor.model.VisualiserClient;
 import com.type2labs.undersea.common.service.ServiceManager;
 import org.apache.logging.log4j.core.*;
@@ -11,6 +11,7 @@ import org.apache.logging.log4j.core.config.plugins.Plugin;
 import org.apache.logging.log4j.core.config.plugins.PluginAttribute;
 import org.apache.logging.log4j.core.config.plugins.PluginElement;
 import org.apache.logging.log4j.core.config.plugins.PluginFactory;
+import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -37,6 +38,14 @@ public class UnderseaLogger extends AbstractAppender {
         return new UnderseaLogger(name, filter, layout);
     }
 
+    public static void info(Logger logger, Agent agent, String message) {
+        logger.info(agent.name() + ": " + message, agent);
+    }
+
+    public static void warn(Logger logger, Agent agent, String message) {
+        logger.warn(agent.name() + ": " + message, agent);
+    }
+
     @Override
     public void append(LogEvent event) {
         Object[] parameters = event.getMessage().getParameters();
@@ -61,14 +70,14 @@ public class UnderseaLogger extends AbstractAppender {
             return;
         }
 
-        Monitor monitor = serviceManager.getService(Monitor.class);
-        if (monitor == null) {
+        SubsystemMonitor subsystemMonitor = serviceManager.getService(SubsystemMonitor.class);
+        if (subsystemMonitor == null) {
             return;
         }
 
         String message = new String(getLayout().toByteArray(event));
         VisualiserMessage visualiserMessage = new VisualiserMessage(agent.peerId().toString(), message);
-        VisualiserClient visualiserClient = monitor.visualiser();
+        VisualiserClient visualiserClient = subsystemMonitor.visualiser();
 
         try {
             visualiserClient.write(visualiserMessage);

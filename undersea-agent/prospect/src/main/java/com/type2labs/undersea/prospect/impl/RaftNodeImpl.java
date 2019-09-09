@@ -9,12 +9,13 @@ import com.type2labs.undersea.common.cluster.Client;
 import com.type2labs.undersea.common.cluster.PeerId;
 import com.type2labs.undersea.common.consensus.MultiRoleState;
 import com.type2labs.undersea.common.consensus.RaftRole;
+import com.type2labs.undersea.common.logger.UnderseaLogger;
 import com.type2labs.undersea.common.logger.model.LogEntry;
 import com.type2labs.undersea.common.logger.model.LogService;
 import com.type2labs.undersea.common.missions.planner.model.AgentMission;
 import com.type2labs.undersea.common.missions.planner.model.GeneratedMission;
 import com.type2labs.undersea.common.missions.planner.model.MissionManager;
-import com.type2labs.undersea.common.monitor.model.Monitor;
+import com.type2labs.undersea.common.monitor.model.SubsystemMonitor;
 import com.type2labs.undersea.common.service.AgentService;
 import com.type2labs.undersea.common.service.transaction.LifecycleEvent;
 import com.type2labs.undersea.common.service.transaction.ServiceCallback;
@@ -65,6 +66,7 @@ public class RaftNodeImpl implements RaftNode {
     private MultiRoleState multiRoleState;
     private boolean started = false;
     private long lastHeartbeatTime;
+    private long lastAppendRequestTime;
 
     public RaftNodeImpl(RaftClusterConfig raftClusterConfig, String name) {
         this(raftClusterConfig, name, new InetSocketAddress(0));
@@ -156,6 +158,7 @@ public class RaftNodeImpl implements RaftNode {
         fireLifecycleCallbacks(LifecycleEvent.ELECTED_LEADER);
 
         getMonitor().update();
+
         scheduleHeartbeat();
     }
 
@@ -184,9 +187,10 @@ public class RaftNodeImpl implements RaftNode {
         getMonitor().update();
     }
 
+    @Override
     public void toCandidate() {
         role = RaftRole.CANDIDATE;
-        state().initCandidate(0);
+        raftState.initCandidate();
         logger.info(name + " is now a candidate", agent);
 
         getMonitor().update();
@@ -195,14 +199,6 @@ public class RaftNodeImpl implements RaftNode {
     @Override
     public GrpcServer server() {
         return server;
-    }
-
-    private void broadcastMissionProgress() {
-        for (Client follower : state().localNodes().values()) {
-            sendMissionUpdateRequest((RaftClient) follower);
-        }
-
-        lastHeartbeatTime = System.currentTimeMillis();
     }
 
     public RaftClusterConfig config() {
@@ -245,21 +241,13 @@ public class RaftNodeImpl implements RaftNode {
         }
     }
 
-    private Monitor getMonitor() {
-        return agent.services().getService(Monitor.class);
+    private SubsystemMonitor getMonitor() {
+        return agent.services().getService(SubsystemMonitor.class);
     }
 
     @Override
     public void run() {
-        if (agent == null) {
-            logger.error("Agent not set for: " + name);
-            throw new RuntimeException("Agent not set for: " + name);
-        }
-
-        server.start();
-        started = true;
-
-        logger.trace("Started node: " + name, agent);
+        scheduleVerifyLeaderTask();
     }
 
     @Override
@@ -279,11 +267,10 @@ public class RaftNodeImpl implements RaftNode {
     }
 
     private void scheduleHeartbeat() {
-        broadcastMissionProgress();
         schedule(ReschedulableTask.wrap(new HeartbeatTask()), 500);
     }
 
-    private void sendMissionUpdateRequest(RaftClient follower) {
+    private void sendAppendRequest(RaftClient follower) {
         LogService logService = parent().services().getService(LogService.class);
         List<LogEntry> logEntries = logService.readNextForClient(follower);
         List<RaftProtos.LogEntryProto> protoEntries = new ArrayList<>(logEntries.size());
@@ -352,7 +339,11 @@ public class RaftNodeImpl implements RaftNode {
     public void initialise(Agent parentAgent) {
         this.agent = parentAgent;
         this.raftState = new RaftState(this);
-        scheduleVerifyLeaderTask();
+        this.started = true;
+
+        server.start();
+
+        UnderseaLogger.info(logger, agent, "Started node");
     }
 
     private void scheduleVerifyLeaderTask() {
@@ -364,19 +355,26 @@ public class RaftNodeImpl implements RaftNode {
         return agent;
     }
 
+    public void updateLastAppendRequestTime() {
+        this.lastAppendRequestTime = System.currentTimeMillis();
+    }
+
     private class VerifyLeaderTask extends ReschedulableTask {
         @Override
         public void innerRun() {
             // If we don't have a leader
             if (state().getLeader() == null) {
                 if (!multiRole().isLeader() && state().getCandidate() == null) {
-                    logger.info(agent.name() + " starting voting round", agent);
+                    UnderseaLogger.info(logger, agent, "Starting voting round");
                     execute(new AcquireStatusTask(RaftNodeImpl.this));
                 }
             }
-//            else if (We haven't heard from the leader) {
-//
-//            }
+            // If we haven't heard from the leader then assume they have gone offline
+            else if (lastAppendRequestTime + raftClusterConfig.heartbeatTimeout() > System.currentTimeMillis()) {
+                UnderseaLogger.info(logger, agent, "leader heartbeat timeout exceeded");
+                state().setLeader(null);
+                execute(new AcquireStatusTask(RaftNodeImpl.this));
+            }
 
             scheduleVerifyLeaderTask();
         }
@@ -391,7 +389,11 @@ public class RaftNodeImpl implements RaftNode {
         @Override
         protected void innerRun() {
             if (lastHeartbeatTime < System.currentTimeMillis() - RaftClusterConfig.HEARTBEAT_PERIOD) {
-                broadcastMissionProgress();
+                for (Client follower : state().localNodes().values()) {
+                    sendAppendRequest((RaftClient) follower);
+                }
+
+                lastHeartbeatTime = System.currentTimeMillis();
             }
 
             scheduleHeartbeat();

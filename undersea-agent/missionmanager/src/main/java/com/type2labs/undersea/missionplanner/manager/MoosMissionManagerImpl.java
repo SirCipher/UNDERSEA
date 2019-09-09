@@ -1,6 +1,5 @@
 package com.type2labs.undersea.missionplanner.manager;
 
-import com.google.common.graph.Network;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
@@ -18,7 +17,7 @@ import com.type2labs.undersea.common.missions.planner.model.MissionPlanner;
 import com.type2labs.undersea.common.missions.task.model.Task;
 import com.type2labs.undersea.common.missions.task.model.TaskExecutor;
 import com.type2labs.undersea.common.missions.task.model.TaskStatus;
-import com.type2labs.undersea.common.monitor.model.Monitor;
+import com.type2labs.undersea.common.monitor.model.SubsystemMonitor;
 import com.type2labs.undersea.common.service.AgentService;
 import com.type2labs.undersea.common.service.ServiceManager;
 import com.type2labs.undersea.common.service.hardware.NetworkInterface;
@@ -171,7 +170,7 @@ public class MoosMissionManagerImpl implements MissionManager {
     }
 
     private void updateMonitor() {
-        agent.services().getService(Monitor.class).update();
+        agent.services().getService(SubsystemMonitor.class).update();
     }
 
     private void handleWaypointIndexUpdate(String message) {

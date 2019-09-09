@@ -13,7 +13,6 @@ public class Sensor implements Subsystem {
     private final List<Range> changesList = new ArrayList<>();
 
     public Sensor(String name, double rate, double reliability) {
-        // TODO: Set from DSl
         this(name, rate, reliability, SensorType.DEPTH);
     }
 
@@ -44,7 +43,14 @@ public class Sensor implements Subsystem {
         return this.reliability;
     }
 
+    @Override
     public String toString() {
+        return "Sensor{" +
+                "name='" + name + '\'' +
+                '}';
+    }
+
+    public String toDslString() {
         StringBuilder str = new StringBuilder();
         str.append("//---------------------------------\n");
         str.append("// " + name + " Configuration Block\n");

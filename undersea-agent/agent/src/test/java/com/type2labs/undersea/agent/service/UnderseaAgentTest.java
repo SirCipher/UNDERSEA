@@ -4,8 +4,8 @@ import com.type2labs.undersea.agent.impl.UnderseaAgent;
 import com.type2labs.undersea.common.agent.AgentStatus;
 import com.type2labs.undersea.common.cluster.PeerId;
 import com.type2labs.undersea.common.config.UnderseaRuntimeConfig;
-import com.type2labs.undersea.common.monitor.impl.MonitorImpl;
-import com.type2labs.undersea.common.monitor.model.Monitor;
+import com.type2labs.undersea.common.monitor.impl.SubsystemMonitorImpl;
+import com.type2labs.undersea.common.monitor.model.SubsystemMonitor;
 import com.type2labs.undersea.common.service.ServiceManager;
 import com.type2labs.undersea.prospect.RaftClusterConfig;
 import com.type2labs.undersea.prospect.impl.RaftNodeImpl;
@@ -34,7 +34,7 @@ public class UnderseaAgentTest {
         serviceManager.registerService(raftNode);
         serviceManager.registerService(new BlockchainNetworkImpl());
 //        serviceManager.registerService(new VehicleRoutingOptimiser());
-        serviceManager.registerService(new MonitorImpl());
+        serviceManager.registerService(new SubsystemMonitorImpl());
 
         UnderseaAgent underseaAgent = new UnderseaAgent(new UnderseaRuntimeConfig(),
                 "test",
@@ -42,7 +42,7 @@ public class UnderseaAgentTest {
                 new AgentStatus("test", new ArrayList<>()),
                 PeerId.newId());
 
-        assertNotNull(serviceManager.getService(Monitor.class));
+        assertNotNull(serviceManager.getService(SubsystemMonitor.class));
         assertNotNull(underseaAgent.getBlockchainNetwork());
 
         serviceManager.shutdownServices();

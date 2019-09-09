@@ -3,7 +3,7 @@ package com.type2labs.undersea.common.service;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.MoreExecutors;
 import com.type2labs.undersea.common.agent.Agent;
-import com.type2labs.undersea.common.monitor.model.Monitor;
+import com.type2labs.undersea.common.monitor.model.SubsystemMonitor;
 import com.type2labs.undersea.common.service.transaction.LifecycleEvent;
 import com.type2labs.undersea.common.service.transaction.Transaction;
 import com.type2labs.undersea.common.service.transaction.TransactionData;
@@ -468,10 +468,10 @@ public class ServiceManager {
     }
 
     public void updateVisualiser() {
-        Monitor monitor = getService(Monitor.class);
+        SubsystemMonitor subsystemMonitor = getService(SubsystemMonitor.class);
 
-        if (monitor != null) {
-            monitor.update();
+        if (subsystemMonitor != null) {
+            subsystemMonitor.update();
         }
     }
 

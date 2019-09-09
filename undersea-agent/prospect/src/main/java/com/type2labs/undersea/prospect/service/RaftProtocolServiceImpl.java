@@ -6,6 +6,7 @@ import com.google.protobuf.AbstractMessage;
 import com.type2labs.undersea.common.cluster.Client;
 import com.type2labs.undersea.common.cluster.ClusterState;
 import com.type2labs.undersea.common.cluster.PeerId;
+import com.type2labs.undersea.common.logger.UnderseaLogger;
 import com.type2labs.undersea.common.logger.model.LogEntry;
 import com.type2labs.undersea.common.logger.model.LogService;
 import com.type2labs.undersea.common.missions.GeneratedMissionImpl;
@@ -14,6 +15,7 @@ import com.type2labs.undersea.common.missions.planner.model.MissionManager;
 import com.type2labs.undersea.common.service.AgentService;
 import com.type2labs.undersea.prospect.RaftProtocolServiceGrpc;
 import com.type2labs.undersea.prospect.RaftProtos;
+import com.type2labs.undersea.prospect.impl.RaftNodeImpl;
 import com.type2labs.undersea.prospect.model.RaftNode;
 import com.type2labs.undersea.prospect.networking.RaftClientImpl;
 import com.type2labs.undersea.prospect.util.GrpcUtil;
@@ -31,19 +33,17 @@ import java.util.function.Supplier;
 public class RaftProtocolServiceImpl extends RaftProtocolServiceGrpc.RaftProtocolServiceImplBase {
 
     private static final Logger logger = LogManager.getLogger(RaftProtocolServiceImpl.class);
-    private final RaftNode raftNode;
+    private final RaftNodeImpl raftNode;
     private final Executor executor;
 
     public RaftProtocolServiceImpl(RaftNode raftNode, Executor executor) {
-        this.raftNode = raftNode;
+        this.raftNode = (RaftNodeImpl) raftNode;
         this.executor = executor;
     }
 
     @Override
     public void getStatus(RaftProtos.AcquireStatusRequest request,
                           StreamObserver<RaftProtos.AcquireStatusResponse> responseObserver) {
-        logger.info(raftNode.name() + " processing get status request: " + request, raftNode.parent());
-
         sendAbstractAsyncMessage(responseObserver, () -> {
             RaftProtos.AcquireStatusResponse.Builder builder = RaftProtos.AcquireStatusResponse.newBuilder();
             List<Pair<String, String>> status = raftNode.parent().status();
@@ -86,6 +86,8 @@ public class RaftProtocolServiceImpl extends RaftProtocolServiceGrpc.RaftProtoco
 
             handleLogEntries(request);
 
+            raftNode.updateLastAppendRequestTime();
+
             return RaftProtos.AppendEntryResponse.newBuilder().setTerm(raftNode.state().getCurrentTerm()).build();
         });
     }
@@ -98,19 +100,18 @@ public class RaftProtocolServiceImpl extends RaftProtocolServiceGrpc.RaftProtoco
 
     @Override
     public void requestVote(RaftProtos.VoteRequest request, StreamObserver<RaftProtos.VoteResponse> responseObserver) {
-        logger.info(raftNode.name() + " processing vote request: " + request, raftNode.parent());
-
         sendAbstractAsyncMessage(responseObserver, () -> {
             Client self = RaftClientImpl.ofSelf(raftNode);
             Pair<Client, ClusterState.ClientState> nominee = raftNode.state().clusterState().getNominee(self);
 
-            RaftProtos.VoteResponse response = RaftProtos.VoteResponse.newBuilder()
+            UnderseaLogger.info(logger, raftNode.parent(),
+                    "Voting for: " + nominee.getKey() + ". Nominee has cost: " + nominee.getValue().toString() + ". I" +
+                            " have: " + raftNode.parent().clusterClients().size() + " clients");
+
+            return RaftProtos.VoteResponse.newBuilder()
                     .setClient(GrpcUtil.toProtoClient(raftNode))
                     .setNominee(GrpcUtil.toProtoClient(nominee.getKey()))
                     .build();
-
-            logger.info(raftNode.name() + ": voting for: " + nominee.getKey(), raftNode.parent());
-            return response;
         });
     }
 
