@@ -68,7 +68,7 @@ public class VoteTask implements Runnable {
                     }
 
                     if (candidate.wonRound()) {
-                        raftNode.toLeader(raftNode.state().getCurrentTerm() + 1);
+                        raftNode.toLeader(raftNode.state().getCurrentTerm());
                     }
                 }
 

@@ -1,13 +1,14 @@
 package com.type2labs.undersea.missionplanner.planner.vrp;
 
 import com.google.ortools.constraintsolver.*;
-import com.mathworks.toolbox.javabuilder.MWApplication;
 import com.mathworks.toolbox.javabuilder.MWClassID;
 import com.mathworks.toolbox.javabuilder.MWException;
 import com.mathworks.toolbox.javabuilder.MWNumericArray;
 import com.type2labs.undersea.common.agent.Agent;
 import com.type2labs.undersea.common.cluster.Client;
 import com.type2labs.undersea.common.cluster.ClusterState;
+import com.type2labs.undersea.common.missions.GeneratedMissionImpl;
+import com.type2labs.undersea.common.missions.PlanDataModel;
 import com.type2labs.undersea.common.missions.PlannerException;
 import com.type2labs.undersea.common.missions.planner.impl.AgentMissionImpl;
 import com.type2labs.undersea.common.missions.planner.model.GeneratedMission;
@@ -17,8 +18,6 @@ import com.type2labs.undersea.common.missions.task.impl.TaskImpl;
 import com.type2labs.undersea.common.missions.task.model.Task;
 import com.type2labs.undersea.common.missions.task.model.TaskType;
 import com.type2labs.undersea.missionplanner.decomposer.delaunay.DelaunayDecomposer;
-import com.type2labs.undersea.common.missions.GeneratedMissionImpl;
-import com.type2labs.undersea.common.missions.PlanDataModel;
 import com.type2labs.undersea.missionplanner.utils.MatlabUtils;
 import com.type2labs.undersea.utilities.PlannerUtils;
 import org.apache.logging.log4j.LogManager;
@@ -48,7 +47,7 @@ public class VehicleRoutingOptimiser implements MissionPlanner {
 
     private Agent parentAgent;
 
-    private double[][] decompose(double[] x, double[] y, double sensorRange) throws PlannerException {
+    private synchronized double[][] decompose(double[] x, double[] y, double sensorRange) throws PlannerException {
         MWNumericArray xArray = new MWNumericArray(x, MWClassID.DOUBLE);
         MWNumericArray yArray = new MWNumericArray(y, MWClassID.DOUBLE);
         double[][] results;
@@ -69,7 +68,7 @@ public class VehicleRoutingOptimiser implements MissionPlanner {
             e.printStackTrace();
             throw new PlannerException(e);
         } finally {
-            MWApplication.terminate();
+//            MWApplication.terminate();
         }
 
         logger.info(parentAgent.name() + ": finished decomposing mission area", parentAgent);
@@ -85,7 +84,6 @@ public class VehicleRoutingOptimiser implements MissionPlanner {
         for (int i = 0; i < manager.getNumberOfVehicles(); ++i) {
             long index = routing.start(i);
             Client client = missionParameters.getClients().get(i);
-            ClusterState.ClientState clientState = client.state();
             List<Task> tasks = new ArrayList<>();
 
             StringBuilder points = new StringBuilder();
@@ -104,14 +102,10 @@ public class VehicleRoutingOptimiser implements MissionPlanner {
                 points = new StringBuilder(points.substring(0, points.length() - 1));
             }
 
-            try {
-                AgentMissionImpl agentMission = new AgentMissionImpl(clientState.getClient(), tasks);
-                agentMission.setPoints(points.toString());
+            AgentMissionImpl agentMission = new AgentMissionImpl(client, tasks);
+            agentMission.setPoints(points.toString());
 
-                mission.addAgentMission(agentMission);
-            } catch (Exception e){
-                e.printStackTrace();
-            }
+            mission.addAgentMission(agentMission);
         }
 
         return mission;

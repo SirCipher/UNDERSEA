@@ -57,10 +57,6 @@ public class RaftState {
         return votedFor;
     }
 
-    public int clusterSize() {
-        return clusterState.getMembers().size();
-    }
-
     public ClusterState clusterState() {
         return clusterState;
     }
@@ -99,10 +95,6 @@ public class RaftState {
 
     public void setCurrentTerm(int currentTerm) {
         this.currentTerm = currentTerm;
-    }
-
-    public void setVote(Client votedFor) {
-        this.votedFor = votedFor;
     }
 
     public class Candidate {

@@ -179,10 +179,9 @@ public class RaftNodeImpl implements RaftNode {
     @Override
     public void toFollower(int term) {
         role = RaftRole.FOLLOWER;
+        raftState.clearCandidate();
         raftState.setCurrentTerm(term);
         logger.info(name + " is now a follower", agent);
-
-        scheduleHeartbeat();
 
         getMonitor().update();
     }
@@ -298,6 +297,7 @@ public class RaftNodeImpl implements RaftNode {
         RaftProtos.AppendEntryRequest request = RaftProtos.AppendEntryRequest.newBuilder()
                 .setClient(GrpcUtil.toProtoClient(this))
                 .setLeader(GrpcUtil.toProtoClient(this))
+                .setTerm(state().getCurrentTerm())
                 .addAllLogEntry(protoEntries)
                 .build();
 
@@ -378,7 +378,7 @@ public class RaftNodeImpl implements RaftNode {
                 }
             }
             // If we haven't heard from the leader then assume they have gone offline
-            else if (lastAppendRequestTime + raftClusterConfig.heartbeatTimeout() > System.currentTimeMillis()) {
+            else if (lastAppendRequestTime + raftClusterConfig.heartbeatTimeout() < System.currentTimeMillis()) {
                 UnderseaLogger.info(logger, agent, "leader heartbeat timeout exceeded");
                 state().setLeader(null);
                 execute(new AcquireStatusTask(RaftNodeImpl.this));
@@ -401,6 +401,7 @@ public class RaftNodeImpl implements RaftNode {
                     sendAppendRequest((RaftClient) follower);
                 }
 
+                updateLastAppendRequestTime();
                 lastHeartbeatTime = System.currentTimeMillis();
             }
 

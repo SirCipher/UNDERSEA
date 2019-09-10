@@ -6,6 +6,7 @@ import com.google.protobuf.AbstractMessage;
 import com.type2labs.undersea.common.cluster.Client;
 import com.type2labs.undersea.common.cluster.ClusterState;
 import com.type2labs.undersea.common.cluster.PeerId;
+import com.type2labs.undersea.common.consensus.RaftRole;
 import com.type2labs.undersea.common.logger.UnderseaLogger;
 import com.type2labs.undersea.common.logger.model.LogEntry;
 import com.type2labs.undersea.common.logger.model.LogService;
@@ -18,7 +19,6 @@ import com.type2labs.undersea.prospect.RaftProtocolServiceGrpc;
 import com.type2labs.undersea.prospect.RaftProtos;
 import com.type2labs.undersea.prospect.impl.RaftNodeImpl;
 import com.type2labs.undersea.prospect.model.RaftNode;
-import com.type2labs.undersea.prospect.networking.RaftClientImpl;
 import com.type2labs.undersea.prospect.util.GrpcUtil;
 import io.grpc.stub.StreamObserver;
 import org.apache.commons.lang3.tuple.Pair;
@@ -76,6 +76,11 @@ public class RaftProtocolServiceImpl extends RaftProtocolServiceGrpc.RaftProtoco
                             StreamObserver<RaftProtos.AppendEntryResponse> responseObserver) {
         sendAbstractAsyncMessage(responseObserver, () -> {
             int requestTerm = request.getTerm();
+            int currentTerm = raftNode.state().getCurrentTerm();
+
+            if(requestTerm < currentTerm){
+                return emptyAppendResponse();
+            }
 
             if (requestTerm > raftNode.state().getCurrentTerm()) {
                 raftNode.toFollower(requestTerm);
@@ -84,15 +89,17 @@ public class RaftProtocolServiceImpl extends RaftProtocolServiceGrpc.RaftProtoco
                 return emptyAppendResponse();
             }
 
+            if (raftNode.getRaftRole() != RaftRole.FOLLOWER) {
+                raftNode.toFollower(requestTerm);
+                UnderseaLogger.info(logger, raftNode.parent(), "Demoting to follower for term term: " + requestTerm);
+            }
+
             PeerId peerId = PeerId.valueOf(request.getLeader().getRaftPeerId());
             Client leader = raftNode.parent().clusterClients().get(peerId);
 
             if (!leader.equals(raftNode.state().getLeader())) {
                 UnderseaLogger.info(logger, raftNode.parent(), "Setting leader: " + peerId);
-
                 raftNode.state().setLeader(leader);
-
-                return emptyAppendResponse();
             }
 
             raftNode.updateLastAppendRequestTime();
@@ -122,7 +129,7 @@ public class RaftProtocolServiceImpl extends RaftProtocolServiceGrpc.RaftProtoco
             Pair<Client, ClusterState.ClientState> nominee = raftNode.state().clusterState().getNominee(self);
 
             UnderseaLogger.info(logger, raftNode.parent(),
-                    "Voting for: " + nominee.getKey() + ". Nominee has cost: " + nominee.getValue().toString() + ". I" +
+                    "Voting for: " + nominee.getKey() + ". Nominee has cost: " + nominee.getValue().getCost() + ". I" +
                             " have: " + raftNode.parent().clusterClients().size() + " clients");
 
             return RaftProtos.VoteResponse.newBuilder()

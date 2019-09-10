@@ -54,15 +54,14 @@ public class MoosConnector implements NetworkInterface {
                         return;
                     }
 
-                    logger.info("Processing request from: " + clientSocket.getPort());
-
                     clientProcessingPool.execute(() -> {
                         try {
                             InputStream is = clientSocket.getInputStream();
                             BufferedReader in = new BufferedReader(new InputStreamReader(is));
                             String rcv = in.readLine();
 
-                            logger.info(agent.name() + ": received {" + rcv + "} on inbound", agent);
+                            logger.trace(agent.name() + ": received {" + rcv + "} on inbound", agent);
+
                             missionPlanner.notify(rcv);
                             clientSocket.close();
                         } catch (IOException e) {

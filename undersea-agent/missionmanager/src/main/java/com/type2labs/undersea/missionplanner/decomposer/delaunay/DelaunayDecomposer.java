@@ -73,6 +73,7 @@ public class DelaunayDecomposer extends MWComponentInstance<DelaunayDecomposer> 
      * @throws MWException An error has occurred during the function call.
      */
     public DelaunayDecomposer() throws MWException {
+
         this(DelaunayDecomposerMCRFactory.newInstance());
     }
 
