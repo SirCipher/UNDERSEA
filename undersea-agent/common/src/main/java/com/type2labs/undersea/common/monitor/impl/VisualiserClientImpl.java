@@ -104,7 +104,7 @@ public class VisualiserClientImpl implements VisualiserClient {
         }
     }
 
-    private VisualiserData agentState() {
+    private synchronized VisualiserData agentState() {
         ServiceManager serviceManager = parent.services();
 
         ConsensusAlgorithm consensusAlgorithm = serviceManager.getService(ConsensusAlgorithm.class);
@@ -197,7 +197,7 @@ public class VisualiserClientImpl implements VisualiserClient {
 
     @Override
     public void write(String data) {
-        VisualiserMessage visualiserMessage = new VisualiserMessage(parent.name(), data + "\n");
+        VisualiserMessage visualiserMessage = new VisualiserMessage(parent.peerId(), data + "\n");
         write(visualiserMessage);
     }
 

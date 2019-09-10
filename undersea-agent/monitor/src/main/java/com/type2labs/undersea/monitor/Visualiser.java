@@ -245,14 +245,12 @@ public class Visualiser {
         }
     }
 
-    private int getRowByAgentName(String name) {
+    private synchronized int getRowByPeerId(String name) {
         DefaultTableModel model = (DefaultTableModel) table.getModel();
 
         for (int i = model.getRowCount() - 1; i >= 0; --i) {
-            for (int j = model.getColumnCount() - 1; j >= 0; --j) {
-                if (model.getValueAt(i, j).equals(name)) {
-                    return i;
-                }
+            if (model.getValueAt(i, 0).equals(name)) {
+                return i;
             }
         }
 
@@ -271,43 +269,42 @@ public class Visualiser {
             DefaultTableModel model = (DefaultTableModel) table.getModel();
 
             if (received instanceof VisualiserData) {
-                VisualiserData agentState = (VisualiserData) received;
-                String peerId = agentState.getRaftPeerId();
+                final VisualiserData agentState = (VisualiserData) received;
+                final String peerId = agentState.getRaftPeerId();
 
-                synchronized (LOCK) {
-                    AgentInfo agentInfo = agents.get(peerId);
+                AgentInfo agentInfo = agents.get(peerId);
 
-                    if (agentInfo == null) {
-                        agentInfo = new AgentInfo();
-                        agentInfo.port = agentState.getPort();
+                // If we haven't seen this agent before
+                if (agentInfo == null) {
+                    agentInfo = new AgentInfo();
+                    agents.put(peerId, agentInfo);
 
-                        agents.put(peerId, agentInfo);
+                    agentInfo.port = agentState.getPort();
 
-                        model.addRow(new Object[]{
-                                agentState.getRaftPeerId(),
-                                agentState.getName(),
-                                agentState.getMultiRoleStatus(),
-                                agentState.getServiceManagerStatus(),
-                                agentState.getRaftRole(),
-                                agentState.getLeaderPeerId(),
-                                agentState.getNoTasks(),
-                                agentState.getCompletedTasks(),
-                                agentState.getNoPeers()
-                        });
-                    } else {
-                        int rowId = getRowByAgentName(peerId);
+                    model.addRow(new Object[]{
+                            agentState.getRaftPeerId(),
+                            agentState.getName(),
+                            agentState.getMultiRoleStatus(),
+                            agentState.getServiceManagerStatus(),
+                            agentState.getRaftRole(),
+                            agentState.getLeaderPeerId(),
+                            agentState.getNoAssignedTasks(),
+                            agentState.getCompletedTasks(),
+                            agentState.getNoPeers()
+                    });
+                } else {
+                    int rowId = getRowByPeerId(peerId);
 
-                        if (rowId != -1) {
-                            model.setValueAt(agentState.getRaftPeerId(), rowId, 0);
-                            model.setValueAt(agentState.getName(), rowId, 1);
-                            model.setValueAt(agentState.getMultiRoleStatus(), rowId, 2);
-                            model.setValueAt(agentState.getServiceManagerStatus(), rowId, 3);
-                            model.setValueAt(agentState.getRaftRole(), rowId, 4);
-                            model.setValueAt(agentState.getLeaderPeerId(), rowId, 5);
-                            model.setValueAt(agentState.getNoTasks(), rowId, 6);
-                            model.setValueAt(agentState.getCompletedTasks(), rowId, 7);
-                            model.setValueAt(agentState.getNoPeers(), rowId, 8);
-                        }
+                    if (rowId != -1) {
+                        model.setValueAt(agentState.getRaftPeerId(), rowId, 0);
+                        model.setValueAt(agentState.getName(), rowId, 1);
+                        model.setValueAt(agentState.getMultiRoleStatus(), rowId, 2);
+                        model.setValueAt(agentState.getServiceManagerStatus(), rowId, 3);
+                        model.setValueAt(agentState.getRaftRole(), rowId, 4);
+                        model.setValueAt(agentState.getLeaderPeerId(), rowId, 5);
+                        model.setValueAt(agentState.getNoAssignedTasks(), rowId, 6);
+                        model.setValueAt(agentState.getCompletedTasks(), rowId, 7);
+                        model.setValueAt(agentState.getNoPeers(), rowId, 8);
                     }
                 }
             } else if (received instanceof VisualiserMessage) {

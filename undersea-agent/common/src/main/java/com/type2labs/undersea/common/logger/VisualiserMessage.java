@@ -1,5 +1,7 @@
 package com.type2labs.undersea.common.logger;
 
+import com.type2labs.undersea.common.cluster.PeerId;
+
 import java.io.Serializable;
 
 public class VisualiserMessage implements Serializable {
@@ -8,11 +10,10 @@ public class VisualiserMessage implements Serializable {
     private final String peerId;
     private final Object message;
 
-    public VisualiserMessage(String peerId, Object message) {
-        this.peerId = peerId;
+    public VisualiserMessage(PeerId peerId, Object message) {
+        this.peerId = peerId.toString();
         this.message = message;
     }
-
 
     public Object getMessage() {
         return message;

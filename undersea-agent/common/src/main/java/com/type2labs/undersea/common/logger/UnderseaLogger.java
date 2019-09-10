@@ -76,7 +76,7 @@ public class UnderseaLogger extends AbstractAppender {
         }
 
         String message = new String(getLayout().toByteArray(event));
-        VisualiserMessage visualiserMessage = new VisualiserMessage(agent.peerId().toString(), message);
+        VisualiserMessage visualiserMessage = new VisualiserMessage(agent.peerId(), message);
         VisualiserClient visualiserClient = subsystemMonitor.visualiser();
 
         try {

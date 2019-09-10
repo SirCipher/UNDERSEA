@@ -75,8 +75,6 @@ public class RaftProtocolServiceImpl extends RaftProtocolServiceGrpc.RaftProtoco
     public void appendEntry(RaftProtos.AppendEntryRequest request,
                             StreamObserver<RaftProtos.AppendEntryResponse> responseObserver) {
         sendAbstractAsyncMessage(responseObserver, () -> {
-            UnderseaLogger.info(logger, raftNode.parent(), "Received heartbeat request");
-
             int requestTerm = request.getTerm();
 
             if (requestTerm > raftNode.state().getCurrentTerm()) {

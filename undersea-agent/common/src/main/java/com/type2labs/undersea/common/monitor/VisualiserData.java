@@ -16,7 +16,7 @@ public class VisualiserData implements Serializable {
         this.serviceManagerStatus = serviceManagerStatus;
     }
 
-    private final int noTasks;
+    private final int noAssignedTasks;
     private final int completedTasks;
     private final int port;
     private final int noPeers;
@@ -26,7 +26,7 @@ public class VisualiserData implements Serializable {
     }
 
     public VisualiserData(String name, String raftPeerId, String multiRoleStatus, String serviceManagerStatus,
-                          String raftRole, String leaderPeerId, int noTasks, int completedTasks, int port,
+                          String raftRole, String leaderPeerId, int noAssignedTasks, int completedTasks, int port,
                           int noPeers) {
         this.name = name;
         this.raftPeerId = raftPeerId;
@@ -34,7 +34,7 @@ public class VisualiserData implements Serializable {
         this.serviceManagerStatus = serviceManagerStatus;
         this.raftRole = raftRole;
         this.leaderPeerId = leaderPeerId;
-        this.noTasks = noTasks;
+        this.noAssignedTasks = noAssignedTasks;
         this.completedTasks = completedTasks;
         this.port = port;
         this.noPeers = noPeers;
@@ -46,6 +46,22 @@ public class VisualiserData implements Serializable {
 
     public String getMultiRoleStatus() {
         return multiRoleStatus;
+    }
+
+    @Override
+    public String toString() {
+        return "VisualiserData{" +
+                "name='" + name + '\'' +
+                ", raftPeerId='" + raftPeerId + '\'' +
+                ", multiRoleStatus='" + multiRoleStatus + '\'' +
+                ", serviceManagerStatus='" + serviceManagerStatus + '\'' +
+                ", raftRole='" + raftRole + '\'' +
+                ", leaderPeerId='" + leaderPeerId + '\'' +
+                ", noTasks=" + noAssignedTasks +
+                ", completedTasks=" + completedTasks +
+                ", port=" + port +
+                ", noPeers=" + noPeers +
+                '}';
     }
 
     public String getServiceManagerStatus() {
@@ -64,8 +80,8 @@ public class VisualiserData implements Serializable {
         return raftRole;
     }
 
-    public int getNoTasks() {
-        return noTasks;
+    public int getNoAssignedTasks() {
+        return noAssignedTasks;
     }
 
     public String getLeaderPeerId() {
