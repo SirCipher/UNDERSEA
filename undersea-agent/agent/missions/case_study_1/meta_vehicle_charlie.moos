@@ -2,10 +2,10 @@
 // Meta vehicle config file
 //-------------------------
 ServerHost      = localhost
-ServerPort      = 9038
+ServerPort      = 9064
 
 // Community name IS the vehicle name
-Community       = alpha
+Community       = charlie
 MOOSTimeWarp    = 5
 LatOrigin       = 43.825300 
 LongOrigin      = -70.330400
@@ -26,24 +26,24 @@ ProcessConfig = ANTLER
 	Run = pShare         @ NewConsole = false
 	Run = uTimerScript   @ NewConsole = false
 	Run = pHostInfo		 @ NewConsole = false
-	Run = sUUV           @ NewConsole = false ~sUUValpha
+	Run = sUUV           @ NewConsole = false ~sUUVcharlie
 	Run = uFldNodeBroker @ NewConsole = false
 	Run = sSensor		 @ NewConsole = false ~SENSOR1
-	Run = sSensor		 @ NewConsole = false ~SENSOR2
+	Run = sSensor		 @ NewConsole = false ~SENSOR4
 }
 
 //-------------------------
 // sUUV Configuration Block
 //-------------------------
-ProcessConfig = sUUValpha
+ProcessConfig = sUUVcharlie
 {
 	 AppTick = 4
 	 CommsTick = 4
 	 MAX_APPCAST_EVENTS = 25 
-	 NAME = alpha
-	 PORT = 9040
-	 INBOUND_PORT = 9041
-	 SENSORS = SENSOR1,SENSOR2
+	 NAME = charlie
+	 PORT = 9066
+	 INBOUND_PORT = 9067
+	 SENSORS = SENSOR1,SENSOR4
 }
 //-------------------------------
 // uSimMarine Configuration Block
@@ -115,12 +115,12 @@ ProcessConfig = pHelmIvP
 {
 	AppTick			= 4
 	CommsTick		= 4
-	Behaviors		= meta_alpha.bhv
+	Behaviors		= meta_charlie.bhv
 	Verbose			= quiet
 	ok_skew			= any
 	active_start	= false
 	Domain			= course:0:359:360
-	Domain			= speed:0.0:1.0:50
+	Domain			= speed:0.0:1.0:40
 }
 //----------------------------------
 // uProcessWatch Configuration Block
@@ -146,7 +146,7 @@ ProcessConfig = pShare
   AppTick       = 2
   CommsTick     = 2
 
-  input = route =  localhost:9039
+  input = route =  localhost:9065
 }
 
 //------------------------------
@@ -206,15 +206,15 @@ ProcessConfig = SENSOR1
 }
 
 //---------------------------------
-// SENSOR2 Configuration Block
+// SENSOR4 Configuration Block
 //---------------------------------
-ProcessConfig = SENSOR2
+ProcessConfig = SENSOR4
 {
-	 AppTick			= 4.0
-	 CommsTick			= 4.0
+	 AppTick			= 6.0
+	 CommsTick			= 6.0
 	 MAX_APPCAST_EVENTS = 25 
-	 NAME				= SENSOR2
-	 RELIABILITY		= 0.8
+	 NAME				= SENSOR4
+	 RELIABILITY		= 1.0
 	 CHANGE				= 10.0:50.0:2.0
 }
 

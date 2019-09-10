@@ -5,24 +5,20 @@ import java.io.Serializable;
 public class VisualiserData implements Serializable {
 
     private static final long serialVersionUID = 1980452255341789631L;
-    private final String name;
-    private final String raftPeerId;
-    private final String multiRoleStatus;
-    private String serviceManagerStatus;
-    private final String raftRole;
-    private final String leaderPeerId;
+    private String name;
+    private String raftPeerId;
+    private String multiRoleStatus = "N/A";
+    private String serviceManagerStatus = "N/A";
+    private String raftRole = "N/A";
+    private String leaderPeerId;
+    private int noAssignedTasks;
+    private int completedTasks;
+    private int port;
+    private int noPeers;
 
-    public void setServiceManagerStatus(String serviceManagerStatus) {
-        this.serviceManagerStatus = serviceManagerStatus;
-    }
-
-    private final int noAssignedTasks;
-    private final int completedTasks;
-    private final int port;
-    private final int noPeers;
-
-    public int getPort() {
-        return port;
+    public VisualiserData(String raftPeerId, String name) {
+        this.raftPeerId = raftPeerId;
+        this.name = name;
     }
 
     public VisualiserData(String name, String raftPeerId, String multiRoleStatus, String serviceManagerStatus,
@@ -38,6 +34,10 @@ public class VisualiserData implements Serializable {
         this.completedTasks = completedTasks;
         this.port = port;
         this.noPeers = noPeers;
+    }
+
+    public int getPort() {
+        return port;
     }
 
     public int getCompletedTasks() {
@@ -68,6 +68,10 @@ public class VisualiserData implements Serializable {
         return serviceManagerStatus;
     }
 
+    public void setServiceManagerStatus(String serviceManagerStatus) {
+        this.serviceManagerStatus = serviceManagerStatus;
+    }
+
     public String getRaftPeerId() {
         return raftPeerId;
     }
@@ -80,12 +84,20 @@ public class VisualiserData implements Serializable {
         return raftRole;
     }
 
+    public void setRaftRole(String raftRole) {
+        this.raftRole = raftRole;
+    }
+
     public int getNoAssignedTasks() {
         return noAssignedTasks;
     }
 
     public String getLeaderPeerId() {
         return leaderPeerId;
+    }
+
+    public void setLeaderPeerId(String leaderPeerId) {
+        this.leaderPeerId = leaderPeerId;
     }
 
     public int getNoPeers() {

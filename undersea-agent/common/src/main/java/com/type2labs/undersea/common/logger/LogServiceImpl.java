@@ -1,5 +1,6 @@
 package com.type2labs.undersea.common.logger;
 
+import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.type2labs.undersea.common.agent.Agent;
@@ -12,7 +13,6 @@ import com.type2labs.undersea.common.service.transaction.LifecycleEvent;
 import com.type2labs.undersea.common.service.transaction.ServiceCallback;
 import com.type2labs.undersea.common.service.transaction.Transaction;
 import com.type2labs.undersea.common.service.transaction.TransactionData;
-import com.type2labs.undersea.utilities.concurrent.SimpleFutureCallback;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -117,10 +117,15 @@ public class LogServiceImpl implements LogService {
             Transaction transaction = transactionFromEntry(e);
 
             for (ListenableFuture<?> future : serviceManager.commitTransaction(transaction)) {
-                Futures.addCallback(future, new SimpleFutureCallback<Object>() {
+                Futures.addCallback(future, new FutureCallback<Object>() {
                     @Override
                     public void onSuccess(@Nullable Object result) {
                         logger.info(agent.name() + ": appending log entry: " + e.toString(), agent);
+                    }
+
+                    @Override
+                    public void onFailure(Throwable t) {
+                        throw new RuntimeException(t);
                     }
 
                 }, e.getAgentService().transactionExecutor());

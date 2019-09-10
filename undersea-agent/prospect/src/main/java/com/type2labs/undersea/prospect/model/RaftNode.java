@@ -26,7 +26,7 @@ public interface RaftNode extends ConsensusAlgorithm {
 
     GrpcServer server();
 
-    void schedule(ReschedulableTask task, long delayInMillis);
+    void schedule(Runnable task, long delayInMillis);
 
     RaftClient self();
 

@@ -2,12 +2,12 @@ package com.type2labs.undersea.prospect.impl;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.common.util.concurrent.MoreExecutors;
 import com.type2labs.undersea.common.agent.Agent;
 import com.type2labs.undersea.common.cluster.Client;
 import com.type2labs.undersea.common.cluster.PeerId;
-import com.type2labs.undersea.common.consensus.ConsensusAlgorithm;
 import com.type2labs.undersea.common.consensus.MultiRoleState;
 import com.type2labs.undersea.common.consensus.RaftRole;
 import com.type2labs.undersea.common.logger.UnderseaLogger;
@@ -28,7 +28,6 @@ import com.type2labs.undersea.prospect.networking.RaftClientImpl;
 import com.type2labs.undersea.prospect.task.AcquireStatusTask;
 import com.type2labs.undersea.prospect.task.RequireRoleTask;
 import com.type2labs.undersea.prospect.util.GrpcUtil;
-import com.type2labs.undersea.utilities.concurrent.SimpleFutureCallback;
 import com.type2labs.undersea.utilities.exception.UnderseaException;
 import com.type2labs.undersea.utilities.executor.ThrowableExecutor;
 import com.type2labs.undersea.utilities.lang.ReschedulableTask;
@@ -231,10 +230,17 @@ public class RaftNodeImpl implements RaftNode {
                     .setMission(mission)
                     .build();
 
-            raftClient.distributeMission(request, new SimpleFutureCallback<RaftProtos.DisributeMissionResponse>() {
+            raftClient.distributeMission(request, new FutureCallback<RaftProtos.DisributeMissionResponse>() {
                 @Override
                 public void onSuccess(RaftProtos.@Nullable DisributeMissionResponse result) {
-                    logger.info(name + " distributed mission to " + result, agent);
+                    if (result != null) {
+                        logger.info(name + " distributed mission to " + result.getClient(), agent);
+                    }
+                }
+
+                @Override
+                public void onFailure(Throwable t) {
+                    throw new RuntimeException(t);
                 }
             });
         }
@@ -250,17 +256,22 @@ public class RaftNodeImpl implements RaftNode {
     }
 
     @Override
-    public void schedule(ReschedulableTask task, long delayInMillis) {
+    public void schedule(Runnable task, long delayInMillis) {
         try {
             scheduledExecutor.schedule(task, delayInMillis, MILLISECONDS);
         } catch (RejectedExecutionException e) {
-            if (task.getRunCount() > ReschedulableTask.maxRunCount) {
-                throw new UnderseaException("Attempted to run task " + task.getRunCount() + " times but failed");
-            } else {
-                logger.error("Failed to run task, scheduling", e);
+            if (task instanceof ReschedulableTask) {
+                ReschedulableTask reschedulableTask = (ReschedulableTask) task;
 
-                task.incrementRunCount();
-                schedule(task, task.getRerunTimeWindow());
+                if (reschedulableTask.getRunCount() > ReschedulableTask.maxRunCount) {
+                    throw new UnderseaException("Attempted to run task " + reschedulableTask.getRunCount() + " times " +
+                            "but failed");
+                } else {
+                    logger.error("Failed to run task, scheduling", e);
+
+                    reschedulableTask.incrementRunCount();
+                    schedule(task, reschedulableTask.getRerunTimeWindow());
+                }
             }
         }
     }
@@ -301,10 +312,15 @@ public class RaftNodeImpl implements RaftNode {
                 .addAllLogEntry(protoEntries)
                 .build();
 
-        follower.appendEntry(request, new SimpleFutureCallback<RaftProtos.AppendEntryResponse>() {
+        follower.appendEntry(request, new FutureCallback<RaftProtos.AppendEntryResponse>() {
             @Override
             public void onSuccess(RaftProtos.@Nullable AppendEntryResponse result) {
 //                logger.info(agent.name() + ": successfully sent request. Response: {" + result + "}", agent);
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                throw new RuntimeException(t);
             }
         });
 
@@ -314,6 +330,7 @@ public class RaftNodeImpl implements RaftNode {
     public void shutdown() {
         alertLeavingCluster();
 
+        scheduledExecutor.shutdownNow();
         singleThreadScheduledExecutor.shutdown();
         server.close();
     }
@@ -326,10 +343,15 @@ public class RaftNodeImpl implements RaftNode {
                     .setClient(GrpcUtil.toProtoClient(this))
                     .build();
 
-            raftClient.alertLeavingCluster(request, new SimpleFutureCallback<RaftProtos.Empty>() {
+            raftClient.alertLeavingCluster(request, new FutureCallback<RaftProtos.Empty>() {
                 @Override
                 public void onSuccess(RaftProtos.@Nullable Empty ignored) {
 
+                }
+
+                @Override
+                public void onFailure(Throwable ignored) {
+                    // not much that can be done now
                 }
             });
         }
@@ -344,14 +366,18 @@ public class RaftNodeImpl implements RaftNode {
     public void initialise(Agent parentAgent) {
         this.agent = parentAgent;
         this.raftState = new RaftState(this);
-        this.started = true;
-        this.selfRaftClientImpl = new RaftClientImpl(agent.services().getService(RaftNode.class), new InetSocketAddress(0), agent.peerId(), true);
+        this.selfRaftClientImpl = new RaftClientImpl(agent.services().getService(RaftNode.class),
+                new InetSocketAddress(0), agent.peerId(), true);
 
         server.start();
 
-        registerCallback(new ServiceCallback(LifecycleEvent.ELECTED_LEADER, () -> getMonitor().update()));
+        registerCallback(new ServiceCallback(LifecycleEvent.ELECTED_LEADER, () -> {
+            getMonitor().update();
+        }));
 
         UnderseaLogger.info(logger, agent, "Started node");
+
+        this.started = true;
     }
 
     private void scheduleVerifyLeaderTask() {
@@ -373,7 +399,6 @@ public class RaftNodeImpl implements RaftNode {
             // If we don't have a leader
             if (state().getLeader() == null) {
                 if (!multiRole().isLeader() && state().getCandidate() == null) {
-                    UnderseaLogger.info(logger, agent, "Starting voting round");
                     execute(new AcquireStatusTask(RaftNodeImpl.this));
                 }
             }

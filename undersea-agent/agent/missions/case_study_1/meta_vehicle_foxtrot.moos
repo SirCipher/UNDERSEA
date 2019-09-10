@@ -2,10 +2,10 @@
 // Meta vehicle config file
 //-------------------------
 ServerHost      = localhost
-ServerPort      = 9038
+ServerPort      = 9025
 
 // Community name IS the vehicle name
-Community       = alpha
+Community       = foxtrot
 MOOSTimeWarp    = 5
 LatOrigin       = 43.825300 
 LongOrigin      = -70.330400
@@ -26,7 +26,7 @@ ProcessConfig = ANTLER
 	Run = pShare         @ NewConsole = false
 	Run = uTimerScript   @ NewConsole = false
 	Run = pHostInfo		 @ NewConsole = false
-	Run = sUUV           @ NewConsole = false ~sUUValpha
+	Run = sUUV           @ NewConsole = false ~sUUVfoxtrot
 	Run = uFldNodeBroker @ NewConsole = false
 	Run = sSensor		 @ NewConsole = false ~SENSOR1
 	Run = sSensor		 @ NewConsole = false ~SENSOR2
@@ -35,14 +35,14 @@ ProcessConfig = ANTLER
 //-------------------------
 // sUUV Configuration Block
 //-------------------------
-ProcessConfig = sUUValpha
+ProcessConfig = sUUVfoxtrot
 {
 	 AppTick = 4
 	 CommsTick = 4
 	 MAX_APPCAST_EVENTS = 25 
-	 NAME = alpha
-	 PORT = 9040
-	 INBOUND_PORT = 9041
+	 NAME = foxtrot
+	 PORT = 9027
+	 INBOUND_PORT = 9028
 	 SENSORS = SENSOR1,SENSOR2
 }
 //-------------------------------
@@ -115,12 +115,12 @@ ProcessConfig = pHelmIvP
 {
 	AppTick			= 4
 	CommsTick		= 4
-	Behaviors		= meta_alpha.bhv
+	Behaviors		= meta_foxtrot.bhv
 	Verbose			= quiet
 	ok_skew			= any
 	active_start	= false
 	Domain			= course:0:359:360
-	Domain			= speed:0.0:1.0:50
+	Domain			= speed:0.0:1.0:20
 }
 //----------------------------------
 // uProcessWatch Configuration Block
@@ -146,7 +146,7 @@ ProcessConfig = pShare
   AppTick       = 2
   CommsTick     = 2
 
-  input = route =  localhost:9039
+  input = route =  localhost:9026
 }
 
 //------------------------------

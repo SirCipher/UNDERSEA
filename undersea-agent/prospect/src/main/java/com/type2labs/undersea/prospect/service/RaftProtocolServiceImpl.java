@@ -78,7 +78,7 @@ public class RaftProtocolServiceImpl extends RaftProtocolServiceGrpc.RaftProtoco
             int requestTerm = request.getTerm();
             int currentTerm = raftNode.state().getCurrentTerm();
 
-            if(requestTerm < currentTerm){
+            if (requestTerm < currentTerm) {
                 return emptyAppendResponse();
             }
 
@@ -128,9 +128,7 @@ public class RaftProtocolServiceImpl extends RaftProtocolServiceGrpc.RaftProtoco
             Client self = raftNode.self();
             Pair<Client, ClusterState.ClientState> nominee = raftNode.state().clusterState().getNominee(self);
 
-            UnderseaLogger.info(logger, raftNode.parent(),
-                    "Voting for: " + nominee.getKey() + ". Nominee has cost: " + nominee.getValue().getCost() + ". I" +
-                            " have: " + raftNode.parent().clusterClients().size() + " clients");
+            UnderseaLogger.info(logger, raftNode.parent(), "Nominating: " + nominee);
 
             return RaftProtos.VoteResponse.newBuilder()
                     .setClient(GrpcUtil.toProtoClient(raftNode))
@@ -166,16 +164,21 @@ public class RaftProtocolServiceImpl extends RaftProtocolServiceGrpc.RaftProtoco
 
     private <M extends AbstractMessage> void sendAbstractAsyncMessage(StreamObserver<M> responseObserver,
                                                                       Supplier<M> supplier) {
-        final CompletableFuture<M> future = CompletableFuture.supplyAsync(supplier, executor);
+        try {
+            final CompletableFuture<M> future = CompletableFuture.supplyAsync(supplier, executor);
 
-        future.whenComplete((result, e) -> {
-            if (e == null) {
-                responseObserver.onNext(result);
-                responseObserver.onCompleted();
-            } else {
-                responseObserver.onError(e);
-            }
-        });
+            future.whenComplete((result, e) -> {
+                if (e == null) {
+                    responseObserver.onNext(result);
+                    responseObserver.onCompleted();
+                } else {
+                    responseObserver.onError(e);
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw e;
+        }
     }
 
 

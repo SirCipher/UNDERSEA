@@ -1,9 +1,6 @@
 package com.type2labs.undersea.missionplanner.manager;
 
-import com.google.common.util.concurrent.Futures;
-import com.google.common.util.concurrent.ListenableFuture;
-import com.google.common.util.concurrent.ListeningExecutorService;
-import com.google.common.util.concurrent.MoreExecutors;
+import com.google.common.util.concurrent.*;
 import com.type2labs.undersea.common.agent.Agent;
 import com.type2labs.undersea.common.blockchain.BlockchainNetwork;
 import com.type2labs.undersea.common.consensus.ConsensusAlgorithm;
@@ -28,7 +25,6 @@ import com.type2labs.undersea.missionplanner.task.executor.MeasureExecutor;
 import com.type2labs.undersea.missionplanner.task.executor.MoosWaypointExecutor;
 import com.type2labs.undersea.missionplanner.task.executor.SurveyExecutor;
 import com.type2labs.undersea.missionplanner.task.executor.WaypointExecutor;
-import com.type2labs.undersea.utilities.concurrent.SimpleFutureCallback;
 import com.type2labs.undersea.utilities.exception.NotSupportedException;
 import com.type2labs.undersea.utilities.executor.ThrowableExecutor;
 import org.apache.commons.lang3.StringUtils;
@@ -84,7 +80,12 @@ public class MoosMissionManagerImpl implements MissionManager {
 
         ListenableFuture<?> listenableFuture = this.taskExecutor.submit(taskExecutor);
 
-        Futures.addCallback(listenableFuture, new SimpleFutureCallback<Object>() {
+        Futures.addCallback(listenableFuture, new FutureCallback<Object>() {
+            @Override
+            public void onFailure(Throwable t) {
+                throw new RuntimeException(t);
+            }
+
             @Override
             public void onSuccess(@Nullable Object result) {
                 currentTask = task;
@@ -123,9 +124,15 @@ public class MoosMissionManagerImpl implements MissionManager {
 
                     ListenableFuture<?> listenableFuture = this.taskExecutor.submit(taskExecutor);
 
-                    Futures.addCallback(listenableFuture, new SimpleFutureCallback<Object>() {
+                    Futures.addCallback(listenableFuture, new FutureCallback<Object>() {
+                        @Override
+                        public void onFailure(Throwable t) {
+                            throw new RuntimeException(t);
+                        }
+
                         @Override
                         public void onSuccess(@Nullable Object result) {
+
                         }
                     }, this.taskExecutor);
                 } else {
@@ -190,7 +197,7 @@ public class MoosMissionManagerImpl implements MissionManager {
             }
         }
 
-        if(true){
+        if (true) {
             return;
         }
 
@@ -200,7 +207,8 @@ public class MoosMissionManagerImpl implements MissionManager {
         ServiceManager serviceManager = agent.services();
         ConsensusAlgorithm consensusAlgorithm = serviceManager.getService(ConsensusAlgorithm.class, true);
 
-        agent.log(new LogEntry(consensusAlgorithm.leaderPeerId(),task.getUuid(), TaskStatus.COMPLETED, consensusAlgorithm.term(), this));
+        agent.log(new LogEntry(consensusAlgorithm.leaderPeerId(), task.getUuid(), TaskStatus.COMPLETED,
+                consensusAlgorithm.term(), this));
 
         if (index == assignedTasks.size() - 1) {
             logger.info(agent.name() + ": completed all tasks", agent);

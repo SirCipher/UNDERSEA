@@ -4,7 +4,6 @@ import com.type2labs.undersea.common.agent.Agent;
 import com.type2labs.undersea.common.agent.Range;
 import com.type2labs.undersea.common.agent.Subsystem;
 import com.type2labs.undersea.common.cost.CostConfiguration;
-import com.type2labs.undersea.common.logger.UnderseaLogger;
 import com.type2labs.undersea.common.monitor.model.SubsystemMonitor;
 import com.type2labs.undersea.common.monitor.model.VisualiserClient;
 import org.apache.logging.log4j.LogManager;
@@ -22,6 +21,11 @@ public class SubsystemMonitorImpl implements SubsystemMonitor {
     private Agent agent;
     private Range speedRange;
 
+    @Override
+    public void shutdown() {
+        visualiserClient.shutdown();
+    }
+
     class SubsystemWrapper {
         Subsystem subsystem;
 
@@ -32,9 +36,8 @@ public class SubsystemMonitorImpl implements SubsystemMonitor {
         public double getStatus() {
             CostConfiguration costConfiguration = agent.config().getCostConfiguration();
             double accuracyWeighting = (double) costConfiguration.getBias("ACCURACY");
-            double speedWeighting = (double) costConfiguration.getBias("SPEED");
 
-            return subsystem.rate() + subsystem.reliability() + (accuracyWeighting * subsystem.accuracy());
+            return (subsystem.rate() + subsystem.reliability()) / (accuracyWeighting * subsystem.accuracy());
         }
     }
 

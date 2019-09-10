@@ -31,7 +31,7 @@ public class RaftState {
     }
 
     public void initCandidate() {
-        this.candidate = new Candidate(localNodes.size());
+        this.candidate = new Candidate(localNodes.size() / 2 + 1);
         this.votedFor = null;
         this.clusterState = new ClusterState(parent, localNodes.size());
         this.currentTerm++;
@@ -106,7 +106,7 @@ public class RaftState {
         }
 
         public void vote(Client client) {
-            logger.info(parent.name() + " registering vote for: " + client);
+            logger.info(parent.name() + " registering vote from: " + client);
             this.voters.add(client);
         }
 

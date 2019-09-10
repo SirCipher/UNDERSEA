@@ -314,9 +314,9 @@ public class ServiceManager {
     }
 
     public synchronized void shutdownService(Class<? extends AgentService> service, AgentService agentService) {
-        if (serviceStates.get(service) == ServiceState.STOPPED) {
-            return;
-        }
+//        if (serviceStates.get(service) == ServiceState.STOPPED) {
+//            return;
+//        }
 
         ScheduledFuture<?> scheduledFuture = getScheduledFuture(service);
 
@@ -382,8 +382,11 @@ public class ServiceManager {
         logger.info(agent.name() + ": started repeating task at period: " + period, agent);
     }
 
-    private synchronized void startService(Class<? extends AgentService> service) {
+    public synchronized void startService(Class<? extends AgentService> service) {
+        initialise();
+
         AgentService agentService = getService(service);
+
         agentService.initialise(agent);
 
         logger.info(agent.name() + ": starting service: " + agentService.getClass().getSimpleName(), agent);
@@ -417,23 +420,23 @@ public class ServiceManager {
         };
     }
 
-    public synchronized void startServices() {
+    private synchronized void initialise() {
         if (started) {
-            throw new IllegalStateException("Service manager already started, cannot start again");
+            return;
         }
 
         processRequiredServices();
-
-        starting = true;
-
         serviceExecutor = ScheduledThrowableExecutor.newExecutor(services.size(), logger);
+    }
+
+    public synchronized void startServices() {
+        starting = true;
 
         for (Map.Entry<Class<? extends AgentService>, Pair<AgentService, ServiceExecutionPriority>> e :
                 prioritySorted()) {
             startService(e.getKey());
         }
 
-        starting = false;
         started = true;
 
         updateVisualiser();

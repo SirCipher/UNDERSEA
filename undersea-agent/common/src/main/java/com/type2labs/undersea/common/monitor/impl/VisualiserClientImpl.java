@@ -27,7 +27,7 @@ import java.util.List;
 public class VisualiserClientImpl implements VisualiserClient {
 
     private static final Logger logger = LogManager.getLogger(VisualiserClientImpl.class);
-    private static boolean enabled = false;
+    private boolean enabled = false;
     private final InetSocketAddress visualiserAddress = new InetSocketAddress("localhost", 5050);
     private Agent parent;
     private int serverPort;
@@ -71,6 +71,10 @@ public class VisualiserClientImpl implements VisualiserClient {
     }
 
     private synchronized void _write(Object data) {
+        if (!enabled) {
+            return;
+        }
+
         ObjectOutputStream oos;
         SocketChannel channel;
 
@@ -203,10 +207,12 @@ public class VisualiserClientImpl implements VisualiserClient {
 
     @Override
     public void shutdown() {
-        VisualiserData visualiserData = agentState();
+        VisualiserData visualiserData = new VisualiserData(parent.peerId().toString(), parent.name());
         visualiserData.setServiceManagerStatus("SHUTDOWN");
 
         _write(visualiserData);
+
+        enabled = false;
     }
 
     @Override

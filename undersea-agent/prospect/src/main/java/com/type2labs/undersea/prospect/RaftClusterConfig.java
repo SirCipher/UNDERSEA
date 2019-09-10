@@ -18,7 +18,7 @@ public class RaftClusterConfig implements UnderseaConfig {
      * In seconds
      */
     private long statusDeadlineLong = 30;
-    private static long heatbeatTimeout = 10000L;
+    private static long heatbeatTimeout = 1000L;
 
     public RaftClusterConfig() {
     }

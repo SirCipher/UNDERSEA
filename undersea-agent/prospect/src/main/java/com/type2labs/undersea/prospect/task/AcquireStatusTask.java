@@ -64,7 +64,7 @@ public class AcquireStatusTask implements Runnable {
 
             // TODO: Will this be stale?
             if (clusterState.heardFromAllNodes()) {
-                raftNode.execute(new VoteTask(raftNode, raftNode.state().getCurrentTerm()));
+                raftNode.execute(new VoteTask(raftNode));
             }
         }
     }

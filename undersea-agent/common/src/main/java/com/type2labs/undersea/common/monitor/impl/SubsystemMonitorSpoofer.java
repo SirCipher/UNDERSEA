@@ -1,6 +1,9 @@
 package com.type2labs.undersea.common.monitor.impl;
 
+import com.type2labs.undersea.common.agent.Range;
 import com.type2labs.undersea.common.agent.Subsystem;
+
+import java.util.concurrent.ThreadLocalRandom;
 
 public class SubsystemMonitorSpoofer extends SubsystemMonitorImpl {
 
@@ -10,6 +13,12 @@ public class SubsystemMonitorSpoofer extends SubsystemMonitorImpl {
 
     static {
         initCount++;
+    }
+
+    public SubsystemMonitorSpoofer() {
+        ThreadLocalRandom random = ThreadLocalRandom.current();
+
+        super.registerSpeedRange(new Range(0, random.nextDouble(100), random.nextDouble(100)));
     }
 
     private class DecayableSubsystemWrapper extends SubsystemWrapper {

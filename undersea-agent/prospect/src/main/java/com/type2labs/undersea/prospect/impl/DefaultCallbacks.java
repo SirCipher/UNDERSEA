@@ -1,5 +1,6 @@
 package com.type2labs.undersea.prospect.impl;
 
+import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.type2labs.undersea.common.agent.Agent;
@@ -12,7 +13,6 @@ import com.type2labs.undersea.common.service.transaction.ServiceCallback;
 import com.type2labs.undersea.common.service.transaction.Transaction;
 import com.type2labs.undersea.prospect.RaftClusterConfig;
 import com.type2labs.undersea.prospect.networking.RaftClientImpl;
-import com.type2labs.undersea.utilities.concurrent.SimpleFutureCallback;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.ArrayList;
@@ -37,10 +37,15 @@ public class DefaultCallbacks {
             Set<ListenableFuture<?>> futures = agent.services().commitTransaction(transaction);
 
             for (ListenableFuture<?> future : futures) {
-                Futures.addCallback(future, new SimpleFutureCallback<Object>() {
+                Futures.addCallback(future, new FutureCallback<Object>() {
                     @Override
                     public void onSuccess(@Nullable Object result) {
                         raftNode.distributeMission((GeneratedMission) result);
+                    }
+
+                    @Override
+                    public void onFailure(Throwable t) {
+                        throw new RuntimeException(t);
                     }
 
                 }, raftNode.getSingleThreadScheduledExecutor());

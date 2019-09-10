@@ -10,10 +10,9 @@ import com.type2labs.undersea.common.config.UnderseaRuntimeConfig;
 import com.type2labs.undersea.common.consensus.RaftRole;
 import com.type2labs.undersea.common.cost.CostConfiguration;
 import com.type2labs.undersea.common.cost.CostConfigurationImpl;
-import com.type2labs.undersea.common.missions.planner.impl.MissionParametersImpl;
+import com.type2labs.undersea.common.logger.LogServiceImpl;
 import com.type2labs.undersea.common.missions.planner.impl.NoMissionManager;
-import com.type2labs.undersea.common.missions.planner.model.MissionParameters;
-import com.type2labs.undersea.common.monitor.impl.SubsystemMonitorImpl;
+import com.type2labs.undersea.common.monitor.impl.SubsystemMonitorSpoofer;
 import com.type2labs.undersea.common.monitor.impl.VisualiserClientImpl;
 import com.type2labs.undersea.common.monitor.model.SubsystemMonitor;
 import com.type2labs.undersea.common.monitor.model.VisualiserClient;
@@ -22,24 +21,27 @@ import com.type2labs.undersea.common.service.ServiceManager;
 import com.type2labs.undersea.prospect.RaftClusterConfig;
 import com.type2labs.undersea.prospect.model.RaftNode;
 import com.type2labs.undersea.prospect.networking.RaftClientImpl;
-import com.type2labs.undersea.utilities.Utility;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.Closeable;
 import java.net.InetSocketAddress;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class LocalAgentGroup implements Closeable {
 
     private static final Logger logger = LogManager.getLogger(LocalAgentGroup.class);
 
-    private final RaftNodeImpl[] raftNodes;
+    private final List<RaftNodeImpl> raftNodes;
     private final List<Agent> agents = new ArrayList<>();
     private final Client[] clients;
 
-    public LocalAgentGroup(int size, Set<AgentService> services, boolean withVisualiser, boolean withCallbacks) {
-        raftNodes = new RaftNodeImpl[size];
+    public LocalAgentGroup(int size, Set<Class<? extends AgentService>> services, boolean withVisualiser,
+                           boolean withCallbacks) {
+        raftNodes = new ArrayList<>(size);
         clients = new RaftClientImpl[size];
 
         RaftClusterConfig config = defaultConfig();
@@ -59,15 +61,26 @@ public class LocalAgentGroup implements Closeable {
                     new AgentStatus(name, new ArrayList<>()));
 
             serviceManager.registerService(raftNode);
-            serviceManager.registerServices(services);
 
+            for (Class<? extends AgentService> clazz : services) {
+                AgentService agentService;
+                try {
+                    agentService = clazz.newInstance();
+                } catch (InstantiationException | IllegalAccessException e) {
+                    throw new RuntimeException("Failed to load class: " + clazz.getSimpleName());
+                }
+
+                serviceManager.registerService(agentService);
+            }
+
+            serviceManager.registerService(new LogServiceImpl());
 
             if (withCallbacks) {
                 raftNode.registerCallback(DefaultCallbacks.defaultMissionCallback(agent, raftNode, config));
             }
 
             if (withVisualiser) {
-                SubsystemMonitor subsystemMonitor = new SubsystemMonitorImpl();
+                SubsystemMonitor subsystemMonitor = new SubsystemMonitorSpoofer();
                 VisualiserClient client = new VisualiserClientImpl();
                 subsystemMonitor.setVisualiser(client);
                 client.initialise(agent);
@@ -76,24 +89,25 @@ public class LocalAgentGroup implements Closeable {
             }
 
             raftNode.initialise(agent);
+            raftNode.run();
 
-            raftNodes[i] = raftNode;
+            raftNodes.add(raftNode);
             agents.add(agent);
         }
 
-        Properties properties = Utility.getPropertiesByName("../resources/runner.properties");
-        double[][] area = Utility.propertyKeyTo2dDoubleArray(properties, "environment.area");
-
-        MissionParameters missionParameters = new MissionParametersImpl(0, area, 40);
-        config.getUnderseaRuntimeConfig().missionParameters(missionParameters);
+//        Properties properties = Utility.getPropertiesByName("../resources/runner.properties");
+//        double[][] area = Utility.propertyKeyTo2dDoubleArray(properties, "environment.area");
+//
+//        MissionParameters missionParameters = new MissionParametersImpl(0, area, 40);
+//        config.getUnderseaRuntimeConfig().missionParameters(missionParameters);
     }
 
-    private LocalAgentGroup(int size, Set<AgentService> services) {
+    private LocalAgentGroup(int size, Set<Class<? extends AgentService>> services) {
         this(size, services, false, false);
     }
 
     public LocalAgentGroup(int size) {
-        this(size, Sets.newHashSet(new SubsystemMonitorImpl(), new NoMissionManager()));
+        this(size, Sets.newHashSet(SubsystemMonitorSpoofer.class, NoMissionManager.class));
     }
 
     @Override
@@ -139,8 +153,8 @@ public class LocalAgentGroup implements Closeable {
 
     public void doManualDiscovery() {
         for (RaftNodeImpl raftNode : raftNodes) {
-            for (int j = raftNodes.length - 1; j >= 0; j--) {
-                RaftNode nodeB = raftNodes[j];
+            for (int j = raftNodes.size() - 1; j >= 0; j--) {
+                RaftNode nodeB = raftNodes.get(j);
 
                 if (raftNode != nodeB) {
                     raftNode.state().discoverNode(nodeB);
@@ -167,17 +181,29 @@ public class LocalAgentGroup implements Closeable {
         } else if (count > 1) {
             throw new RuntimeException("More than one leader elected");
         } else {
-            throw new RuntimeException("Failed to find leader");
+            return null;
         }
     }
 
-    public RaftNodeImpl[] getRaftNodes() {
+    public List<RaftNodeImpl> getRaftNodes() {
         return raftNodes;
     }
 
     public void start() {
         for (RaftNodeImpl node : raftNodes) {
-            node.parent().services().startServices();
+            ServiceManager serviceManager = node.parent().services();
+
+            for (AgentService agentService : serviceManager.getServices()) {
+                if (RaftNode.class.isAssignableFrom(agentService.getClass())) {
+                    continue;
+                } else {
+                    serviceManager.startService(agentService.getClass());
+                }
+            }
         }
+    }
+
+    public void removeNode(RaftNodeImpl leaderNode) {
+        raftNodes.remove(leaderNode);
     }
 }
