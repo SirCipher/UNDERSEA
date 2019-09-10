@@ -29,20 +29,14 @@ import java.util.concurrent.ConcurrentHashMap;
 public class Visualiser {
 
     private static final Logger logger = LogManager.getLogger(Visualiser.class);
-
+    private final Object LOCK = new Object();
     // AgentName:Log
     private Map<String, AgentInfo> agents = new ConcurrentHashMap<>();
-    private final Object LOCK = new Object();
     private JFrame frame;
     private JTextArea logArea;
     private JTable table;
     private String currentLog;
     private boolean shutdown = false;
-
-    private static class AgentInfo {
-        String log = "";
-        int port;
-    }
 
     public Visualiser() {
         startServer();
@@ -326,6 +320,11 @@ public class Visualiser {
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
+    }
+
+    private static class AgentInfo {
+        String log = "";
+        int port;
     }
 
 

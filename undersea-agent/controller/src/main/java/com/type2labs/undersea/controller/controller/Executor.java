@@ -4,6 +4,7 @@ public abstract class Executor {
 
     private final Knowledge knowledge;
     protected String command;
+
     public Executor(Knowledge knowledge) {
         this.knowledge = knowledge;
     }

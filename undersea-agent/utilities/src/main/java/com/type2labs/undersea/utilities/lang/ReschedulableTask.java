@@ -10,6 +10,15 @@ public abstract class ReschedulableTask implements Runnable {
     private int runCount;
     private long rerunTimeWindow = 1000L;
 
+    public static ReschedulableTask wrap(Runnable runnable) {
+        return new ReschedulableTask() {
+            @Override
+            public void innerRun() {
+                runnable.run();
+            }
+        };
+    }
+
     public int getRunCount() {
         return runCount;
     }
@@ -32,14 +41,5 @@ public abstract class ReschedulableTask implements Runnable {
     }
 
     public abstract void innerRun();
-
-    public static ReschedulableTask wrap(Runnable runnable) {
-        return new ReschedulableTask() {
-            @Override
-            public void innerRun() {
-                runnable.run();
-            }
-        };
-    }
 
 }

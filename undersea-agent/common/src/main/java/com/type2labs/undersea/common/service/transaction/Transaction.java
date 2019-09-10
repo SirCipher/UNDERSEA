@@ -58,10 +58,6 @@ public class Transaction {
      */
     private TransactionData secondaryTransactionData;
 
-    public TransactionData getSecondaryTransactionData() {
-        return secondaryTransactionData;
-    }
-
     private Transaction(Agent agent,
                         Collection<Class<? extends AgentService>> destinationServices,
                         Enum<? extends LifecycleEvent> code,
@@ -75,6 +71,10 @@ public class Transaction {
         this.secondaryTransactionData = secondaryTransactionData;
         this.executorService = executorService;
         this.caller = caller;
+    }
+
+    public TransactionData getSecondaryTransactionData() {
+        return secondaryTransactionData;
     }
 
     public Agent getAgent() {

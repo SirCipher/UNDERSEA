@@ -13,14 +13,8 @@ public class SimpleServer {
     private final Logger logger;
     private final ServerCallback serverCallback;
     private final int port;
-    private boolean shutdown = false;
     private final ExecutorService clientProcessingPool = Executors.newFixedThreadPool(10);
-
-    public interface ServerCallback {
-
-        void onNewConnection(Socket clientSocket);
-
-    }
+    private boolean shutdown = false;
 
     public SimpleServer(int port, ServerCallback serverCallback, Logger logger) {
         this.port = port;
@@ -52,6 +46,12 @@ public class SimpleServer {
         });
 
         serverThread.start();
+    }
+
+    public interface ServerCallback {
+
+        void onNewConnection(Socket clientSocket);
+
     }
 
 }

@@ -10,6 +10,7 @@ import java.util.concurrent.TimeUnit;
 public class RaftClusterConfig implements UnderseaConfig {
 
     public static final long HEARTBEAT_PERIOD = 100;
+    private static long heatbeatTimeout = 1000L;
     private UnderseaRuntimeConfig underseaRuntimeConfig;
     private boolean autoPortDiscovery = true;
     private int executorThreads = 4;
@@ -18,7 +19,6 @@ public class RaftClusterConfig implements UnderseaConfig {
      * In seconds
      */
     private long statusDeadlineLong = 30;
-    private static long heatbeatTimeout = 1000L;
 
     public RaftClusterConfig() {
     }

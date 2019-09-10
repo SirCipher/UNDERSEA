@@ -19,6 +19,7 @@ public interface MissionManager extends AgentService {
 
     /**
      * The global mission that all agents are working together to complete
+     *
      * @param mission the global mission
      */
     void assignMission(GeneratedMission mission);

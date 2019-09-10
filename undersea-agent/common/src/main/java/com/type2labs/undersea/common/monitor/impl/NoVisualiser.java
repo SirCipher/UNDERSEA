@@ -1,14 +1,10 @@
 package com.type2labs.undersea.common.monitor.impl;
 
-import com.google.common.util.concurrent.ListenableFuture;
 import com.type2labs.undersea.common.agent.Agent;
 import com.type2labs.undersea.common.logger.VisualiserMessage;
 import com.type2labs.undersea.common.monitor.model.VisualiserClient;
-import com.type2labs.undersea.common.service.transaction.ServiceCallback;
-import com.type2labs.undersea.common.service.transaction.Transaction;
 
 import java.io.IOException;
-import java.util.concurrent.ExecutorService;
 
 public class NoVisualiser implements VisualiserClient {
 

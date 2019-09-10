@@ -1,6 +1,5 @@
 package com.type2labs.undersea.common.cluster;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.type2labs.undersea.utilities.exception.NotSupportedException;
 
 import java.net.InetSocketAddress;

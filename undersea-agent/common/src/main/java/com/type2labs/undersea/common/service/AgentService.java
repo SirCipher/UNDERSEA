@@ -55,9 +55,9 @@ public interface AgentService extends Runnable, AgentAware {
         throw new NotSupportedException();
     }
 
-   default ExecutorService transactionExecutor() {
+    default ExecutorService transactionExecutor() {
         return ThrowableExecutor.newSingleThreadExecutor();
-   }
+    }
 
     /**
      * The time (in milliseconds) that the {@link ServiceManager} should wait before assuming that there has been an

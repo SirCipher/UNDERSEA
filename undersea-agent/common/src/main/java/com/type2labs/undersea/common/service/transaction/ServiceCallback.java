@@ -7,10 +7,6 @@ public class ServiceCallback {
     private final LifecycleEvent statusCode;
     private final Callback callback;
 
-    public interface Callback {
-        void call();
-    }
-
     public ServiceCallback(LifecycleEvent statusCode, Callback callback) {
         this.statusCode = Objects.requireNonNull(statusCode);
         this.callback = Objects.requireNonNull(callback);
@@ -22,5 +18,9 @@ public class ServiceCallback {
 
     public void call() {
         callback.call();
+    }
+
+    public interface Callback {
+        void call();
     }
 }

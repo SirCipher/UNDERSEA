@@ -5,7 +5,6 @@ import com.type2labs.undersea.common.missions.task.model.Task;
 import com.type2labs.undersea.common.missions.task.model.TaskExecutor;
 import com.type2labs.undersea.common.missions.task.model.TaskType;
 import com.type2labs.undersea.common.service.hardware.NetworkInterface;
-import com.type2labs.undersea.utilities.exception.ServiceNotRegisteredException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

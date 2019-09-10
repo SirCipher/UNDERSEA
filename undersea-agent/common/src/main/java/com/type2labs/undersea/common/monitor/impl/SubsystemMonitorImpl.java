@@ -26,21 +26,6 @@ public class SubsystemMonitorImpl implements SubsystemMonitor {
         visualiserClient.shutdown();
     }
 
-    class SubsystemWrapper {
-        Subsystem subsystem;
-
-        SubsystemWrapper(Subsystem subsystem) {
-            this.subsystem = subsystem;
-        }
-
-        public double getStatus() {
-            CostConfiguration costConfiguration = agent.config().getCostConfiguration();
-            double accuracyWeighting = (double) costConfiguration.getBias("ACCURACY");
-
-            return (subsystem.rate() + subsystem.reliability()) / (accuracyWeighting * subsystem.accuracy());
-        }
-    }
-
     @Override
     public void monitorSubsystem(Subsystem subsystem) {
         monitorSubsystem(new SubsystemWrapper(subsystem));
@@ -103,6 +88,21 @@ public class SubsystemMonitorImpl implements SubsystemMonitor {
     @Override
     public void run() {
 
+    }
+
+    class SubsystemWrapper {
+        Subsystem subsystem;
+
+        SubsystemWrapper(Subsystem subsystem) {
+            this.subsystem = subsystem;
+        }
+
+        public double getStatus() {
+            CostConfiguration costConfiguration = agent.config().getCostConfiguration();
+            double accuracyWeighting = (double) costConfiguration.getBias("ACCURACY");
+
+            return (subsystem.rate() + subsystem.reliability()) / (accuracyWeighting * subsystem.accuracy());
+        }
     }
 
 }

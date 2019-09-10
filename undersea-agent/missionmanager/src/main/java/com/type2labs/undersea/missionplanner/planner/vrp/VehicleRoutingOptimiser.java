@@ -150,7 +150,7 @@ public class VehicleRoutingOptimiser implements MissionPlanner {
 
 
             long index = routing.start(i);
-            logger.info("Route for client: " + client.peerId());
+            logger.info(parentAgent.name() + ": Route for client: " + client.peerId(), parentAgent);
             long routeDistance = 0;
             String route = "";
 
@@ -161,7 +161,7 @@ public class VehicleRoutingOptimiser implements MissionPlanner {
                 routeDistance += routing.getArcCostForVehicle(previousIndex, index, i) / VehicleRoutingOptimiser.SPEED_SCALAR;
             }
 
-            logger.info(route + manager.indexToNode(index));
+            logger.info(parentAgent.name() + ": "+ route + manager.indexToNode(index), parentAgent);
             maxRouteDistance = Math.max(routeDistance, maxRouteDistance);
         }
     }

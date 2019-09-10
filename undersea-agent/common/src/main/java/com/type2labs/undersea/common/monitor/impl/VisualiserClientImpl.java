@@ -27,8 +27,8 @@ import java.util.List;
 public class VisualiserClientImpl implements VisualiserClient {
 
     private static final Logger logger = LogManager.getLogger(VisualiserClientImpl.class);
-    private boolean enabled = false;
     private final InetSocketAddress visualiserAddress = new InetSocketAddress("localhost", 5050);
+    private boolean enabled = false;
     private Agent parent;
     private int serverPort;
     private boolean running = false;

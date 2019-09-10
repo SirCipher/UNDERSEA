@@ -3,10 +3,6 @@ package com.type2labs.undersea.prospect.util;
 import com.type2labs.undersea.common.cluster.Client;
 import com.type2labs.undersea.prospect.RaftProtos;
 import com.type2labs.undersea.prospect.model.RaftNode;
-import org.apache.commons.lang3.tuple.Pair;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class GrpcUtil {
 

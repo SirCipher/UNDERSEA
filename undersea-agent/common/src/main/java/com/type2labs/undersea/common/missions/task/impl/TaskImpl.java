@@ -33,13 +33,13 @@ public class TaskImpl implements Task {
         return taskType;
     }
 
+    public void setTaskType(TaskType taskType) {
+        this.taskType = taskType;
+    }
+
     @Override
     public UUID getUuid() {
         return uuid;
-    }
-
-    public void setTaskType(TaskType taskType) {
-        this.taskType = taskType;
     }
 
     @Override

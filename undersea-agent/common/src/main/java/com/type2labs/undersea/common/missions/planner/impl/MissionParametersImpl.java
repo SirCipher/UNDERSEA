@@ -1,6 +1,5 @@
 package com.type2labs.undersea.common.missions.planner.impl;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.type2labs.undersea.common.cluster.Client;
 import com.type2labs.undersea.common.missions.planner.model.MissionParameters;
 
@@ -17,7 +16,7 @@ public class MissionParametersImpl implements MissionParameters {
     private double minimumSensorRange;
     private double[][] centroids;
 
-    public MissionParametersImpl(){
+    public MissionParametersImpl() {
 
     }
 
@@ -31,8 +30,16 @@ public class MissionParametersImpl implements MissionParameters {
         return polygon;
     }
 
+    public void setPolygon(double[][] polygon) {
+        this.polygon = polygon;
+    }
+
     public double getMinimumSensorRange() {
         return minimumSensorRange;
+    }
+
+    public void setMinimumSensorRange(double minimumSensorRange) {
+        this.minimumSensorRange = minimumSensorRange;
     }
 
     public int getAgentCount() {
@@ -41,6 +48,10 @@ public class MissionParametersImpl implements MissionParameters {
 
     public int getStartingNode() {
         return startingNode;
+    }
+
+    public void setStartingNode(int startingNode) {
+        this.startingNode = startingNode;
     }
 
     @Override
@@ -61,24 +72,12 @@ public class MissionParametersImpl implements MissionParameters {
         this.centroids = centroids;
     }
 
-    public void setStartingNode(int startingNode) {
-        this.startingNode = startingNode;
-    }
-
-    public void setPolygon(double[][] polygon) {
-        this.polygon = polygon;
-    }
-
     public List<Client> getAgents() {
         return agents;
     }
 
     public void setAgents(List<Client> agents) {
         this.agents = agents;
-    }
-
-    public void setMinimumSensorRange(double minimumSensorRange) {
-        this.minimumSensorRange = minimumSensorRange;
     }
 
     public double[] getCentroid(int index) {

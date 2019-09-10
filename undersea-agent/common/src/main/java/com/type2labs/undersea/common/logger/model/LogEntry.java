@@ -1,6 +1,5 @@
 package com.type2labs.undersea.common.logger.model;
 
-import com.type2labs.undersea.common.cluster.Client;
 import com.type2labs.undersea.common.cluster.PeerId;
 import com.type2labs.undersea.common.consensus.ConsensusAlgorithm;
 import com.type2labs.undersea.common.missions.planner.model.MissionManager;

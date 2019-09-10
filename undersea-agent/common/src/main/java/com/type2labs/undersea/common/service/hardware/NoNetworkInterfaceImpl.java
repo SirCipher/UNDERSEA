@@ -6,8 +6,6 @@ import com.type2labs.undersea.common.service.transaction.ServiceCallback;
 import com.type2labs.undersea.common.service.transaction.Transaction;
 import com.type2labs.undersea.utilities.exception.NotSupportedException;
 
-import java.util.concurrent.ExecutorService;
-
 public class NoNetworkInterfaceImpl implements NetworkInterface {
 
     private Agent parentAgent;
