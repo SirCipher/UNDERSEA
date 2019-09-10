@@ -21,7 +21,7 @@ service RaftProtocolService {
 
     }
 
-    rpc LeaveCluster (LeaveClusterRequest) returns (Empty) {
+    rpc BroadcastMembershipChanges (ClusterMembersRequest) returns (Empty) {
 
     }
 }
@@ -31,13 +31,14 @@ service MultiRaftProtocolService {
     }
 }
 
+message ClusterMembersRequest {
+    repeated RaftPeerProto members = 1;
+    RaftPeerProto client = 2;
+}
+
 message NotificationRequest {
     RaftPeerProto client = 1;
     string notification = 2;
-}
-
-message LeaveClusterRequest {
-    RaftPeerProto client = 1;
 }
 
 message Empty {
@@ -56,6 +57,8 @@ message DisributeMissionResponse {
 
 message RaftPeerProto {
     string raftPeerId = 1;
+    string host = 2;
+    uint32 port = 3;
 }
 
 message AcquireStatusRequest {

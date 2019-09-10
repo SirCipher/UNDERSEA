@@ -4,7 +4,6 @@ import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
-import com.type2labs.undersea.common.cluster.ClusterState;
 import com.type2labs.undersea.common.cluster.PeerId;
 import com.type2labs.undersea.prospect.RaftClusterConfig;
 import com.type2labs.undersea.prospect.RaftProtocolServiceGrpc;
@@ -22,8 +21,6 @@ import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
-
-import static java.util.concurrent.TimeUnit.SECONDS;
 
 public class RaftClientImpl implements RaftClient {
 
@@ -69,7 +66,7 @@ public class RaftClientImpl implements RaftClient {
 
     @Override
     public void shutdown() {
-        channel.shutdown();
+        channel.shutdownNow();
         clientExecutor.shutdown();
 
         try {
@@ -120,9 +117,10 @@ public class RaftClientImpl implements RaftClient {
     }
 
     @Override
-    public void alertLeavingCluster(RaftProtos.LeaveClusterRequest request, FutureCallback<RaftProtos.Empty> callback) {
-        ListenableFuture<RaftProtos.Empty> ignored = futureStub.leaveCluster(request);
-        Futures.addCallback(ignored, callback, clientExecutor);
+    public void broadcastMembershipChanges(RaftProtos.ClusterMembersRequest request,
+                                           FutureCallback<RaftProtos.Empty> callback) {
+        ListenableFuture<RaftProtos.Empty> response = futureStub.broadcastMembershipChanges(request);
+        Futures.addCallback(response, callback, clientExecutor);
     }
 
     @Override

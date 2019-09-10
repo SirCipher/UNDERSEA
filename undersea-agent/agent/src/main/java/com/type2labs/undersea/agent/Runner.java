@@ -124,6 +124,8 @@ public class Runner extends AbstractRunner {
                     }
                 }
             }
+
+            Thread.sleep(1000);
         }
     }
 

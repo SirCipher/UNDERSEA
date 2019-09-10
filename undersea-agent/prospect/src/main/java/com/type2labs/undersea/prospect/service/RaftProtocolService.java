@@ -19,12 +19,14 @@ import com.type2labs.undersea.prospect.RaftProtocolServiceGrpc;
 import com.type2labs.undersea.prospect.RaftProtos;
 import com.type2labs.undersea.prospect.impl.RaftNodeImpl;
 import com.type2labs.undersea.prospect.model.RaftNode;
+import com.type2labs.undersea.prospect.networking.RaftClientImpl;
 import com.type2labs.undersea.prospect.util.GrpcUtil;
 import io.grpc.stub.StreamObserver;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.net.InetSocketAddress;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -99,7 +101,7 @@ public class RaftProtocolService extends RaftProtocolServiceGrpc.RaftProtocolSer
 
             if (!leader.equals(raftNode.state().getLeader())) {
                 UnderseaLogger.info(logger, raftNode.parent(), "Setting leader: " + peerId);
-                raftNode.state().setLeader(leader);
+                raftNode.state().toLeader(leader);
             }
 
             raftNode.updateLastAppendRequestTime();
@@ -117,9 +119,28 @@ public class RaftProtocolService extends RaftProtocolServiceGrpc.RaftProtocolSer
     }
 
     @Override
-    public void leaveCluster(RaftProtos.LeaveClusterRequest request,
-                             StreamObserver<RaftProtos.Empty> responseObserver) {
-        raftNode.state().removeNode(PeerId.valueOf(request.getClient().getRaftPeerId()));
+    public void broadcastMembershipChanges(RaftProtos.ClusterMembersRequest request,
+                                           StreamObserver<RaftProtos.Empty> responseObserver) {
+        UnderseaLogger.info(logger, raftNode.parent(), "Received new members: " + request.getMembersList());
+
+        List<Client> clients = new ArrayList<>(request.getMembersCount());
+
+        for (int i = 0; i < request.getMembersCount(); i++) {
+            RaftProtos.RaftPeerProto raftPeerProto = request.getMembersList().get(i);
+
+            PeerId peerId = PeerId.valueOf(raftPeerProto.getRaftPeerId());
+            Client member = raftNode.parent().clusterClients().get(peerId);
+
+            if (member == null) {
+                member = new RaftClientImpl(raftNode,
+                        new InetSocketAddress(raftPeerProto.getHost(), raftPeerProto.getPort()),
+                        peerId);
+            }
+
+            clients.add(member);
+        }
+
+        raftNode.state().updateMembers(clients);
     }
 
     @Override

@@ -31,6 +31,7 @@ import com.type2labs.undersea.prospect.util.GrpcUtil;
 import com.type2labs.undersea.utilities.exception.UnderseaException;
 import com.type2labs.undersea.utilities.executor.ThrowableExecutor;
 import com.type2labs.undersea.utilities.lang.ReschedulableTask;
+import io.grpc.Grpc;
 import io.grpc.Status;
 import io.grpc.StatusRuntimeException;
 import org.apache.logging.log4j.LogManager;
@@ -155,11 +156,11 @@ public class RaftNodeImpl implements RaftNode {
         }
 
         role = RaftRole.LEADER;
-        state().setLeader(selfRaftClientImpl);
         logger.info(name + " is now the leader", agent);
+        agent.log(new LogEntry(leaderPeerId(), new Object(), new Object(), state().getCurrentTerm(), this));
 
         fireLifecycleCallbacks(LifecycleEvent.ELECTED_LEADER);
-        agent.log(new LogEntry(leaderPeerId(), new Object(), new Object(), state().getCurrentTerm(), this));
+        state().toLeader(selfRaftClientImpl);
         scheduleHeartbeat();
     }
 
@@ -325,7 +326,9 @@ public class RaftNodeImpl implements RaftNode {
                 if (t instanceof StatusRuntimeException) {
                     StatusRuntimeException statusRuntimeException = (StatusRuntimeException) t;
                     if (statusRuntimeException.getStatus().getCode() == Status.Code.UNAVAILABLE) {
-                        parent().clusterClients().remove(follower.peerId());
+                        Client client = parent().clusterClients().remove(follower.peerId());
+                        client.shutdown();
+
                         broadcastClusterMembers();
 
                         UnderseaLogger.info(logger, parent(), "Failed to communicate with: " + follower.peerId());
@@ -341,7 +344,31 @@ public class RaftNodeImpl implements RaftNode {
     }
 
     private void broadcastClusterMembers() {
+        RaftProtos.ClusterMembersRequest.Builder builder = RaftProtos.ClusterMembersRequest
+                .newBuilder();
 
+        for (Client member : state().localNodes().values()) {
+            builder.addMembers(GrpcUtil.toProtoClient(member));
+        }
+
+        builder.addMembers(GrpcUtil.toProtoClient(this));
+
+        RaftProtos.ClusterMembersRequest request = builder.setClient(GrpcUtil.toProtoClient(this)).build();
+
+        for (Client follower : state().localNodes().values()) {
+            RaftClient raftClient = (RaftClient) follower;
+            raftClient.broadcastMembershipChanges(request, new FutureCallback<RaftProtos.Empty>() {
+                @Override
+                public void onSuccess(RaftProtos.@Nullable Empty result) {
+
+                }
+
+                @Override
+                public void onFailure(Throwable t) {
+                    t.printStackTrace();
+                }
+            });
+        }
     }
 
     @Override
@@ -397,7 +424,7 @@ public class RaftNodeImpl implements RaftNode {
             // If we haven't heard from the leader then assume they have gone offline
             else if (lastAppendRequestTime + raftClusterConfig.heartbeatTimeout() < System.currentTimeMillis()) {
                 UnderseaLogger.info(logger, agent, "leader heartbeat timeout exceeded");
-                state().setLeader(null);
+                state().toLeader(null);
                 execute(new AcquireStatusTask(RaftNodeImpl.this));
             }
 

@@ -11,15 +11,17 @@ import org.apache.logging.log4j.Logger;
 
 import java.net.InetSocketAddress;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 public class RaftState {
 
     private static final Logger logger = LogManager.getLogger(RaftState.class);
 
-    private final ConcurrentMap<PeerId, Client> localNodes;
-    private final RaftNode parent;
+    private final RaftNode raftNode;
+    private ConcurrentMap<PeerId, Client> localNodes;
     private Pair<Client, ClusterState.ClientState> votedFor;
     private int currentTerm;
     private Candidate candidate;
@@ -27,7 +29,7 @@ public class RaftState {
     private Client leader;
 
     public RaftState(RaftNode agent) {
-        this.parent = agent;
+        this.raftNode = agent;
         this.localNodes = agent.parent().clusterClients();
     }
 
@@ -36,12 +38,12 @@ public class RaftState {
     }
 
     public void initPreVoteClusterState() {
-        this.preVoteClusterState = new ClusterState(parent);
+        this.preVoteClusterState = new ClusterState(raftNode);
     }
 
     public void initCandidate() {
         this.candidate = new Candidate(preVoteClusterState.getMembers().size() / 2 + 1);
-        this.votedFor = preVoteClusterState.getNominee(parent.self());
+        this.votedFor = preVoteClusterState.getNominee(raftNode.self());
         this.preVoteClusterState = null;
         this.currentTerm++;
     }
@@ -54,7 +56,7 @@ public class RaftState {
         return leader;
     }
 
-    public void setLeader(Client leader) {
+    public void toLeader(Client leader) {
         this.leader = leader;
     }
 
@@ -79,15 +81,10 @@ public class RaftState {
      */
     public void discoverNode(RaftNode node) {
         InetSocketAddress address = node.server().getSocketAddress();
-        localNodes.computeIfAbsent(node.parent().peerId(), n -> new RaftClientImpl(parent, address,
+        localNodes.computeIfAbsent(node.parent().peerId(), n -> new RaftClientImpl(raftNode, address,
                 node.parent().peerId()));
 
-        logger.info(parent.name() + ": discovered: " + node.parent().peerId(), parent);
-    }
-
-    public void removeNode(PeerId peerId) {
-        localNodes.remove(peerId);
-        logger.info(parent.name() + ": removing peer: " + peerId, parent);
+        logger.info(raftNode.name() + ": discovered: " + node.parent().peerId(), raftNode);
     }
 
     public ConcurrentMap<PeerId, Client> localNodes() {
@@ -106,6 +103,19 @@ public class RaftState {
         this.currentTerm = currentTerm;
     }
 
+    public synchronized void updateMembers(List<Client> clients) {
+        localNodes.clear();
+
+        for (Client client : clients) {
+            if(client.peerId().equals(raftNode.parent().peerId())){
+                continue;
+            }
+
+            localNodes.put(client.peerId(), client);
+            logger.info(raftNode.name() + ": added client: " + client.peerId(), raftNode.parent());
+        }
+    }
+
     public class Candidate {
         private final int threshold;
         private final Set<Client> voters = new HashSet<>();
@@ -115,7 +125,7 @@ public class RaftState {
         }
 
         public void vote(Client client) {
-            logger.info(parent.name() + " registering vote from: " + client);
+            logger.info(raftNode.name() + " registering vote from: " + client);
             this.voters.add(client);
         }
 

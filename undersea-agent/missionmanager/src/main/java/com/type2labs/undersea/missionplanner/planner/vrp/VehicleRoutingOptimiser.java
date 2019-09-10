@@ -207,8 +207,6 @@ public class VehicleRoutingOptimiser implements MissionPlanner {
         clients.sort(Comparator.comparing(client -> client.peerId().toString()));
 
         for (int vehicle = 0; vehicle < clients.size(); ++vehicle) {
-            Client client = clients.get(vehicle);
-
             final int callback = routing.registerTransitCallback((long fromIndex, long toIndex) -> {
                 // Convert from routing variable Index to user NodeIndex.
                 int fromNode = manager.indexToNode(fromIndex);
