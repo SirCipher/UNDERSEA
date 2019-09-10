@@ -56,6 +56,11 @@ public class VehicleRoutingOptimiserTest {
         missionParameters.getClients().add(new Client() {
 
             @Override
+            public String name() {
+                return agent.name();
+            }
+
+            @Override
             public ClusterState.ClientState state() {
                 return new ClusterState.ClientState(this, true);
             }

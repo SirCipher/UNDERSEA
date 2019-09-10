@@ -8,6 +8,8 @@ import java.util.concurrent.ConcurrentMap;
 
 public interface Client {
 
+    String name();
+
     default ClusterState.ClientState state() {
         throw new NotSupportedException("state not implemented");
     }

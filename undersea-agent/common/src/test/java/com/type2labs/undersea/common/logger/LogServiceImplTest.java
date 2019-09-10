@@ -19,10 +19,16 @@ public class LogServiceImplTest {
         List<Client> clients = new ArrayList<>();
 
         for (int i = 0; i < 5; i++) {
+            PeerId peerId = PeerId.newId();
             clients.add(new Client() {
                 @Override
+                public String name() {
+                    return peerId.toString();
+                }
+
+                @Override
                 public PeerId peerId() {
-                    return PeerId.newId();
+                    return peerId;
                 }
 
                 @Override

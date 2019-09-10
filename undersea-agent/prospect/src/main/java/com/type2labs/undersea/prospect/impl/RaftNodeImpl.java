@@ -31,7 +31,6 @@ import com.type2labs.undersea.prospect.util.GrpcUtil;
 import com.type2labs.undersea.utilities.exception.UnderseaException;
 import com.type2labs.undersea.utilities.executor.ThrowableExecutor;
 import com.type2labs.undersea.utilities.lang.ReschedulableTask;
-import io.grpc.Grpc;
 import io.grpc.Status;
 import io.grpc.StatusRuntimeException;
 import org.apache.logging.log4j.LogManager;
@@ -394,7 +393,7 @@ public class RaftNodeImpl implements RaftNode {
 
         registerCallback(new ServiceCallback(LifecycleEvent.ELECTED_LEADER, () -> getMonitor().update()));
 
-        UnderseaLogger.info(logger, agent, "Started node");
+        UnderseaLogger.info(logger, agent, "Started node. Peer ID: " + agent.peerId());
 
         this.started = true;
     }
@@ -424,7 +423,7 @@ public class RaftNodeImpl implements RaftNode {
             // If we haven't heard from the leader then assume they have gone offline
             else if (lastAppendRequestTime + raftClusterConfig.heartbeatTimeout() < System.currentTimeMillis()) {
                 UnderseaLogger.info(logger, agent, "leader heartbeat timeout exceeded");
-                state().toLeader(null);
+                state().leaderFailed();
                 execute(new AcquireStatusTask(RaftNodeImpl.this));
             }
 

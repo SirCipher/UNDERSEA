@@ -22,6 +22,11 @@ public class AgentFactory implements AbstractFactory<Agent> {
             PeerId peerId = PeerId.newId();
             agent.clusterClients().put(peerId, new Client() {
                 @Override
+                public String name() {
+                    return peerId.toString();
+                }
+
+                @Override
                 public ClusterState.ClientState state() {
                     return new ClusterState.ClientState(this, true);
                 }

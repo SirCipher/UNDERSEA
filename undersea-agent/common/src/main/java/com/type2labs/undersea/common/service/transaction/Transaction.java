@@ -93,7 +93,7 @@ public class Transaction {
     public String toString() {
         return "Transaction{" +
                 "executorService=" + executorService +
-                ", agent=" + agent +
+                ", agent=" + agent.name() +
                 ", caller=" + caller +
                 ", destinationServices=" + destinationServices +
                 ", statusCode=" + statusCode +

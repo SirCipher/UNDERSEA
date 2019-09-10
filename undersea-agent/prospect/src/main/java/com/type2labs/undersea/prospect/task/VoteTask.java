@@ -26,16 +26,8 @@ public class VoteTask implements Runnable {
         this.raftNode = raftNode;
     }
 
-    /**
-     * Allows for an agent to vote more than one time as the client checks to see if it has already received a vote
-     * from an endpoint and does not allow for duplicates.
-     */
     @Override
     public void run() {
-        if (raftNode.state().getVotedFor() != null) {
-            logger.info("Node: " + raftNode.name() + " has already voted during this term. For: " + raftNode.state().getVotedFor() + ". Not voting again");
-        }
-
         raftNode.toCandidate();
 
         logger.info(raftNode.name() + " starting voting", raftNode.parent());
@@ -47,16 +39,16 @@ public class VoteTask implements Runnable {
             logger.warn(raftNode.name() + " has no peers", raftNode.parent());
         }
 
-        Iterator<Client> iterator = localNodes.values().iterator();
+        final Iterator<Client> iterator = localNodes.values().iterator();
 
         while (iterator.hasNext()) {
             RaftClient raftClient = (RaftClient) iterator.next();
 
-            int nextTerm = raftNode.state().getCurrentTerm() + 1;
+            int term = raftNode.state().getCurrentTerm();
 
             RaftProtos.VoteRequest request = RaftProtos.VoteRequest.newBuilder()
                     .setClient(GrpcUtil.toProtoClient(raftNode))
-                    .setTerm(nextTerm)
+                    .setTerm(term)
                     .build();
 
             raftClient.requestVote(request, new FutureCallback<RaftProtos.VoteResponse>() {
@@ -64,8 +56,6 @@ public class VoteTask implements Runnable {
                 public void onSuccess(RaftProtos.VoteResponse result) {
                     PeerId nomineeId = PeerId.valueOf(result.getNominee().getRaftPeerId());
                     PeerId responderId = PeerId.valueOf(result.getClient().getRaftPeerId());
-
-                    logger.info(raftNode.name() + ": received vote for: " + nomineeId, raftNode.parent());
 
                     // Grant vote if we were nominated
                     if (nomineeId.equals(raftNode.parent().peerId())) {

@@ -100,7 +100,7 @@ public class RaftProtocolService extends RaftProtocolServiceGrpc.RaftProtocolSer
             Client leader = raftNode.parent().clusterClients().get(peerId);
 
             if (!leader.equals(raftNode.state().getLeader())) {
-                UnderseaLogger.info(logger, raftNode.parent(), "Setting leader: " + peerId);
+                UnderseaLogger.info(logger, raftNode.parent(), "Setting leader: " + leader.name());
                 raftNode.state().toLeader(leader);
             }
 
@@ -148,7 +148,8 @@ public class RaftProtocolService extends RaftProtocolServiceGrpc.RaftProtocolSer
         sendAbstractAsyncMessage(responseObserver, () -> {
             Pair<Client, ClusterState.ClientState> nominee = raftNode.state().getVotedFor();
 
-            UnderseaLogger.info(logger, raftNode.parent(), "Nominating: " + nominee);
+            UnderseaLogger.info(logger, raftNode.parent(), "Nominating: " + nominee.getKey().peerId() + ". With cost:" +
+                    " " + nominee.getValue().getCost());
 
             return RaftProtos.VoteResponse.newBuilder()
                     .setClient(GrpcUtil.toProtoClient(raftNode))

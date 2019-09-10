@@ -42,7 +42,7 @@ public class LogEntry {
                 "term=" + term +
                 ", data=" + data +
                 ", value=" + value +
-                ", agentService=" + agentService +
+                ", agentService=" + agentService.getClass().getSimpleName() +
                 '}';
     }
 

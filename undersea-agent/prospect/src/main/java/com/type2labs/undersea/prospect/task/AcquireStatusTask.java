@@ -8,12 +8,14 @@ import com.type2labs.undersea.prospect.model.RaftNode;
 import com.type2labs.undersea.prospect.networking.RaftClient;
 import com.type2labs.undersea.prospect.util.GrpcUtil;
 import com.type2labs.undersea.utilities.lang.ReschedulableTask;
+import io.grpc.Deadline;
 import io.grpc.Status;
 import io.grpc.StatusRuntimeException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.Collection;
+import java.util.concurrent.TimeUnit;
 
 public class AcquireStatusTask implements Runnable {
 
@@ -52,7 +54,7 @@ public class AcquireStatusTask implements Runnable {
             try {
                 RaftClusterConfig config = (RaftClusterConfig) raftNode.config();
 
-                response = raftClient.getStatus(request, config.getStatusDeadline());
+                response = raftClient.getStatus(request, Deadline.after(config.getStatusDeadline(), TimeUnit.SECONDS));
 
                 ClusterState.ClientState agentInfo = new ClusterState.ClientState(localNode, response.getCost());
                 preVoteClusterState.setAgentInformation(localNode, agentInfo);
@@ -62,6 +64,8 @@ public class AcquireStatusTask implements Runnable {
                 Status.Code code = e.getStatus().getCode();
 
                 if (code.equals(Status.Code.DEADLINE_EXCEEDED)) {
+                    logger.info(raftNode.name() + ": deadline exceeded while contacting client: " + raftClient.name()
+                            , raftNode.parent());
                     incrementAndVote();
                 }
             }

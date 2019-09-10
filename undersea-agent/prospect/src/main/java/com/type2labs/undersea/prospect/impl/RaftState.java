@@ -13,7 +13,6 @@ import java.net.InetSocketAddress;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 public class RaftState {
@@ -107,13 +106,18 @@ public class RaftState {
         localNodes.clear();
 
         for (Client client : clients) {
-            if(client.peerId().equals(raftNode.parent().peerId())){
+            if (client.peerId().equals(raftNode.parent().peerId())) {
                 continue;
             }
 
             localNodes.put(client.peerId(), client);
             logger.info(raftNode.name() + ": added client: " + client.peerId(), raftNode.parent());
         }
+    }
+
+    public void leaderFailed() {
+        localNodes.remove(leader.peerId());
+        this.leader = null;
     }
 
     public class Candidate {

@@ -23,6 +23,6 @@ public class VoteTaskTimeout implements Runnable {
         }
 
         UnderseaLogger.info(logger, raftNode.parent(), "Voting round timed out, trying again");
-        raftNode.execute(new VoteTask(raftNode));
+        raftNode.execute(new AcquireStatusTask(raftNode));
     }
 }

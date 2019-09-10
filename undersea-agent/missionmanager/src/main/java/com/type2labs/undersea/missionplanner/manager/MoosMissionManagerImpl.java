@@ -264,7 +264,6 @@ public class MoosMissionManagerImpl implements MissionManager {
 
         String message = MoosMissionManagerImpl.class.getSimpleName() + " does not support status code: " + statusCode +
                 ". Called by: " + transaction.getCaller();
-        logger.error(message, agent);
 
         throw new NotSupportedException(message);
     }

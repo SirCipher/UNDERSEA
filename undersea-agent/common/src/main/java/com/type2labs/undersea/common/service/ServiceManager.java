@@ -90,12 +90,13 @@ public class ServiceManager {
                 .build();
 
         Set<ListenableFuture<?>> futures = commitTransaction(transaction);
-        futures.forEach(e -> {
+        futures.forEach(f -> {
             try {
-                e.get();
+                f.get();
             } catch (InterruptedException | ExecutionException ex) {
                 ex.printStackTrace();
-            } catch (NotSupportedException ignored) {
+            } catch (NotSupportedException e) {
+                logger.error(agent.name() + ": " + e.getLocalizedMessage());
             }
         });
     }
@@ -314,10 +315,6 @@ public class ServiceManager {
     }
 
     public synchronized void shutdownService(Class<? extends AgentService> service, AgentService agentService) {
-//        if (serviceStates.get(service) == ServiceState.STOPPED) {
-//            return;
-//        }
-
         ScheduledFuture<?> scheduledFuture = getScheduledFuture(service);
 
         if (scheduledFuture != null) {
@@ -437,6 +434,7 @@ public class ServiceManager {
             startService(e.getKey());
         }
 
+        starting = false;
         started = true;
 
         updateVisualiser();

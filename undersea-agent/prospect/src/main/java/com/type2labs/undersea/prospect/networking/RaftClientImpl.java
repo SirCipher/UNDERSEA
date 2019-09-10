@@ -55,6 +55,11 @@ public class RaftClientImpl implements RaftClient {
     }
 
     @Override
+    public String name() {
+        return consensusAlgorithm.name();
+    }
+
+    @Override
     public PeerId peerId() {
         return clientId;
     }

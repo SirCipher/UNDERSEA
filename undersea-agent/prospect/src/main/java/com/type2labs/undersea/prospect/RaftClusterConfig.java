@@ -2,9 +2,6 @@ package com.type2labs.undersea.prospect;
 
 import com.type2labs.undersea.common.config.UnderseaConfig;
 import com.type2labs.undersea.common.config.UnderseaRuntimeConfig;
-import io.grpc.Deadline;
-
-import java.util.concurrent.TimeUnit;
 
 
 public class RaftClusterConfig implements UnderseaConfig {
@@ -14,8 +11,8 @@ public class RaftClusterConfig implements UnderseaConfig {
     private UnderseaRuntimeConfig underseaRuntimeConfig;
     private boolean autoPortDiscovery = true;
     private int executorThreads = 4;
-    private Deadline getStatusDeadline = Deadline.after(10, TimeUnit.SECONDS);
-    private Deadline appendRequestDeadline = Deadline.after(10, TimeUnit.SECONDS);
+    private long getStatusDeadline = 10;
+    private long appendRequestDeadline = 10;
 
     /**
      * In seconds
@@ -33,17 +30,16 @@ public class RaftClusterConfig implements UnderseaConfig {
         return statusDeadlineLong;
     }
 
-    public RaftClusterConfig setStatusDeadline(long duration, TimeUnit timeUnit) {
-        this.getStatusDeadline = Deadline.after(duration, timeUnit);
-        this.statusDeadlineLong = duration;
+    public RaftClusterConfig setStatusDeadline(long duration) {
+        this.getStatusDeadline = duration;
         return this;
     }
 
-    public Deadline getStatusDeadline() {
+    public long getStatusDeadline() {
         return getStatusDeadline;
     }
 
-    public Deadline getAppendRequestDeadline() {
+    public long getAppendRequestDeadline() {
         return appendRequestDeadline;
     }
 

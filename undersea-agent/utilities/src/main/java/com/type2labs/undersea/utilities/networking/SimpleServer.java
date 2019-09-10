@@ -31,7 +31,6 @@ public class SimpleServer {
         Thread serverThread = new Thread(() -> {
             try {
                 ServerSocket serverSocket = new ServerSocket(port);
-                logger.info("Waiting for clients to connect...");
 
                 while (!shutdown) {
                     Socket clientSocket = serverSocket.accept();
