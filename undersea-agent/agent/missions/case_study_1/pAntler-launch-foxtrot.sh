@@ -1,1 +1,1 @@
-pAntler meta_vehicle_foxtrot.moos> /dev/null 2>&1
+pAntler meta_vehicle_foxtrot.moos >/dev/null 2>&1
