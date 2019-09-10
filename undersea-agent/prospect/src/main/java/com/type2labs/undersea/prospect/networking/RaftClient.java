@@ -22,7 +22,7 @@ public interface RaftClient extends Client {
     RaftProtos.AcquireStatusResponse getStatus(RaftProtos.AcquireStatusRequest request,
                                                Deadline deadline) throws StatusRuntimeException;
 
-    void appendEntry(RaftProtos.AppendEntryRequest request, FutureCallback<RaftProtos.AppendEntryResponse> callback);
+    void appendEntry(RaftProtos.AppendEntryRequest request,FutureCallback<RaftProtos.AppendEntryResponse> callback);
 
     void requestVote(RaftProtos.VoteRequest request, FutureCallback<RaftProtos.VoteResponse> callback);
 

@@ -2,7 +2,7 @@ package com.type2labs.undersea.prospect.impl;
 
 import com.type2labs.undersea.prospect.RaftClusterConfig;
 import com.type2labs.undersea.prospect.model.RaftNode;
-import com.type2labs.undersea.prospect.service.RaftProtocolServiceImpl;
+import com.type2labs.undersea.prospect.service.RaftProtocolService;
 import com.type2labs.undersea.utilities.executor.ExecutorUtils;
 import io.grpc.Server;
 import io.grpc.ServerBuilder;
@@ -60,7 +60,7 @@ public class GrpcServer implements Closeable {
         int executorThreads = ((RaftClusterConfig) raftNode.config()).executorThreads();
 
         ExecutorService handlerExecutor = ExecutorUtils.newExecutor(executorThreads, agentName + "-grpc-handler-%d");
-        builder.addService(new RaftProtocolServiceImpl(raftNode, handlerExecutor));
+        builder.addService(new RaftProtocolService(raftNode, handlerExecutor));
 
         ExecutorService serverExecutor = ExecutorUtils.newExecutor(executorThreads, agentName + "-grpc-server-%d");
         this.server = builder.executor(serverExecutor).build();

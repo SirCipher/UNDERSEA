@@ -13,6 +13,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.Iterator;
 import java.util.concurrent.ConcurrentMap;
 
 public class VoteTask implements Runnable {
@@ -35,6 +36,8 @@ public class VoteTask implements Runnable {
             logger.info("Node: " + raftNode.name() + " has already voted during this term. For: " + raftNode.state().getVotedFor() + ". Not voting again");
         }
 
+        raftNode.toCandidate();
+
         logger.info(raftNode.name() + " starting voting", raftNode.parent());
 
         ConcurrentMap<PeerId, Client> localNodes = raftNode.parent().clusterClients();
@@ -44,8 +47,10 @@ public class VoteTask implements Runnable {
             logger.warn(raftNode.name() + " has no peers", raftNode.parent());
         }
 
-        for (Client client : localNodes.values()) {
-            RaftClient raftClient = (RaftClient) client;
+        Iterator<Client> iterator = localNodes.values().iterator();
+
+        while (iterator.hasNext()) {
+            RaftClient raftClient = (RaftClient) iterator.next();
 
             int nextTerm = raftNode.state().getCurrentTerm() + 1;
 
@@ -60,6 +65,7 @@ public class VoteTask implements Runnable {
                     PeerId nomineeId = PeerId.valueOf(result.getNominee().getRaftPeerId());
                     PeerId responderId = PeerId.valueOf(result.getClient().getRaftPeerId());
 
+                    logger.info(raftNode.name() + ": received vote for: " + nomineeId, raftNode.parent());
 
                     // Grant vote if we were nominated
                     if (nomineeId.equals(raftNode.parent().peerId())) {
@@ -74,7 +80,7 @@ public class VoteTask implements Runnable {
 
                 @Override
                 public void onFailure(Throwable t) {
-                    throw new RuntimeException(t);
+                    iterator.remove();
                 }
             });
 
@@ -82,14 +88,14 @@ public class VoteTask implements Runnable {
 
         // Check if we voted for ourself
         Client self = raftNode.self();
-        Pair<Client, ClusterState.ClientState> nominee = raftNode.state().clusterState().getNominee(self);
+        Pair<Client, ClusterState.ClientState> nominee = raftNode.state().getVotedFor();
         PeerId nomineeId = nominee.getKey().peerId();
 
         if (nomineeId.equals(raftNode.parent().peerId())) {
             candidate.vote(self);
         }
 
-        raftNode.schedule(new VoteTaskTimeout(raftNode), localNodes.size() * 1000);
+        raftNode.schedule(new VoteTaskTimeout(raftNode), 10000);
 
     }
 

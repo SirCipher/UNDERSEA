@@ -5,6 +5,7 @@ import com.type2labs.undersea.common.cluster.ClusterState;
 import com.type2labs.undersea.common.cluster.PeerId;
 import com.type2labs.undersea.prospect.model.RaftNode;
 import com.type2labs.undersea.prospect.networking.RaftClientImpl;
+import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -19,10 +20,10 @@ public class RaftState {
 
     private final ConcurrentMap<PeerId, Client> localNodes;
     private final RaftNode parent;
-    private Client votedFor;
+    private Pair<Client, ClusterState.ClientState> votedFor;
     private int currentTerm;
     private Candidate candidate;
-    private ClusterState clusterState;
+    private ClusterState preVoteClusterState;
     private Client leader;
 
     public RaftState(RaftNode agent) {
@@ -30,10 +31,18 @@ public class RaftState {
         this.localNodes = agent.parent().clusterClients();
     }
 
+    public ClusterState getPreVoteClusterState() {
+        return preVoteClusterState;
+    }
+
+    public void initPreVoteClusterState() {
+        this.preVoteClusterState = new ClusterState(parent);
+    }
+
     public void initCandidate() {
-        this.candidate = new Candidate(localNodes.size() / 2 + 1);
-        this.votedFor = null;
-        this.clusterState = new ClusterState(parent, localNodes.size());
+        this.candidate = new Candidate(preVoteClusterState.getMembers().size() / 2 + 1);
+        this.votedFor = preVoteClusterState.getNominee(parent.self());
+        this.preVoteClusterState = null;
         this.currentTerm++;
     }
 
@@ -53,12 +62,12 @@ public class RaftState {
         return candidate;
     }
 
-    public Client getVotedFor() {
+    public Pair<Client, ClusterState.ClientState> getVotedFor() {
         return votedFor;
     }
 
     public ClusterState clusterState() {
-        return clusterState;
+        return preVoteClusterState;
     }
 
     /**

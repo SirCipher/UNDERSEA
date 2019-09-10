@@ -31,6 +31,8 @@ import com.type2labs.undersea.prospect.util.GrpcUtil;
 import com.type2labs.undersea.utilities.exception.UnderseaException;
 import com.type2labs.undersea.utilities.executor.ThrowableExecutor;
 import com.type2labs.undersea.utilities.lang.ReschedulableTask;
+import io.grpc.Status;
+import io.grpc.StatusRuntimeException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -320,41 +322,33 @@ public class RaftNodeImpl implements RaftNode {
 
             @Override
             public void onFailure(Throwable t) {
-                throw new RuntimeException(t);
+                if (t instanceof StatusRuntimeException) {
+                    StatusRuntimeException statusRuntimeException = (StatusRuntimeException) t;
+                    if (statusRuntimeException.getStatus().getCode() == Status.Code.UNAVAILABLE) {
+                        parent().clusterClients().remove(follower.peerId());
+                        broadcastClusterMembers();
+
+                        UnderseaLogger.info(logger, parent(), "Failed to communicate with: " + follower.peerId());
+
+                        schedule(new AcquireStatusTask(RaftNodeImpl.this), 0);
+                    }
+                } else {
+                    t.printStackTrace();
+                }
             }
         });
 
     }
 
+    private void broadcastClusterMembers() {
+
+    }
+
     @Override
     public void shutdown() {
-        alertLeavingCluster();
-
         scheduledExecutor.shutdownNow();
         singleThreadScheduledExecutor.shutdown();
         server.close();
-    }
-
-    private void alertLeavingCluster() {
-        for (Client follower : state().localNodes().values()) {
-            RaftClient raftClient = (RaftClient) follower;
-
-            RaftProtos.LeaveClusterRequest request = RaftProtos.LeaveClusterRequest.newBuilder()
-                    .setClient(GrpcUtil.toProtoClient(this))
-                    .build();
-
-            raftClient.alertLeavingCluster(request, new FutureCallback<RaftProtos.Empty>() {
-                @Override
-                public void onSuccess(RaftProtos.@Nullable Empty ignored) {
-
-                }
-
-                @Override
-                public void onFailure(Throwable ignored) {
-                    // not much that can be done now
-                }
-            });
-        }
     }
 
     @Override
@@ -371,9 +365,7 @@ public class RaftNodeImpl implements RaftNode {
 
         server.start();
 
-        registerCallback(new ServiceCallback(LifecycleEvent.ELECTED_LEADER, () -> {
-            getMonitor().update();
-        }));
+        registerCallback(new ServiceCallback(LifecycleEvent.ELECTED_LEADER, () -> getMonitor().update()));
 
         UnderseaLogger.info(logger, agent, "Started node");
 

@@ -11,20 +11,15 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
 
-// TODO: This whole system needs refactoring as it's far too fragile
 public class ClusterState {
 
     private final Map<Client, ClientState> clusterState;
     private final ConsensusAlgorithm associatedAlg;
     private boolean calculatedCosts = false;
-    private int clusterSize;
-    private CostCalculator costCalculator;
 
-    public ClusterState(ConsensusAlgorithm associatedAlg, int clusterSize) {
+    public ClusterState(ConsensusAlgorithm associatedAlg) {
         this.associatedAlg = associatedAlg;
-        this.clusterState = new HashMap<>(clusterSize);
-        this.clusterSize = clusterSize;
-        this.costCalculator = associatedAlg.parent().config().getCostCalculator();
+        this.clusterState = new HashMap<>();
     }
 
     private void addSelf(Client self) {
@@ -43,10 +38,6 @@ public class ClusterState {
 
     public Map<Client, ClientState> getMembers() {
         return clusterState;
-    }
-
-    public boolean heardFromAllNodes() {
-        return clusterSize == clusterState.size();
     }
 
     public Pair<Client, ClientState> getNominee(Client self) {

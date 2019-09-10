@@ -23,6 +23,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
+import static java.util.concurrent.TimeUnit.SECONDS;
+
 public class RaftClientImpl implements RaftClient {
 
     private static final Logger logger = LogManager.getLogger(RaftClientImpl.class);
@@ -35,7 +37,6 @@ public class RaftClientImpl implements RaftClient {
     private final PeerId clientId;
     private RaftNode consensusAlgorithm;
     private boolean isSelf = false;
-    private RaftClientImpl self;
 
     public RaftClientImpl(RaftNode consensusAlgorithm, InetSocketAddress socketAddress, PeerId peerId) {
         this.consensusAlgorithm = consensusAlgorithm;
@@ -54,12 +55,6 @@ public class RaftClientImpl implements RaftClient {
     public RaftClientImpl(RaftNode consensusAlgorithm, InetSocketAddress socketAddress, PeerId peerId, boolean isSelf) {
         this(consensusAlgorithm, socketAddress, peerId);
         this.isSelf = isSelf;
-    }
-
-
-    @Override
-    public ClusterState.ClientState state() {
-        return consensusAlgorithm.state().clusterState().getClientState(this);
     }
 
     @Override
@@ -106,7 +101,8 @@ public class RaftClientImpl implements RaftClient {
     @Override
     public void appendEntry(RaftProtos.AppendEntryRequest request,
                             FutureCallback<RaftProtos.AppendEntryResponse> callback) {
-        ListenableFuture<RaftProtos.AppendEntryResponse> response = futureStub.appendEntry(request);
+        ListenableFuture<RaftProtos.AppendEntryResponse> response =
+                futureStub.withDeadline(Deadline.after(10, TimeUnit.SECONDS)).appendEntry(request);
         Futures.addCallback(response, callback, clientExecutor);
     }
 
@@ -153,19 +149,6 @@ public class RaftClientImpl implements RaftClient {
         return "ClientImpl{" +
                 "clientId=" + clientId +
                 '}';
-    }
-
-    public abstract static class Callback<T> implements FutureCallback<T> {
-
-        @Override
-        public void onSuccess(T response) {
-            logger.info("Processing response: " + response);
-        }
-
-        @Override
-        public final void onFailure(Throwable t) {
-            throw new RuntimeException(t);
-        }
     }
 
 }

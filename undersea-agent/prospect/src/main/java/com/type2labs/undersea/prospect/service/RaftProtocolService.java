@@ -31,13 +31,13 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 import java.util.function.Supplier;
 
-public class RaftProtocolServiceImpl extends RaftProtocolServiceGrpc.RaftProtocolServiceImplBase {
+public class RaftProtocolService extends RaftProtocolServiceGrpc.RaftProtocolServiceImplBase {
 
-    private static final Logger logger = LogManager.getLogger(RaftProtocolServiceImpl.class);
+    private static final Logger logger = LogManager.getLogger(RaftProtocolService.class);
     private final RaftNodeImpl raftNode;
     private final Executor executor;
 
-    public RaftProtocolServiceImpl(RaftNode raftNode, Executor executor) {
+    public RaftProtocolService(RaftNode raftNode, Executor executor) {
         this.raftNode = (RaftNodeImpl) raftNode;
         this.executor = executor;
     }
@@ -125,8 +125,7 @@ public class RaftProtocolServiceImpl extends RaftProtocolServiceGrpc.RaftProtoco
     @Override
     public void requestVote(RaftProtos.VoteRequest request, StreamObserver<RaftProtos.VoteResponse> responseObserver) {
         sendAbstractAsyncMessage(responseObserver, () -> {
-            Client self = raftNode.self();
-            Pair<Client, ClusterState.ClientState> nominee = raftNode.state().clusterState().getNominee(self);
+            Pair<Client, ClusterState.ClientState> nominee = raftNode.state().getVotedFor();
 
             UnderseaLogger.info(logger, raftNode.parent(), "Nominating: " + nominee);
 

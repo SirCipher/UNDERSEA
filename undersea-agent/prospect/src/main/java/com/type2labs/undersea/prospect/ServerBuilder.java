@@ -1,7 +1,7 @@
 package com.type2labs.undersea.prospect;
 
 import com.type2labs.undersea.prospect.model.RaftNode;
-import com.type2labs.undersea.prospect.service.RaftProtocolServiceImpl;
+import com.type2labs.undersea.prospect.service.RaftProtocolService;
 import io.github.classgraph.ClassGraph;
 import io.github.classgraph.ClassInfo;
 import io.github.classgraph.ScanResult;
@@ -27,7 +27,7 @@ public class ServerBuilder {
 //                .verbose()
 //                .enableAllInfo()
                 .disableModuleScanning()
-                .whitelistPackages(RaftProtocolServiceImpl.class.getPackage().getName())
+                .whitelistPackages(RaftProtocolService.class.getPackage().getName())
                 .scan();
 
         registeredServices = scanResult

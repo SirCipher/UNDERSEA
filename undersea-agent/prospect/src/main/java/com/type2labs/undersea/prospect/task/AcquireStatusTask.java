@@ -19,21 +19,24 @@ public class AcquireStatusTask implements Runnable {
 
     private static final Logger logger = LogManager.getLogger(AcquireStatusTask.class);
     private final RaftNode raftNode;
+    private int noResponses = 0;
+    private int clusterSize;
 
     public AcquireStatusTask(RaftNode raftNode) {
         this.raftNode = raftNode;
+        this.clusterSize = raftNode.parent().clusterClients().size();
     }
 
     @Override
     public void run() {
         Collection<Client> localNodes = raftNode.state().localNodes().values();
 
+        raftNode.state().initPreVoteClusterState();
+
         if (localNodes.size() == 0) {
             raftNode.schedule(ReschedulableTask.wrap(new AcquireStatusTask(raftNode)), 100);
             return;
         }
-
-        raftNode.toCandidate();
 
         for (Client localNode : localNodes) {
             RaftClient raftClient = (RaftClient) localNode;
@@ -44,7 +47,7 @@ public class AcquireStatusTask implements Runnable {
                     .build();
 
             RaftProtos.AcquireStatusResponse response;
-            ClusterState clusterState = raftNode.state().clusterState();
+            ClusterState preVoteClusterState = raftNode.state().getPreVoteClusterState();
 
             try {
                 RaftClusterConfig config = (RaftClusterConfig) raftNode.config();
@@ -52,20 +55,24 @@ public class AcquireStatusTask implements Runnable {
                 response = raftClient.getStatus(request, config.getStatusDeadline());
 
                 ClusterState.ClientState agentInfo = new ClusterState.ClientState(localNode, response.getCost());
-                clusterState.setAgentInformation(localNode, agentInfo);
+                preVoteClusterState.setAgentInformation(localNode, agentInfo);
+
+                incrementAndVote();
             } catch (StatusRuntimeException e) {
                 Status.Code code = e.getStatus().getCode();
 
                 if (code.equals(Status.Code.DEADLINE_EXCEEDED)) {
-                    ClusterState.ClientState agentInfo = new ClusterState.ClientState(localNode, false);
-                    clusterState.setAgentInformation(localNode, agentInfo);
+                    incrementAndVote();
                 }
             }
+        }
+    }
 
-            // TODO: Will this be stale?
-            if (clusterState.heardFromAllNodes()) {
-                raftNode.execute(new VoteTask(raftNode));
-            }
+    private void incrementAndVote() {
+        noResponses++;
+
+        if (noResponses == clusterSize) {
+            raftNode.execute(new VoteTask(raftNode));
         }
     }
 }

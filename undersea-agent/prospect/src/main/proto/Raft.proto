@@ -26,6 +26,16 @@ service RaftProtocolService {
     }
 }
 
+service MultiRaftProtocolService {
+    rpc Notify (NotificationRequest) returns (Empty) {
+    }
+}
+
+message NotificationRequest {
+    RaftPeerProto client = 1;
+    string notification = 2;
+}
+
 message LeaveClusterRequest {
     RaftPeerProto client = 1;
 }
