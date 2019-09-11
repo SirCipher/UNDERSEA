@@ -88,6 +88,9 @@ public class UUVListener extends UUVBaseListener {
         agent.setSpeedRange(range);
         agent.setSensors(sensors);
 
+        String activeStr = ctx.active.getText();
+        agent.setActive(Boolean.parseBoolean(activeStr));
+
         environmentProperties.addAgent(agent);
     }
 

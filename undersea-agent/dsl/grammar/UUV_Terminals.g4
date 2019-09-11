@@ -1,11 +1,19 @@
 lexer grammar UUV_Terminals; // note "lexer grammar"
 
 @lexer::header {
-  package com.type2labs.dsl.uuv.gen;
+package com.type2labs.undersea.dsl.uuv.gen;
 } 
 
 ASSIGN: 
 	'='
+;
+
+ACTIVE:
+    'active'
+;
+
+BOOL:
+    'false' | 'true'
 ;
 
 MISSION_NAME:

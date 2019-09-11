@@ -87,7 +87,7 @@ public class RaftNodeImpl implements RaftNode {
         this.singleThreadScheduledExecutor = ThrowableExecutor.newSingleThreadExecutor(logger);
         this.listeningExecutorService =
                 MoreExecutors.listeningDecorator(ThrowableExecutor.newSingleThreadExecutor(logger));
-        this.multiRoleState = new MultiRoleState();
+        this.multiRoleState = new MultiRoleState(this);
     }
 
     public ThrowableExecutor getSingleThreadScheduledExecutor() {

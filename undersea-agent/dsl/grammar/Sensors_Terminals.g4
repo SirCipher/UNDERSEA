@@ -1,7 +1,7 @@
 lexer grammar Sensors_Terminals; // note "lexer grammar"
 
 @lexer::header {
-  package com.type2labs.dsl.uuv.gen;
+package com.type2labs.undersea.dsl.uuv.gen;
 }
 
 NAME:

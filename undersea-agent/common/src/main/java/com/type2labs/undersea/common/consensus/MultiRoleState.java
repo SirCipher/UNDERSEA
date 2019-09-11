@@ -2,6 +2,8 @@ package com.type2labs.undersea.common.consensus;
 
 import com.type2labs.undersea.common.cluster.Client;
 
+import java.util.Objects;
+
 /**
  * Contains an agent's multi-role state. A node that is in a {@link Status#LEADER_FOLLOWER} is leading one
  * cluster and a follower in another.
@@ -14,6 +16,11 @@ public class MultiRoleState {
     private Client leader;
     private Status status = Status.NOT_APPLIED;
     private Cluster assignedCluster;
+    private ConsensusAlgorithm consensusAlgorithm;
+
+    public MultiRoleState(ConsensusAlgorithm consensusAlgorithm) {
+        this.consensusAlgorithm = Objects.requireNonNull(consensusAlgorithm);
+    }
 
     public Cluster getAssignedCluster() {
         return assignedCluster;
@@ -44,7 +51,6 @@ public class MultiRoleState {
     }
 
     public enum Status {
-
         /*
          * Denotes that this node is the leader of all groups. It's leader (client) will also be null
          */

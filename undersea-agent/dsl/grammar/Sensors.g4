@@ -2,7 +2,7 @@ grammar Sensors;
 import Sensors_Terminals;
 
 @parser::header {
-package com.type2labs.dsl.uuv.gen;
+package com.type2labs.undersea.dsl.uuv.gen;
   import java.util.*;
 }
 

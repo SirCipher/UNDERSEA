@@ -7,7 +7,15 @@ public class DslAgentProxy extends AgentImpl {
 
     private static final long serialVersionUID = -4045369914177688638L;
     private String metaFileName;
+    private boolean active = true;
 
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
 
     public DslAgentProxy(String name) {
         super(name);
