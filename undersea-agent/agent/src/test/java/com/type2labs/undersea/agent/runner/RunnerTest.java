@@ -56,4 +56,25 @@ public class RunnerTest {
         visualiser.shutdown();
     }
 
+    @Test
+    @IgnoredOnCi
+    public void runCaseStudy2() throws InterruptedException {
+        String testProperties = "src/test/resources/case-study-2/runner.properties";
+        Runner runner = new Runner(testProperties);
+        Visualiser visualiser = new Visualiser();
+
+        runner.setup();
+        runner.start();
+        runner.onParsed(testProperties);
+
+        while (!runner.missionComplete()) {
+            Thread.sleep(500);
+        }
+
+        System.out.println("RunnerTest: Shutting down");
+
+        runner.shutdown();
+        visualiser.shutdown();
+    }
+
 }

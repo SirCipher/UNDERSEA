@@ -5,6 +5,7 @@ import com.type2labs.undersea.common.agent.Agent;
 import com.type2labs.undersea.common.monitor.model.SubsystemMonitor;
 import com.type2labs.undersea.common.monitor.model.VisualiserClient;
 import com.type2labs.undersea.common.service.ServiceManager;
+import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.core.*;
 import org.apache.logging.log4j.core.appender.AbstractAppender;
@@ -76,7 +77,8 @@ public class UnderseaLogger extends AbstractAppender {
         }
 
         String message = new String(getLayout().toByteArray(event));
-        VisualiserMessage visualiserMessage = new VisualiserMessage(agent.peerId(), message);
+        VisualiserMessage visualiserMessage = new VisualiserMessage(agent.peerId(), message,
+                event.getLevel() == Level.ERROR);
         VisualiserClient visualiserClient = subsystemMonitor.visualiser();
 
         try {

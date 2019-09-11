@@ -41,6 +41,7 @@ public class AgentImpl implements Agent {
     // Assume 1 per metre travelled
     private double batteryRange = ThreadLocalRandom.current().nextDouble(100);
     private AgentMetaData agentMetaData = new AgentMetaData();
+    private AgentState agentState = new AgentState();
 
     public AgentImpl(String name) {
         this.name = name;
@@ -195,6 +196,11 @@ public class AgentImpl implements Agent {
     @Override
     public void log(LogEntry logEntry) {
 
+    }
+
+    @Override
+    public AgentState state() {
+        return agentState;
     }
 
     public String getHost() {

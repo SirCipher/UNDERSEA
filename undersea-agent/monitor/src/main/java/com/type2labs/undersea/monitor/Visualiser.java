@@ -92,9 +92,13 @@ public class Visualiser {
         MenuBar menuBar = new MenuBar();
         Menu menu = new Menu("Agent Options");
 
-        MenuItem killAgentItem = new MenuItem("Kill Agent");
-        killAgentItem.addActionListener(this::killAgentAction);
-        menu.add(killAgentItem);
+        MenuItem shutdownAgentItem = new MenuItem("Shutdown Agent");
+        shutdownAgentItem.addActionListener(this::shutdownAgent);
+        menu.add(shutdownAgentItem);
+
+        MenuItem failAgentItem = new MenuItem("Kill Agent");
+        failAgentItem.addActionListener(this::killAgent);
+        menu.add(failAgentItem);
 
         menuBar.add(menu);
 
@@ -107,7 +111,7 @@ public class Visualiser {
         c.fill = GridBagConstraints.HORIZONTAL;
 
         String[] columnNames = {"Raft Peer ID", "Name", "Multi-Role status", "Service Manager Status",
-                "Raft Role", "Leader Peer ID", "No. Tasks", "No. Completed Tasks", "No. Peers"};
+                "Raft Role", "Leader Peer ID", "No. Tasks", "No. Completed Tasks", "No. Peers", "Error count"};
         DefaultTableModel model = new DefaultTableModel(new Object[0][0], columnNames);
         table = new JTable(model) {
             @Override
@@ -212,6 +216,19 @@ public class Visualiser {
         frame.setVisible(true);
     }
 
+    private void killAgent(ActionEvent actionEvent) {
+        if (table.getSelectedRow() > -1) {
+            String selected = (String) table.getValueAt(table.getSelectedRow(), 0);
+            AgentInfo agentInfo = agents.get(selected);
+
+            if (agentInfo == null) {
+                return;
+            }
+
+            sendToAgent(agentInfo, LifecycleEvent.FAILING.toString());
+        }
+    }
+
     private void sendToAgent(AgentInfo agentInfo, String message) {
         PrintStream ps;
 
@@ -226,7 +243,7 @@ public class Visualiser {
         }
     }
 
-    private void killAgentAction(ActionEvent e) {
+    private void shutdownAgent(ActionEvent e) {
         if (table.getSelectedRow() > -1) {
             String selected = (String) table.getValueAt(table.getSelectedRow(), 0);
             AgentInfo agentInfo = agents.get(selected);
@@ -284,7 +301,8 @@ public class Visualiser {
                             agentState.getLeaderPeerId(),
                             agentState.getNoAssignedTasks(),
                             agentState.getCompletedTasks(),
-                            agentState.getNoPeers()
+                            agentState.getNoPeers(),
+                            0
                     });
                 } else {
                     int rowId = getRowByPeerId(peerId);
@@ -303,6 +321,11 @@ public class Visualiser {
                 }
             } else if (received instanceof VisualiserMessage) {
                 VisualiserMessage visualiserMessage = (VisualiserMessage) received;
+                int rowId = getRowByPeerId(visualiserMessage.getPeerId());
+                int errorCount = (int) model.getValueAt(rowId, 9);
+                errorCount = visualiserMessage.isError() ? errorCount+1 : errorCount;
+
+                model.setValueAt(errorCount, rowId, 9);
 
                 AgentInfo agentInfo = agents.get(visualiserMessage.getPeerId());
                 if (agentInfo == null) {

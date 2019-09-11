@@ -29,6 +29,7 @@ public abstract class AbstractAgent implements Agent {
     private final PeerId peerId;
     private AgentMetaData metaData;
     private String name;
+    private AgentState agentState = new AgentState();
 
     public AbstractAgent(UnderseaRuntimeConfig config, String name, ServiceManager serviceManager, AgentStatus status
             , PeerId peerId) {
@@ -142,5 +143,10 @@ public abstract class AbstractAgent implements Agent {
         if (logService != null) {
             logService.add(logEntry);
         }
+    }
+
+    @Override
+    public AgentState state() {
+        return agentState;
     }
 }

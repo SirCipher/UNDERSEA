@@ -1,5 +1,6 @@
 package com.type2labs.undersea.common.monitor.impl;
 
+import com.google.common.util.concurrent.MoreExecutors;
 import com.type2labs.undersea.common.agent.Agent;
 import com.type2labs.undersea.common.cluster.PeerId;
 import com.type2labs.undersea.common.consensus.ConsensusAlgorithm;
@@ -11,6 +12,8 @@ import com.type2labs.undersea.common.monitor.VisualiserData;
 import com.type2labs.undersea.common.monitor.model.VisualiserClient;
 import com.type2labs.undersea.common.service.ServiceManager;
 import com.type2labs.undersea.common.service.transaction.LifecycleEvent;
+import com.type2labs.undersea.common.service.transaction.Transaction;
+import com.type2labs.undersea.common.service.transaction.TransactionData;
 import com.type2labs.undersea.utilities.exception.UnderseaException;
 import com.type2labs.undersea.utilities.networking.SimpleServer;
 import org.apache.logging.log4j.LogManager;
@@ -59,6 +62,29 @@ public class VisualiserClientImpl implements VisualiserClient {
 
             LifecycleEvent lifecycleEvent = LifecycleEvent.valueOf(request);
             if (lifecycleEvent == LifecycleEvent.SHUTDOWN) {
+                if(parent.name().equals("shoreside")){
+                    logger.error(parent.name()+": cannot shutdown shoreside", parent);
+                    return;
+                }
+
+                parent.services().shutdownServices();
+            } else if (lifecycleEvent == LifecycleEvent.FAILING) {
+                if(parent.name().equals("shoreside")){
+                    logger.error(parent.name()+": cannot shutdown shoreside", parent);
+                    return;
+                }
+
+                Transaction transaction = new Transaction.Builder(parent)
+                        .forAllRunningServices()
+                        .withStatus(LifecycleEvent.FAILING)
+                        .withPrimaryData(TransactionData.from(this))
+                        .usingExecutorService(MoreExecutors.newDirectExecutorService()).forAllServices()
+                        .invokedBy(this)
+                        .build();
+
+                parent.services().commitTransaction(transaction);
+
+                Thread.sleep(10000);
                 parent.services().shutdownServices();
             }
 
@@ -67,6 +93,8 @@ public class VisualiserClientImpl implements VisualiserClient {
             socket.close();
         } catch (IOException e) {
             logger.error(parent.name() + ": failed to read message from: " + socket.getLocalPort(), e);
+        } catch (InterruptedException e) {
+            logger.error(parent.name() + ": threw: " + e.getLocalizedMessage(), e);
         }
     }
 
@@ -120,7 +148,7 @@ public class VisualiserClientImpl implements VisualiserClient {
 
         if (consensusAlgorithm != null) {
             raftRole = String.valueOf(consensusAlgorithm.raftRole());
-            multiRoleStatus = String.valueOf(consensusAlgorithm.multiRoleState().getStatus());
+            multiRoleStatus = String.valueOf(consensusAlgorithm.multiRoleState().status());
 
             PeerId peerId = consensusAlgorithm.leaderPeerId();
 
@@ -201,7 +229,7 @@ public class VisualiserClientImpl implements VisualiserClient {
 
     @Override
     public void write(String data) {
-        VisualiserMessage visualiserMessage = new VisualiserMessage(parent.peerId(), data + "\n");
+        VisualiserMessage visualiserMessage = new VisualiserMessage(parent.peerId(), data + "\n", false);
         write(visualiserMessage);
     }
 

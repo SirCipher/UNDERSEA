@@ -3,7 +3,7 @@ package com.type2labs.undersea.agent;
 import com.type2labs.undersea.agent.impl.HardwareInterface;
 import com.type2labs.undersea.agent.impl.MoosConnector;
 import com.type2labs.undersea.common.agent.*;
-import com.type2labs.undersea.common.consensus.MultiRoleState;
+import com.type2labs.undersea.common.consensus.MultiRoleStatus;
 import com.type2labs.undersea.common.logger.LogServiceImpl;
 import com.type2labs.undersea.common.monitor.impl.SubsystemMonitorSpoofer;
 import com.type2labs.undersea.common.monitor.impl.VisualiserClientImpl;
@@ -16,11 +16,9 @@ import com.type2labs.undersea.dsl.EnvironmentProperties;
 import com.type2labs.undersea.dsl.uuv.model.DslAgentProxy;
 import com.type2labs.undersea.missionplanner.manager.MoosMissionManagerImpl;
 import com.type2labs.undersea.missionplanner.planner.vrp.VehicleRoutingOptimiser;
-import com.type2labs.undersea.prospect.RaftClusterConfig;
-import com.type2labs.undersea.prospect.impl.DefaultCallbacks;
+import com.type2labs.undersea.common.consensus.RaftClusterConfig;
+import com.type2labs.undersea.prospect.impl.DefaultServiceCallbacks;
 import com.type2labs.undersea.prospect.impl.RaftNodeImpl;
-import com.type2labs.undersea.prospect.model.RaftNode;
-import com.type2labs.undersea.prospect.networking.RaftClientImpl;
 import com.type2labs.undersea.seachain.BlockchainNetworkImpl;
 
 import java.io.File;
@@ -64,13 +62,19 @@ public class AgentInitialiserImpl implements AgentInitialiser {
                     serviceManager,
                     new AgentStatus(key, new ArrayList<>()));
 
+            if (!((DslAgentProxy) value).isActive()) {
+                underseaAgent.state().setState(AgentState.State.BACKUP);
+            } else {
+                underseaAgent.state().setState(AgentState.State.ACTIVE);
+            }
+
             RaftNodeImpl raftNode = new RaftNodeImpl(
                     raftClusterConfig
             );
 
             serviceManager.registerService(raftNode);
 
-            raftNode.registerCallback(DefaultCallbacks.defaultMissionCallback(underseaAgent, raftNode,
+            raftNode.registerCallback(DefaultServiceCallbacks.defaultMissionCallback(underseaAgent, raftNode,
                     raftClusterConfig));
 
             Properties properties = environmentProperties.getRunnerProperties();
@@ -80,21 +84,18 @@ public class AgentInitialiserImpl implements AgentInitialiser {
 
             if (value.name().equals("shoreside")) {
                 metaData.setProperty(AgentMetaData.PropertyKey.IS_MASTER_NODE, true);
-                raftNode.multiRoleState().setStatus(MultiRoleState.Status.LEADER);
+                raftNode.multiRoleState().setStatus(MultiRoleStatus.LEADER);
             } else {
                 metaData.setProperty(AgentMetaData.PropertyKey.IS_MASTER_NODE, false);
             }
 
             metaData.setProperty(AgentMetaData.PropertyKey.SERVER_PORT, ((DslAgentProxy) value).getServerPort());
-
             metaData.setProperty(AgentMetaData.PropertyKey.METADATA_FILE_NAME,
                     ((DslAgentProxy) value).getMetaFileName());
 
             String missionName =
                     environmentProperties.getEnvironmentValue(EnvironmentProperties.EnvironmentValue.MISSION_NAME);
             metaData.setProperty(AgentMetaData.PropertyKey.MISSION_NAME, missionName);
-
-
             metaData.setProperty(AgentMetaData.PropertyKey.MISSION_DIRECTORY, new File((String) properties.get(
                     "config.output")));
 

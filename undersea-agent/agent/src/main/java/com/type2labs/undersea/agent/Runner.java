@@ -1,10 +1,11 @@
 package com.type2labs.undersea.agent;
 
 import com.type2labs.undersea.common.agent.Agent;
-import com.type2labs.undersea.common.agent.AgentMetaData;
+import com.type2labs.undersea.common.agent.AgentState;
 import com.type2labs.undersea.common.cluster.Client;
 import com.type2labs.undersea.common.cluster.ClusterState;
 import com.type2labs.undersea.common.config.UnderseaRuntimeConfig;
+import com.type2labs.undersea.common.consensus.RaftClusterConfig;
 import com.type2labs.undersea.common.cost.CostConfiguration;
 import com.type2labs.undersea.common.cost.CostConfigurationImpl;
 import com.type2labs.undersea.common.missions.planner.impl.MissionParametersImpl;
@@ -15,10 +16,9 @@ import com.type2labs.undersea.dsl.EnvironmentProperties;
 import com.type2labs.undersea.dsl.ParserEngine;
 import com.type2labs.undersea.dsl.uuv.model.DslAgentProxy;
 import com.type2labs.undersea.missionplanner.manager.MoosMissionManagerImpl;
-import com.type2labs.undersea.prospect.RaftClusterConfig;
 import com.type2labs.undersea.prospect.impl.RaftNodeImpl;
 import com.type2labs.undersea.prospect.model.RaftNode;
-import com.type2labs.undersea.prospect.networking.RaftClientImpl;
+import com.type2labs.undersea.prospect.networking.impl.MultiRoleLeaderClientImpl;
 import com.type2labs.undersea.utilities.Utility;
 import com.type2labs.undersea.utilities.exception.UnderseaException;
 import org.apache.logging.log4j.LogManager;
@@ -28,6 +28,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Map;
 import java.util.Properties;
+import java.util.stream.Collectors;
 
 /**
  * Entry point of UNDERSEA application
@@ -95,6 +96,7 @@ public class Runner extends AbstractRunner {
         runner.onParsed(args[0]);
     }
 
+    @SuppressWarnings("DuplicatedCode")
     public void onParsed(String args) throws InterruptedException {
         Agent shoreside = null;
 
@@ -108,9 +110,10 @@ public class Runner extends AbstractRunner {
             throw new UnderseaException("Shoreside agent not found");
         }
 
-        RaftNode service = shoreside.services().getService(RaftNode.class);
-        RaftClientImpl shoresideClient = new RaftClientImpl(service, service.server().getSocketAddress(),
-                service.parent().peerId());
+        RaftNode shoresideRaftNode = shoreside.services().getService(RaftNode.class);
+        MultiRoleLeaderClientImpl shoresideClient = new MultiRoleLeaderClientImpl(shoresideRaftNode,
+                shoresideRaftNode.server().getSocketAddress(),
+                shoresideRaftNode.parent().peerId());
 
         super.getAgents().forEach((a) -> {
             if (a.name().equals("shoreside")) {
@@ -129,25 +132,48 @@ public class Runner extends AbstractRunner {
                 }
 
                 RaftNodeImpl raftNodeA = agentA.services().getService(RaftNodeImpl.class);
-                raftNodeA.multiRoleState().setLeader(shoresideClient);
 
-                // TODO: Replace with MRS
-                if ((boolean) agentA.metadata().getProperty(AgentMetaData.PropertyKey.IS_MASTER_NODE)) {
+                if (raftNodeA.multiRoleState().isLeader()) {
                     continue;
                 }
 
-                for (Agent agentB : super.getAgents()) {
-                    while (!agentB.services().isHealthy()) {
-                        Thread.sleep(500);
-                    }
+                raftNodeA.multiRoleState().setLeader(shoresideClient);
 
-                    RaftNodeImpl raftNodeB = agentB.services().getService(RaftNodeImpl.class);
-                    if (raftNodeB.multiRoleState().isLeader()) {
-                        continue;
-                    }
+                if (agentA.state().getState() == AgentState.State.BACKUP) {
+                    shoresideRaftNode.state().discoverNode(raftNodeA);
 
-                    if (raftNodeA != raftNodeB) {
-                        raftNodeA.state().discoverNode(raftNodeB);
+                    for (Agent agentB :
+                            super.getAgents().stream().filter(a -> a.state().getState() == AgentState.State.BACKUP).collect(Collectors.toList())) {
+                        while (!agentB.services().isHealthy()) {
+                            Thread.sleep(500);
+                        }
+
+                        RaftNodeImpl raftNodeB = agentB.services().getService(RaftNodeImpl.class);
+                        if (raftNodeB.multiRoleState().isLeader()) {
+                            continue;
+                        }
+
+                        if (raftNodeA != raftNodeB) {
+                            raftNodeA.state().discoverNode(raftNodeB);
+                        }
+                    }
+                } else {
+                    for (Agent agentB :
+                            super.getAgents().stream().filter(a -> a.state().getState() != AgentState.State.BACKUP).collect(Collectors.toList())) {
+                        while (!agentB.services().isHealthy()) {
+                            Thread.sleep(500);
+                        }
+
+
+                        RaftNodeImpl raftNodeB = agentB.services().getService(RaftNodeImpl.class);
+                        shoresideRaftNode.multiRoleState().remotePeers().put(agentB.peerId(), raftNodeB.self());
+                        if (raftNodeB.multiRoleState().isLeader()) {
+                            continue;
+                        }
+
+                        if (raftNodeA != raftNodeB) {
+                            raftNodeA.state().discoverNode(raftNodeB);
+                        }
                     }
                 }
             }

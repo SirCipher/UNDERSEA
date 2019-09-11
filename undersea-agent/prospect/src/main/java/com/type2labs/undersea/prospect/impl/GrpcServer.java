@@ -1,7 +1,8 @@
 package com.type2labs.undersea.prospect.impl;
 
-import com.type2labs.undersea.prospect.RaftClusterConfig;
+import com.type2labs.undersea.common.consensus.RaftClusterConfig;
 import com.type2labs.undersea.prospect.model.RaftNode;
+import com.type2labs.undersea.prospect.service.MultiRaftProtocolService;
 import com.type2labs.undersea.prospect.service.RaftProtocolService;
 import com.type2labs.undersea.utilities.executor.ExecutorUtils;
 import io.grpc.Server;
@@ -15,6 +16,7 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.TimeUnit;
 
 @SuppressWarnings("PlaceholderCountMatchesArgumentCount")
 public class GrpcServer implements Closeable {
@@ -29,7 +31,7 @@ public class GrpcServer implements Closeable {
      * Creates a new gRPC server for the given {@link RaftNode} and listening on the provided socket address.
      * The server is initialised with a handler executor for services and a server executor for the {@link Server}.
      * Both are initialised using the number of threads defined in the
-     * {@link com.type2labs.undersea.prospect.RaftClusterConfig}
+     * {@link RaftClusterConfig}
      *
      * @param raftNode      that this server belongs to
      * @param socketAddress to bind the server to. If the port is defined to be 0 then an attempt is made to discover
@@ -53,7 +55,7 @@ public class GrpcServer implements Closeable {
             throw new RuntimeException("Unable to bind to socket", e);
         }
 
-        // If the provided port number was zero then the new port will be different
+        // If the provided port number was zero then the new port will be auto-discovered
         this.socketAddress = new InetSocketAddress(port);
         final ServerBuilder builder = NettyServerBuilder.forPort(port);
 
@@ -61,6 +63,9 @@ public class GrpcServer implements Closeable {
 
         ExecutorService handlerExecutor = ExecutorUtils.newExecutor(executorThreads, agentName + "-grpc-handler-%d");
         builder.addService(new RaftProtocolService(raftNode, handlerExecutor));
+
+        // TODO: This service should be started and shutdown as required instead of always running
+        builder.addService(new MultiRaftProtocolService(raftNode, handlerExecutor));
 
         ExecutorService serverExecutor = ExecutorUtils.newExecutor(executorThreads, agentName + "-grpc-server-%d");
         this.server = builder.executor(serverExecutor).build();
@@ -105,7 +110,14 @@ public class GrpcServer implements Closeable {
         String name = parentNode.parent().name();
 
         logger.info(name + ": shutting down gRPC server", parentNode.parent());
-        server.shutdownNow();
+        server.shutdown();
+
+        try {
+            server.awaitTermination(10, TimeUnit.SECONDS);
+        } catch (InterruptedException e) {
+            logger.error(name + ": failed to gracefully shutdown gRPC server", parentNode.parent());
+        }
+
         logger.info(name + ": shutdown gRPC server", parentNode.parent());
     }
 

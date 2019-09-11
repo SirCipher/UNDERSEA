@@ -10,21 +10,29 @@ public class VisualiserMessage implements Serializable {
     private final String peerId;
     private final Object message;
 
-    public VisualiserMessage(PeerId peerId, Object message) {
+    @Override
+    public String toString() {
+        return "VisualiserMessage{" +
+                "peerId='" + peerId + '\'' +
+                ", message=" + message +
+                ", error=" + error +
+                '}';
+    }
+
+    public boolean isError() {
+        return error;
+    }
+
+    private final boolean error;
+
+    public VisualiserMessage(PeerId peerId, Object message, boolean error) {
         this.peerId = peerId.toString();
         this.message = message;
+        this.error = error;
     }
 
     public Object getMessage() {
         return message;
-    }
-
-    @Override
-    public String toString() {
-        return "LogMessage{" +
-                "peerId='" + peerId + '\'' +
-                ", message=" + message +
-                '}';
     }
 
     public String getPeerId() {

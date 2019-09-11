@@ -17,6 +17,8 @@ public interface MissionParameters {
 
     double[][] getPolygon();
 
+    void setPolygon(double[][] polygon);
+
     double getMinimumSensorRange();
 
     double[][] getCentroids();

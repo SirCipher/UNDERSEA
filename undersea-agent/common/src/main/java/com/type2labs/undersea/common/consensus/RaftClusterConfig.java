@@ -1,4 +1,4 @@
-package com.type2labs.undersea.prospect;
+package com.type2labs.undersea.common.consensus;
 
 import com.type2labs.undersea.common.config.UnderseaConfig;
 import com.type2labs.undersea.common.config.UnderseaRuntimeConfig;
@@ -11,7 +11,7 @@ public class RaftClusterConfig implements UnderseaConfig {
     private UnderseaRuntimeConfig underseaRuntimeConfig;
     private boolean autoPortDiscovery = true;
     private int executorThreads = 4;
-    private long getStatusDeadline = 10;
+    private long getStatusDeadline = 30;
     private long appendRequestDeadline = 10;
 
     /**

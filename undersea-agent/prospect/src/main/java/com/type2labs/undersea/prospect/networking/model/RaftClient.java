@@ -1,4 +1,4 @@
-package com.type2labs.undersea.prospect.networking;
+package com.type2labs.undersea.prospect.networking.model;
 
 
 import com.google.common.util.concurrent.FutureCallback;

@@ -34,4 +34,6 @@ public interface GeneratedMission {
 
     List<Task> allTasks();
 
+    double[][] polygon();
+
 }

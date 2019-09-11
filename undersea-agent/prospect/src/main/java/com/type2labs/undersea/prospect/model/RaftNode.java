@@ -1,11 +1,10 @@
 package com.type2labs.undersea.prospect.model;
 
 import com.type2labs.undersea.common.consensus.ConsensusAlgorithm;
-import com.type2labs.undersea.common.consensus.MultiRoleState;
 import com.type2labs.undersea.common.consensus.RaftRole;
 import com.type2labs.undersea.prospect.impl.GrpcServer;
 import com.type2labs.undersea.prospect.impl.RaftState;
-import com.type2labs.undersea.prospect.networking.RaftClient;
+import com.type2labs.undersea.prospect.networking.model.RaftClient;
 
 public interface RaftNode extends ConsensusAlgorithm {
 

@@ -7,7 +7,7 @@ import com.type2labs.undersea.common.cluster.PeerId;
 import com.type2labs.undersea.prospect.RaftProtos;
 import com.type2labs.undersea.prospect.impl.RaftState;
 import com.type2labs.undersea.prospect.model.RaftNode;
-import com.type2labs.undersea.prospect.networking.RaftClient;
+import com.type2labs.undersea.prospect.networking.model.RaftClient;
 import com.type2labs.undersea.prospect.util.GrpcUtil;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.LogManager;

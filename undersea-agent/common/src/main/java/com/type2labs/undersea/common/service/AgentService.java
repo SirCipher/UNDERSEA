@@ -2,6 +2,7 @@ package com.type2labs.undersea.common.service;
 
 import com.google.common.util.concurrent.ListenableFuture;
 import com.type2labs.undersea.common.agent.AgentAware;
+import com.type2labs.undersea.common.service.transaction.LifecycleEvent;
 import com.type2labs.undersea.common.service.transaction.ServiceCallback;
 import com.type2labs.undersea.common.service.transaction.Transaction;
 import com.type2labs.undersea.utilities.exception.NotSupportedException;
@@ -9,6 +10,7 @@ import com.type2labs.undersea.utilities.executor.ThrowableExecutor;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.concurrent.ExecutorService;
 
 /**
@@ -21,6 +23,7 @@ public interface AgentService extends Runnable, AgentAware {
      * operation. Without it, the required duties cannot be performed. If a service fails, such as one which is
      * performing a non-mission-critical task, then the {@link ServiceManager} will not start to shutdown the agent.
      *
+     * @return whether or not the service is critical
      * @return whether or not the service is critical
      */
     default boolean isCritical() {
@@ -84,4 +87,7 @@ public interface AgentService extends Runnable, AgentAware {
         return new ArrayList<>();
     }
 
+    default void fireCallback(LifecycleEvent electedLeader) {
+
+    }
 }

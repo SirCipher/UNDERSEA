@@ -1,14 +1,15 @@
-package com.type2labs.undersea.prospect.networking;
+package com.type2labs.undersea.prospect.networking.impl;
 
 import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.type2labs.undersea.common.cluster.PeerId;
-import com.type2labs.undersea.prospect.RaftClusterConfig;
+import com.type2labs.undersea.common.consensus.RaftClusterConfig;
 import com.type2labs.undersea.prospect.RaftProtocolServiceGrpc;
 import com.type2labs.undersea.prospect.RaftProtos;
 import com.type2labs.undersea.prospect.model.RaftNode;
+import com.type2labs.undersea.prospect.networking.model.RaftClient;
 import io.grpc.Deadline;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;

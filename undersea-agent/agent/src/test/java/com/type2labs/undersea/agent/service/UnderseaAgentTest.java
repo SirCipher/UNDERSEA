@@ -7,7 +7,7 @@ import com.type2labs.undersea.common.config.UnderseaRuntimeConfig;
 import com.type2labs.undersea.common.monitor.impl.SubsystemMonitorImpl;
 import com.type2labs.undersea.common.monitor.model.SubsystemMonitor;
 import com.type2labs.undersea.common.service.ServiceManager;
-import com.type2labs.undersea.prospect.RaftClusterConfig;
+import com.type2labs.undersea.common.consensus.RaftClusterConfig;
 import com.type2labs.undersea.prospect.impl.RaftNodeImpl;
 import com.type2labs.undersea.seachain.BlockchainNetworkImpl;
 import org.junit.Test;

@@ -10,13 +10,13 @@ import com.type2labs.undersea.common.missions.planner.model.MissionParameters;
 import com.type2labs.undersea.common.service.transaction.LifecycleEvent;
 import com.type2labs.undersea.common.service.transaction.ServiceCallback;
 import com.type2labs.undersea.common.service.transaction.Transaction;
-import com.type2labs.undersea.prospect.RaftClusterConfig;
+import com.type2labs.undersea.common.consensus.RaftClusterConfig;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.ArrayList;
 import java.util.Set;
 
-public class DefaultCallbacks {
+public class DefaultServiceCallbacks {
 
     public static ServiceCallback defaultMissionCallback(Agent agent, RaftNodeImpl raftNode, RaftClusterConfig config) {
         return new ServiceCallback(LifecycleEvent.ELECTED_LEADER, () -> {

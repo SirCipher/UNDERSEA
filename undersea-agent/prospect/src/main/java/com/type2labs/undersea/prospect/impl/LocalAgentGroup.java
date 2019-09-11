@@ -18,9 +18,9 @@ import com.type2labs.undersea.common.monitor.model.SubsystemMonitor;
 import com.type2labs.undersea.common.monitor.model.VisualiserClient;
 import com.type2labs.undersea.common.service.AgentService;
 import com.type2labs.undersea.common.service.ServiceManager;
-import com.type2labs.undersea.prospect.RaftClusterConfig;
+import com.type2labs.undersea.common.consensus.RaftClusterConfig;
 import com.type2labs.undersea.prospect.model.RaftNode;
-import com.type2labs.undersea.prospect.networking.RaftClientImpl;
+import com.type2labs.undersea.prospect.networking.impl.RaftClientImpl;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -75,7 +75,7 @@ public class LocalAgentGroup implements Closeable {
             serviceManager.registerService(new LogServiceImpl());
 
             if (withCallbacks) {
-                raftNode.registerCallback(DefaultCallbacks.defaultMissionCallback(agent, raftNode, config));
+                raftNode.registerCallback(DefaultServiceCallbacks.defaultMissionCallback(agent, raftNode, config));
             }
 
             if (withVisualiser) {

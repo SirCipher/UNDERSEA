@@ -31,4 +31,6 @@ public interface Agent extends Serializable {
 
     void log(LogEntry logEntry);
 
+    AgentState state();
+
 }

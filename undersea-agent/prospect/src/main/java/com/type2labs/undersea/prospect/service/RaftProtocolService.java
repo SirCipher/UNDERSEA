@@ -2,7 +2,6 @@ package com.type2labs.undersea.prospect.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.protobuf.AbstractMessage;
 import com.type2labs.undersea.common.cluster.Client;
 import com.type2labs.undersea.common.cluster.ClusterState;
 import com.type2labs.undersea.common.cluster.PeerId;
@@ -19,7 +18,7 @@ import com.type2labs.undersea.prospect.RaftProtocolServiceGrpc;
 import com.type2labs.undersea.prospect.RaftProtos;
 import com.type2labs.undersea.prospect.impl.RaftNodeImpl;
 import com.type2labs.undersea.prospect.model.RaftNode;
-import com.type2labs.undersea.prospect.networking.RaftClientImpl;
+import com.type2labs.undersea.prospect.networking.impl.RaftClientImpl;
 import com.type2labs.undersea.prospect.util.GrpcUtil;
 import io.grpc.stub.StreamObserver;
 import org.apache.commons.lang3.tuple.Pair;
@@ -29,9 +28,7 @@ import org.apache.logging.log4j.Logger;
 import java.net.InetSocketAddress;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
-import java.util.function.Supplier;
 
 public class RaftProtocolService extends RaftProtocolServiceGrpc.RaftProtocolServiceImplBase {
 
@@ -47,7 +44,7 @@ public class RaftProtocolService extends RaftProtocolServiceGrpc.RaftProtocolSer
     @Override
     public void getStatus(RaftProtos.AcquireStatusRequest request,
                           StreamObserver<RaftProtos.AcquireStatusResponse> responseObserver) {
-        sendAbstractAsyncMessage(responseObserver, () -> {
+        GrpcUtil.sendAbstractAsyncMessage(responseObserver, () -> {
             RaftProtos.AcquireStatusResponse.Builder builder = RaftProtos.AcquireStatusResponse.newBuilder();
             SubsystemMonitor subsystemMonitor = raftNode.parent().services().getService(SubsystemMonitor.class);
             double cost = subsystemMonitor.getCurrentCost();
@@ -55,7 +52,7 @@ public class RaftProtocolService extends RaftProtocolServiceGrpc.RaftProtocolSer
             builder.setCost(cost);
 
             return builder.build();
-        });
+        }, executor);
     }
 
     private void handleLogEntries(RaftProtos.AppendEntryRequest request) {
@@ -76,7 +73,7 @@ public class RaftProtocolService extends RaftProtocolServiceGrpc.RaftProtocolSer
     @Override
     public void appendEntry(RaftProtos.AppendEntryRequest request,
                             StreamObserver<RaftProtos.AppendEntryResponse> responseObserver) {
-        sendAbstractAsyncMessage(responseObserver, () -> {
+        GrpcUtil.sendAbstractAsyncMessage(responseObserver, () -> {
             int requestTerm = request.getTerm();
             int currentTerm = raftNode.state().getCurrentTerm();
 
@@ -108,7 +105,7 @@ public class RaftProtocolService extends RaftProtocolServiceGrpc.RaftProtocolSer
             handleLogEntries(request);
 
             return RaftProtos.AppendEntryResponse.newBuilder().setTerm(raftNode.state().getCurrentTerm()).build();
-        });
+        }, executor);
     }
 
     private RaftProtos.AppendEntryResponse emptyAppendResponse() {
@@ -133,7 +130,9 @@ public class RaftProtocolService extends RaftProtocolServiceGrpc.RaftProtocolSer
 
             if (member == null) {
                 member = new RaftClientImpl(raftNode,
-                        new InetSocketAddress(raftPeerProto.getHost(), raftPeerProto.getPort()),
+                        new InetSocketAddress(
+                                raftPeerProto.getHost(),
+                                raftPeerProto.getPort()),
                         peerId);
             }
 
@@ -145,7 +144,7 @@ public class RaftProtocolService extends RaftProtocolServiceGrpc.RaftProtocolSer
 
     @Override
     public void requestVote(RaftProtos.VoteRequest request, StreamObserver<RaftProtos.VoteResponse> responseObserver) {
-        sendAbstractAsyncMessage(responseObserver, () -> {
+        GrpcUtil.sendAbstractAsyncMessage(responseObserver, () -> {
             Pair<Client, ClusterState.ClientState> nominee = raftNode.state().getVotedFor();
 
             UnderseaLogger.info(logger, raftNode.parent(), "Nominating: " + nominee.getKey().peerId() + ". With cost:" +
@@ -155,7 +154,7 @@ public class RaftProtocolService extends RaftProtocolServiceGrpc.RaftProtocolSer
                     .setClient(GrpcUtil.toProtoClient(raftNode))
                     .setNominee(GrpcUtil.toProtoClient(nominee.getKey()))
                     .build();
-        });
+        }, executor);
     }
 
     @Override
@@ -174,32 +173,13 @@ public class RaftProtocolService extends RaftProtocolServiceGrpc.RaftProtocolSer
 
         logger.info(raftNode.parent().name() + ": received mission: " + generatedMission);
 
-        sendAbstractAsyncMessage(responseObserver, () -> RaftProtos.DisributeMissionResponse.newBuilder()
+        GrpcUtil.sendAbstractAsyncMessage(responseObserver, () -> RaftProtos.DisributeMissionResponse.newBuilder()
                 .setClient(GrpcUtil.toProtoClient(raftNode))
                 .setResponse(1)
-                .build());
+                .build(), executor);
 
         MissionManager manager = raftNode.parent().services().getService(MissionManager.class);
         manager.assignMission(generatedMission);
-    }
-
-    private <M extends AbstractMessage> void sendAbstractAsyncMessage(StreamObserver<M> responseObserver,
-                                                                      Supplier<M> supplier) {
-        try {
-            final CompletableFuture<M> future = CompletableFuture.supplyAsync(supplier, executor);
-
-            future.whenComplete((result, e) -> {
-                if (e == null) {
-                    responseObserver.onNext(result);
-                    responseObserver.onCompleted();
-                } else {
-                    responseObserver.onError(e);
-                }
-            });
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw e;
-        }
     }
 
 

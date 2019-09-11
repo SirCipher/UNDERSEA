@@ -39,6 +39,7 @@ message ClusterMembersRequest {
 message NotificationRequest {
     RaftPeerProto client = 1;
     string notification = 2;
+    string statusCode = 3;
 }
 
 message Empty {

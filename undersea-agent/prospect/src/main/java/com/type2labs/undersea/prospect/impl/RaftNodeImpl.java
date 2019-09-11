@@ -3,12 +3,15 @@ package com.type2labs.undersea.prospect.impl;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.util.concurrent.FutureCallback;
+import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.common.util.concurrent.MoreExecutors;
 import com.type2labs.undersea.common.agent.Agent;
+import com.type2labs.undersea.common.agent.AgentState;
 import com.type2labs.undersea.common.cluster.Client;
 import com.type2labs.undersea.common.cluster.PeerId;
 import com.type2labs.undersea.common.consensus.MultiRoleState;
+import com.type2labs.undersea.common.consensus.RaftClusterConfig;
 import com.type2labs.undersea.common.consensus.RaftRole;
 import com.type2labs.undersea.common.logger.UnderseaLogger;
 import com.type2labs.undersea.common.logger.model.LogEntry;
@@ -20,14 +23,17 @@ import com.type2labs.undersea.common.monitor.model.SubsystemMonitor;
 import com.type2labs.undersea.common.service.AgentService;
 import com.type2labs.undersea.common.service.transaction.LifecycleEvent;
 import com.type2labs.undersea.common.service.transaction.ServiceCallback;
-import com.type2labs.undersea.prospect.RaftClusterConfig;
+import com.type2labs.undersea.common.service.transaction.Transaction;
 import com.type2labs.undersea.prospect.RaftProtos;
+import com.type2labs.undersea.prospect.model.MultiRoleNotification;
 import com.type2labs.undersea.prospect.model.RaftNode;
-import com.type2labs.undersea.prospect.networking.RaftClient;
-import com.type2labs.undersea.prospect.networking.RaftClientImpl;
+import com.type2labs.undersea.prospect.networking.impl.MultiRoleLeaderClientImpl;
+import com.type2labs.undersea.prospect.networking.impl.RaftClientImpl;
+import com.type2labs.undersea.prospect.networking.model.RaftClient;
 import com.type2labs.undersea.prospect.task.AcquireStatusTask;
 import com.type2labs.undersea.prospect.task.RequireRoleTask;
 import com.type2labs.undersea.prospect.util.GrpcUtil;
+import com.type2labs.undersea.utilities.exception.NotSupportedException;
 import com.type2labs.undersea.utilities.exception.UnderseaException;
 import com.type2labs.undersea.utilities.executor.ThrowableExecutor;
 import com.type2labs.undersea.utilities.lang.ReschedulableTask;
@@ -64,11 +70,12 @@ public class RaftNodeImpl implements RaftNode {
     private List<ServiceCallback> serviceCallbacks = new ArrayList<>();
     private Agent agent;
     private RaftRole role = RaftRole.CANDIDATE;
-    private MultiRoleState multiRoleState;
+    private MultiRoleStateImpl multiRoleState;
     private RaftClientImpl selfRaftClientImpl;
     private boolean started = false;
     private long lastHeartbeatTime;
     private long lastAppendRequestTime;
+
 
     public RaftNodeImpl(RaftClusterConfig raftClusterConfig) {
         this(raftClusterConfig, new InetSocketAddress(0));
@@ -87,7 +94,7 @@ public class RaftNodeImpl implements RaftNode {
         this.singleThreadScheduledExecutor = ThrowableExecutor.newSingleThreadExecutor(logger);
         this.listeningExecutorService =
                 MoreExecutors.listeningDecorator(ThrowableExecutor.newSingleThreadExecutor(logger));
-        this.multiRoleState = new MultiRoleState(this);
+        this.multiRoleState = new MultiRoleStateImpl(this);
     }
 
     public ThrowableExecutor getSingleThreadScheduledExecutor() {
@@ -101,6 +108,40 @@ public class RaftNodeImpl implements RaftNode {
     @Override
     public Collection<Class<? extends AgentService>> requiredServices() {
         return Arrays.asList(LogService.class, MissionManager.class, SubsystemMonitor.class);
+    }
+
+    @Override
+    public ListenableFuture<?> executeTransaction(Transaction transaction) {
+        if (transaction.getStatusCode() == LifecycleEvent.FAILING) {
+            notifyMultiRoleLeaderOfFailure();
+        }
+
+        throw new NotSupportedException(transaction.getStatusCode().toString(), this.getClass());
+    }
+
+    private void notifyMultiRoleLeaderOfFailure() {
+        // Only the leader can do this
+        if (!multiRoleState.isApplied()) {
+            return;
+        }
+
+        MultiRoleLeaderClientImpl leaderClient = (MultiRoleLeaderClientImpl) multiRoleState.getLeader();
+        RaftProtos.NotificationRequest request = RaftProtos.NotificationRequest.newBuilder()
+                .setClient(GrpcUtil.toProtoClient(this))
+                .setStatusCode(MultiRoleNotification.FAILING.toString())
+                .build();
+
+        leaderClient.notify(request, new FutureCallback<RaftProtos.Empty>() {
+            @Override
+            public void onSuccess(RaftProtos.@Nullable Empty result) {
+                UnderseaLogger.info(logger, agent, "Notified leader {" + leaderClient.name() + "} that I am failing");
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                t.printStackTrace();
+            }
+        });
     }
 
     @Override
@@ -148,15 +189,23 @@ public class RaftNodeImpl implements RaftNode {
         }
 
         role = RaftRole.LEADER;
+
+        multiRoleState.updateStatus();
+
         logger.info(parent().name() + " is now the leader", agent);
         agent.log(new LogEntry(leaderPeerId(), new Object(), new Object(), state().getCurrentTerm(), this));
 
-        fireLifecycleCallbacks(LifecycleEvent.ELECTED_LEADER);
+        fireCallback(LifecycleEvent.ELECTED_LEADER);
         state().toLeader(selfRaftClientImpl);
         scheduleHeartbeat();
     }
 
-    private void fireLifecycleCallbacks(LifecycleEvent statusCode) {
+    @Override
+    public void fireCallback(LifecycleEvent statusCode) {
+        if (agent.state().getState() != AgentState.State.ACTIVE) {
+            return;
+        }
+
         Collection<ServiceCallback> callbacks =
                 serviceCallbacks.stream().filter(c -> c.getStatusCode() == statusCode).collect(Collectors.toList());
 
@@ -172,6 +221,8 @@ public class RaftNodeImpl implements RaftNode {
 
     @Override
     public void toFollower(int term) {
+        multiRoleState.updateStatus();
+
         role = RaftRole.FOLLOWER;
         raftState.clearCandidate();
         raftState.setCurrentTerm(term);
@@ -182,6 +233,8 @@ public class RaftNodeImpl implements RaftNode {
 
     @Override
     public void toCandidate() {
+        multiRoleState.updateStatus();
+
         role = RaftRole.CANDIDATE;
         raftState.initCandidate();
         logger.info(parent().name() + " is now a candidate", agent);
@@ -194,23 +247,48 @@ public class RaftNodeImpl implements RaftNode {
         return server;
     }
 
+    @Override
     public RaftClusterConfig config() {
         return raftClusterConfig;
+    }
+
+    private void alertMultiRoleLeaderOfMission(GeneratedMission generatedMission) {
+        MultiRoleLeaderClientImpl leaderClient = (MultiRoleLeaderClientImpl) multiRoleState.getLeader();
+        RaftProtos.NotificationRequest request = RaftProtos.NotificationRequest.newBuilder()
+                .setClient(GrpcUtil.toProtoClient(this))
+                .setStatusCode(MultiRoleNotification.GENERATED_MISSION.toString())
+                .setNotification(Arrays.deepToString(generatedMission.polygon()))
+                .build();
+
+        leaderClient.notify(request, new FutureCallback<RaftProtos.Empty>() {
+            @Override
+            public void onSuccess(RaftProtos.@Nullable Empty result) {
+                logger.info(parent().name() + " alerted multi-role leader of new mission", agent);
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                t.printStackTrace();
+                logger.error(parent().name() + " failed to alert multi-role leader of new mission", agent);
+            }
+        });
     }
 
     void distributeMission(GeneratedMission generatedMission) {
         ObjectMapper mapper = new ObjectMapper();
 
+        String jsonMission;
+
+        try {
+            jsonMission = mapper.writeValueAsString(generatedMission);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException("Unable to process mission: " + generatedMission, e);
+        }
+
+        alertMultiRoleLeaderOfMission(generatedMission);
+
         // Iterate over all the submissions in the mission and send them the parent mission.
         for (AgentMission agentMission : generatedMission.subMissions()) {
-            String mission;
-
-            try {
-                mission = mapper.writeValueAsString(generatedMission);
-            } catch (JsonProcessingException e) {
-                throw new RuntimeException("Unable to process mission: " + agentMission, e);
-            }
-
             RaftClient raftClient = (RaftClient) agentMission.getAssignee();
 
             if (raftClient.isSelf()) {
@@ -222,7 +300,7 @@ public class RaftNodeImpl implements RaftNode {
 
             RaftProtos.DistributeMissionRequest request = RaftProtos.DistributeMissionRequest.newBuilder()
                     .setClient(GrpcUtil.toProtoClient(this))
-                    .setMission(mission)
+                    .setMission(jsonMission)
                     .build();
 
             raftClient.distributeMission(request, new FutureCallback<RaftProtos.DisributeMissionResponse>() {

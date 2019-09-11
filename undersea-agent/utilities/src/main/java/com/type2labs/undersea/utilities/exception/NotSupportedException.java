@@ -15,4 +15,9 @@ public class NotSupportedException extends RuntimeException {
     public NotSupportedException(String message, Throwable cause) {
         super(message, cause);
     }
+
+
+    public NotSupportedException(String statusCode, Class<?> clazz) {
+        super("Class: "+clazz.getSimpleName() + " does not support status code: "+statusCode);
+    }
 }

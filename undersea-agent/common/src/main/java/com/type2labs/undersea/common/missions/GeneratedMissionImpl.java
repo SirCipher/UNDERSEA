@@ -30,6 +30,7 @@ public class GeneratedMissionImpl implements GeneratedMission {
     private MissionParameters missionParameters;
     private List<AgentMission> missions = new ArrayList<>();
 
+    @SuppressWarnings("unused")
     public GeneratedMissionImpl() {
 
     }
@@ -114,6 +115,11 @@ public class GeneratedMissionImpl implements GeneratedMission {
         }
 
         return allTasks;
+    }
+
+    @Override
+    public double[][] polygon() {
+        return missionParameters.getPolygon();
     }
 
 
