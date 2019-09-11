@@ -9,9 +9,9 @@ public interface ConsensusAlgorithm extends AgentService {
 
     UnderseaConfig config();
 
-    RaftRole getRaftRole();
+    RaftRole raftRole();
 
-    MultiRoleState multiRole();
+    MultiRoleState multiRoleState();
 
     int term();
 

@@ -18,7 +18,7 @@ public abstract class RequireRoleTask implements Runnable {
 
     @Override
     public void run() {
-        if (raftNode.getRaftRole() != requestedRole) {
+        if (raftNode.raftRole() != requestedRole) {
             logger.error(raftNode.parent().name() + ": unable to run task as agent does not meet requested role: " + requestedRole,
                     raftNode.parent());
             return;

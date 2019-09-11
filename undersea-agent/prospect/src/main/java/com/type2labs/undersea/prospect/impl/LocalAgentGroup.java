@@ -169,7 +169,7 @@ public class LocalAgentGroup implements Closeable {
         RaftNode match = null;
 
         for (RaftNodeImpl raftNode : raftNodes) {
-            if (raftNode.getRaftRole() == RaftRole.LEADER) {
+            if (raftNode.raftRole() == RaftRole.LEADER) {
                 match = raftNode;
                 count++;
             }

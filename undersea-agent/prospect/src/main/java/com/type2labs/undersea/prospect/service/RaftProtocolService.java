@@ -91,7 +91,7 @@ public class RaftProtocolService extends RaftProtocolServiceGrpc.RaftProtocolSer
                 return emptyAppendResponse();
             }
 
-            if (raftNode.getRaftRole() != RaftRole.FOLLOWER) {
+            if (raftNode.raftRole() != RaftRole.FOLLOWER) {
                 raftNode.toFollower(requestTerm);
                 UnderseaLogger.info(logger, raftNode.parent(), "Demoting to follower for term term: " + requestTerm);
             }

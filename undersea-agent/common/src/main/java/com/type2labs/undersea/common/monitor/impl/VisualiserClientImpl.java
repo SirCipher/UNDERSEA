@@ -119,8 +119,8 @@ public class VisualiserClientImpl implements VisualiserClient {
         int noPeers = parent.clusterClients().size();
 
         if (consensusAlgorithm != null) {
-            raftRole = String.valueOf(consensusAlgorithm.getRaftRole());
-            multiRoleStatus = String.valueOf(consensusAlgorithm.multiRole().getStatus());
+            raftRole = String.valueOf(consensusAlgorithm.raftRole());
+            multiRoleStatus = String.valueOf(consensusAlgorithm.multiRoleState().getStatus());
 
             PeerId peerId = consensusAlgorithm.leaderPeerId();
 

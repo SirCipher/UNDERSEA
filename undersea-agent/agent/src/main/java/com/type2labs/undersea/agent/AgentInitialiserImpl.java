@@ -19,6 +19,8 @@ import com.type2labs.undersea.missionplanner.planner.vrp.VehicleRoutingOptimiser
 import com.type2labs.undersea.prospect.RaftClusterConfig;
 import com.type2labs.undersea.prospect.impl.DefaultCallbacks;
 import com.type2labs.undersea.prospect.impl.RaftNodeImpl;
+import com.type2labs.undersea.prospect.model.RaftNode;
+import com.type2labs.undersea.prospect.networking.RaftClientImpl;
 import com.type2labs.undersea.seachain.BlockchainNetworkImpl;
 
 import java.io.File;
@@ -42,8 +44,6 @@ public class AgentInitialiserImpl implements AgentInitialiser {
         List<Agent> constructedAgents = new LinkedList<>();
 
         agents.forEach((key, value) -> {
-            DslAgentProxy agentProxy = (DslAgentProxy) value;
-
             ServiceManager serviceManager = new ServiceManager();
 
             serviceManager.registerService(new BlockchainNetworkImpl());
@@ -80,7 +80,7 @@ public class AgentInitialiserImpl implements AgentInitialiser {
 
             if (value.name().equals("shoreside")) {
                 metaData.setProperty(AgentMetaData.PropertyKey.IS_MASTER_NODE, true);
-                raftNode.multiRole().setStatus(MultiRoleState.Status.LEADER);
+                raftNode.multiRoleState().setStatus(MultiRoleState.Status.LEADER);
             } else {
                 metaData.setProperty(AgentMetaData.PropertyKey.IS_MASTER_NODE, false);
             }

@@ -17,7 +17,10 @@ import com.type2labs.undersea.dsl.uuv.model.DslAgentProxy;
 import com.type2labs.undersea.missionplanner.manager.MoosMissionManagerImpl;
 import com.type2labs.undersea.prospect.RaftClusterConfig;
 import com.type2labs.undersea.prospect.impl.RaftNodeImpl;
+import com.type2labs.undersea.prospect.model.RaftNode;
+import com.type2labs.undersea.prospect.networking.RaftClientImpl;
 import com.type2labs.undersea.utilities.Utility;
+import com.type2labs.undersea.utilities.exception.UnderseaException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -93,6 +96,29 @@ public class Runner extends AbstractRunner {
     }
 
     public void onParsed(String args) throws InterruptedException {
+        Agent shoreside = null;
+
+        for (Agent agent : super.getAgents()) {
+            if (agent.name().equals("shoreside")) {
+                shoreside = agent;
+            }
+        }
+
+        if (shoreside == null) {
+            throw new UnderseaException("Shoreside agent not found");
+        }
+
+        RaftNode service = shoreside.services().getService(RaftNode.class);
+        RaftClientImpl shoresideClient = new RaftClientImpl(service, service.server().getSocketAddress(),
+                service.parent().peerId());
+
+        super.getAgents().forEach((a) -> {
+            if (a.name().equals("shoreside")) {
+                RaftNode raftNode = a.services().getService(RaftNode.class);
+                raftNode.multiRoleState().setLeader(shoresideClient);
+            }
+        });
+
         Properties properties = Utility.getPropertiesByName(args);
         boolean localNodeDiscovery = Boolean.parseBoolean(Utility.getProperty(properties, "config.localnodediscovery"));
 
@@ -103,6 +129,7 @@ public class Runner extends AbstractRunner {
                 }
 
                 RaftNodeImpl raftNodeA = agentA.services().getService(RaftNodeImpl.class);
+                raftNodeA.multiRoleState().setLeader(shoresideClient);
 
                 // TODO: Replace with MRS
                 if ((boolean) agentA.metadata().getProperty(AgentMetaData.PropertyKey.IS_MASTER_NODE)) {
@@ -115,7 +142,7 @@ public class Runner extends AbstractRunner {
                     }
 
                     RaftNodeImpl raftNodeB = agentB.services().getService(RaftNodeImpl.class);
-                    if (raftNodeB.multiRole().isLeader()) {
+                    if (raftNodeB.multiRoleState().isLeader()) {
                         continue;
                     }
 

@@ -18,7 +18,7 @@ public class VoteTaskTimeout implements Runnable {
 
     @Override
     public void run() {
-        if (raftNode.getRaftRole() != RaftRole.CANDIDATE) {
+        if (raftNode.raftRole() != RaftRole.CANDIDATE) {
             return;
         }
 

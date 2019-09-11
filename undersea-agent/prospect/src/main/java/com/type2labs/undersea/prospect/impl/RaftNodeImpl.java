@@ -65,14 +65,15 @@ public class RaftNodeImpl implements RaftNode {
     private Agent agent;
     private RaftRole role = RaftRole.CANDIDATE;
     private MultiRoleState multiRoleState;
+    private RaftClientImpl selfRaftClientImpl;
     private boolean started = false;
     private long lastHeartbeatTime;
     private long lastAppendRequestTime;
-    private RaftClientImpl selfRaftClientImpl;
 
     public RaftNodeImpl(RaftClusterConfig raftClusterConfig) {
         this(raftClusterConfig, new InetSocketAddress(0));
     }
+
 
     public RaftNodeImpl(RaftClusterConfig raftClusterConfig,
                         InetSocketAddress address) {
@@ -80,7 +81,7 @@ public class RaftNodeImpl implements RaftNode {
         this.address = address;
 
         if (address.getPort() == 0 && !raftClusterConfig.autoPortDiscoveryEnabled()) {
-            throw new IllegalArgumentException("Auto port discovery is not enabled");
+            throw new IllegalStateException("Auto port discovery is not enabled");
         }
 
         this.singleThreadScheduledExecutor = ThrowableExecutor.newSingleThreadExecutor(logger);
@@ -112,12 +113,12 @@ public class RaftNodeImpl implements RaftNode {
     }
 
     @Override
-    public RaftRole getRaftRole() {
+    public RaftRole raftRole() {
         return role;
     }
 
     @Override
-    public MultiRoleState multiRole() {
+    public MultiRoleState multiRoleState() {
         return multiRoleState;
     }
 
@@ -409,7 +410,7 @@ public class RaftNodeImpl implements RaftNode {
         public void innerRun() {
             // If we don't have a leader
             if (state().getLeader() == null) {
-                if (!multiRole().isLeader() && state().getCandidate() == null) {
+                if (!multiRoleState().isLeader() && state().getCandidate() == null) {
                     execute(new AcquireStatusTask(RaftNodeImpl.this));
                 }
             }
