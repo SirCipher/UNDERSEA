@@ -56,7 +56,7 @@ public class RaftClientImpl implements RaftClient {
 
     @Override
     public String name() {
-        return consensusAlgorithm.name();
+        return consensusAlgorithm.parent().name();
     }
 
     @Override

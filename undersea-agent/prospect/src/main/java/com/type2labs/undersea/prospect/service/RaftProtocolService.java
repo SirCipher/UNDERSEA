@@ -161,7 +161,7 @@ public class RaftProtocolService extends RaftProtocolServiceGrpc.RaftProtocolSer
     @Override
     public void distributeMission(RaftProtos.DistributeMissionRequest request,
                                   StreamObserver<RaftProtos.DisributeMissionResponse> responseObserver) {
-        logger.info(raftNode.name() + " processing distribute mission request: " + request, raftNode.parent());
+        logger.info(raftNode.parent().name() + " processing distribute mission request: " + request, raftNode.parent());
 
         GeneratedMission generatedMission;
 
@@ -172,7 +172,7 @@ public class RaftProtocolService extends RaftProtocolServiceGrpc.RaftProtocolSer
             throw new RuntimeException("Unable to process: " + request.toString(), e);
         }
 
-        logger.info(raftNode.name() + ": received mission: " + generatedMission);
+        logger.info(raftNode.parent().name() + ": received mission: " + generatedMission);
 
         sendAbstractAsyncMessage(responseObserver, () -> RaftProtos.DisributeMissionResponse.newBuilder()
                 .setClient(GrpcUtil.toProtoClient(raftNode))

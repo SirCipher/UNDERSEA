@@ -57,10 +57,9 @@ public class RaftNodeImpl implements RaftNode {
     private final ThrowableExecutor singleThreadScheduledExecutor;
     private final ListeningExecutorService listeningExecutorService;
     private final ScheduledExecutorService scheduledExecutor = Executors.newSingleThreadScheduledExecutor();
-    private final String name;
-    private final GrpcServer server;
     private final RaftClusterConfig raftClusterConfig;
 
+    private GrpcServer server;
     private RaftState raftState;
     private List<ServiceCallback> serviceCallbacks = new ArrayList<>();
     private Agent agent;
@@ -70,22 +69,21 @@ public class RaftNodeImpl implements RaftNode {
     private long lastHeartbeatTime;
     private long lastAppendRequestTime;
     private RaftClientImpl selfRaftClientImpl;
+    private final InetSocketAddress address;
 
-    public RaftNodeImpl(RaftClusterConfig raftClusterConfig, String name) {
-        this(raftClusterConfig, name, new InetSocketAddress(0));
+    public RaftNodeImpl(RaftClusterConfig raftClusterConfig) {
+        this(raftClusterConfig, new InetSocketAddress(0));
     }
 
     public RaftNodeImpl(RaftClusterConfig raftClusterConfig,
-                        String name,
                         InetSocketAddress address) {
         this.raftClusterConfig = raftClusterConfig;
-        this.name = name;
+        this.address = address;
 
         if (address.getPort() == 0 && !raftClusterConfig.autoPortDiscoveryEnabled()) {
             throw new IllegalArgumentException("Auto port discovery is not enabled");
         }
 
-        this.server = new GrpcServer(this, address);
         this.singleThreadScheduledExecutor = ThrowableExecutor.newSingleThreadExecutor(logger);
         this.listeningExecutorService =
                 MoreExecutors.listeningDecorator(ThrowableExecutor.newSingleThreadExecutor(logger));
@@ -138,11 +136,6 @@ public class RaftNodeImpl implements RaftNode {
         }
     }
 
-    @Override
-    public String name() {
-        return name;
-    }
-
     public RaftState state() {
         return raftState;
     }
@@ -155,7 +148,7 @@ public class RaftNodeImpl implements RaftNode {
         }
 
         role = RaftRole.LEADER;
-        logger.info(name + " is now the leader", agent);
+        logger.info(parent().name() + " is now the leader", agent);
         agent.log(new LogEntry(leaderPeerId(), new Object(), new Object(), state().getCurrentTerm(), this));
 
         fireLifecycleCallbacks(LifecycleEvent.ELECTED_LEADER);
@@ -182,7 +175,7 @@ public class RaftNodeImpl implements RaftNode {
         role = RaftRole.FOLLOWER;
         raftState.clearCandidate();
         raftState.setCurrentTerm(term);
-        logger.info(name + " is now a follower", agent);
+        logger.info(parent().name() + " is now a follower", agent);
 
         getMonitor().update();
     }
@@ -191,7 +184,7 @@ public class RaftNodeImpl implements RaftNode {
     public void toCandidate() {
         role = RaftRole.CANDIDATE;
         raftState.initCandidate();
-        logger.info(name + " is now a candidate", agent);
+        logger.info(parent().name() + " is now a candidate", agent);
 
         getMonitor().update();
     }
@@ -236,7 +229,7 @@ public class RaftNodeImpl implements RaftNode {
                 @Override
                 public void onSuccess(RaftProtos.@Nullable DisributeMissionResponse result) {
                     if (result != null) {
-                        logger.info(name + " distributed mission to " + result.getClient(), agent);
+                        logger.info(parent().name() + " distributed mission to " + result.getClient(), agent);
                     }
                 }
 
@@ -385,6 +378,7 @@ public class RaftNodeImpl implements RaftNode {
     @Override
     public void initialise(Agent parentAgent) {
         this.agent = parentAgent;
+        this.server = new GrpcServer(this, address);
         this.raftState = new RaftState(this);
         this.selfRaftClientImpl = new RaftClientImpl(agent.services().getService(RaftNode.class),
                 new InetSocketAddress(0), agent.peerId(), true);

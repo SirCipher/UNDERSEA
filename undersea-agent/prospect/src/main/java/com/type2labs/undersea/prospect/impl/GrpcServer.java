@@ -37,7 +37,7 @@ public class GrpcServer implements Closeable {
      */
     public GrpcServer(RaftNode raftNode, InetSocketAddress socketAddress) {
         this.parentNode = raftNode;
-        String agentName = raftNode.name();
+        String agentName = raftNode.parent().name();
         ServerSocket serverSocket;
         int port;
 
@@ -83,7 +83,7 @@ public class GrpcServer implements Closeable {
         try {
             server.start();
         } catch (IOException e) {
-            logger.error(parentNode.name() + " failed to start. Attempted to use port: " + socketAddress.getPort(),
+            logger.error(parentNode.parent().name() + " failed to start. Attempted to use port: " + socketAddress.getPort(),
                     parentNode.parent());
             e.printStackTrace();
             throw new RuntimeException("Failed to start", e);
@@ -102,7 +102,7 @@ public class GrpcServer implements Closeable {
      */
     @Override
     public void close() {
-        String name = parentNode.name();
+        String name = parentNode.parent().name();
 
         logger.info(name + ": shutting down gRPC server", parentNode.parent());
         server.shutdownNow();

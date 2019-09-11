@@ -64,7 +64,7 @@ public class AcquireStatusTask implements Runnable {
                 Status.Code code = e.getStatus().getCode();
 
                 if (code.equals(Status.Code.DEADLINE_EXCEEDED)) {
-                    logger.info(raftNode.name() + ": deadline exceeded while contacting client: " + raftClient.name()
+                    logger.info(raftNode.parent().name() + ": deadline exceeded while contacting client: " + raftClient.name()
                             , raftNode.parent());
                     incrementAndVote();
                 }

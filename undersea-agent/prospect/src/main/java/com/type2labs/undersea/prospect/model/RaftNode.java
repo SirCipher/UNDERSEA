@@ -12,8 +12,6 @@ public interface RaftNode extends ConsensusAlgorithm {
 
     RaftRole getRaftRole();
 
-    String name();
-
     RaftState state();
 
     void toLeader(int term);

@@ -30,13 +30,13 @@ public class VoteTask implements Runnable {
     public void run() {
         raftNode.toCandidate();
 
-        logger.info(raftNode.name() + " starting voting", raftNode.parent());
+        logger.info(raftNode.parent().name() + " starting voting", raftNode.parent());
 
         ConcurrentMap<PeerId, Client> localNodes = raftNode.parent().clusterClients();
         RaftState.Candidate candidate = raftNode.state().getCandidate();
 
         if (localNodes.size() == 0) {
-            logger.warn(raftNode.name() + " has no peers", raftNode.parent());
+            logger.warn(raftNode.parent().name() + " has no peers", raftNode.parent());
         }
 
         final Iterator<Client> iterator = localNodes.values().iterator();
@@ -70,6 +70,8 @@ public class VoteTask implements Runnable {
 
                 @Override
                 public void onFailure(Throwable t) {
+                    logger.error(raftNode.parent().name() + ": exception thrown when contacting: " + raftClient.name(), t,
+                            raftNode.parent());
                     iterator.remove();
                 }
             });

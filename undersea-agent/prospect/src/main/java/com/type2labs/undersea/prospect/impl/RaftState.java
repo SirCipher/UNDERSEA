@@ -83,7 +83,7 @@ public class RaftState {
         localNodes.computeIfAbsent(node.parent().peerId(), n -> new RaftClientImpl(raftNode, address,
                 node.parent().peerId()));
 
-        logger.info(raftNode.name() + ": discovered: " + node.parent().peerId(), raftNode);
+        logger.info(raftNode.parent().name() + ": discovered: " + node.parent().peerId(), raftNode);
     }
 
     public ConcurrentMap<PeerId, Client> localNodes() {
@@ -111,7 +111,7 @@ public class RaftState {
             }
 
             localNodes.put(client.peerId(), client);
-            logger.info(raftNode.name() + ": added client: " + client.peerId(), raftNode.parent());
+            logger.info(raftNode.parent().name() + ": added client: " + client.peerId(), raftNode.parent());
         }
     }
 
@@ -129,7 +129,7 @@ public class RaftState {
         }
 
         public void vote(Client client) {
-            logger.info(raftNode.name() + " registering vote from: " + client);
+            logger.info(raftNode.parent().name() + " registering vote from: " + client);
             this.voters.add(client);
         }
 

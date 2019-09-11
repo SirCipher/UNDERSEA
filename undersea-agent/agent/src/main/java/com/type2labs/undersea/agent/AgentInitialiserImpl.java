@@ -65,8 +65,7 @@ public class AgentInitialiserImpl implements AgentInitialiser {
                     new AgentStatus(key, new ArrayList<>()));
 
             RaftNodeImpl raftNode = new RaftNodeImpl(
-                    raftClusterConfig,
-                    agentProxy.getName()
+                    raftClusterConfig
             );
 
             serviceManager.registerService(raftNode);
