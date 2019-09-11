@@ -58,7 +58,7 @@ public class RaftNodeImpl implements RaftNode {
     private final ListeningExecutorService listeningExecutorService;
     private final ScheduledExecutorService scheduledExecutor = Executors.newSingleThreadScheduledExecutor();
     private final RaftClusterConfig raftClusterConfig;
-
+    private final InetSocketAddress address;
     private GrpcServer server;
     private RaftState raftState;
     private List<ServiceCallback> serviceCallbacks = new ArrayList<>();
@@ -69,7 +69,6 @@ public class RaftNodeImpl implements RaftNode {
     private long lastHeartbeatTime;
     private long lastAppendRequestTime;
     private RaftClientImpl selfRaftClientImpl;
-    private final InetSocketAddress address;
 
     public RaftNodeImpl(RaftClusterConfig raftClusterConfig) {
         this(raftClusterConfig, new InetSocketAddress(0));

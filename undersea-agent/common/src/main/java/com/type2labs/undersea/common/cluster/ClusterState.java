@@ -1,7 +1,6 @@
 package com.type2labs.undersea.common.cluster;
 
 import com.type2labs.undersea.common.consensus.ConsensusAlgorithm;
-import com.type2labs.undersea.common.cost.CostCalculator;
 import com.type2labs.undersea.common.monitor.model.SubsystemMonitor;
 import org.apache.commons.lang3.tuple.Pair;
 

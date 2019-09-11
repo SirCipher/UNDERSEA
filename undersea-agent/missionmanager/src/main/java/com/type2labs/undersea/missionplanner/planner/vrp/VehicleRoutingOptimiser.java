@@ -6,7 +6,6 @@ import com.mathworks.toolbox.javabuilder.MWException;
 import com.mathworks.toolbox.javabuilder.MWNumericArray;
 import com.type2labs.undersea.common.agent.Agent;
 import com.type2labs.undersea.common.cluster.Client;
-import com.type2labs.undersea.common.cluster.ClusterState;
 import com.type2labs.undersea.common.missions.GeneratedMissionImpl;
 import com.type2labs.undersea.common.missions.PlanDataModel;
 import com.type2labs.undersea.common.missions.PlannerException;
@@ -161,7 +160,7 @@ public class VehicleRoutingOptimiser implements MissionPlanner {
                 routeDistance += routing.getArcCostForVehicle(previousIndex, index, i) / VehicleRoutingOptimiser.SPEED_SCALAR;
             }
 
-            logger.info(parentAgent.name() + ": "+ route + manager.indexToNode(index), parentAgent);
+            logger.info(parentAgent.name() + ": " + route + manager.indexToNode(index), parentAgent);
             maxRouteDistance = Math.max(routeDistance, maxRouteDistance);
         }
     }

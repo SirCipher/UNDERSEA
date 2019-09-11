@@ -85,6 +85,12 @@ public class VoteTask implements Runnable {
 
         if (nomineeId.equals(raftNode.parent().peerId())) {
             candidate.vote(self);
+
+            if (localNodes.size() == 0) {
+                if (candidate.wonRound()) {
+                    raftNode.toLeader(raftNode.state().getCurrentTerm());
+                }
+            }
         }
 
         raftNode.schedule(new VoteTaskTimeout(raftNode), 10000);

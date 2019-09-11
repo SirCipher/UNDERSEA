@@ -30,13 +30,13 @@ public class RaftClusterConfig implements UnderseaConfig {
         return statusDeadlineLong;
     }
 
+    public long getStatusDeadline() {
+        return getStatusDeadline;
+    }
+
     public RaftClusterConfig setStatusDeadline(long duration) {
         this.getStatusDeadline = duration;
         return this;
-    }
-
-    public long getStatusDeadline() {
-        return getStatusDeadline;
     }
 
     public long getAppendRequestDeadline() {

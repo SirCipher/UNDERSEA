@@ -36,7 +36,7 @@ public class AcquireStatusTask implements Runnable {
         raftNode.state().initPreVoteClusterState();
 
         if (localNodes.size() == 0) {
-            raftNode.schedule(ReschedulableTask.wrap(new AcquireStatusTask(raftNode)), 100);
+            raftNode.execute(new VoteTask(raftNode));
             return;
         }
 
