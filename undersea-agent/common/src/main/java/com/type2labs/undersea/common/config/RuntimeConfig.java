@@ -32,11 +32,11 @@ import static com.type2labs.undersea.utilities.preconditions.Preconditions.isNot
 @SuppressWarnings("UnusedReturnValue")
 public class RuntimeConfig {
 
+    private final double subsystemDecayTime = 0.1;
     private boolean visualiserEnabled = true;
     private MissionParameters missionParameters;
     private CostConfiguration costConfiguration;
     private int logBatchSize = 10;
-    private double subsystemDecayTime = 0.1;
 
     /**
      * The batch size that {@link com.type2labs.undersea.common.logger.model.LogEntry}s should be sent in by the

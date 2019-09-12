@@ -33,7 +33,7 @@ import java.util.List;
  */
 public class RingBuffer<T> {
 
-    private T[] elements;
+    private final T[] elements;
     private int capacity = 0;
     private int writePos = 0;
     private int available = 0;

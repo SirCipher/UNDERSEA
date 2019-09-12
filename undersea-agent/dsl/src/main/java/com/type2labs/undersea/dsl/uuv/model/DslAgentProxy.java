@@ -23,10 +23,17 @@ package com.type2labs.undersea.dsl.uuv.model;
 
 import com.type2labs.undersea.common.agent.AgentImpl;
 
+/**
+ * Proxy for holding the required state while parsing the DSL
+ */
 public class DslAgentProxy extends AgentImpl {
 
     private String metaFileName;
     private boolean active = true;
+
+    public DslAgentProxy(String name) {
+        super(name);
+    }
 
     public boolean isActive() {
         return active;
@@ -34,10 +41,6 @@ public class DslAgentProxy extends AgentImpl {
 
     public void setActive(boolean active) {
         this.active = active;
-    }
-
-    public DslAgentProxy(String name) {
-        super(name);
     }
 
     public String getMetaFileName() {

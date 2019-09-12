@@ -73,13 +73,13 @@ public class Transaction {
      * A corresponding object that may be used for performing the transaction. This may be {@code null} and the
      * {@link LifecycleEvent} may be enough to achieve the desired output.
      */
-    private TransactionData primaryTransactionData;
+    private final TransactionData primaryTransactionData;
 
     /**
      * A corresponding object that may be used for performing the transaction. This may be {@code null} and the
      * {@link LifecycleEvent} may be enough to achieve the desired output.
      */
-    private TransactionData secondaryTransactionData;
+    private final TransactionData secondaryTransactionData;
 
     private Transaction(Agent agent,
                         Collection<Class<? extends AgentService>> destinationServices,
@@ -142,7 +142,7 @@ public class Transaction {
      */
     public static class Builder {
 
-        private Agent agent;
+        private final Agent agent;
         private Collection<Class<? extends AgentService>> services = new HashSet<>();
         private Enum<? extends LifecycleEvent> statusCode;
         private TransactionData primaryTransactionData;

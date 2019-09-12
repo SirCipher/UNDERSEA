@@ -35,11 +35,11 @@ import java.util.List;
  */
 public class AgentMissionImpl implements AgentMission {
 
+    private final double progress = 0;
     private List<Task> tasks;
     @JsonIgnore
     private Client assignee;
     private String peerId;
-    private double progress = 0;
     private String points;
     private boolean started = false;
 

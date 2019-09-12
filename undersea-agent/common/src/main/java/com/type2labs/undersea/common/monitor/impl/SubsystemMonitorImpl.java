@@ -37,7 +37,7 @@ public class SubsystemMonitorImpl implements SubsystemMonitor {
 
     private static final Logger logger = LogManager.getLogger(SubsystemMonitorImpl.class);
 
-    private Map<String, SubsystemWrapper> subsystems = new HashMap<>();
+    private final Map<String, SubsystemWrapper> subsystems = new HashMap<>();
     private VisualiserClient visualiserClient = new NoVisualiser();
     private Agent agent;
     private Range speedRange;
@@ -107,7 +107,7 @@ public class SubsystemMonitorImpl implements SubsystemMonitor {
     }
 
     class SubsystemWrapper {
-        Subsystem subsystem;
+        final Subsystem subsystem;
 
         SubsystemWrapper(Subsystem subsystem) {
             this.subsystem = subsystem;

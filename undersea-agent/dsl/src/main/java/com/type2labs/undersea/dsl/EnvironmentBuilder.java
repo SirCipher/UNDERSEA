@@ -36,6 +36,10 @@ import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
+/**
+ * Builds a representation of the environment from the mission.config file. This is then used to write the required
+ * files for each of the MOOS agents. Running {@code nsplug} to populate them
+ */
 class EnvironmentBuilder {
 
     private static final Logger logger = LogManager.getLogger(EnvironmentBuilder.class);
@@ -48,6 +52,10 @@ class EnvironmentBuilder {
         EnvironmentBuilder.environmentProperties = environmentProperties;
     }
 
+    /**
+     * Build and write the respective {@code .moos} and {@code .bhv} files for each of the
+     * {@link com.type2labs.undersea.common.agent.Agent}s
+     */
     static void build() {
         DslAgentProxy shoreside = environmentProperties.getShoreside();
 
@@ -137,6 +145,12 @@ class EnvironmentBuilder {
         }
     }
 
+    /**
+     * Initialises the required directories. Emptying them of all but the configuration files required
+     *
+     * @param buildDirPath          to clean
+     * @param missionIncludeDirPath to reference the directory against
+     */
     static void initDirectories(String buildDirPath, String missionIncludeDirPath) {
         buildDir = new File(buildDirPath);
         missionIncludeDir = new File(missionIncludeDirPath);
@@ -166,6 +180,13 @@ class EnvironmentBuilder {
         }
     }
 
+    /**
+     * Runs {@code nsplug} using the arguments provided. This is the final write stage of the DSL parsing
+     *
+     * @param sourceName to run it on
+     * @param destName   to output the file
+     * @param nsplugArgs to provide when running {@code nsplug}. These should be the placeholders and values
+     */
     private static void nsplug(String sourceName, String destName, List<String> nsplugArgs) {
         try {
             logger.info("Running nsplug on " + destName);

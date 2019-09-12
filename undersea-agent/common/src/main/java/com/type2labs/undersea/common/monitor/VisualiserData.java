@@ -29,8 +29,8 @@ import java.io.Serializable;
 public class VisualiserData implements Serializable {
 
     private static final long serialVersionUID = 1980452255341789631L;
-    private String name;
-    private String raftPeerId;
+    private final String name;
+    private final String raftPeerId;
     private String multiRoleStatus = "N/A";
     private String serviceManagerStatus = "N/A";
     private String raftRole = "N/A";

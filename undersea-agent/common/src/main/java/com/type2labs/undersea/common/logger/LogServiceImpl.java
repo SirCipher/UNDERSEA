@@ -54,7 +54,7 @@ public class LogServiceImpl implements LogService {
     private static final Logger logger = LogManager.getLogger(LogServiceImpl.class);
     private final RingBuffer<LogEntry> ringBuffer = new RingBuffer<>();
 
-    private Map<Client, Integer> clientIndexMap = new ConcurrentHashMap<>();
+    private final Map<Client, Integer> clientIndexMap = new ConcurrentHashMap<>();
     private Agent agent;
     private ServiceManager serviceManager;
 

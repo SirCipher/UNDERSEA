@@ -21,6 +21,7 @@
 
 package com.type2labs.undersea.dsl;
 
+import com.type2labs.undersea.common.agent.Agent;
 import com.type2labs.undersea.dsl.uuv.model.DslAgentProxy;
 import com.type2labs.undersea.utilities.exception.UnderseaException;
 
@@ -29,7 +30,10 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.stream.Collectors;
 
-// TODO: 27/08/2019 I think this should be moved to common and be a subclass of env props
+/**
+ * DSL environment properties that are required while parsing. Many of these are transferred to the
+ * {@link Agent#metadata()} following parsing the DSL
+ */
 public class EnvironmentProperties {
 
     private static Properties runnerProperties;
@@ -40,7 +44,7 @@ public class EnvironmentProperties {
         return runnerProperties;
     }
 
-    public static void setRunnerProperties(Properties runnerProperties) {
+    static void setRunnerProperties(Properties runnerProperties) {
         EnvironmentProperties.runnerProperties = runnerProperties;
     }
 
@@ -56,26 +60,21 @@ public class EnvironmentProperties {
         return agents;
     }
 
-    public Map<String, DslAgentProxy> getAgents() {
-        // TODO: 2019-08-24 Remove shoreside name and set a flag
+    Map<String, DslAgentProxy> getAgents() {
         return agents.entrySet().stream()
                 .filter(a -> !a.getValue().getName().equals("shoreside"))
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
-    }
-
-    public int getTotalNumberOfAgents() {
-        return agents.size();
     }
 
     public String getEnvironmentValue(EnvironmentValue environmentValue) {
         return environmentValues.get(environmentValue);
     }
 
-    public Map<EnvironmentValue, String> getEnvironmentValues() {
+    Map<EnvironmentValue, String> getEnvironmentValues() {
         return environmentValues;
     }
 
-    public DslAgentProxy getShoreside() {
+    DslAgentProxy getShoreside() {
         return agents.get("shoreside");
     }
 
@@ -88,7 +87,7 @@ public class EnvironmentProperties {
         environmentValues.put(name, value);
     }
 
-    public void validateEnvironmentValues() {
+    void validateEnvironmentValues() {
         StringBuilder errors = new StringBuilder();
 
         for (EnvironmentValue value : EnvironmentValue.values()) {
@@ -106,6 +105,9 @@ public class EnvironmentProperties {
         }
     }
 
+    /**
+     * Type-safe values that are required in order to successfully parse the DSL
+     */
     public enum EnvironmentValue {
         MISSION_NAME("(e.g., mission name = reconnaissance)"),
         SIMULATION_TIME("(e.g., simulation time = 10)"),

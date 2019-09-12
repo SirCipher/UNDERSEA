@@ -50,9 +50,9 @@ public abstract class AbstractAgent implements Agent {
     private final RuntimeConfig config;
     private final ConcurrentHashMap<PeerId, Client> clusterClients = new ConcurrentHashMap<>();
     private final PeerId peerId;
+    private final String name;
+    private final AgentState agentState = new AgentState();
     private AgentMetaData metaData;
-    private String name;
-    private AgentState agentState = new AgentState();
 
     public AbstractAgent(RuntimeConfig config, String name, ServiceManager serviceManager, PeerId peerId) {
         this.config = Objects.requireNonNull(config);

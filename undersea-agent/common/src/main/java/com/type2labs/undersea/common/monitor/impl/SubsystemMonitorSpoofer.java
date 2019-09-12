@@ -28,13 +28,13 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class SubsystemMonitorSpoofer extends SubsystemMonitorImpl {
 
-    private static int initCount;
+    private static final int initCount;
 
     static {
         initCount++;
     }
 
-    private long initTime = System.currentTimeMillis();
+    private final long initTime = System.currentTimeMillis();
 
     public SubsystemMonitorSpoofer() {
         ThreadLocalRandom random = ThreadLocalRandom.current();

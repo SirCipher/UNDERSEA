@@ -71,6 +71,7 @@ public interface Client {
 
     /**
      * The remote address of this client
+     *
      * @return the address
      */
     InetSocketAddress socketAddress();

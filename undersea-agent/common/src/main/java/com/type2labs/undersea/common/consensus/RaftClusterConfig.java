@@ -30,17 +30,16 @@ import com.type2labs.undersea.common.config.UnderseaConfig;
 public class RaftClusterConfig implements UnderseaConfig {
 
     public static final long HEARTBEAT_PERIOD = 100;
-    private static long heatbeatTimeout = 1000L;
+    private static final long heatbeatTimeout = 1000L;
+    private final long appendRequestDeadline = 10;
+    /**
+     * In seconds
+     */
+    private final long statusDeadlineLong = 30;
     private RuntimeConfig runtimeConfig;
     private boolean autoPortDiscovery = true;
     private int executorThreads = 4;
     private long getStatusDeadline = 30;
-    private long appendRequestDeadline = 10;
-
-    /**
-     * In seconds
-     */
-    private long statusDeadlineLong = 30;
 
     public RaftClusterConfig() {
     }

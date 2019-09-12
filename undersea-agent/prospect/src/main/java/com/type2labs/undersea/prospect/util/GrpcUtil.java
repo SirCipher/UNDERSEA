@@ -29,7 +29,6 @@ import io.grpc.stub.StreamObserver;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
-import java.util.concurrent.ExecutorService;
 import java.util.function.Supplier;
 
 public class GrpcUtil {
@@ -49,7 +48,8 @@ public class GrpcUtil {
     }
 
     public static synchronized <M extends AbstractMessage> void sendAbstractAsyncMessage(StreamObserver<M> responseObserver,
-                                                                      Supplier<M> supplier, Executor executor) {
+                                                                                         Supplier<M> supplier,
+                                                                                         Executor executor) {
         try {
             final CompletableFuture<M> future = CompletableFuture.supplyAsync(supplier, executor);
 

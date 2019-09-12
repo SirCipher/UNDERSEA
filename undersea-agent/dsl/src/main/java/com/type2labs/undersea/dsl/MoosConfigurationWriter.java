@@ -35,6 +35,9 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.Map;
 
+/**
+ * Writes all the {@code .moos} and {@code .bhv} configuration files from the configuration files provided
+ */
 @SuppressWarnings({"StringConcatenationInsideStringBufferAppend", "StringBufferReplaceableByString"})
 class MoosConfigurationWriter {
 

@@ -23,8 +23,6 @@ package com.type2labs.undersea.agent;
 
 import com.type2labs.undersea.common.agent.Agent;
 import com.type2labs.undersea.common.agent.AgentState;
-import com.type2labs.undersea.common.cluster.Client;
-import com.type2labs.undersea.common.cluster.ClusterState;
 import com.type2labs.undersea.common.config.RuntimeConfig;
 import com.type2labs.undersea.common.consensus.RaftClusterConfig;
 import com.type2labs.undersea.common.cost.CostConfiguration;

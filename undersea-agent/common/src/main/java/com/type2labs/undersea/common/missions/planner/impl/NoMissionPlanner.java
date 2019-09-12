@@ -22,11 +22,8 @@
 package com.type2labs.undersea.common.missions.planner.impl;
 
 import com.type2labs.undersea.common.agent.Agent;
-import com.type2labs.undersea.common.missions.PlannerException;
 import com.type2labs.undersea.common.missions.planner.model.GeneratedMission;
 import com.type2labs.undersea.common.missions.planner.model.MissionPlanner;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 /**
  * Mock implementation
@@ -35,7 +32,7 @@ public class NoMissionPlanner implements MissionPlanner {
 
 
     @Override
-    public GeneratedMission generate()  {
+    public GeneratedMission generate() {
         return null;
     }
 

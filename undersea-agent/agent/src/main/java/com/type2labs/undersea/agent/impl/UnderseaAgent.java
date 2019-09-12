@@ -27,7 +27,6 @@ import com.type2labs.undersea.common.cluster.PeerId;
 import com.type2labs.undersea.common.config.RuntimeConfig;
 import com.type2labs.undersea.common.service.ServiceManager;
 
-import java.util.ArrayList;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class UnderseaAgent extends AbstractAgent {
@@ -38,7 +37,7 @@ public class UnderseaAgent extends AbstractAgent {
     private double accuracy;
     private String name;
 
-    public UnderseaAgent(RuntimeConfig config, String name, ServiceManager serviceManager           , PeerId peerId) {
+    public UnderseaAgent(RuntimeConfig config, String name, ServiceManager serviceManager, PeerId peerId) {
         super(config, name, serviceManager, peerId);
 
         ThreadLocalRandom random = ThreadLocalRandom.current();

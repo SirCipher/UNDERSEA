@@ -31,7 +31,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
@@ -40,24 +39,22 @@ import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * A simple implementation of agent used for testing.
- *
+ * <p>
  * This needs to be removed.
  */
 public class AgentImpl implements Agent {
 
     private static final Logger logger = LogManager.getLogger(AgentImpl.class);
-
+    private final double batteryRange = ThreadLocalRandom.current().nextDouble(100);
+    private final AgentMetaData agentMetaData = new AgentMetaData();
+    private final AgentState agentState = new AgentState();
     private String name;
-
     private String rate;
     private int serverPort;
     private Range speedRange;
     private List<Sensor> sensors = new ArrayList<>();
     private String host = "localhost";
     private String groupName = "test";
-    private double batteryRange = ThreadLocalRandom.current().nextDouble(100);
-    private AgentMetaData agentMetaData = new AgentMetaData();
-    private AgentState agentState = new AgentState();
 
     public AgentImpl(String name) {
         this.name = name;

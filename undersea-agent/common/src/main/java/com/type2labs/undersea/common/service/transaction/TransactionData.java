@@ -27,7 +27,7 @@ package com.type2labs.undersea.common.service.transaction;
 public class TransactionData<T> {
 
     private final T data;
-    private String className;
+    private final String className;
 
     private TransactionData(T data) {
         this.data = data;

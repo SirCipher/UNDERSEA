@@ -52,10 +52,6 @@ public class ParserEngine {
         EnvironmentProperties.setRunnerProperties(runnerProperties);
     }
 
-    public EnvironmentProperties getEnvironmentProperties() {
-        return environmentProperties;
-    }
-
     private SensorsParser createSensorParser() throws IOException {
         // create a CharStream that reads from standard input
         String sensorsFile = Utility.getProperty(ParserEngine.properties, "config.sensors");

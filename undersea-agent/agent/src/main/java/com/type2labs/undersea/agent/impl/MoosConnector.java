@@ -21,15 +21,11 @@
 
 package com.type2labs.undersea.agent.impl;
 
-import com.google.common.util.concurrent.ListenableFuture;
 import com.type2labs.undersea.common.agent.Agent;
 import com.type2labs.undersea.common.agent.AgentMetaData;
 import com.type2labs.undersea.common.logger.UnderseaLogger;
 import com.type2labs.undersea.common.missions.planner.model.MissionManager;
 import com.type2labs.undersea.common.service.hardware.NetworkInterface;
-import com.type2labs.undersea.common.service.transaction.ServiceCallback;
-import com.type2labs.undersea.common.service.transaction.Transaction;
-import com.type2labs.undersea.utilities.exception.NotSupportedException;
 import com.type2labs.undersea.utilities.exception.UnderseaException;
 import com.type2labs.undersea.utilities.executor.ThrowableExecutor;
 import org.apache.logging.log4j.LogManager;
@@ -41,7 +37,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 
 /**
- * Created by Thomas Klapwijk on 2019-08-23.
+ * Connector for the c++ server/client
  */
 @NotThreadSafe
 public class MoosConnector implements NetworkInterface {
@@ -217,17 +213,7 @@ public class MoosConnector implements NetworkInterface {
     }
 
     @Override
-    public void registerCallback(ServiceCallback serviceCallback) {
-
-    }
-
-    @Override
     public boolean started() {
         return aquiredConnection;
-    }
-
-    @Override
-    public ListenableFuture<?> executeTransaction(Transaction transaction) {
-        throw new NotSupportedException();
     }
 }

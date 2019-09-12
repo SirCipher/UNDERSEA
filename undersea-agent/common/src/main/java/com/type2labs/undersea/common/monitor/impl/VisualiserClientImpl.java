@@ -83,15 +83,15 @@ public class VisualiserClientImpl implements VisualiserClient {
 
             LifecycleEvent lifecycleEvent = LifecycleEvent.valueOf(request);
             if (lifecycleEvent == LifecycleEvent.SHUTDOWN) {
-                if(parent.name().equals("shoreside")){
-                    logger.error(parent.name()+": cannot shutdown shoreside", parent);
+                if (parent.name().equals("shoreside")) {
+                    logger.error(parent.name() + ": cannot shutdown shoreside", parent);
                     return;
                 }
 
                 parent.serviceManager().shutdownServices();
             } else if (lifecycleEvent == LifecycleEvent.FAILING) {
-                if(parent.name().equals("shoreside")){
-                    logger.error(parent.name()+": cannot shutdown shoreside", parent);
+                if (parent.name().equals("shoreside")) {
+                    logger.error(parent.name() + ": cannot shutdown shoreside", parent);
                     return;
                 }
 

@@ -35,13 +35,6 @@ import java.util.Map;
 public interface MultiRoleState {
 
     /**
-     * Sets the leader of this MRS
-     *
-     * @param client to lead
-     */
-    void setLeader(Client client);
-
-    /**
      * Sets the MRS status
      *
      * @param status to change to
@@ -61,6 +54,13 @@ public interface MultiRoleState {
      * @return if this {@link com.type2labs.undersea.common.agent.Agent} is this MRS leader
      */
     boolean isLeader();
+
+    /**
+     * Sets the leader of this MRS
+     *
+     * @param client to lead
+     */
+    void setLeader(Client client);
 
     /**
      * Handles the failure of a {@link Client} that is in {@link MultiRoleState#remotePeers()}

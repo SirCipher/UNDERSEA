@@ -70,7 +70,7 @@ public class LogServiceImplTest {
         }
 
         for (int i = 0; i < 100; i++) {
-            logService.add(new LogEntry(PeerId.newId(), i, i, i, logService,true));
+            logService.add(new LogEntry(PeerId.newId(), i, i, i, logService, true));
         }
 
         List<LogEntry> logEntries;

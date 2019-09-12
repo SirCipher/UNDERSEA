@@ -35,24 +35,21 @@ public class LogEntry {
     /**
      * The {@link ConsensusAlgorithm} term that this entry was created in
      */
-    private int term;
-
+    private final int term;
+    /**
+     * Who the leader was when this entry was created
+     */
+    private final PeerId leader;
+    private final Object data;
+    /**
+     * Which service created this entry
+     */
+    private final AgentService agentService;
     /**
      * Whether or not this entry should be replicated across the cluster
      */
     private boolean replicate = true;
-
-    /**
-     * Who the leader was when this entry was created
-     */
-    private PeerId leader;
-    private Object data;
     private Object value;
-
-    /**
-     * Which service created this entry
-     */
-    private AgentService agentService;
 
     public LogEntry(PeerId leader, Object data, Object value, int term, AgentService agentService, boolean replicate) {
         this.leader = leader;

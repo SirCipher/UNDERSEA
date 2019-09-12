@@ -25,7 +25,7 @@ import com.type2labs.undersea.common.service.ServiceManager;
 
 /**
  * Denotes the current state of an {@link Agent}.
- *
+ * <p>
  * See {@link Agent#state()}
  */
 public class AgentState {

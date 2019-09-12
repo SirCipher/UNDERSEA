@@ -21,12 +21,10 @@
 
 package com.type2labs.undersea.dsl;
 
-import com.type2labs.undersea.dsl.uuv.model.DslAgentProxy;
 import com.type2labs.undersea.utilities.Utility;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.util.Map;
 import java.util.Properties;
 
 /**

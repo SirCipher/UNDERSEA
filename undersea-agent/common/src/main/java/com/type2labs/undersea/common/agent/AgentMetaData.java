@@ -31,7 +31,7 @@ import java.util.Map;
  */
 public class AgentMetaData {
 
-    private Map<PropertyKey, Object> properties = new HashMap<>();
+    private final Map<PropertyKey, Object> properties = new HashMap<>();
 
     public Map<PropertyKey, Object> getProperties() {
         return properties;

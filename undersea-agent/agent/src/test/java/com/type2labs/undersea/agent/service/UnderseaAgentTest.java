@@ -24,16 +24,15 @@ package com.type2labs.undersea.agent.service;
 import com.type2labs.undersea.agent.impl.UnderseaAgent;
 import com.type2labs.undersea.common.cluster.PeerId;
 import com.type2labs.undersea.common.config.RuntimeConfig;
+import com.type2labs.undersea.common.consensus.RaftClusterConfig;
 import com.type2labs.undersea.common.monitor.impl.SubsystemMonitorImpl;
 import com.type2labs.undersea.common.monitor.model.SubsystemMonitor;
 import com.type2labs.undersea.common.service.ServiceManager;
-import com.type2labs.undersea.common.consensus.RaftClusterConfig;
 import com.type2labs.undersea.prospect.impl.RaftNodeImpl;
 import com.type2labs.undersea.seachain.BlockchainNetworkImpl;
 import org.junit.Test;
 
 import java.net.InetSocketAddress;
-import java.util.ArrayList;
 
 import static org.junit.Assert.assertNotNull;
 

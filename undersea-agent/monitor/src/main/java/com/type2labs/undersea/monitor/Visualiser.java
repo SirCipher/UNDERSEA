@@ -344,7 +344,7 @@ public class Visualiser {
                 VisualiserMessage visualiserMessage = (VisualiserMessage) received;
                 int rowId = getRowByPeerId(visualiserMessage.getPeerId());
                 int errorCount = (int) model.getValueAt(rowId, 9);
-                errorCount = visualiserMessage.isError() ? errorCount+1 : errorCount;
+                errorCount = visualiserMessage.isError() ? errorCount + 1 : errorCount;
 
                 model.setValueAt(errorCount, rowId, 9);
 

@@ -21,13 +21,9 @@
 
 package com.type2labs.undersea.agent.impl;
 
-import com.google.common.util.concurrent.ListenableFuture;
 import com.type2labs.undersea.common.agent.Agent;
 import com.type2labs.undersea.common.agent.AgentMetaData;
 import com.type2labs.undersea.common.service.AgentService;
-import com.type2labs.undersea.common.service.transaction.ServiceCallback;
-import com.type2labs.undersea.common.service.transaction.Transaction;
-import com.type2labs.undersea.utilities.exception.NotSupportedException;
 import com.type2labs.undersea.utilities.processbuilder.ProcessBuilderUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -37,8 +33,6 @@ import java.io.IOException;
 
 /**
  * Interface for running the moos library that the agent operates on
- * <p>
- * Created by Thomas Klapwijk on 2019-08-24.
  */
 public class HardwareInterface implements AgentService {
 
@@ -57,10 +51,6 @@ public class HardwareInterface implements AgentService {
         return 5000;
     }
 
-    @Override
-    public void registerCallback(ServiceCallback serviceCallback) {
-
-    }
 
     @Override
     public void initialise(Agent parentAgent) {
@@ -125,16 +115,6 @@ public class HardwareInterface implements AgentService {
         }
 
         started = false;
-    }
-
-    @Override
-    public boolean started() {
-        return started;
-    }
-
-    @Override
-    public ListenableFuture<?> executeTransaction(Transaction transaction) {
-        throw new NotSupportedException();
     }
 
 }

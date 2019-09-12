@@ -25,6 +25,7 @@ import com.type2labs.undersea.agent.impl.HardwareInterface;
 import com.type2labs.undersea.agent.impl.MoosConnector;
 import com.type2labs.undersea.common.agent.*;
 import com.type2labs.undersea.common.consensus.MultiRoleStatus;
+import com.type2labs.undersea.common.consensus.RaftClusterConfig;
 import com.type2labs.undersea.common.logger.LogServiceImpl;
 import com.type2labs.undersea.common.monitor.impl.SubsystemMonitorSpoofer;
 import com.type2labs.undersea.common.monitor.impl.VisualiserClientImpl;
@@ -37,16 +38,18 @@ import com.type2labs.undersea.dsl.EnvironmentProperties;
 import com.type2labs.undersea.dsl.uuv.model.DslAgentProxy;
 import com.type2labs.undersea.missionplanner.manager.MoosMissionManagerImpl;
 import com.type2labs.undersea.missionplanner.planner.vrp.VehicleRoutingOptimiser;
-import com.type2labs.undersea.common.consensus.RaftClusterConfig;
 import com.type2labs.undersea.prospect.impl.DefaultServiceCallbacks;
 import com.type2labs.undersea.prospect.impl.RaftNodeImpl;
 import com.type2labs.undersea.seachain.BlockchainNetworkImpl;
 
 import java.io.File;
-import java.util.*;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
 
 /**
- * Created by Thomas Klapwijk on 2019-07-23.
+ * Initialises {@link Agent}s as required by UNDERSEA
  */
 public class AgentInitialiserImpl implements AgentInitialiser {
 

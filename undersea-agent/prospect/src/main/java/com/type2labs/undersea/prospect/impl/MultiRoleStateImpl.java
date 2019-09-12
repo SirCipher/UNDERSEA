@@ -81,13 +81,13 @@ public class MultiRoleStateImpl implements MultiRoleState {
         return status == MultiRoleStatus.LEADER;
     }
 
-    public boolean isApplied(){
-        return status==MultiRoleStatus.LEADER_FOLLOWER|| status==MultiRoleStatus.LEADER;
-    }
-
     @Override
     public void setLeader(Client leader) {
         this.leader = leader;
+    }
+
+    public boolean isApplied() {
+        return status == MultiRoleStatus.LEADER_FOLLOWER || status == MultiRoleStatus.LEADER;
     }
 
     /**

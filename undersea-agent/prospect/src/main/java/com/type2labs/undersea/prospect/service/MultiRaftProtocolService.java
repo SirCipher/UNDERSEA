@@ -53,7 +53,7 @@ public class MultiRaftProtocolService extends MultiRaftProtocolServiceGrpc.Multi
     public void notify(RaftProtos.NotificationRequest request, StreamObserver<RaftProtos.Empty> responseObserver) {
         GrpcUtil.sendAbstractAsyncMessage(responseObserver, () -> {
             MultiRoleNotification statusCode = MultiRoleNotification.valueOf(request.getStatusCode());
-            UnderseaLogger.info(logger, raftNode.parent(),"Received notification. Status: " + statusCode);
+            UnderseaLogger.info(logger, raftNode.parent(), "Received notification. Status: " + statusCode);
             PeerId peerId = PeerId.valueOf(request.getClient().getRaftPeerId());
             Client client = raftNode.multiRoleState().remotePeers().get(peerId);
 

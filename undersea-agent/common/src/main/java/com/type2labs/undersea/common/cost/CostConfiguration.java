@@ -29,7 +29,7 @@ import java.util.Map;
  */
 public class CostConfiguration {
 
-    private Map<String, Object> biases = new HashMap<>();
+    private final Map<String, Object> biases = new HashMap<>();
 
     public void setBias(String key, Object value) {
         biases.put(key, value);

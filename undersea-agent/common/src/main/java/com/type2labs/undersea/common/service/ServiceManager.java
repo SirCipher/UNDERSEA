@@ -60,10 +60,9 @@ public class ServiceManager {
             new ConcurrentHashMap<>();
     private final Map<Class<? extends AgentService>, ScheduledFuture<?>> scheduledFutures = new ConcurrentHashMap<>();
     private final Map<Class<? extends AgentService>, ServiceState> serviceStates = new ConcurrentHashMap<>();
-
+    private final ScheduledExecutorService scheduledExecutor;
+    private final ThrowableExecutor serviceInitialiser = ThrowableExecutor.newSingleThreadExecutor(logger);
     private ScheduledExecutorService serviceExecutor;
-    private ScheduledExecutorService scheduledExecutor;
-    private ThrowableExecutor serviceInitialiser = ThrowableExecutor.newSingleThreadExecutor(logger);
     private Agent agent;
 
     private volatile boolean started = false;
@@ -638,7 +637,7 @@ public class ServiceManager {
          */
         HIGH(5);
 
-        private int priority;
+        private final int priority;
 
         ServiceExecutionPriority(int priority) {
             this.priority = priority;
