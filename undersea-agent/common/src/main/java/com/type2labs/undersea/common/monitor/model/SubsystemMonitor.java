@@ -1,22 +1,79 @@
+/*
+ * Copyright [2019] [Undersea contributors]
+ *
+ * Developed from: https://github.com/gerasimou/UNDERSEA
+ * To: https://github.com/SirCipher/UNDERSEA
+ *
+ * Contact: Thomas Klapwijk - tklapwijk@pm.me
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package com.type2labs.undersea.common.monitor.model;
 
 import com.type2labs.undersea.common.agent.Range;
 import com.type2labs.undersea.common.agent.Subsystem;
 import com.type2labs.undersea.common.service.AgentService;
 
+/**
+ * A monitoring system for registered {@link Subsystem}s on the {@link com.type2labs.undersea.common.agent.Agent}.
+ * This system also calculates an associated cost for itself which is used during voting by the
+ * {@link com.type2labs.undersea.common.consensus.ConsensusAlgorithm}. This system also communicates the state with
+ * the {@link VisualiserClient} via {@link SubsystemMonitor#update()}
+ */
 public interface SubsystemMonitor extends AgentService {
 
+    /**
+     * Registers a new {@link Subsystem} to monitor
+     *
+     * @param subsystem to monitor
+     */
     void monitorSubsystem(Subsystem subsystem);
 
-    double readSubsystemStatus(Subsystem subsystem);
-
+    /**
+     * Update the {@link VisualiserClient} with the current status of the
+     * {@link com.type2labs.undersea.common.agent.Agent}
+     */
     void update();
 
+    /**
+     * Return the associated {@link VisualiserClient}
+     *
+     * @return the visualiser
+     */
     VisualiserClient visualiser();
 
+    /**
+     * Sets a {@link VisualiserClient} that the {@link com.type2labs.undersea.common.agent.Agent}'s state will be
+     * communicated with. Implementations of this interface must ensure that the {@link VisualiserClient}'s
+     * {@link com.type2labs.undersea.common.agent.AgentAware} initialisation is run
+     *
+     * @param visualiserClient to communicate with
+     */
     void setVisualiser(VisualiserClient visualiserClient);
 
+    /**
+     * Register the speed range of this {@link com.type2labs.undersea.common.agent.Agent}
+     *
+     * @param speedRange to register
+     */
     void registerSpeedRange(Range speedRange);
 
+    /**
+     * Given the current state of the {@link com.type2labs.undersea.common.agent.Agent}, calculate a cost and return it
+     *
+     * @return the current cost
+     */
     double getCurrentCost();
+
 }

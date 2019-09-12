@@ -1,3 +1,24 @@
+/*
+ * Copyright [2019] [Undersea contributors]
+ *
+ * Developed from: https://github.com/gerasimou/UNDERSEA
+ * To: https://github.com/SirCipher/UNDERSEA
+ *
+ * Contact: Thomas Klapwijk - tklapwijk@pm.me
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package com.type2labs.undersea.common.service;
 
 import com.google.common.util.concurrent.ListenableFuture;
@@ -10,11 +31,12 @@ import com.type2labs.undersea.utilities.executor.ThrowableExecutor;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.concurrent.ExecutorService;
 
 /**
- * Created by Thomas Klapwijk on 2019-08-08.
+ * A top-level structure that all services must implement. Services are registered and managed by the
+ * {@link ServiceManager}. The {@link ServiceManager} will initialise, start and waiting for the service to
+ * transition to a running state.
  */
 public interface AgentService extends Runnable, AgentAware {
 
@@ -23,7 +45,6 @@ public interface AgentService extends Runnable, AgentAware {
      * operation. Without it, the required duties cannot be performed. If a service fails, such as one which is
      * performing a non-mission-critical task, then the {@link ServiceManager} will not start to shutdown the agent.
      *
-     * @return whether or not the service is critical
      * @return whether or not the service is critical
      */
     default boolean isCritical() {
@@ -74,6 +95,12 @@ public interface AgentService extends Runnable, AgentAware {
     }
 
 
+    /**
+     * Register a {@link ServiceCallback} with the {@link AgentService} that will fire when the provided
+     * {@link LifecycleEvent} happens
+     *
+     * @param serviceCallback to register
+     */
     default void registerCallback(ServiceCallback serviceCallback) {
 
     }
@@ -87,7 +114,13 @@ public interface AgentService extends Runnable, AgentAware {
         return new ArrayList<>();
     }
 
-    default void fireCallback(LifecycleEvent electedLeader) {
+    /**
+     * Fire all {@link ServiceCallback}s that have been registered with the service that match the provided
+     * {@link LifecycleEvent}
+     *
+     * @param event to fire
+     */
+    default void fireCallback(LifecycleEvent event) {
 
     }
 }

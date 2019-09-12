@@ -1,15 +1,33 @@
+/*
+ * Copyright [2019] [Undersea contributors]
+ *
+ * Developed from: https://github.com/gerasimou/UNDERSEA
+ * To: https://github.com/SirCipher/UNDERSEA
+ *
+ * Contact: Thomas Klapwijk - tklapwijk@pm.me
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package com.type2labs.undersea.prospect.impl;
 
 import com.google.common.collect.Sets;
 import com.type2labs.undersea.common.agent.Agent;
 import com.type2labs.undersea.common.agent.AgentFactory;
-import com.type2labs.undersea.common.agent.AgentStatus;
 import com.type2labs.undersea.common.cluster.Client;
-import com.type2labs.undersea.common.cluster.ClusterState;
-import com.type2labs.undersea.common.config.UnderseaRuntimeConfig;
-import com.type2labs.undersea.common.consensus.RaftRole;
+import com.type2labs.undersea.common.config.RuntimeConfig;
+import com.type2labs.undersea.common.consensus.ConsensusAlgorithmRole;
 import com.type2labs.undersea.common.cost.CostConfiguration;
-import com.type2labs.undersea.common.cost.CostConfigurationImpl;
 import com.type2labs.undersea.common.logger.LogServiceImpl;
 import com.type2labs.undersea.common.missions.planner.impl.NoMissionManager;
 import com.type2labs.undersea.common.monitor.impl.SubsystemMonitorSpoofer;
@@ -28,7 +46,6 @@ import java.io.Closeable;
 import java.net.InetSocketAddress;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 public class LocalAgentGroup implements Closeable {
@@ -56,8 +73,7 @@ public class LocalAgentGroup implements Closeable {
 
             ServiceManager serviceManager = new ServiceManager();
 
-            Agent agent = agentFactory.createWith(config.getUnderseaRuntimeConfig(), name, serviceManager,
-                    new AgentStatus(name, new ArrayList<>()));
+            Agent agent = agentFactory.createWith(config.getRuntimeConfig(), name, serviceManager);
 
             serviceManager.registerService(raftNode);
 
@@ -120,28 +136,10 @@ public class LocalAgentGroup implements Closeable {
     }
 
     private RaftClusterConfig defaultConfig() {
-        UnderseaRuntimeConfig underseaConfig = new UnderseaRuntimeConfig();
+        RuntimeConfig underseaConfig = new RuntimeConfig();
         RaftClusterConfig config = new RaftClusterConfig(underseaConfig);
 
-        CostConfiguration costConfiguration = new CostConfigurationImpl();
-        costConfiguration.setCostCalculator((ClusterState clusterState) -> {
-            double accuracyWeighting = (double) costConfiguration.getBias("ACCURACY");
-            double speedWeighting = (double) costConfiguration.getBias("SPEED");
-
-            for (Map.Entry<Client, ClusterState.ClientState> e : clusterState.getMembers().entrySet()) {
-                ClusterState.ClientState a = e.getValue();
-                if (!a.isReachable()) {
-                    continue;
-                }
-
-//                double cost = ((a.getAccuracy() * accuracyWeighting)
-//                        + (a.getRemainingBattery() * speedWeighting))
-//                        / a.getRange();
-
-                e.getValue().setCost(0);
-            }
-        });
-
+        CostConfiguration costConfiguration = new CostConfiguration();
         costConfiguration.setBias("ACCURACY", 30.0);
         costConfiguration.setBias("SPEED", 5.0);
 
@@ -169,7 +167,7 @@ public class LocalAgentGroup implements Closeable {
         RaftNode match = null;
 
         for (RaftNodeImpl raftNode : raftNodes) {
-            if (raftNode.raftRole() == RaftRole.LEADER) {
+            if (raftNode.raftRole() == ConsensusAlgorithmRole.LEADER) {
                 match = raftNode;
                 count++;
             }
@@ -190,7 +188,7 @@ public class LocalAgentGroup implements Closeable {
 
     public void start() {
         for (RaftNodeImpl node : raftNodes) {
-            ServiceManager serviceManager = node.parent().services();
+            ServiceManager serviceManager = node.parent().serviceManager();
 
             for (AgentService agentService : serviceManager.getServices()) {
                 if (RaftNode.class.isAssignableFrom(agentService.getClass())) {

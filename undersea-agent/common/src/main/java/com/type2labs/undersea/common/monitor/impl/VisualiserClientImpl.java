@@ -1,3 +1,24 @@
+/*
+ * Copyright [2019] [Undersea contributors]
+ *
+ * Developed from: https://github.com/gerasimou/UNDERSEA
+ * To: https://github.com/SirCipher/UNDERSEA
+ *
+ * Contact: Thomas Klapwijk - tklapwijk@pm.me
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package com.type2labs.undersea.common.monitor.impl;
 
 import com.google.common.util.concurrent.MoreExecutors;
@@ -67,7 +88,7 @@ public class VisualiserClientImpl implements VisualiserClient {
                     return;
                 }
 
-                parent.services().shutdownServices();
+                parent.serviceManager().shutdownServices();
             } else if (lifecycleEvent == LifecycleEvent.FAILING) {
                 if(parent.name().equals("shoreside")){
                     logger.error(parent.name()+": cannot shutdown shoreside", parent);
@@ -82,10 +103,10 @@ public class VisualiserClientImpl implements VisualiserClient {
                         .invokedBy(this)
                         .build();
 
-                parent.services().commitTransaction(transaction);
+                parent.serviceManager().commitTransaction(transaction);
 
                 Thread.sleep(10000);
-                parent.services().shutdownServices();
+                parent.serviceManager().shutdownServices();
             }
 
             inputStream.close();
@@ -137,7 +158,7 @@ public class VisualiserClientImpl implements VisualiserClient {
     }
 
     private synchronized VisualiserData agentState() {
-        ServiceManager serviceManager = parent.services();
+        ServiceManager serviceManager = parent.serviceManager();
 
         ConsensusAlgorithm consensusAlgorithm = serviceManager.getService(ConsensusAlgorithm.class);
 
@@ -211,7 +232,7 @@ public class VisualiserClientImpl implements VisualiserClient {
         running = true;
 
         runServer();
-        parent.services().startRepeatingTask(this::sendVisualiserData, 500);
+        parent.serviceManager().startRepeatingTask(this::sendVisualiserData, 500);
     }
 
     private void sendVisualiserData() {

@@ -1,60 +1,64 @@
+/*
+ * Copyright [2019] [Undersea contributors]
+ *
+ * Developed from: https://github.com/gerasimou/UNDERSEA
+ * To: https://github.com/SirCipher/UNDERSEA
+ *
+ * Contact: Thomas Klapwijk - tklapwijk@pm.me
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package com.type2labs.undersea.common.agent;
 
 
 import com.type2labs.undersea.common.blockchain.BlockchainNetwork;
 import com.type2labs.undersea.common.cluster.Client;
 import com.type2labs.undersea.common.cluster.PeerId;
-import com.type2labs.undersea.common.config.UnderseaRuntimeConfig;
+import com.type2labs.undersea.common.config.RuntimeConfig;
 import com.type2labs.undersea.common.consensus.ConsensusAlgorithm;
 import com.type2labs.undersea.common.controller.Controller;
 import com.type2labs.undersea.common.logger.model.LogEntry;
 import com.type2labs.undersea.common.logger.model.LogService;
-import com.type2labs.undersea.common.missions.planner.model.MissionManager;
 import com.type2labs.undersea.common.service.ServiceManager;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.concurrent.*;
+import java.util.Objects;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
+/**
+ * An abstract implementation of {@link Agent}. Implementing the core functionality of an agent for users to extend
+ * to their own needs.
+ */
 public abstract class AbstractAgent implements Agent {
 
     private static final Logger logger = LogManager.getLogger(AbstractAgent.class);
-    private static final long serialVersionUID = 6578957795091837535L;
 
-    private final ScheduledExecutorService internalExecutor = new ScheduledThreadPoolExecutor(4);
     private final ServiceManager services;
-    private final AgentStatus status;
-    private final UnderseaRuntimeConfig config;
+    private final RuntimeConfig config;
     private final ConcurrentHashMap<PeerId, Client> clusterClients = new ConcurrentHashMap<>();
     private final PeerId peerId;
     private AgentMetaData metaData;
     private String name;
     private AgentState agentState = new AgentState();
 
-    public AbstractAgent(UnderseaRuntimeConfig config, String name, ServiceManager serviceManager, AgentStatus status
-            , PeerId peerId) {
-        // Avoided using javax validation for minimal reliance on reflection
-        if (config == null) {
-            throw new IllegalArgumentException("Runtime configuration must be provided");
-        }
-
-        if (serviceManager == null) {
-            throw new IllegalArgumentException("Service manager must be provided");
-        }
-
-        if (status == null) {
-            throw new IllegalArgumentException("Agent status must be provided");
-        }
-
-        if (peerId == null) {
-            throw new IllegalArgumentException("Peer ID must be provided");
-        }
-
-        this.config = config;
-        this.name = name;
-        this.services = serviceManager;
-        this.status = status;
-        this.peerId = peerId;
+    public AbstractAgent(RuntimeConfig config, String name, ServiceManager serviceManager, PeerId peerId) {
+        this.config = Objects.requireNonNull(config);
+        this.name = Objects.requireNonNull(name);
+        this.services = Objects.requireNonNull(serviceManager);
+        this.peerId = Objects.requireNonNull(peerId);
 
         serviceManager.setAgent(this);
     }
@@ -80,10 +84,6 @@ public abstract class AbstractAgent implements Agent {
         return services.getService(Controller.class);
     }
 
-    public MissionManager getMissionManager() {
-        return services.getService(MissionManager.class);
-    }
-
     public String getName() {
         return name;
     }
@@ -92,17 +92,13 @@ public abstract class AbstractAgent implements Agent {
         return services;
     }
 
-    public AgentStatus getStatus() {
-        return status;
-    }
-
     @Override
     public AgentMetaData metadata() {
         return metaData;
     }
 
     @Override
-    public ServiceManager services() {
+    public ServiceManager serviceManager() {
         return services;
     }
 
@@ -112,12 +108,7 @@ public abstract class AbstractAgent implements Agent {
     }
 
     @Override
-    public void schedule(Runnable task) {
-        internalExecutor.schedule(task, 500, TimeUnit.MILLISECONDS);
-    }
-
-    @Override
-    public UnderseaRuntimeConfig config() {
+    public RuntimeConfig config() {
         return config;
     }
 

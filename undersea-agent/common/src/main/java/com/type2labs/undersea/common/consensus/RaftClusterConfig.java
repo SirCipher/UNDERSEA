@@ -1,14 +1,37 @@
+/*
+ * Copyright [2019] [Undersea contributors]
+ *
+ * Developed from: https://github.com/gerasimou/UNDERSEA
+ * To: https://github.com/SirCipher/UNDERSEA
+ *
+ * Contact: Thomas Klapwijk - tklapwijk@pm.me
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package com.type2labs.undersea.common.consensus;
 
+import com.type2labs.undersea.common.config.RuntimeConfig;
 import com.type2labs.undersea.common.config.UnderseaConfig;
-import com.type2labs.undersea.common.config.UnderseaRuntimeConfig;
 
-
+/**
+ * A configuration object for {@link ConsensusAlgorithm}s
+ */
 public class RaftClusterConfig implements UnderseaConfig {
 
     public static final long HEARTBEAT_PERIOD = 100;
     private static long heatbeatTimeout = 1000L;
-    private UnderseaRuntimeConfig underseaRuntimeConfig;
+    private RuntimeConfig runtimeConfig;
     private boolean autoPortDiscovery = true;
     private int executorThreads = 4;
     private long getStatusDeadline = 30;
@@ -22,8 +45,8 @@ public class RaftClusterConfig implements UnderseaConfig {
     public RaftClusterConfig() {
     }
 
-    public RaftClusterConfig(UnderseaRuntimeConfig underseaRuntimeConfig) {
-        this.underseaRuntimeConfig = underseaRuntimeConfig;
+    public RaftClusterConfig(RuntimeConfig runtimeConfig) {
+        this.runtimeConfig = runtimeConfig;
     }
 
     public long getStatusDeadlineLong() {
@@ -58,10 +81,9 @@ public class RaftClusterConfig implements UnderseaConfig {
         return autoPortDiscovery;
     }
 
-    public UnderseaRuntimeConfig getUnderseaRuntimeConfig() {
-        return underseaRuntimeConfig;
+    public RuntimeConfig getRuntimeConfig() {
+        return runtimeConfig;
     }
-
 
     /**
      * Signifies the number of threads that the {@link java.util.concurrent.ExecutorService}s should use for the gRPC
@@ -74,7 +96,6 @@ public class RaftClusterConfig implements UnderseaConfig {
         this.executorThreads = executorThreads;
         return this;
     }
-
 
     /**
      * Returns the number of threads that an {@link java.util.concurrent.ExecutorService} should use

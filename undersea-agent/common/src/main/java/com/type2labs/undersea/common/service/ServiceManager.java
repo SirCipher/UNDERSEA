@@ -1,3 +1,24 @@
+/*
+ * Copyright [2019] [Undersea contributors]
+ *
+ * Developed from: https://github.com/gerasimou/UNDERSEA
+ * To: https://github.com/SirCipher/UNDERSEA
+ *
+ * Contact: Thomas Klapwijk - tklapwijk@pm.me
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package com.type2labs.undersea.common.service;
 
 import com.google.common.util.concurrent.ListenableFuture;
@@ -21,10 +42,8 @@ import java.util.concurrent.*;
 import java.util.function.BooleanSupplier;
 
 /**
- * Created by Thomas Klapwijk on 2019-08-08.
- * <p>
- * TODO: AgentServices should have a prerequisites method that starts all services before the service itself and
- * checks for circular dependencies
+ * The backing manager for all registered {@link AgentService} for an {@link Agent}. This manages all the registered
+ * services; starting, shutting down and handling them if there is a failure when they run.
  */
 @ThreadSafe
 public class ServiceManager {
@@ -56,10 +75,20 @@ public class ServiceManager {
         scheduledExecutor = ScheduledThrowableExecutor.newSingleThreadExecutor(logger);
     }
 
+    /**
+     * @return whether or not the manager is currently starting
+     */
     public boolean isStarting() {
         return starting;
     }
 
+    /**
+     * Transitions the provided service to the new {@link ServiceState}. If the provided {@link ServiceState} is
+     * {@link ServiceState#FAILED}, then all running {@link AgentService}s are notified of the failure
+     *
+     * @param service to transition
+     * @param status  to transition to
+     */
     private void transitionService(Class<? extends AgentService> service, ServiceState status) {
         serviceStates.put(service, status);
 
@@ -154,6 +183,12 @@ public class ServiceManager {
         }
     }
 
+    /**
+     * Commits a {@link Transaction} to all the running {@link AgentService}s with the provided {@link LifecycleEvent}
+     *
+     * @param lifecycleEvent to set against the {@link Transaction}
+     * @return all the futures from the {@link AgentService}s
+     */
     public Set<ListenableFuture<?>> commitTransactionFromLifecycleEvent(LifecycleEvent lifecycleEvent) {
         Transaction transaction = new Transaction.Builder(agent)
                 .forAllRunningServices()
@@ -164,6 +199,12 @@ public class ServiceManager {
         return commitTransaction(transaction);
     }
 
+    /**
+     * Commits a {@link Transaction} to the specified {@link AgentService}s
+     *
+     * @param transaction to commit
+     * @return all the futures from the {@link AgentService}s
+     */
     public Set<ListenableFuture<?>> commitTransaction(Transaction transaction) {
         Collection<Class<? extends AgentService>> destinationServices = transaction.getDestinationServices();
         Set<ListenableFuture<?>> futures = new HashSet<>(destinationServices.size());
@@ -201,6 +242,14 @@ public class ServiceManager {
         return null;
     }
 
+    /**
+     * Gets a service by its {@link Class}. This can be the class itself or any superclass
+     *
+     * @param s        to get
+     * @param required whether or not the service is required. If it is, then a {@link NullPointerException} is thrown
+     * @param <T>      {@link AgentService}
+     * @return the requested {@link AgentService}
+     */
     public <T extends AgentService> T getService(Class<T> s, boolean required) {
         AgentService agentService = getService(s);
 
@@ -211,6 +260,13 @@ public class ServiceManager {
         return (T) agentService;
     }
 
+    /**
+     * Gets a service by its {@link Class}. This can be the class itself or any superclass
+     *
+     * @param s   to get
+     * @param <T> {@link AgentService}
+     * @return the requested {@link AgentService}
+     */
     public <T extends AgentService> T getService(Class<T> s) {
         Objects.requireNonNull(s);
 
@@ -224,6 +280,11 @@ public class ServiceManager {
         return null;
     }
 
+    /**
+     * Returns all the registered {@link AgentService} {@link Class} objects
+     *
+     * @return the classes
+     */
     public Collection<Class<? extends AgentService>> getServiceClasses() {
         return services.keySet();
     }
@@ -237,6 +298,11 @@ public class ServiceManager {
         return services.keySet();
     }
 
+    /**
+     * Returns all of the registered {@link AgentService} instances
+     *
+     * @return the registered {@link AgentService}s
+     */
     public synchronized Collection<AgentService> getServices() {
         List<AgentService> s = new ArrayList<>(services.size());
 
@@ -262,6 +328,13 @@ public class ServiceManager {
         return sorted;
     }
 
+    /**
+     * Register an {@link AgentService} that will be managed by this class. The provided service must not already be
+     * registered. The registered service will be registered with a default {@link ServiceExecutionPriority} of
+     * {@link ServiceExecutionPriority#MEDIUM
+     *
+     * @param service to register
+     */
     public synchronized void registerService(AgentService service) {
         if (services.containsKey(service.getClass())) {
             throw new IllegalArgumentException("Service already exists");
@@ -270,6 +343,14 @@ public class ServiceManager {
         registerService(service, ServiceExecutionPriority.MEDIUM);
     }
 
+    /**
+     * Register an {@link AgentService} with the given {@link ServiceExecutionPriority} that will be managed by this
+     * class. The provided service must not already be
+     * registered.
+     *
+     * @param service  to register
+     * @param priority to start and shutdown the service by
+     */
     public synchronized void registerService(AgentService service, ServiceExecutionPriority priority) {
         if (services.containsKey(service.getClass())) {
             throw new IllegalArgumentException("Service already exists");
@@ -292,10 +373,12 @@ public class ServiceManager {
         return serviceStates.values().stream().filter(e -> e == ServiceState.RUNNING).count() == serviceStates.size();
     }
 
-    public void registerServices(Set<AgentService> services) {
-        services.forEach(this::registerService);
-    }
-
+    /**
+     * Returns whether or not the requested service is currently running
+     *
+     * @param service to check
+     * @return whether or not it is running
+     */
     public synchronized boolean serviceRunning(Class<? extends AgentService> service) {
         ScheduledFuture<?> scheduledFuture = getScheduledFuture(service);
 
@@ -306,6 +389,11 @@ public class ServiceManager {
         }
     }
 
+    /**
+     * Sets the associated {@link Agent} for this service manager. This must be set
+     *
+     * @param agent to associate with this service manager
+     */
     public void setAgent(Agent agent) {
         this.agent = agent;
         this.serviceManagerTransactionService = new ServiceManagerTransactionService();
@@ -314,6 +402,12 @@ public class ServiceManager {
         logger.info(agent.name() + ": service manager assigned", agent);
     }
 
+    /**
+     * Shuts down the requested service if it is registered
+     *
+     * @param service      class
+     * @param agentService to shutdown
+     */
     public synchronized void shutdownService(Class<? extends AgentService> service, AgentService agentService) {
         ScheduledFuture<?> scheduledFuture = getScheduledFuture(service);
 
@@ -332,6 +426,9 @@ public class ServiceManager {
         logger.info(agent.name() + ": shutting down service: " + service.getSimpleName(), agent);
     }
 
+    /**
+     * Shuts down all registered {@link AgentService}s and the {@link ExecutorService}s
+     */
     public void shutdownServices() {
         for (Map.Entry<Class<? extends AgentService>, Pair<AgentService, ServiceExecutionPriority>> e :
                 prioritySorted()) {
@@ -379,10 +476,15 @@ public class ServiceManager {
         logger.info(agent.name() + ": started repeating task at period: " + period, agent);
     }
 
+    /**
+     * Starts the given {@link AgentService}
+     *
+     * @param service to start
+     */
     public synchronized void startService(Class<? extends AgentService> service) {
         initialise();
 
-        AgentService agentService = getService(service);
+        AgentService agentService = getService(service, true);
 
         agentService.initialise(agent);
 
@@ -417,6 +519,10 @@ public class ServiceManager {
         };
     }
 
+    /**
+     * Initialise the {@link ServiceManager} and check that all the required {@link AgentService}s for the registered
+     * {@link AgentService}s are registered
+     */
     private synchronized void initialise() {
         if (started) {
             return;
@@ -426,6 +532,9 @@ public class ServiceManager {
         serviceExecutor = ScheduledThrowableExecutor.newExecutor(services.size(), logger);
     }
 
+    /**
+     * Starts the {@link ServiceManager} and all the registered {@link AgentService}s
+     */
     public synchronized void startServices() {
         starting = true;
 
@@ -440,6 +549,10 @@ public class ServiceManager {
         updateVisualiser();
     }
 
+    /**
+     * Checks that all of the registered {@link AgentService}s have the required {@link AgentService}s as specified
+     * by {@link AgentService#requiredServices()}
+     */
     private synchronized void processRequiredServices() {
         Set<Class<? extends AgentService>> missingServices = new HashSet<>();
 
@@ -468,6 +581,10 @@ public class ServiceManager {
         }
     }
 
+    /**
+     * If the {@link SubsystemMonitor} is registered, then make a call to update the
+     * {@link com.type2labs.undersea.common.monitor.model.VisualiserClient} with the current state of the {@link Agent}
+     */
     public void updateVisualiser() {
         SubsystemMonitor subsystemMonitor = getService(SubsystemMonitor.class);
 
@@ -537,6 +654,9 @@ public class ServiceManager {
         }
     }
 
+    /**
+     * Default {@link AgentService} for firing transactions internally
+     */
     private static class ServiceManagerTransactionService implements AgentService {
 
         private Agent agent;

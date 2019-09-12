@@ -1,13 +1,33 @@
+/*
+ * Copyright [2019] [Undersea contributors]
+ *
+ * Developed from: https://github.com/gerasimou/UNDERSEA
+ * To: https://github.com/SirCipher/UNDERSEA
+ *
+ * Contact: Thomas Klapwijk - tklapwijk@pm.me
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package com.type2labs.undersea.agent;
 
 import com.type2labs.undersea.common.agent.Agent;
 import com.type2labs.undersea.common.agent.AgentState;
 import com.type2labs.undersea.common.cluster.Client;
 import com.type2labs.undersea.common.cluster.ClusterState;
-import com.type2labs.undersea.common.config.UnderseaRuntimeConfig;
+import com.type2labs.undersea.common.config.RuntimeConfig;
 import com.type2labs.undersea.common.consensus.RaftClusterConfig;
 import com.type2labs.undersea.common.cost.CostConfiguration;
-import com.type2labs.undersea.common.cost.CostConfigurationImpl;
 import com.type2labs.undersea.common.missions.planner.impl.MissionParametersImpl;
 import com.type2labs.undersea.common.missions.planner.model.MissionParameters;
 import com.type2labs.undersea.common.missions.task.model.TaskStatus;
@@ -46,40 +66,22 @@ public class Runner extends AbstractRunner {
     }
 
     private static RaftClusterConfig defaultConfig(String configurationFileLocation) {
-        UnderseaRuntimeConfig underseaRuntimeConfig = new UnderseaRuntimeConfig();
-        RaftClusterConfig raftClusterConfig = new RaftClusterConfig(underseaRuntimeConfig);
+        RuntimeConfig runtimeConfig = new RuntimeConfig();
+        RaftClusterConfig raftClusterConfig = new RaftClusterConfig(runtimeConfig);
 
-        CostConfiguration costConfiguration = new CostConfigurationImpl();
-        costConfiguration.setCostCalculator((ClusterState clusterState) -> {
-            double accuracyWeighting = (double) costConfiguration.getBias("ACCURACY");
-            double speedWeighting = (double) costConfiguration.getBias("SPEED");
-
-            for (Map.Entry<Client, ClusterState.ClientState> e : clusterState.getMembers().entrySet()) {
-                ClusterState.ClientState a = e.getValue();
-                if (!a.isReachable()) {
-                    continue;
-                }
-
-//                double cost = ((a.getAccuracy() * accuracyWeighting)
-//                        + (a.getRemainingBattery() * speedWeighting))
-//                        / a.getRange();
-
-                e.getValue().setCost(0);
-            }
-        });
-
+        CostConfiguration costConfiguration = new CostConfiguration();
         costConfiguration.setBias("ACCURACY", 30.0);
         costConfiguration.setBias("SPEED", 5.0);
 
-        underseaRuntimeConfig.setCostConfiguration(costConfiguration);
+        runtimeConfig.setCostConfiguration(costConfiguration);
 
         Properties properties = Utility.getPropertiesByName(configurationFileLocation);
         double[][] area = Utility.propertyKeyTo2dDoubleArray(properties, "environment.area");
 
         MissionParameters missionParameters = new MissionParametersImpl(0, area, 40);
-        underseaRuntimeConfig.missionParameters(missionParameters);
+        runtimeConfig.missionParameters(missionParameters);
 
-        underseaRuntimeConfig.enableVisualiser(true);
+        runtimeConfig.enableVisualiser(true);
 
         return raftClusterConfig;
     }
@@ -110,14 +112,14 @@ public class Runner extends AbstractRunner {
             throw new UnderseaException("Shoreside agent not found");
         }
 
-        RaftNode shoresideRaftNode = shoreside.services().getService(RaftNode.class);
+        RaftNode shoresideRaftNode = shoreside.serviceManager().getService(RaftNode.class);
         MultiRoleLeaderClientImpl shoresideClient = new MultiRoleLeaderClientImpl(shoresideRaftNode,
                 shoresideRaftNode.server().getSocketAddress(),
                 shoresideRaftNode.parent().peerId());
 
         super.getAgents().forEach((a) -> {
             if (a.name().equals("shoreside")) {
-                RaftNode raftNode = a.services().getService(RaftNode.class);
+                RaftNode raftNode = a.serviceManager().getService(RaftNode.class);
                 raftNode.multiRoleState().setLeader(shoresideClient);
             }
         });
@@ -127,11 +129,11 @@ public class Runner extends AbstractRunner {
 
         if (localNodeDiscovery) {
             for (Agent agentA : super.getAgents()) {
-                while (!agentA.services().isHealthy()) {
+                while (!agentA.serviceManager().isHealthy()) {
                     Thread.sleep(500);
                 }
 
-                RaftNodeImpl raftNodeA = agentA.services().getService(RaftNodeImpl.class);
+                RaftNodeImpl raftNodeA = agentA.serviceManager().getService(RaftNodeImpl.class);
 
                 if (raftNodeA.multiRoleState().isLeader()) {
                     continue;
@@ -144,11 +146,11 @@ public class Runner extends AbstractRunner {
 
                     for (Agent agentB :
                             super.getAgents().stream().filter(a -> a.state().getState() == AgentState.State.BACKUP).collect(Collectors.toList())) {
-                        while (!agentB.services().isHealthy()) {
+                        while (!agentB.serviceManager().isHealthy()) {
                             Thread.sleep(500);
                         }
 
-                        RaftNodeImpl raftNodeB = agentB.services().getService(RaftNodeImpl.class);
+                        RaftNodeImpl raftNodeB = agentB.serviceManager().getService(RaftNodeImpl.class);
                         if (raftNodeB.multiRoleState().isLeader()) {
                             continue;
                         }
@@ -160,12 +162,12 @@ public class Runner extends AbstractRunner {
                 } else {
                     for (Agent agentB :
                             super.getAgents().stream().filter(a -> a.state().getState() != AgentState.State.BACKUP).collect(Collectors.toList())) {
-                        while (!agentB.services().isHealthy()) {
+                        while (!agentB.serviceManager().isHealthy()) {
                             Thread.sleep(500);
                         }
 
 
-                        RaftNodeImpl raftNodeB = agentB.services().getService(RaftNodeImpl.class);
+                        RaftNodeImpl raftNodeB = agentB.serviceManager().getService(RaftNodeImpl.class);
                         shoresideRaftNode.multiRoleState().remotePeers().put(agentB.peerId(), raftNodeB.self());
                         if (raftNodeB.multiRoleState().isLeader()) {
                             continue;
@@ -216,7 +218,7 @@ public class Runner extends AbstractRunner {
                 continue;
             }
 
-            MoosMissionManagerImpl missionManager = agent.services().getService(MoosMissionManagerImpl.class);
+            MoosMissionManagerImpl missionManager = agent.serviceManager().getService(MoosMissionManagerImpl.class);
             while (!missionManager.missionHasBeenAssigned()) {
                 try {
                     Thread.sleep(500);

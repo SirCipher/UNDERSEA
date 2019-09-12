@@ -23,7 +23,7 @@ Behavior = BHV_Waypoint
   updates   = WAYPOINT_foxtrot_UPDATES
   perpetual = false
   speed = 2.0
-  //points = 
+  //points = $(POINTS)
 }
 
 Behavior = BHV_Waypoint

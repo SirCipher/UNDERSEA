@@ -1,3 +1,24 @@
+/*
+ * Copyright [2019] [Undersea contributors]
+ *
+ * Developed from: https://github.com/gerasimou/UNDERSEA
+ * To: https://github.com/SirCipher/UNDERSEA
+ *
+ * Contact: Thomas Klapwijk - tklapwijk@pm.me
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package com.type2labs.undersea.prospect.impl;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -12,7 +33,7 @@ import com.type2labs.undersea.common.cluster.Client;
 import com.type2labs.undersea.common.cluster.PeerId;
 import com.type2labs.undersea.common.consensus.MultiRoleState;
 import com.type2labs.undersea.common.consensus.RaftClusterConfig;
-import com.type2labs.undersea.common.consensus.RaftRole;
+import com.type2labs.undersea.common.consensus.ConsensusAlgorithmRole;
 import com.type2labs.undersea.common.logger.UnderseaLogger;
 import com.type2labs.undersea.common.logger.model.LogEntry;
 import com.type2labs.undersea.common.logger.model.LogService;
@@ -69,7 +90,7 @@ public class RaftNodeImpl implements RaftNode {
     private RaftState raftState;
     private List<ServiceCallback> serviceCallbacks = new ArrayList<>();
     private Agent agent;
-    private RaftRole role = RaftRole.CANDIDATE;
+    private ConsensusAlgorithmRole role = ConsensusAlgorithmRole.CANDIDATE;
     private MultiRoleStateImpl multiRoleState;
     private RaftClientImpl selfRaftClientImpl;
     private boolean started = false;
@@ -154,7 +175,7 @@ public class RaftNodeImpl implements RaftNode {
     }
 
     @Override
-    public RaftRole raftRole() {
+    public ConsensusAlgorithmRole raftRole() {
         return role;
     }
 
@@ -184,16 +205,16 @@ public class RaftNodeImpl implements RaftNode {
     @Override
     public synchronized void toLeader(int term) {
         // Prevent reassigning the role
-        if (role == RaftRole.LEADER) {
+        if (role == ConsensusAlgorithmRole.LEADER) {
             return;
         }
 
-        role = RaftRole.LEADER;
+        role = ConsensusAlgorithmRole.LEADER;
 
         multiRoleState.updateStatus();
 
         logger.info(parent().name() + " is now the leader", agent);
-        agent.log(new LogEntry(leaderPeerId(), new Object(), new Object(), state().getCurrentTerm(), this));
+        agent.log(new LogEntry(leaderPeerId(), new Object(), new Object(), state().getCurrentTerm(), this, true));
 
         fireCallback(LifecycleEvent.ELECTED_LEADER);
         state().toLeader(selfRaftClientImpl);
@@ -223,7 +244,7 @@ public class RaftNodeImpl implements RaftNode {
     public void toFollower(int term) {
         multiRoleState.updateStatus();
 
-        role = RaftRole.FOLLOWER;
+        role = ConsensusAlgorithmRole.FOLLOWER;
         raftState.clearCandidate();
         raftState.setCurrentTerm(term);
         logger.info(parent().name() + " is now a follower", agent);
@@ -235,7 +256,7 @@ public class RaftNodeImpl implements RaftNode {
     public void toCandidate() {
         multiRoleState.updateStatus();
 
-        role = RaftRole.CANDIDATE;
+        role = ConsensusAlgorithmRole.CANDIDATE;
         raftState.initCandidate();
         logger.info(parent().name() + " is now a candidate", agent);
 
@@ -292,7 +313,7 @@ public class RaftNodeImpl implements RaftNode {
             RaftClient raftClient = (RaftClient) agentMission.getAssignee();
 
             if (raftClient.isSelf()) {
-                MissionManager manager = agent.services().getService(MissionManager.class);
+                MissionManager manager = agent.serviceManager().getService(MissionManager.class);
                 manager.assignMission(generatedMission);
 
                 continue;
@@ -320,7 +341,7 @@ public class RaftNodeImpl implements RaftNode {
     }
 
     private SubsystemMonitor getMonitor() {
-        return agent.services().getService(SubsystemMonitor.class);
+        return agent.serviceManager().getService(SubsystemMonitor.class);
     }
 
     @Override
@@ -359,7 +380,7 @@ public class RaftNodeImpl implements RaftNode {
     }
 
     private void sendAppendRequest(RaftClient follower) {
-        LogService logService = parent().services().getService(LogService.class);
+        LogService logService = parent().serviceManager().getService(LogService.class);
         List<LogEntry> logEntries = logService.readNextForClient(follower);
         List<RaftProtos.LogEntryProto> protoEntries = new ArrayList<>(logEntries.size());
 
@@ -458,7 +479,7 @@ public class RaftNodeImpl implements RaftNode {
         this.agent = parentAgent;
         this.server = new GrpcServer(this, address);
         this.raftState = new RaftState(this);
-        this.selfRaftClientImpl = new RaftClientImpl(agent.services().getService(RaftNode.class),
+        this.selfRaftClientImpl = new RaftClientImpl(agent.serviceManager().getService(RaftNode.class),
                 new InetSocketAddress(0), agent.peerId(), true);
 
         server.start();
@@ -506,7 +527,7 @@ public class RaftNodeImpl implements RaftNode {
     private class HeartbeatTask extends RequireRoleTask {
 
         HeartbeatTask() {
-            super(RaftNodeImpl.this, RaftRole.LEADER);
+            super(RaftNodeImpl.this, ConsensusAlgorithmRole.LEADER);
         }
 
         @Override

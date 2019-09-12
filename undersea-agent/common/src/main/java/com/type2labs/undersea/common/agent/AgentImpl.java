@@ -1,9 +1,30 @@
+/*
+ * Copyright [2019] [Undersea contributors]
+ *
+ * Developed from: https://github.com/gerasimou/UNDERSEA
+ * To: https://github.com/SirCipher/UNDERSEA
+ *
+ * Contact: Thomas Klapwijk - tklapwijk@pm.me
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package com.type2labs.undersea.common.agent;
 
 
 import com.type2labs.undersea.common.cluster.Client;
 import com.type2labs.undersea.common.cluster.PeerId;
-import com.type2labs.undersea.common.config.UnderseaRuntimeConfig;
+import com.type2labs.undersea.common.config.RuntimeConfig;
 import com.type2labs.undersea.common.logger.model.LogEntry;
 import com.type2labs.undersea.common.service.ServiceManager;
 import org.apache.logging.log4j.LogManager;
@@ -18,27 +39,22 @@ import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
- * Created by Thomas Klapwijk on 2019-07-23.
+ * A simple implementation of agent used for testing.
+ *
+ * This needs to be removed.
  */
 public class AgentImpl implements Agent {
 
     private static final Logger logger = LogManager.getLogger(AgentImpl.class);
-    private static final long serialVersionUID = -1629589627663718213L;
 
     private String name;
-    // TODO: Remove
-    private List<Node> assignedNodes = new ArrayList<>();
 
     private String rate;
     private int serverPort;
     private Range speedRange;
     private List<Sensor> sensors = new ArrayList<>();
-    // TODO: Add to grammar
     private String host = "localhost";
-    // TODO: Add to grammar
     private String groupName = "test";
-    // TEST
-    // Assume 1 per metre travelled
     private double batteryRange = ThreadLocalRandom.current().nextDouble(100);
     private AgentMetaData agentMetaData = new AgentMetaData();
     private AgentState agentState = new AgentState();
@@ -58,7 +74,7 @@ public class AgentImpl implements Agent {
     }
 
     @Override
-    public ServiceManager services() {
+    public ServiceManager serviceManager() {
         return null;
     }
 
@@ -68,12 +84,7 @@ public class AgentImpl implements Agent {
     }
 
     @Override
-    public void schedule(Runnable task) {
-
-    }
-
-    @Override
-    public UnderseaRuntimeConfig config() {
+    public RuntimeConfig config() {
         return null;
     }
 
@@ -81,21 +92,6 @@ public class AgentImpl implements Agent {
         return batteryRange;
     }
 
-    public void assignNode(Node node) {
-        assignedNodes.add(node);
-    }
-
-    public List<Node> getAssignedNodes() {
-        return assignedNodes;
-    }
-
-    public void setAssignedNodes(List<Node> assignedNodes) {
-        this.assignedNodes = assignedNodes;
-    }
-
-    public boolean hasSensorType(Sensor.SensorType sensorType) {
-        return sensors.stream().anyMatch(s -> s.getSensorType().equals(sensorType));
-    }
 
     public String getName() {
         return name;
@@ -139,22 +135,6 @@ public class AgentImpl implements Agent {
 
     public void setSpeedRange(Range speedRange) {
         this.speedRange = speedRange;
-    }
-
-    public String getBehaviour() {
-        StringBuilder result = new StringBuilder();
-        Iterator<Node> it = assignedNodes.iterator();
-
-        while (it.hasNext()) {
-            Node n = it.next();
-            result.append(n.getVector().getX()).append(",").append(n.getVector().getY());
-
-            if (it.hasNext()) {
-                result.append(":");
-            }
-        }
-
-        return result.toString();
     }
 
     @Override

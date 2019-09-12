@@ -1,3 +1,24 @@
+/*
+ * Copyright [2019] [Undersea contributors]
+ *
+ * Developed from: https://github.com/gerasimou/UNDERSEA
+ * To: https://github.com/SirCipher/UNDERSEA
+ *
+ * Contact: Thomas Klapwijk - tklapwijk@pm.me
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package com.type2labs.undersea.common.service.transaction;
 
 import com.google.common.util.concurrent.ListeningExecutorService;
@@ -10,10 +31,12 @@ import java.util.HashSet;
 import java.util.Objects;
 
 /**
- * A transportable object for performing operations between services.
+ * A transportable object for performing operations between services. Constructed using {@link Transaction.Builder}
+ * and executed by the {@link Agent}'s {@link com.type2labs.undersea.common.service.ServiceManager}
  * <p>
- * An example transaction is the consensus service achieving becoming the leader and requesting
- * {@link LifecycleEvent#ELECTED_LEADER} the mission planner perform mission decomposition.
+ * An example transaction is the consensus service becoming the leader and firing a {@link Transaction} to the
+ * {@link com.type2labs.undersea.common.consensus.ConsensusAlgorithm} service with a
+ * {@link LifecycleEvent#ELECTED_LEADER} so the mission planner performs mission decomposition.
  */
 public class Transaction {
 
@@ -114,6 +137,9 @@ public class Transaction {
         return primaryTransactionData;
     }
 
+    /**
+     * Builds a {@link Transaction} given the parameters, validating it to ensure that it has been constructed correctly
+     */
     public static class Builder {
 
         private Agent agent;
@@ -128,6 +154,12 @@ public class Transaction {
             this.agent = agent;
         }
 
+        /**
+         * Validates and builds the {@link Transaction}
+         *
+         * @return a constructed {@link Transaction}
+         * @throws NullPointerException if any of the required parameters have not been provided
+         */
         public Transaction build() {
             validate();
             return new Transaction(agent, services, statusCode, primaryTransactionData, secondaryTransactionData,
@@ -140,12 +172,12 @@ public class Transaction {
         }
 
         public Builder forAllServices() {
-            this.services = agent.services().getServiceClasses();
+            this.services = agent.serviceManager().getServiceClasses();
             return this;
         }
 
         public Builder forAllRunningServices() {
-            this.services = agent.services().getRunningServiceClasses();
+            this.services = agent.serviceManager().getRunningServiceClasses();
             return this;
         }
 

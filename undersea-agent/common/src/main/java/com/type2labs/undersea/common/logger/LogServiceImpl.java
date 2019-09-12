@@ -1,3 +1,24 @@
+/*
+ * Copyright [2019] [Undersea contributors]
+ *
+ * Developed from: https://github.com/gerasimou/UNDERSEA
+ * To: https://github.com/SirCipher/UNDERSEA
+ *
+ * Contact: Thomas Klapwijk - tklapwijk@pm.me
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package com.type2labs.undersea.common.logger;
 
 import com.google.common.util.concurrent.FutureCallback;
@@ -10,7 +31,6 @@ import com.type2labs.undersea.common.logger.model.LogService;
 import com.type2labs.undersea.common.logger.model.RingBuffer;
 import com.type2labs.undersea.common.service.ServiceManager;
 import com.type2labs.undersea.common.service.transaction.LifecycleEvent;
-import com.type2labs.undersea.common.service.transaction.ServiceCallback;
 import com.type2labs.undersea.common.service.transaction.Transaction;
 import com.type2labs.undersea.common.service.transaction.TransactionData;
 import org.apache.logging.log4j.LogManager;
@@ -22,6 +42,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+/**
+ * An implementation of the {@link LogService} which fires {@link Transaction}s to the
+ * {@link LogEntry#getAgentService()} upon appending entries. {@link LogEntry}s are broadcast by the
+ * {@link com.type2labs.undersea.common.consensus.ConsensusAlgorithm} leader during heartbeats and as such, follower
+ * {@link com.type2labs.undersea.common.service.AgentService} need to keep their states up-to-date. This
+ * implementation ensures that services are.
+ */
 public class LogServiceImpl implements LogService {
 
     private static final Logger logger = LogManager.getLogger(LogServiceImpl.class);
@@ -32,24 +59,9 @@ public class LogServiceImpl implements LogService {
     private ServiceManager serviceManager;
 
     @Override
-    public void shutdown() {
-
-    }
-
-    @Override
-    public boolean started() {
-        return true;
-    }
-
-    @Override
-    public void registerCallback(ServiceCallback serviceCallback) {
-
-    }
-
-    @Override
     public void initialise(Agent parentAgent) {
         this.agent = parentAgent;
-        this.serviceManager = agent.services();
+        this.serviceManager = agent.serviceManager();
     }
 
     @Override
@@ -73,6 +85,12 @@ public class LogServiceImpl implements LogService {
         return ringBuffer.readBetween(index, getEndIndex(index));
     }
 
+    /**
+     * Returns the end index for a batch. Either the end of the ring buffer or the current index + the batch size
+     *
+     * @param startIndex last read
+     * @return the new index
+     */
     private int getEndIndex(int startIndex) {
         int batchSize = agent.config().getLogBatchSize();
 
@@ -109,6 +127,13 @@ public class LogServiceImpl implements LogService {
                 .build();
     }
 
+    /**
+     * Upon receiving a number of log entries, notify the corresponding
+     * {@link com.type2labs.undersea.common.service.AgentService}s that {@link LifecycleEvent#APPEND_REQUEST} were
+     * received
+     *
+     * @param logEntries to append
+     */
     @Override
     public void appendEntries(List<LogEntry> logEntries) {
         logEntries.forEach(e -> {

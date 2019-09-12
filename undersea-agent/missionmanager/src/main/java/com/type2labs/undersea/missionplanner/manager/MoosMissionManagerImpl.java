@@ -1,3 +1,24 @@
+/*
+ * Copyright [2019] [Undersea contributors]
+ *
+ * Developed from: https://github.com/gerasimou/UNDERSEA
+ * To: https://github.com/SirCipher/UNDERSEA
+ *
+ * Contact: Thomas Klapwijk - tklapwijk@pm.me
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package com.type2labs.undersea.missionplanner.manager;
 
 import com.google.common.util.concurrent.*;
@@ -177,7 +198,7 @@ public class MoosMissionManagerImpl implements MissionManager {
     }
 
     private void updateMonitor() {
-        agent.services().getService(SubsystemMonitor.class).update();
+        agent.serviceManager().getService(SubsystemMonitor.class).update();
     }
 
     private void handleWaypointIndexUpdate(String message) {
@@ -204,11 +225,11 @@ public class MoosMissionManagerImpl implements MissionManager {
         Task task = assignedTasks.get(index);
         task.setTaskStatus(TaskStatus.COMPLETED);
 
-        ServiceManager serviceManager = agent.services();
+        ServiceManager serviceManager = agent.serviceManager();
         ConsensusAlgorithm consensusAlgorithm = serviceManager.getService(ConsensusAlgorithm.class, true);
 
         agent.log(new LogEntry(consensusAlgorithm.leaderPeerId(), task.getUuid(), TaskStatus.COMPLETED,
-                consensusAlgorithm.term(), this));
+                consensusAlgorithm.term(), this, true));
 
         if (index == assignedTasks.size() - 1) {
             logger.info(agent.name() + ": completed all tasks", agent);
@@ -220,7 +241,7 @@ public class MoosMissionManagerImpl implements MissionManager {
     @Override
     public void initialise(Agent parentAgent) {
         this.agent = parentAgent;
-        this.networkInterface = parentAgent.services().getService(NetworkInterface.class);
+        this.networkInterface = parentAgent.serviceManager().getService(NetworkInterface.class);
         missionPlanner.initialise(parentAgent);
     }
 

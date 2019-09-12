@@ -1,10 +1,31 @@
+/*
+ * Copyright [2019] [Undersea contributors]
+ *
+ * Developed from: https://github.com/gerasimou/UNDERSEA
+ * To: https://github.com/SirCipher/UNDERSEA
+ *
+ * Contact: Thomas Klapwijk - tklapwijk@pm.me
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package com.type2labs.undersea.common.agent;
 
 
 import com.type2labs.undersea.common.cluster.Client;
 import com.type2labs.undersea.common.cluster.ClusterState;
 import com.type2labs.undersea.common.cluster.PeerId;
-import com.type2labs.undersea.common.config.UnderseaRuntimeConfig;
+import com.type2labs.undersea.common.config.RuntimeConfig;
 import com.type2labs.undersea.common.service.ServiceManager;
 import com.type2labs.undersea.utilities.factory.AbstractFactory;
 import org.apache.commons.lang3.NotImplementedException;
@@ -12,7 +33,11 @@ import org.apache.commons.lang3.NotImplementedException;
 import java.net.InetSocketAddress;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
+/**
+ * Factory for creating agents. Largely used for test classes, however, it allows for quick construction of agents.
+ */
 public class AgentFactory implements AbstractFactory<Agent> {
 
     private int count = 0;
@@ -28,7 +53,7 @@ public class AgentFactory implements AbstractFactory<Agent> {
 
                 @Override
                 public ClusterState.ClientState state() {
-                    return new ClusterState.ClientState(this, true);
+                    return new ClusterState.ClientState(this, new Random().nextInt(100));
                 }
 
                 @Override
@@ -59,20 +84,16 @@ public class AgentFactory implements AbstractFactory<Agent> {
         throw new NotImplementedException("Get agent not supported at present");
     }
 
-    public Agent createWith(UnderseaRuntimeConfig config, String name, ServiceManager serviceManager,
-                            AgentStatus agentStatus) {
-        return new AbstractAgent(config, name, serviceManager, agentStatus, PeerId.newId()) {
-            private static final long serialVersionUID = 8743121047309335316L;
+    public Agent createWith(RuntimeConfig config, String name, ServiceManager serviceManager) {
+        return new AbstractAgent(config, name, serviceManager, PeerId.newId()) {
         };
     }
 
-    public Agent createWith(UnderseaRuntimeConfig config) {
+    public Agent createWith(RuntimeConfig config) {
         String name = "test:" + count++;
         ServiceManager serviceManager = new ServiceManager();
-        AgentStatus agentStatus = new AgentStatus(name, new ArrayList<>());
 
-        return new AbstractAgent(config, name, serviceManager, agentStatus, PeerId.newId()) {
-            private static final long serialVersionUID = -2866679824255773653L;
+        return new AbstractAgent(config, name, serviceManager, PeerId.newId()) {
         };
     }
 
@@ -80,19 +101,8 @@ public class AgentFactory implements AbstractFactory<Agent> {
     public Agent create() {
         String name = "test:" + count++;
         ServiceManager serviceManager = new ServiceManager();
-        AgentStatus agentStatus = new AgentStatus(name, new ArrayList<>());
 
-        return new AbstractAgent(new UnderseaRuntimeConfig(), name, serviceManager, agentStatus, PeerId.newId()) {
-            private static final long serialVersionUID = -2866679824255773653L;
-        };
-    }
-
-    public Agent createWithName(String name) {
-        ServiceManager serviceManager = new ServiceManager();
-        AgentStatus agentStatus = new AgentStatus(name, new ArrayList<>());
-
-        return new AbstractAgent(new UnderseaRuntimeConfig(), name, serviceManager, agentStatus, PeerId.newId()) {
-            private static final long serialVersionUID = -1087323467644961495L;
+        return new AbstractAgent(new RuntimeConfig(), name, serviceManager, PeerId.newId()) {
         };
     }
 

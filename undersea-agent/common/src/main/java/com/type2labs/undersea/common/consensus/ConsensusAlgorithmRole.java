@@ -19,23 +19,26 @@
  * limitations under the License.
  */
 
-package com.type2labs.undersea.controller.controllerRandom;
+package com.type2labs.undersea.common.consensus;
 
+/**
+ * The role that an {@link com.type2labs.undersea.common.agent.Agent} is in the cluster
+ */
+public enum ConsensusAlgorithmRole {
 
-import com.type2labs.undersea.controller.controller.Analyser;
-import com.type2labs.undersea.controller.controller.Knowledge;
+    /**
+     * This agent is the leader of the cluster
+     */
+    LEADER,
 
-public class AnalyserRandom extends Analyser {
+    /**
+     * This agent is a follower in the cluster
+     */
+    FOLLOWER,
 
-
-    public AnalyserRandom(Knowledge knowledge) {
-        super(knowledge);
-    }
-
-    @Override
-    public void run() {
-        // TODO Auto-generated method stub
-
-    }
+    /**
+     * This agent is currently a candidate and is performing a voting round
+     */
+    CANDIDATE
 
 }

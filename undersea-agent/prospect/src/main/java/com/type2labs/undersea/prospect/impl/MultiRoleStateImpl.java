@@ -1,3 +1,24 @@
+/*
+ * Copyright [2019] [Undersea contributors]
+ *
+ * Developed from: https://github.com/gerasimou/UNDERSEA
+ * To: https://github.com/SirCipher/UNDERSEA
+ *
+ * Contact: Thomas Klapwijk - tklapwijk@pm.me
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package com.type2labs.undersea.prospect.impl;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -36,7 +57,7 @@ public class MultiRoleStateImpl implements MultiRoleState {
      * A map of clients that we have communicated with and their respective states. This will be different to what
      * {@link Agent#clusterClients()} will return as that is a list of all known nodes.
      */
-    private Map<Client, ClientState> clientStates = new HashMap<>();
+    private Map<Client, MultiRoleClientState> clientStates = new HashMap<>();
 
     MultiRoleStateImpl(RaftNode raftNode) {
         this.raftNode = Objects.requireNonNull(raftNode);
@@ -73,7 +94,7 @@ public class MultiRoleStateImpl implements MultiRoleState {
      * Sets the {@link MultiRoleStatus} based on the current {@link ConsensusAlgorithm#raftRole()}
      */
     void updateStatus() {
-        if (raftNode.raftRole() == RaftRole.LEADER && this.leader != null) {
+        if (raftNode.raftRole() == ConsensusAlgorithmRole.LEADER && this.leader != null) {
             this.status = MultiRoleStatus.LEADER_FOLLOWER;
         } else {
             this.status = MultiRoleStatus.NOT_APPLIED;
@@ -81,7 +102,7 @@ public class MultiRoleStateImpl implements MultiRoleState {
     }
 
     private void checkAndAdd(Client client) {
-        clientStates.putIfAbsent(client, new ClientState(client));
+        clientStates.putIfAbsent(client, new MultiRoleClientState(client));
     }
 
     /**
@@ -120,15 +141,15 @@ public class MultiRoleStateImpl implements MultiRoleState {
             }
         }
 
-        raftNode.config().getUnderseaRuntimeConfig().missionParameters().setPolygon(unboxed);
+        raftNode.config().getRuntimeConfig().missionParameters().setPolygon(unboxed);
         raftNode.fireCallback(LifecycleEvent.ELECTED_LEADER);
     }
 
     @Override
     public void setGeneratedMission(Client client, String jsonMission) {
         checkAndAdd(client);
-        ClientState clientState = clientStates.get(client);
-        clientState.setJsonMissionCoordinates(jsonMission);
+        MultiRoleClientState multiRoleClientState = clientStates.get(client);
+        multiRoleClientState.setJsonMissionCoordinates(jsonMission);
     }
 
     @Override
