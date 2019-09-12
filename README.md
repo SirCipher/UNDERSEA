@@ -8,7 +8,7 @@ Demonstrating automatic task decomposition, distribution and execution to local 
 
 The video also demonstrates the leader being killed and a new one elected. The new mission is re-decomposed and distributed to the available clients. The same functionality is demonstrated by a follower failing.
 
-[![Case study 1](https://img.youtube.com/vi/hwb0acLLqaw/0.jpg)](https://www.youtube.com/watch?v=https://youtu.be/hwb0acLLqaw)
+[![Case study 1](https://img.youtube.com/vi/hwb0acLLqaw/0.jpg)](https://www.youtube.com/watch?v=hwb0acLLqaw)
 
 Case study 2
 ----
@@ -16,4 +16,4 @@ Demonstrating automatic task decomposition, distribution and execution to local 
 
 The video also demonstrates the leader being killed and a new one elected. The new mission is re-decomposed and distributed to the available clients. The same functionality is demonstrated by a follower failing.
 
-[![Case study 2](https://img.youtube.com/vi/fK5BTo5zOIo/0.jpg)](https://www.youtube.com/watch?v=https://youtu.be/fK5BTo5zOIo)
+[![Case study 2](https://img.youtube.com/vi/fK5BTo5zOIo/0.jpg)](https://www.youtube.com/watch?v=K5BTo5zOIo)
