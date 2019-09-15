@@ -30,8 +30,8 @@ import org.junit.Test;
 
 public class VisualiserClientImplTest {
 
-    @Test
-    @IgnoredOnCi
+//    @Test
+//    @IgnoredOnCi
     public void doTest() throws InterruptedException {
         new Visualiser();
 

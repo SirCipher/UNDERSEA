@@ -27,7 +27,7 @@ import com.type2labs.undersea.common.agent.Subsystem;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class SubsystemMonitorSpoofer extends SubsystemMonitorImpl {
-    
+
     private static int initCount = 0;
 
     static {
