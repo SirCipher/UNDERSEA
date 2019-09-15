@@ -51,7 +51,6 @@ public class UnderseaAgentTest {
         ServiceManager serviceManager = new ServiceManager();
         serviceManager.registerService(raftNode);
         serviceManager.registerService(new BlockchainNetworkImpl());
-//        serviceManager.registerService(new VehicleRoutingOptimiser());
         serviceManager.registerService(new SubsystemMonitorImpl());
 
         UnderseaAgent underseaAgent = new UnderseaAgent(new RuntimeConfig(),
@@ -61,8 +60,6 @@ public class UnderseaAgentTest {
 
         assertNotNull(serviceManager.getService(SubsystemMonitor.class));
         assertNotNull(underseaAgent.getBlockchainNetwork());
-
-        serviceManager.shutdownServices();
     }
 
 }

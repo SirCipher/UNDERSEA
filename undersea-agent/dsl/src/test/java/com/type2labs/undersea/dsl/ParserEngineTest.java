@@ -25,6 +25,7 @@ import com.type2labs.undersea.utilities.Utility;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.io.File;
 import java.util.Properties;
 
 /**
@@ -35,7 +36,9 @@ public class ParserEngineTest {
     @Test
     public void testParser() {
         try {
-            Properties properties = Utility.getPropertiesByName("src/test/resources/test.properties");
+            String configurationFileLocation = "src/test/resources/case-study-1/runner.properties";
+            Properties properties = Utility.getPropertiesByName(configurationFileLocation);
+            properties.put("pwd", new File(configurationFileLocation).getAbsoluteFile().getParent());
             ParserEngine parserEngine = new ParserEngine(properties);
             parserEngine.parseMission();
 

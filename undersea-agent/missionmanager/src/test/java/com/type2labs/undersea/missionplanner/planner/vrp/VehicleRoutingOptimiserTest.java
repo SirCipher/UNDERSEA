@@ -41,6 +41,7 @@ import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import java.io.File;
 import java.net.InetSocketAddress;
 import java.util.ArrayList;
 import java.util.List;
@@ -66,8 +67,9 @@ public class VehicleRoutingOptimiserTest {
         AgentFactory agentFactory = new AgentFactory();
         Agent agent = agentFactory.createWith(config);
 
-        Properties properties = Utility.getPropertiesByName("../resources/runner.properties");
-        double[][] area = Utility.propertyKeyTo2dDoubleArray(properties, "environment.area");
+        String configurationFileLocation = "src/test/resources/case-study-1/runner.properties";
+        Properties properties = Utility.getPropertiesByName(configurationFileLocation);
+        properties.put("pwd", new File(configurationFileLocation).getAbsoluteFile().getParent());        double[][] area = Utility.propertyKeyTo2dDoubleArray(properties, "environment.area");
 
         List<Agent> agents = agentFactory.createN(5);
         agentFactory.populateCluster(agent, agents);

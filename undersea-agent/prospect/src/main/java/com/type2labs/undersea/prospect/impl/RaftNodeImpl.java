@@ -466,7 +466,10 @@ public class RaftNodeImpl implements RaftNode {
     public void shutdown() {
         scheduledExecutor.shutdownNow();
         singleThreadScheduledExecutor.shutdown();
-        server.close();
+
+        if (started) {
+            server.close();
+        }
     }
 
     @Override

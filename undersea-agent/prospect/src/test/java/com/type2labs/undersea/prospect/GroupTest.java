@@ -21,7 +21,6 @@
 
 package com.type2labs.undersea.prospect;
 
-import com.type2labs.undersea.common.cluster.ClusterState;
 import com.type2labs.undersea.prospect.impl.LocalAgentGroup;
 import com.type2labs.undersea.prospect.impl.RaftNodeImpl;
 import org.apache.logging.log4j.Level;
@@ -32,7 +31,8 @@ import org.apache.logging.log4j.core.config.LoggerConfig;
 import org.junit.Test;
 
 import static com.type2labs.undersea.utilities.testing.TestUtil.assertTrueEventually;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertNotNull;
 
 public class GroupTest {
 
@@ -42,29 +42,6 @@ public class GroupTest {
         LoggerConfig loggerConfig = config.getLoggerConfig("io.netty");
         loggerConfig.setLevel(Level.INFO);
         ctx.updateLoggers();
-    }
-
-    @Test
-    public void testAcquireStatusTask() {
-        int count = 3;
-
-        try (LocalAgentGroup localAgentGroup = new LocalAgentGroup(count)) {
-            localAgentGroup.doManualDiscovery();
-            localAgentGroup.start();
-
-            assertTrueEventually(() -> {
-                for (RaftNodeImpl node : localAgentGroup.getRaftNodes()) {
-                    ClusterState clusterState = node.state().clusterState();
-
-                    assertNotNull(clusterState);
-                    assertEquals(count, clusterState.getMembers().size());
-                }
-            }, 5);
-
-            Thread.sleep(5000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
     }
 
     @Test
@@ -93,7 +70,7 @@ public class GroupTest {
 
     @Test
     public void testReelection() throws InterruptedException {
-        int count = 3;
+        int count = 5;
 
         try (LocalAgentGroup localAgentGroup = new LocalAgentGroup(count)) {
             localAgentGroup.doManualDiscovery();
