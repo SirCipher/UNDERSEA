@@ -51,7 +51,7 @@ int main(int argc, char *argv[]) {
     cout << "sUUV mission file: " << mission_file << endl;
 
 //    run_command = "sUUValpha";
-//    mission_file = "/home/tom/Desktop/PACS/UNDERSEA/undersea-agent/missions/test_01/meta_vehicle_alpha.moos";
+//    mission_file = "/Volumes/MiniMudkipz/dev/PACS/UNDERSEA/undersea-agent/agent/missions/case_study_1/meta_vehicle_alpha.moos";
 
     UUV.Run(run_command.c_str(), mission_file.c_str());
 

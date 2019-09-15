@@ -29,7 +29,7 @@ void new_connection(Args args);
 
 void run_server(UUV uuv);
 
-const char *prependPort(int port);
+std::string prependPort(int port);
 
 void write_data(UUV *uuv, const char* msg);
 

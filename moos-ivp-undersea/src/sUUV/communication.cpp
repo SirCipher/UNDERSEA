@@ -6,8 +6,6 @@
 #include "communication.h"
 #include "Utilities.h"
 
-using namespace std;
-
 bool serverRunning = true;
 
 int make_accept_sock(const char *servspec) {
@@ -34,7 +32,12 @@ int make_accept_sock(const char *servspec) {
 
     sock = socket(ai->ai_family, SOCK_STREAM, 0);
     setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, &one, sizeof(one));
-    bind(sock, ai->ai_addr, ai->ai_addrlen);
+
+    if (::bind(sock, ai->ai_addr, ai->ai_addrlen) == -1) {
+        printf("Bind error: ", errno);
+    } else {
+        std::cout << "Binded successfully" << std::endl;
+    }
 
     if (listen(sock, 256) != 0) {
         ASSERT(false, "Failed to start listening on: " << servspec);
@@ -59,7 +62,7 @@ void new_connection(Args args) {
     std::string inputStr = buffer;
     std::cout << "Received: " << inputStr << std::endl;
 
-    string outputStr;
+    std::string outputStr;
     auto sensMap = args.uuv->m_sensors_map;
 
     if (strcmp(buffer, "###") == 0) {
@@ -75,7 +78,7 @@ void new_connection(Args args) {
             // outputStr += it->first +"="+ doubleToString(it->second.averageRate,2) +",";
 
             //if it's not the dummy element that resembles the speed in sensors map
-            if (it.first.find("SPEED") == string::npos) {
+            if (it.first.find("SPEED") == std::string::npos) {
                 outputStr += it.second.getSummary() + ",";
             }
             //reset sensors information
@@ -85,11 +88,11 @@ void new_connection(Args args) {
         if (outputStr.length() > 0) {
             outputStr.replace(outputStr.length() - 1, 1, "\n");
         }
-    } else if (inputStr.find("SPEED") != string::npos) {
+    } else if (inputStr.find("SPEED") != std::string::npos) {
         //input string is in the form "SPEED=3.6,SENSOR1=-1,SENSOR2=0,..."
         char *dup = strdup(inputStr.c_str());
         char *token = strtok(dup, ",");
-        vector<string> uuvElements;
+        std::vector<std::string> uuvElements;
 
         while (token != nullptr) {
             uuvElements.emplace_back(token);
@@ -100,10 +103,10 @@ void new_connection(Args args) {
         free(dup);
 
         //iterate over tokens and extract the desired values from each token
-        for (const string &str : uuvElements) {
+        for (const std::string &str : uuvElements) {
             char *dup2 = strdup(str.c_str());
             char *token2 = strtok(dup2, "=");
-            vector<string> v;
+            std::vector<std::string> v;
             while (token2 != nullptr) {
                 v.emplace_back(token2);
                 // the call is treated as a subsequent calls to strtok:
@@ -112,12 +115,12 @@ void new_connection(Args args) {
             }
             free(dup2);
             if (v.size() == 2) {
-                if (v.at(0).find("SPEED") != string::npos) {//SPEED=3.22
+                if (v.at(0).find("SPEED") != std::string::npos) {//SPEED=3.22
                     auto it = sensMap.find(v.at(0));
                     if (it != sensMap.end()) {
                         it->second.other = stod(v.at(1));
                     }
-                } else if (v.at(0).find("SENSOR") != string::npos) {
+                } else if (v.at(0).find("SENSOR") != std::string::npos) {
                     auto it = sensMap.find(v.at(0));
                     if (it != sensMap.end()) {
                         it->second.state = static_cast<int>(stod(v.at(1)));
@@ -154,12 +157,12 @@ void new_connection(Args args) {
     close(args.port);
 }
 
-const char *prependPort(int port) {
+std::string prependPort(int port) {
     std::stringstream stream;
     stream << port;
     std::string str = stream.str().insert(0, ":");
 
-    return str.c_str();
+    return str;
 }
 
 void write_data(UUV *uuv, const char *msg) {
@@ -189,7 +192,7 @@ void write_data(UUV *uuv, const char *msg) {
 void run_server(UUV uuv) {
     signal(SIGPIPE, SIG_IGN);
 
-    const char *port = prependPort(uuv.PORT);
+    const char *port = prependPort(uuv.PORT).c_str();
     std::cout << "Initialising server on port: " << port << std::endl;
 
     int sock = make_accept_sock(port);

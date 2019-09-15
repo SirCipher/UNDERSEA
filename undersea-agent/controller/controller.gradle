@@ -33,7 +33,7 @@ dependencies {
     compile project(":utilities")
 
     if (Os.isFamily(Os.FAMILY_MAC)) {
-        compile files("${rootProject.projectDir}/../libraries/repo/prism/osx/prism.jsr")
+        compile files("${rootProject.projectDir}/../libraries/repo/prism/osx/prism.jar")
     } else if (Os.isFamily(Os.FAMILY_UNIX)) {
         compile files("${rootProject.projectDir}/../libraries/repo/prism/linux/prism.jar")
     } else {

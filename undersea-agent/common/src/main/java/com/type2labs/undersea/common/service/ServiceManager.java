@@ -511,7 +511,6 @@ public class ServiceManager {
             try {
                 agentService.run();
             } catch (final Throwable t) {
-                t.printStackTrace();
                 transitionService(agentService.getClass(), ServiceState.FAILED);
                 throw t;
             }

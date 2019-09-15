@@ -49,8 +49,7 @@ public class PrismAPI {
     /**
      * Class constructor
      *
-     * @param modelFile      - the Markov model file to be provided as input to PRISM
-     * @param propertiesFile - the temporal logic file to be provided as input to PRISM
+     * @param propertiesFilename - the temporal logic file to be provided as input to PRISM
      */
     public PrismAPI(String propertiesFilename) {
         try {
