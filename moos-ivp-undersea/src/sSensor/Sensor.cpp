@@ -94,7 +94,6 @@ bool Sensor::OnStartUp() {
 //---------------------------------------------------------
 void Sensor::RegisterVariables() {
     AppCastingMOOSApp::RegisterVariables();
-    // Register("FOOBAR", 0);
 }
 
 
