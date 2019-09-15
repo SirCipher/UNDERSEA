@@ -30,7 +30,9 @@ public class MoosConnectorTest {
     public void doTest() throws InterruptedException {
         MoosConnector moosConnector = new MoosConnector();
         moosConnector.initialise(new AgentFactory().create());
-        moosConnector.listenOnInbound();
+        moosConnector.run();
+
+        System.out.println();
 
         Thread.sleep(10000);
 

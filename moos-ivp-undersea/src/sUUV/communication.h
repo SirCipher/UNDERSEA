@@ -11,8 +11,6 @@
 #include <unistd.h>
 #include <sys/types.h>
 #include <netdb.h>
-#include <asm/ioctls.h>
-#include <stropts.h>
 #include <csignal>
 #include <thread>
 #include <iostream>
@@ -31,7 +29,7 @@ void new_connection(Args args);
 
 void run_server(UUV uuv);
 
-const char *prependPort(int port);
+std::string prependPort(int port);
 
 void write_data(UUV *uuv, const char* msg);
 

@@ -10,7 +10,6 @@
 
 #include "MOOS/libMOOS/Thirdparty/AppCasting/AppCastingMOOSApp.h"
 #include "MBUtils.h"
-
 #include <map>
 
 class UUV : public AppCastingMOOSApp {

@@ -48,20 +48,47 @@ public class MoosConnector implements NetworkInterface {
     private boolean aquiredConnection = false;
     private boolean shutdown;
 
+    private Socket connectToServer() {
+        int retries = 20;
+        int port = (int) agent.metadata().getProperty(AgentMetaData.PropertyKey.HARDWARE_PORT);
+        Exception exception = null;
+
+        for (int i = 0; i < retries; i++) {
+            try {
+                Socket socket = new Socket("localhost", port);
+                aquiredConnection = true;
+
+                return socket;
+            } catch (IOException e) {
+                exception = e;
+            }
+
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException ignored) {
+            }
+        }
+
+        throw new UnderseaException("Failed to connect to server", exception);
+    }
+
     @Override
     public void initialise(Agent parentAgent) {
         this.agent = parentAgent;
+    }
+
+    @Override
+    public Agent parent() {
+        return agent;
     }
 
     public void listenOnInbound() {
         Thread serverThread = new Thread(() -> {
             try {
                 int port = (int) agent.metadata().getProperty(AgentMetaData.PropertyKey.INBOUND_HARDWARE_PORT);
-
                 ServerSocket serverSocket = new ServerSocket(port);
                 logger.info(agent.name() + ": initialised MOOS connector inbound server", agent);
                 MissionManager missionPlanner = agent.serviceManager().getService(MissionManager.class);
-
 
                 while (!shutdown) {
                     Socket clientSocket = serverSocket.accept();
@@ -96,71 +123,6 @@ public class MoosConnector implements NetworkInterface {
         });
 
         serverThread.start();
-    }
-
-    private Socket connectToServer() {
-        int retries = 20;
-        int port = (int) agent.metadata().getProperty(AgentMetaData.PropertyKey.HARDWARE_PORT);
-        Exception exception = null;
-
-        for (int i = 0; i < retries; i++) {
-            try {
-                Socket socket = new Socket("localhost", port);
-                aquiredConnection = true;
-
-                return socket;
-            } catch (IOException e) {
-                exception = e;
-            }
-
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException ignored) {
-            }
-        }
-
-        throw new UnderseaException("Failed to connect to server", exception);
-    }
-
-    @Override
-    public Agent parent() {
-        return agent;
-    }
-
-    @Override
-    public synchronized String write(String message) {
-        logger.info(agent.name() + ": sending: " + message);
-        Socket socket = connectToServer();
-        PrintWriter out;
-        BufferedReader in;
-
-        try {
-            out = new PrintWriter(socket.getOutputStream(), false);
-            in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
-        out.print(message);
-        out.flush();
-
-        String response;
-
-        try {
-            response = in.readLine();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
-        try {
-            socket.close();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
-        UnderseaLogger.info(logger, agent, "received: " + response);
-
-        return response;
     }
 
     /**
@@ -208,12 +170,48 @@ public class MoosConnector implements NetworkInterface {
     }
 
     @Override
-    public long transitionTimeout() {
-        return 10000;
+    public boolean started() {
+        return aquiredConnection;
     }
 
     @Override
-    public boolean started() {
-        return aquiredConnection;
+    public long transitionTimeout() {
+        return 30000;
+    }
+
+    @Override
+    public synchronized String write(String message) {
+        logger.info(agent.name() + ": sending: " + message);
+        Socket socket = connectToServer();
+        PrintWriter out;
+        BufferedReader in;
+
+        try {
+            out = new PrintWriter(socket.getOutputStream(), false);
+            in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        out.print(message);
+        out.flush();
+
+        String response;
+
+        try {
+            response = in.readLine();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        try {
+            socket.close();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        UnderseaLogger.info(logger, agent, "received: " + response);
+
+        return response;
     }
 }

@@ -14,10 +14,8 @@ INCLUDE_DIRECTORIES(${LOCAL_LIBRARY_DIRS})
 #============================================================================
 # List the subdirectories to build...
 #============================================================================
-ADD_SUBDIRECTORY(sOdometry)
 ADD_SUBDIRECTORY(sSensor)
 ADD_SUBDIRECTORY(sUUV)
-ADD_SUBDIRECTORY(sTest)
 
 ##############################################################################
 #                           END of CMakeLists.txt
