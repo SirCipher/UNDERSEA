@@ -11,8 +11,6 @@
 #include <unistd.h>
 #include <sys/types.h>
 #include <netdb.h>
-#include <asm/ioctls.h>
-#include <stropts.h>
 #include <csignal>
 #include <thread>
 #include <iostream>

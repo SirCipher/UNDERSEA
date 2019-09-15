@@ -5,16 +5,16 @@
 # It is necessary for linking the library.
 
 # The name that we can dlopen(3).
-dlname='libCbcSolver.so.3'
+dlname='libCbcSolver.3.dylib'
 
 # Names of this library.
-library_names='libCbcSolver.so.3.10.3 libCbcSolver.so.3 libCbcSolver.so'
+library_names='libCbcSolver.3.10.3.dylib libCbcSolver.3.dylib libCbcSolver.dylib'
 
 # The name of the static archive.
 old_library=''
 
 # Libraries that this one depends upon.
-dependency_libs=' -L/root/or-tools/dependencies/install/lib /root/or-tools/dependencies/install/lib/libCbc.la -lpthread -lrt /root/or-tools/dependencies/install/lib/libCgl.la /root/or-tools/dependencies/install/lib/libOsiClp.la /root/or-tools/dependencies/install/lib/libClpSolver.la /root/or-tools/dependencies/install/lib/libClp.la /root/or-tools/dependencies/install/lib/libOsi.la /root/or-tools/dependencies/install/lib/libCoinUtils.la -lz'
+dependency_libs=' -L/Users/lperron/Work/or-tools/dependencies/install/lib /Users/lperron/Work/or-tools/dependencies/install/lib/libCbc.la -lpthread /Users/lperron/Work/or-tools/dependencies/install/lib/libCgl.la /Users/lperron/Work/or-tools/dependencies/install/lib/libOsiClp.la /Users/lperron/Work/or-tools/dependencies/install/lib/libClpSolver.la /Users/lperron/Work/or-tools/dependencies/install/lib/libClp.la /Users/lperron/Work/or-tools/dependencies/install/lib/libOsi.la /Users/lperron/Work/or-tools/dependencies/install/lib/libCoinUtils.la -lbz2 -lz -lm'
 
 # Version information for libCbcSolver.
 current=13
@@ -32,4 +32,4 @@ dlopen=''
 dlpreopen=''
 
 # Directory that this library needs to be installed in:
-libdir='/root/or-tools/dependencies/install/lib'
+libdir='/Users/lperron/Work/or-tools/dependencies/install/lib'

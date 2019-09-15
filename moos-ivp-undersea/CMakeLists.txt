@@ -8,6 +8,7 @@
 
 CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
 PROJECT( IVP_EXTEND )
+SET (CMAKE_CXX_STANDARD 14)
 
 #=============================================================================
 # Set the output directories for the binary and library files

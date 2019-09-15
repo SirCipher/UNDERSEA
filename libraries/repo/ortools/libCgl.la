@@ -5,16 +5,16 @@
 # It is necessary for linking the library.
 
 # The name that we can dlopen(3).
-dlname='libCgl.so.1'
+dlname='libCgl.1.dylib'
 
 # Names of this library.
-library_names='libCgl.so.1.10.2 libCgl.so.1 libCgl.so'
+library_names='libCgl.1.10.2.dylib libCgl.1.dylib libCgl.dylib'
 
 # The name of the static archive.
 old_library=''
 
 # Libraries that this one depends upon.
-dependency_libs=' -L/root/or-tools/dependencies/install/lib /root/or-tools/dependencies/install/lib/libOsiClp.la /root/or-tools/dependencies/install/lib/libClpSolver.la /root/or-tools/dependencies/install/lib/libClp.la /root/or-tools/dependencies/install/lib/libOsi.la /root/or-tools/dependencies/install/lib/libCoinUtils.la -lz'
+dependency_libs=' -L/Users/lperron/Work/or-tools/dependencies/install/lib /Users/lperron/Work/or-tools/dependencies/install/lib/libOsiClp.la /Users/lperron/Work/or-tools/dependencies/install/lib/libClpSolver.la /Users/lperron/Work/or-tools/dependencies/install/lib/libClp.la /Users/lperron/Work/or-tools/dependencies/install/lib/libOsi.la /Users/lperron/Work/or-tools/dependencies/install/lib/libCoinUtils.la -lbz2 -lz -lm'
 
 # Version information for libCgl.
 current=11
@@ -32,4 +32,4 @@ dlopen=''
 dlpreopen=''
 
 # Directory that this library needs to be installed in:
-libdir='/root/or-tools/dependencies/install/lib'
+libdir='/Users/lperron/Work/or-tools/dependencies/install/lib'

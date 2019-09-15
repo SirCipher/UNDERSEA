@@ -2,13 +2,13 @@
  * Adapted from https://stackoverflow.com/questions/25091148/single-tcp-ip-server-that-handles-multiple-clients-in-c
  */
 
+#include <sys/filio.h>
 #include "communication.h"
 #include "Utilities.h"
 
 using namespace std;
 
 bool serverRunning = true;
-
 
 int make_accept_sock(const char *servspec) {
     const int one = 1;
@@ -43,19 +43,6 @@ int make_accept_sock(const char *servspec) {
     freeaddrinfo(res);
 
     return sock;
-}
-
-bool isclosed(int sock) {
-    fd_set rfd;
-    FD_ZERO(&rfd);
-    FD_SET(sock, &rfd);
-    timeval tv = {0};
-    select(sock + 1, &rfd, nullptr, nullptr, &tv);
-    if (!FD_ISSET(sock, &rfd))
-        return false;
-    int n = 0;
-    ioctl(sock, FIONREAD, &n);
-    return n == 0;
 }
 
 void new_connection(Args args) {

@@ -5,16 +5,16 @@
 # It is necessary for linking the library.
 
 # The name that we can dlopen(3).
-dlname='libClpSolver.so.1'
+dlname='libClpSolver.1.dylib'
 
 # Names of this library.
-library_names='libClpSolver.so.1.14.3 libClpSolver.so.1 libClpSolver.so'
+library_names='libClpSolver.1.14.3.dylib libClpSolver.1.dylib libClpSolver.dylib'
 
 # The name of the static archive.
 old_library=''
 
 # Libraries that this one depends upon.
-dependency_libs=' -L/root/or-tools/dependencies/install/lib /root/or-tools/dependencies/install/lib/libClp.la /root/or-tools/dependencies/install/lib/libCoinUtils.la -lz'
+dependency_libs=' -L/Users/lperron/Work/or-tools/dependencies/install/lib /Users/lperron/Work/or-tools/dependencies/install/lib/libClp.la /Users/lperron/Work/or-tools/dependencies/install/lib/libCoinUtils.la -lbz2 -lz -lm'
 
 # Version information for libClpSolver.
 current=15
@@ -32,4 +32,4 @@ dlopen=''
 dlpreopen=''
 
 # Directory that this library needs to be installed in:
-libdir='/root/or-tools/dependencies/install/lib'
+libdir='/Users/lperron/Work/or-tools/dependencies/install/lib'
