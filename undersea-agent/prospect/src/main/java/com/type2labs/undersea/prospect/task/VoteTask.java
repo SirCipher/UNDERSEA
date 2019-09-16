@@ -93,7 +93,7 @@ public class VoteTask implements Runnable {
                 public void onFailure(Throwable t) {
                     logger.error(raftNode.parent().name() + ": exception thrown when contacting: " + raftClient.name(), t,
                             raftNode.parent());
-                    iterator.remove();
+                    localNodes.remove(raftClient.peerId());
                 }
             });
 
