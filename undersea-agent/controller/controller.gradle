@@ -36,6 +36,8 @@ dependencies {
         compile files("${rootProject.projectDir}/../libraries/repo/prism/osx/prism.jar")
     } else if (Os.isFamily(Os.FAMILY_UNIX)) {
         compile files("${rootProject.projectDir}/../libraries/repo/prism/linux/prism.jar")
+    } else if (Os.isFamily(Os.FAMILY_WINDOWS)){
+        compile files("${rootProject.projectDir}/../libraries/repo/prism/windows/prism.jar")
     } else {
         throw new GradleException("Unsupported Prism OS type")
     }
