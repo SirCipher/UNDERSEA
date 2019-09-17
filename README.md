@@ -30,12 +30,12 @@ The repository comprises the following directories:
     - **utilities**: utilities for the project
 
 ----
-
-
 UNDERSEA has primarily been developed using Ubuntu 18.04 LTS, however, it has also been tested on Mac OS, and Windows 10 using the Windows Subsystem for Linux (WSL) - without any GUI applications from MOOS. 
 
+---
 Running UNDERSEA using Windows WSL:
 ---
+
 UNDERSEA on Windows 10 has only been tested using CLion and IntelliJ, though not as a target release. In addition to this, WSL does not natively support GUI applications - while support can be added through an XServer, WSL sockets fail to bind - so pMarineViewer does not launch and run correctly. Instructions to setup for development are as follows:
 To setup UNDERSEA on Windows:
 - Setup the machine as per the [instructions](https://docs.microsoft.com/en-us/windows/wsl/install-win10) for Ubuntu 18.04 LTS
