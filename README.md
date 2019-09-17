@@ -27,7 +27,7 @@ The repository comprises the following directories:
     - **monitor**: a monitoring application for the cluster
     - **prospect**: a custom [Raft](https://raft.github.io/raft.pdf) implementation for the cluster
     - **seachain**: a todo application which will migrate the distributed logging system to an Ethereum network
-    - **utilities**: utilities for the project
+    - **tutorials**: contains a handful of tutorials that demonstrate the functionality of the project
 
 ----
 UNDERSEA has primarily been developed using Ubuntu 18.04 LTS, however, it has also been tested on Mac OS, and Windows 10 using the Windows Subsystem for Linux (WSL) - without any GUI applications from MOOS. 
