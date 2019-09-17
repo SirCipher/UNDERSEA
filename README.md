@@ -2,6 +2,37 @@
 
 ---
 
+# UNDERSEA
+An Exemplar for Engineering Self-Adaptive Vehicles, prototyed using the Mission Oriented Operating Suite ([MOOS](https://oceanai.mit.edu/moos-ivp/pmwiki/pmwiki.php)). 
+
+Additional information on the original UNDERSEA application can be found on the [UNDERSEA webpage](http://www-users.cs.york.ac.uk/simos/UNDERSEA/).
+
+Further information on the project, architecture, and tutorials will be available soon.
+
+---
+
+To setup and use on Ubuntu, or Mac OS, checkout the project, run `setup.sh` and wait for all the dependencies to pull.
+
+----
+
+The repository comprises the following directories:
+
+- **libraries**: populated by running `setup.sh`
+- **resources**: case studies
+- **moos-ivp-UNDERSEA**: Necessary UNDERSEA components (Sensor and UUV) for MOOS-IvP
+- **undersea-agent**:
+    - **agent**: a sample implementation of the software, built for MOOS
+    - **common**: common functionality for all submodules
+    - **dsl**: a DSL parser for the sample implementation
+    - **mission-includes**: DSL templates for the sample implementation
+    - **monitor**: a monitoring application for the cluster
+    - **prospect**: a custom [Raft](https://raft.github.io/raft.pdf) implementation for the cluster
+    - **seachain**: a todo application which will migrate the distributed logging system to an Ethereum network
+    - **utilities**: utilities for the project
+
+----
+
+
 UNDERSEA has primarily been developed using Ubuntu 18.04 LTS, however, it has also been tested on Mac OS, and Windows 10 using the Windows Subsystem for Linux (WSL) - without any GUI applications from MOOS. 
 
 Running UNDERSEA using Windows WSL:
@@ -22,6 +53,7 @@ Developing on Windows:
 ---
 - In order to develop using Windows for the UNDERSEA platform but without the MOOS subsystem, Google OR Tools and Matlab must be installed to the libraries directory that resides in this folder. [OR Tools](https://github.com/google/or-tools/releases/download/v7.3/or-tools_VisualStudio2017-64bit_v7.3.7083.zip) must be installed to `libraries/ortools` and [MATLAB](https://ssd.mathworks.com/supportfiles/downloads/R2018b/deployment_files/R2018b/installers/glnxa64/MCR_R2018b_glnxa64_installer.zip) to `libraries/MATLAB`.
 
+---
 Case study 1
 ----
 Demonstrating automatic task decomposition, distribution and execution to local cluster clients. A leader is automatically elected and distributes the mission to the clients.
