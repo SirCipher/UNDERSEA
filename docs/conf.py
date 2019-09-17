@@ -21,6 +21,7 @@ project = 'UNDERSEA'
 copyright = '2019, Tom Klapwijk'
 author = 'Tom Klapwijk'
 
+master_doc = 'index'
 
 # -- General configuration ---------------------------------------------------
 
