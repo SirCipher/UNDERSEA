@@ -1,4 +1,4 @@
-## Linux [![Build Status](https://type2labs.visualstudio.com/UNDERSEA/_apis/build/status/SirCipher.UNDERSEA?branchName=master&jobName=Linux)](https://type2labs.visualstudio.com/UNDERSEA/_build/latest?definitionId=8&branchName=master) Mac [![Build Status](https://travis-ci.com/SirCipher/UNDERSEA.svg?branch=master)](https://travis-ci.com/SirCipher/UNDERSEA)
+## Linux [![Build Status](https://type2labs.visualstudio.com/UNDERSEA/_apis/build/status/SirCipher.UNDERSEA?branchName=master&jobName=Linux)](https://type2labs.visualstudio.com/UNDERSEA/_build/latest?definitionId=8&branchName=master) Mac [![Build Status](https://travis-ci.com/SirCipher/UNDERSEA.svg?branch=master)](https://travis-ci.com/SirCipher/UNDERSEA) Docs [![Build Status](https://readthedocs.org/projects/undersea/badge/?version=latest)](https://undersea.readthedocs.io/en/latest/?badge=latest) 
 
 ---
 
