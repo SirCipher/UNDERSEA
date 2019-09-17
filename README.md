@@ -50,7 +50,11 @@ If you are planning to extend UNDERSEA and continue developing MOOS applications
 
 Developing on Windows:
 ---
-- In order to develop using Windows for the UNDERSEA platform but without the MOOS subsystem, Google OR Tools and Matlab must be installed to the libraries directory that resides in this folder. [OR Tools](https://github.com/google/or-tools/releases/download/v7.3/or-tools_VisualStudio2017-64bit_v7.3.7083.zip) must be installed to `libraries/ortools` and [MATLAB](https://ssd.mathworks.com/supportfiles/downloads/R2018b/deployment_files/R2018b/installers/glnxa64/MCR_R2018b_glnxa64_installer.zip) to `libraries/MATLAB`.
+In order to develop using Windows for the UNDERSEA platform but without the MOOS subsystem, Google OR Tools and Matlab must be installed to the libraries directory that resides in this folder. [OR Tools](https://github.com/google/or-tools/releases/download/v7.3/or-tools_VisualStudio2017-64bit_v7.3.7083.zip) must be installed to `libraries/ortools` and [MATLAB](https://ssd.mathworks.com/supportfiles/downloads/R2018b/deployment_files/R2018b/installers/glnxa64/MCR_R2018b_glnxa64_installer.zip) to `libraries/MATLAB`.
+
+Developing on Linux 16.04/18.04:
+---
+Run `setup.sh` in the root of this directory and all of the required external dependencies will pull. Run `setup.sh` in `moos-ivp-undersea`, add the `libraries/moos/bin` and `moos-ivp-undersea/bin` directories to your `$PATH`.
 
 ---
 Case study 1
