@@ -23,7 +23,6 @@ The repository comprises the following directories:
 - **undersea-agent**:
     - **agent**: a sample implementation of the software, built for MOOS. This includes a DSL parser for the agent configuration files.
     - **common**: common functionality for all submodules
-    - **mission-includes**: DSL templates for the sample implementation
     - **missionmanager**: A mission manager and planner for agent missions
     - **monitor**: a monitoring application for the cluster
     - **prospect**: a custom [Raft](https://raft.github.io/raft.pdf) implementation for the cluster
