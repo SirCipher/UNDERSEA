@@ -102,7 +102,7 @@ Transactions and Callbacks
 The above will construct a :code:`Transaction` and commit it to the registered :code:`MissionManager` service and notify it that the :code:`RaftNode` has been elected the cluster leader and the :code:`ServiceManager` will commit the transaction to that service and return a set of futures that we can add callbacks. This, however, requires that the :code:`MissionManager` has overridden the :code:`AgentService#executeTransaction`. If not, the transaction will be lost and nothing will be returned. The destination service can switch on the status that the transaction has marked on it to ensure that it executes the correct path. The sample implementation for MOOS uses this system to fire a transaction to all services and transitions the system state to a leader elected state. This causes the registered mission manager to decompose the target polygon to over, generate mission paths for each client and distribute them respectively.
 
 Complete code
--------------
++++++++++++++
 
 .. code-block:: java
 

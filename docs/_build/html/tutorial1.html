@@ -86,10 +86,8 @@
 <li class="toctree-l3"><a class="reference internal" href="#the-service-manager">The Service Manager</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#clients">Clients</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#raft">Raft</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#transactions-and-callbacks">Transactions and Callbacks</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#complete-code">Complete code</a></li>
-</ul>
-</li>
+<li class="toctree-l3"><a class="reference internal" href="#transactions-and-callbacks">Transactions and Callbacks</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#complete-code">Complete code</a></li>
 </ul>
 </li>
 </ul>
@@ -245,8 +243,9 @@
 </pre></div>
 </div>
 <p>The above will construct a <code class="code docutils literal notranslate"><span class="pre">Transaction</span></code> and commit it to the registered <code class="code docutils literal notranslate"><span class="pre">MissionManager</span></code> service and notify it that the <code class="code docutils literal notranslate"><span class="pre">RaftNode</span></code> has been elected the cluster leader and the <code class="code docutils literal notranslate"><span class="pre">ServiceManager</span></code> will commit the transaction to that service and return a set of futures that we can add callbacks. This, however, requires that the <code class="code docutils literal notranslate"><span class="pre">MissionManager</span></code> has overridden the <code class="code docutils literal notranslate"><span class="pre">AgentService#executeTransaction</span></code>. If not, the transaction will be lost and nothing will be returned. The destination service can switch on the status that the transaction has marked on it to ensure that it executes the correct path. The sample implementation for MOOS uses this system to fire a transaction to all services and transitions the system state to a leader elected state. This causes the registered mission manager to decompose the target polygon to over, generate mission paths for each client and distribute them respectively.</p>
+</div>
 <div class="section" id="complete-code">
-<h3>Complete code<a class="headerlink" href="#complete-code" title="Permalink to this headline">¶</a></h3>
+<h2>Complete code<a class="headerlink" href="#complete-code" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kn">package</span> <span class="nn">com.type2labs.undersea.tutorials.tutoriala</span><span class="o">;</span>
 
 
@@ -344,7 +343,6 @@
 
 <span class="o">}</span>
 </pre></div>
-</div>
 </div>
 </div>
 </div>
