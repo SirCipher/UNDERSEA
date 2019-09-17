@@ -7,7 +7,7 @@ An Exemplar for Engineering Self-Adaptive Vehicles, prototyped using the Mission
 
 Additional information on the original UNDERSEA application can be found on the [UNDERSEA webpage](http://www-users.cs.york.ac.uk/simos/UNDERSEA/).
 
-Further information on the project, architecture, and tutorials will be available soon.
+Further information on the project, architecture, tutorials are currently in progress. This project is currently under heavy development (as part of my dissertation) and is not recommended to be used in a production environment. The full report and research paper will be published in the coming months. Documentation will be available [here](https://undersea.readthedocs.io/en/latest/index.html) or if you wish to dive straight in, the first guide is available [here](https://undersea.readthedocs.io/en/latest/tutorial1.html).
 
 ---
 

@@ -69,7 +69,7 @@ This process happens every time a client joins and leaves a cluster to ensure th
 Transactions and Callbacks
 ++++++++++++++++++++++++++
 
-:code:`Transactions` lie at the core of how an :code:`AgentService` can communicate with one another in a simple fashion. If, for example, a service wishes to propagate a particular life cycle event to all other services, then a :code:`Transaction` is the most suitable choice. In the example below, the :code:`Transaction` and handling the response, is registered as a :code:`ServiceCallback` against the :code:`RaftNodeImpl` which will fire automatically when the node is elected as a leader.
+:code:`Transactions` lie at the core of how an :code:`AgentService` can communicate with another in a simple fashion. If, for example, a service wishes to propagate a particular life cycle event to all other services, then a :code:`Transaction` is the most suitable choice. In the example below, the :code:`Transaction` and handling the response, is registered as a :code:`ServiceCallback` against the :code:`RaftNodeImpl` which will fire automatically when the node is elected as a leader.
 
 .. code-block:: java
 
