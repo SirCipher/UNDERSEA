@@ -85,6 +85,7 @@ public class GroupTest {
             localAgentGroup.removeNode(leaderNode);
 
             leaderNode.parent().serviceManager().shutdownServices();
+            Thread.sleep(10000);
 
             assertTrueEventually(() -> {
                 RaftNodeImpl newLeader = (RaftNodeImpl) localAgentGroup.getLeaderNode();
@@ -92,8 +93,6 @@ public class GroupTest {
                 assertNotNull(newLeader);
                 assertNotEquals(newLeader, leaderNode);
             }, 120);
-
-            Thread.sleep(10000);
         }
     }
 

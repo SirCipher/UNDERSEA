@@ -118,7 +118,7 @@ public class RaftProtocolService extends RaftProtocolServiceGrpc.RaftProtocolSer
             Client leader = raftNode.parent().clusterClients().get(peerId);
 
             if (!leader.equals(raftNode.state().getLeader())) {
-                UnderseaLogger.info(logger, raftNode.parent(), "Setting leader: " + leader.name());
+                UnderseaLogger.info(logger, raftNode.parent(), "Setting leader: " + leader.peerId());
                 raftNode.state().toLeader(leader);
             }
 

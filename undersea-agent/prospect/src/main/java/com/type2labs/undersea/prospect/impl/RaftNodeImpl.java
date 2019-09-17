@@ -111,7 +111,7 @@ public class RaftNodeImpl implements RaftNode {
             throw new IllegalStateException("Auto port discovery is not enabled");
         }
 
-        this.singleThreadScheduledExecutor = ThrowableExecutor.newSingleThreadExecutor(parent(),logger);
+        this.singleThreadScheduledExecutor = ThrowableExecutor.newSingleThreadExecutor(parent(), logger);
         this.listeningExecutorService =
                 MoreExecutors.listeningDecorator(ThrowableExecutor.newSingleThreadExecutor(parent(), logger));
         this.multiRoleState = new MultiRoleStateImpl(this);
@@ -538,6 +538,8 @@ public class RaftNodeImpl implements RaftNode {
 
         @Override
         protected void innerRun() {
+            logger.info(agent.name() + ": running heartbeat task");
+
             if (lastHeartbeatTime < System.currentTimeMillis() - RaftClusterConfig.HEARTBEAT_PERIOD) {
                 for (Client follower : state().localNodes().values()) {
                     sendAppendRequest((RaftClient) follower);
