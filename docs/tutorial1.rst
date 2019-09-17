@@ -12,7 +12,7 @@ Local clusters can be defined easily through using the :code:`AgentFactory` clas
     AgentFactory agentFactory = new AgentFactory();
     List<Agent> agents = agentFactory.createN(5);
 
-The above initialises each agent with a unique, human-readable, name, a :code:`PeerId` (which uniquely identifies each :code:`Agent`), and a :code:`ServiceManager` that has no registered services. This is as bare-bones that you can get to a default template for creating an :code:`Agent`. 
+The above initialises each agent with a human-readable name, a :code:`PeerId` (which uniquely identifies each :code:`Agent`), and a :code:`ServiceManager` that has no registered services. This is as bare-bones that you can get to a default template for creating an :code:`Agent`. 
 
 The Service Manager
 +++++++++++++++++++
@@ -34,7 +34,7 @@ The :code:`ServiceManager` is the backbone of each :code:`Agent`. Each :code:`Ag
             agent.state().transitionTo(AgentState.State.ACTIVE);
         }
 
-All services must implement the :code:`AgentService` interface in order to be able to be registered. In this interface, exists much of the functionality that the :code:`ServiceManager` uses to manage services effectively. For example, the service :code:`RaftNodeImpl` requires a number of services in order for itself to function correctly and these are defined by overriding the :code:`AgentService#requiredServices` method which the :code:`ServiceManager` will ensure are registered during its startup procedure. In addition to this, some services may require a long time to startup and transition to a running state but the :code:`ServiceManager` only allows for a certain transition timeout period to elapse, this can be overridden by :code:`AgentService#transitionTimeout`. In order to initiate the aforementioned process, the :code:`Agent` is started by :code:`serviceManager.startServices()` and requires transitioning to an active state: :code:`agent.state().transitionTo(AgentState.State.ACTIVE)`
+All services must implement the :code:`AgentService` interface in order to be able to be registered. In this interface exists much of the functionality that the :code:`ServiceManager` uses to manage services effectively. For example, the service :code:`RaftNodeImpl` requires a number of services in order for itself to function correctly and these are defined by overriding the :code:`AgentService#requiredServices` method which the :code:`ServiceManager` will ensure are registered during its startup procedure. In addition to this, some services may require a long time to startup and transition to a running state but the :code:`ServiceManager` only allows for a certain transition timeout period to elapse, this can be overridden by :code:`AgentService#transitionTimeout`. In order to initiate the aforementioned process, the :code:`Agent` is started by :code:`serviceManager.startServices()` and requires transitioning to an active state: :code:`agent.state().transitionTo(AgentState.State.ACTIVE)`
 
 Clients
 +++++++
@@ -99,7 +99,7 @@ Transactions and Callbacks
         }
     }));
 
-The above will construct a :code:`Transaction` and commit it to the registered :code:`MissionManager` service and notify it that the :code:`RaftNode` has been elected the cluster leader and the :code:`ServiceManager` will commit the transaction to that service and return a set of futures that we can add callbacks. This, however, requires that the :code:`MissionManager` has overridden the :code:`AgentService#executeTransaction`. If not, the transaction will be lost and nothing will be returned. The destination service can switch on the status that the transaction has marked on it to ensure that it executes the correct path. The sample implementation for MOOS uses this system to fire a transaction to all services and transitions the system state to a leader elected state. This causes the registered mission manager to decompose the target polygon to over, generate mission paths for each client and distribute them respectively.
+The above will construct a :code:`Transaction` and commit it to the registered :code:`MissionManager` service and notify it that the :code:`RaftNode` has been elected the cluster leader and the :code:`ServiceManager` will commit the transaction to that service and return a set of futures that we can add callbacks. This, however, requires that the :code:`MissionManager` has overridden the :code:`AgentService#executeTransaction`. If not, the transaction will be lost and nothing will be returned. The destination service can switch on the status that the transaction has marked on it to ensure that it executes the correct path. The sample implementation for MOOS uses this system to fire a transaction to all services and transitions the system state to a leader elected state. This causes the registered mission manager to decompose the target polygon, generate mission paths for each client and distribute them respectively.
 
 Complete code
 +++++++++++++

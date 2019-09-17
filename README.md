@@ -5,7 +5,7 @@
 # UNDERSEA
 An Exemplar for Engineering Self-Adaptive Vehicles, prototyped using the Mission Oriented Operating Suite ([MOOS](https://oceanai.mit.edu/moos-ivp/pmwiki/pmwiki.php)). 
 
-Additional information on the original UNDERSEA application can be found on the [UNDERSEA webpage](http://www-users.cs.york.ac.uk/simos/UNDERSEA/).
+Additional information on the original UNDERSEA application can be found on the [UNDERSEA webpage](http://www-users.cs.york.ac.uk/simos/UNDERSEA/) and it is recommended that you read the [research paper](http://eprints.whiterose.ac.uk/113455/1/SEAMS_2017_UNDERSEA.pdf) before using this project to gain an understanding of how UNDERSEA works.
 
 Further information on the project, architecture, tutorials are currently in progress. This project is currently under heavy development (as part of my dissertation) and is not recommended to be used in a production environment. The full report and research paper will be published in the coming months. Documentation will be available [here](https://undersea.readthedocs.io/en/latest/index.html) or if you wish to dive straight in, the first guide is available [here](https://undersea.readthedocs.io/en/latest/tutorial1.html).
 
