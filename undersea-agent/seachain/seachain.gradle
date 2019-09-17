@@ -29,5 +29,4 @@
 
 dependencies {
     compile project(":common")
-    compile project(":utilities")
 }

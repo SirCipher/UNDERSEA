@@ -30,7 +30,6 @@ import org.apache.tools.ant.taskdefs.condition.Os
 
 dependencies {
     compile project(":common")
-    compile project(":utilities")
 
     if (Os.isFamily(Os.FAMILY_MAC)) {
         compile files("${rootProject.projectDir}/../libraries/repo/prism/osx/prism.jar")

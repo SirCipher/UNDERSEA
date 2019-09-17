@@ -181,8 +181,6 @@ public class RaftProtocolService extends RaftProtocolServiceGrpc.RaftProtocolSer
     @Override
     public void distributeMission(RaftProtos.DistributeMissionRequest request,
                                   StreamObserver<RaftProtos.DisributeMissionResponse> responseObserver) {
-        logger.info(raftNode.parent().name() + " processing distribute mission request: " + request, raftNode.parent());
-
         GeneratedMission generatedMission;
 
         try {

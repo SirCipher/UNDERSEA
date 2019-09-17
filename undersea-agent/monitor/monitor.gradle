@@ -8,7 +8,6 @@ dependencies {
     compile project(":common")
     compile project(":missionmanager")
     compile project(":prospect")
-    compile project(":utilities")
 }
 
 /*

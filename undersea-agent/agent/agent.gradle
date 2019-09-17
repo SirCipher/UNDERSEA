@@ -49,7 +49,6 @@ dependencies {
     compile project(":missionmanager")
     compile project(":controller")
     compile project(":seachain")
-    compile project(":utilities")
 
     compile("javax.annotation:javax.annotation-api:1.3.2")
 

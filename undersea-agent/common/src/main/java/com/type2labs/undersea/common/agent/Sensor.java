@@ -38,6 +38,8 @@ public class Sensor implements Subsystem {
     private final List<Range> changesList = new ArrayList<>();
     private double accuracy;
 
+    private double health = 100;
+
     public Sensor(String name, double rate, double reliability) {
         this(name, rate, reliability, SensorType.DEPTH);
         this.accuracy = ThreadLocalRandom.current().nextDouble(100);
@@ -117,6 +119,15 @@ public class Sensor implements Subsystem {
     @Override
     public double accuracy() {
         return accuracy;
+    }
+
+    @Override
+    public double health() {
+        return health;
+    }
+
+    public void setHealth(double health) {
+        this.health = health;
     }
 
     public enum SensorType {

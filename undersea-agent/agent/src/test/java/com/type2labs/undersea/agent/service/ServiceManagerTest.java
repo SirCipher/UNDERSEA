@@ -21,7 +21,6 @@
 
 package com.type2labs.undersea.agent.service;
 
-import com.google.common.util.concurrent.ListenableFuture;
 import com.type2labs.undersea.agent.impl.UnderseaAgent;
 import com.type2labs.undersea.common.agent.Agent;
 import com.type2labs.undersea.common.cluster.PeerId;
@@ -84,7 +83,7 @@ public class ServiceManagerTest {
         }
 
         @Override
-        public ListenableFuture<?> executeTransaction(Transaction transaction) {
+        public Object executeTransaction(Transaction transaction) {
             return null;
         }
 

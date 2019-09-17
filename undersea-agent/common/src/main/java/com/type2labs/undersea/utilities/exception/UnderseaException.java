@@ -21,7 +21,12 @@
 
 package com.type2labs.undersea.utilities.exception;
 
+import com.type2labs.undersea.common.service.AgentService;
+
 public class UnderseaException extends RuntimeException {
+
+    private ErrorCode errorCode = ErrorCode.UNKNOWN;
+    private AgentService agentService;
 
     private static final long serialVersionUID = 3322424663356101425L;
 
@@ -33,7 +38,26 @@ public class UnderseaException extends RuntimeException {
         super(message, e);
     }
 
-    public String toString() {
-        return "Error: \t" + getMessage();
+    public UnderseaException(ErrorCode errorCode, AgentService agentService, String m) {
+        super(m);
+        this.errorCode = errorCode;
+        this.agentService = agentService;
     }
+
+    public AgentService getAgentService() {
+        return agentService;
+    }
+
+    @Override
+    public String toString() {
+        return "UnderseaException{" +
+                "errorCode=" + errorCode +
+                ", agentService=" + agentService +
+                '}';
+    }
+
+    public ErrorCode getErrorCode() {
+        return errorCode;
+    }
+
 }

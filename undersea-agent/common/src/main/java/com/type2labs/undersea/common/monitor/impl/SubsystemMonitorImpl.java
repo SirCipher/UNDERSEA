@@ -30,7 +30,9 @@ import com.type2labs.undersea.common.monitor.model.VisualiserClient;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class SubsystemMonitorImpl implements SubsystemMonitor {
@@ -41,6 +43,7 @@ public class SubsystemMonitorImpl implements SubsystemMonitor {
     private VisualiserClient visualiserClient = new NoVisualiser();
     private Agent agent;
     private Range speedRange;
+    private MonitorCallback monitorCallback;
 
     @Override
     public void shutdown() {
@@ -66,6 +69,10 @@ public class SubsystemMonitorImpl implements SubsystemMonitor {
         return visualiserClient;
     }
 
+    public void setMonitorCallback(MonitorCallback monitorCallback) {
+        this.monitorCallback = monitorCallback;
+    }
+
     @Override
     public void setVisualiser(VisualiserClient visualiserClient) {
         this.visualiserClient = visualiserClient;
@@ -79,7 +86,11 @@ public class SubsystemMonitorImpl implements SubsystemMonitor {
     @Override
     public double getCurrentCost() {
         CostConfiguration costConfiguration = agent.config().getCostConfiguration();
-        double speedWeighting = (double) costConfiguration.getBias("SPEED");
+        double speedWeighting = 1;
+
+        if (costConfiguration != null) {
+            speedWeighting = (double) costConfiguration.getBias("SPEED");
+        }
 
         double result = speedRange.getMax() * speedWeighting;
 
@@ -94,6 +105,14 @@ public class SubsystemMonitorImpl implements SubsystemMonitor {
     public void initialise(Agent parentAgent) {
         this.agent = parentAgent;
         visualiserClient.initialise(agent);
+
+        if (monitorCallback != null) {
+            parentAgent.serviceManager().startRepeatingTask(() -> {
+                for (SubsystemWrapper subsystemWrapper : subsystems.values()) {
+                    monitorCallback.onMonitor(subsystemWrapper.subsystem);
+                }
+            }, 500);
+        }
     }
 
     @Override
@@ -115,10 +134,23 @@ public class SubsystemMonitorImpl implements SubsystemMonitor {
 
         public double getStatus() {
             CostConfiguration costConfiguration = agent.config().getCostConfiguration();
-            double accuracyWeighting = (double) costConfiguration.getBias("ACCURACY");
+            double accuracyWeighting = 1;
+            if (costConfiguration != null) {
+                accuracyWeighting = (double) costConfiguration.getBias("ACCURACY");
+            }
 
             return (subsystem.rate() + subsystem.reliability()) / (accuracyWeighting * subsystem.accuracy());
         }
+    }
+
+    public List<Subsystem> getSubsystems() {
+        List<Subsystem> res = new ArrayList<>();
+
+        for (SubsystemWrapper subsystemWrapper : subsystems.values()) {
+            res.add(subsystemWrapper.subsystem);
+        }
+
+        return res;
     }
 
 }

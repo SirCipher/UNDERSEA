@@ -56,4 +56,6 @@ public interface Subsystem {
      */
     double accuracy();
 
+    double health();
+
 }

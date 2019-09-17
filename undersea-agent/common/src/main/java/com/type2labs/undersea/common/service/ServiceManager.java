@@ -22,6 +22,7 @@
 package com.type2labs.undersea.common.service;
 
 import com.google.common.util.concurrent.ListenableFuture;
+import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.common.util.concurrent.MoreExecutors;
 import com.type2labs.undersea.common.agent.Agent;
 import com.type2labs.undersea.common.monitor.model.SubsystemMonitor;
@@ -60,8 +61,9 @@ public class ServiceManager {
             new ConcurrentHashMap<>();
     private final Map<Class<? extends AgentService>, ScheduledFuture<?>> scheduledFutures = new ConcurrentHashMap<>();
     private final Map<Class<? extends AgentService>, ServiceState> serviceStates = new ConcurrentHashMap<>();
-    private final ScheduledExecutorService scheduledExecutor;
-    private final ThrowableExecutor serviceInitialiser = ThrowableExecutor.newSingleThreadExecutor(logger);
+    private ScheduledExecutorService scheduledExecutor;
+    private ListeningExecutorService listeningExecutorService;
+    private ThrowableExecutor serviceInitialiser;
     private ScheduledExecutorService serviceExecutor;
     private Agent agent;
 
@@ -71,7 +73,6 @@ public class ServiceManager {
 
     public ServiceManager() {
         Runtime.getRuntime().addShutdownHook(new Thread(this::shutdownServices));
-        scheduledExecutor = ScheduledThrowableExecutor.newSingleThreadExecutor(logger);
     }
 
     /**
@@ -92,7 +93,7 @@ public class ServiceManager {
         serviceStates.put(service, status);
 
         if (status == ServiceState.FAILED) {
-            notifyServicesOfFailure(service);
+            handleFailure(service);
         }
     }
 
@@ -107,7 +108,9 @@ public class ServiceManager {
      *
      * @param service that has failed
      */
-    private void notifyServicesOfFailure(Class<? extends AgentService> service) {
+    public void handleFailure(Class<? extends AgentService> service) {
+        serviceStates.put(service, ServiceState.FAILED);
+
         // This does not currently take care of notifying the target services as to why/how the service failed
         Transaction transaction = new Transaction.Builder(agent)
                 .forAllRunningServices()
@@ -121,12 +124,20 @@ public class ServiceManager {
         futures.forEach(f -> {
             try {
                 f.get();
-            } catch (InterruptedException | ExecutionException ex) {
-                ex.printStackTrace();
-            } catch (NotSupportedException e) {
+            } catch (NotSupportedException ignored) {
+            } catch (InterruptedException | ExecutionException e) {
                 logger.error(agent.name() + ": " + e.getLocalizedMessage());
             }
         });
+
+        AgentService agentService = getService(service, true);
+        if (agentService.isCritical()) {
+            shutdownServices();
+        }
+    }
+
+    public void scheduleTask(Runnable task, long delay) {
+        scheduledExecutor.schedule(task, delay, TimeUnit.SECONDS);
     }
 
     /**
@@ -212,7 +223,8 @@ public class ServiceManager {
             AgentService _registeredService = checkServiceAndThrow(service);
 
             try {
-                ListenableFuture<?> future = _registeredService.executeTransaction(transaction);
+                ListenableFuture<?> future = listeningExecutorService.submit(() -> _registeredService.executeTransaction(transaction));
+
                 futures.add(future);
             } catch (NotSupportedException ignored) {
             }
@@ -398,6 +410,10 @@ public class ServiceManager {
         this.serviceManagerTransactionService = new ServiceManagerTransactionService();
         serviceManagerTransactionService.initialise(agent);
 
+        scheduledExecutor = ScheduledThrowableExecutor.newSingleThreadExecutor(agent, logger);
+        listeningExecutorService = MoreExecutors.listeningDecorator(ThrowableExecutor.newExecutor(agent, 3, logger));
+        serviceInitialiser = ThrowableExecutor.newSingleThreadExecutor(agent, logger);
+
         logger.info(agent.name() + ": service manager assigned", agent);
     }
 
@@ -522,12 +538,16 @@ public class ServiceManager {
      * {@link AgentService}s are registered
      */
     private synchronized void initialise() {
+        if (agent == null) {
+            throw new IllegalStateException("Agent not set");
+        }
+
         if (started) {
             return;
         }
 
         processRequiredServices();
-        serviceExecutor = ScheduledThrowableExecutor.newExecutor(services.size(), logger);
+        serviceExecutor = ScheduledThrowableExecutor.newExecutor(agent, services.size(), logger);
     }
 
     /**
@@ -570,7 +590,7 @@ public class ServiceManager {
                     " Missing:\n");
 
             for (Class<? extends AgentService> clazz : missingServices) {
-                msg.append(clazz.getSimpleName());
+                msg.append(clazz.getSimpleName() + " ");
             }
 
             throw new ServiceNotRegisteredException(msg.toString());

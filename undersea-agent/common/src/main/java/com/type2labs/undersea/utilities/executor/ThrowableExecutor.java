@@ -21,36 +21,46 @@
 
 package com.type2labs.undersea.utilities.executor;
 
+import com.type2labs.undersea.common.agent.Agent;
+import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.Objects;
 import java.util.concurrent.*;
 
-public class ScheduledThrowableExecutor extends ScheduledThreadPoolExecutor {
+public class ThrowableExecutor extends ThreadPoolExecutor {
 
     private final Thread.UncaughtExceptionHandler ueh;
     private final Logger logger;
+    private final Agent agent;
 
-    public ScheduledThrowableExecutor(int corePoolSize, Logger logger) {
-        super(corePoolSize);
+    public ThrowableExecutor(Agent agent, int corePoolSize, int maximumPoolSize, long keepAliveTime, TimeUnit unit,
+                             BlockingQueue<Runnable> workQueue, Logger logger) {
+        super(corePoolSize, maximumPoolSize, keepAliveTime, unit, workQueue);
 
-        this.logger = Objects.requireNonNull(logger);
-        this.ueh = new Thread.UncaughtExceptionHandler() {
-            @Override
-            public void uncaughtException(final Thread t, final Throwable e) {
-                e.printStackTrace();
-            }
+        this.agent = agent;
+
+        if (logger == null) {
+            this.logger = LogManager.getLogger(ThrowableExecutor.class);
+        } else {
+            this.logger = logger;
+        }
+
+        this.ueh = (t, e) -> {
+            UnderseaExceptionHandler.handle(e, agent);
+            e.printStackTrace();
         };
-
-        setRemoveOnCancelPolicy(true);
     }
 
-    public static ScheduledThrowableExecutor newExecutor(int threads, Logger logger) {
-        return new ScheduledThrowableExecutor(threads, logger);
+    public static ThrowableExecutor newExecutor(Agent agent, int threads, Logger logger) {
+        return new ThrowableExecutor(agent, threads, threads, 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<>(), logger);
     }
 
-    public static ScheduledThrowableExecutor newSingleThreadExecutor(Logger logger) {
-        return newExecutor(1, logger);
+    public static ThrowableExecutor newSingleThreadExecutor(Agent agent, Logger logger) {
+        return newExecutor(agent, 1, logger);
+    }
+
+    public static ThrowableExecutor newSingleThreadExecutor(Agent agent) {
+        return newExecutor(agent, 1, null);
     }
 
     protected void afterExecute(Runnable r, Throwable t) {
@@ -58,6 +68,8 @@ public class ScheduledThrowableExecutor extends ScheduledThreadPoolExecutor {
 
         if (t != null) {
             logger.error(t);
+            UnderseaExceptionHandler.handle(t, agent);
+
             throw new RuntimeException(t);
         }
     }
@@ -67,25 +79,6 @@ public class ScheduledThrowableExecutor extends ScheduledThreadPoolExecutor {
         return super.submit(wrap(task));
     }
 
-    @Override
-    public ScheduledFuture<?> schedule(Runnable command, long delay, TimeUnit unit) {
-        return super.schedule(wrap(command), delay, unit);
-    }
-
-    @Override
-    public <V> ScheduledFuture<V> schedule(Callable<V> callable, long delay, TimeUnit unit) {
-        return super.schedule(wrap(callable), delay, unit);
-    }
-
-    @Override
-    public ScheduledFuture<?> scheduleAtFixedRate(Runnable command, long initialDelay, long period, TimeUnit unit) {
-        return super.scheduleAtFixedRate(wrap(command), initialDelay, period, unit);
-    }
-
-    @Override
-    public ScheduledFuture<?> scheduleWithFixedDelay(Runnable command, long initialDelay, long delay, TimeUnit unit) {
-        return super.scheduleWithFixedDelay(wrap(command), initialDelay, delay, unit);
-    }
 
     @Override
     public void execute(Runnable command) {
@@ -99,7 +92,6 @@ public class ScheduledThrowableExecutor extends ScheduledThreadPoolExecutor {
                 try {
                     return callable.call();
                 } catch (Throwable t) {
-                    t.printStackTrace();
                     ueh.uncaughtException(Thread.currentThread(), t);
                     throw t;
                 }
@@ -112,7 +104,6 @@ public class ScheduledThrowableExecutor extends ScheduledThreadPoolExecutor {
             try {
                 runnable.run();
             } catch (final Throwable t) {
-                t.printStackTrace();
                 ueh.uncaughtException(Thread.currentThread(), t);
                 throw t;
             }

@@ -21,7 +21,6 @@
 
 package com.type2labs.undersea.controller;
 
-import com.google.common.util.concurrent.ListenableFuture;
 import com.type2labs.undersea.common.agent.Agent;
 import com.type2labs.undersea.common.agent.AgentMetaData;
 import com.type2labs.undersea.common.controller.Controller;
@@ -130,7 +129,7 @@ public class ControllerImpl implements Controller {
     }
 
     @Override
-    public ListenableFuture<?> executeTransaction(Transaction transaction) {
+    public Object executeTransaction(Transaction transaction) {
         throw new NotSupportedException();
     }
 

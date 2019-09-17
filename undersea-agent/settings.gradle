@@ -23,7 +23,6 @@ if (!JavaVersion.current().java8Compatible) {
     throw new GradleException("Gradle must be run with Java 8")
 }
 
-include 'utilities'
 include 'agent'
 include 'missionmanager'
 include 'seachain'
@@ -31,6 +30,7 @@ include 'controller'
 include 'common'
 include 'prospect'
 include 'monitor'
+include 'tutorials'
 
 rootProject.children.each { project ->
     project.buildFileName = "${project.name}.gradle"

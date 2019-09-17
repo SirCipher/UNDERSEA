@@ -33,6 +33,10 @@ import com.type2labs.undersea.common.service.AgentService;
  */
 public interface SubsystemMonitor extends AgentService {
 
+    interface MonitorCallback {
+        void onMonitor(Subsystem subsystem);
+    }
+
     /**
      * Registers a new {@link Subsystem} to monitor
      *

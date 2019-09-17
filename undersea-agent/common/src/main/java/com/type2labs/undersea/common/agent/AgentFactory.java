@@ -99,7 +99,7 @@ public class AgentFactory implements AbstractFactory<Agent> {
 
     @Override
     public Agent create() {
-        String name = "test:" + count++;
+        String name = "test-" + count++;
         ServiceManager serviceManager = new ServiceManager();
 
         return new AbstractAgent(new RuntimeConfig(), name, serviceManager, PeerId.newId()) {

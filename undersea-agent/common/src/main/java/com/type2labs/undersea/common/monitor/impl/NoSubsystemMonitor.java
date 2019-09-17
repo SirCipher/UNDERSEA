@@ -21,7 +21,6 @@
 
 package com.type2labs.undersea.common.monitor.impl;
 
-import com.google.common.util.concurrent.ListenableFuture;
 import com.type2labs.undersea.common.agent.Agent;
 import com.type2labs.undersea.common.agent.Range;
 import com.type2labs.undersea.common.agent.Subsystem;
@@ -73,7 +72,7 @@ public class NoSubsystemMonitor implements SubsystemMonitor {
     }
 
     @Override
-    public ListenableFuture<?> executeTransaction(Transaction transaction) {
+    public Object executeTransaction(Transaction transaction) {
         return null;
     }
 

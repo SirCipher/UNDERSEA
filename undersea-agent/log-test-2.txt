@@ -1,0 +1,2 @@
+
+LogEntry{term=2, data=java.lang.Object@7dc30e9a, value=java.lang.Object@7304fe8a, agentService=RaftNodeImpl}

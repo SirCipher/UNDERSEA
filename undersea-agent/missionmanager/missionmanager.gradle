@@ -28,7 +28,6 @@
  */
 
 dependencies {
-    compile project(":utilities")
     compile project(":common")
 
     compile files("${rootProject.projectDir}/../libraries/MATLAB/v95/toolbox/javabuilder/jar/javabuilder.jar")

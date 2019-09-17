@@ -21,7 +21,6 @@
 
 package com.type2labs.undersea.common.service;
 
-import com.google.common.util.concurrent.ListenableFuture;
 import com.type2labs.undersea.common.agent.AgentAware;
 import com.type2labs.undersea.common.service.transaction.LifecycleEvent;
 import com.type2labs.undersea.common.service.transaction.ServiceCallback;
@@ -75,12 +74,12 @@ public interface AgentService extends Runnable, AgentAware {
      * @param transaction to execute
      * @return scheduled future
      */
-    default ListenableFuture<?> executeTransaction(Transaction transaction) {
+    default Object executeTransaction(Transaction transaction) {
         throw new NotSupportedException();
     }
 
     default ExecutorService transactionExecutor() {
-        return ThrowableExecutor.newSingleThreadExecutor();
+        return ThrowableExecutor.newSingleThreadExecutor(parent());
     }
 
     /**

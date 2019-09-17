@@ -24,7 +24,6 @@ package com.type2labs.undersea.prospect.impl;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.util.concurrent.FutureCallback;
-import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.common.util.concurrent.MoreExecutors;
 import com.type2labs.undersea.common.agent.Agent;
@@ -112,9 +111,9 @@ public class RaftNodeImpl implements RaftNode {
             throw new IllegalStateException("Auto port discovery is not enabled");
         }
 
-        this.singleThreadScheduledExecutor = ThrowableExecutor.newSingleThreadExecutor(logger);
+        this.singleThreadScheduledExecutor = ThrowableExecutor.newSingleThreadExecutor(parent(),logger);
         this.listeningExecutorService =
-                MoreExecutors.listeningDecorator(ThrowableExecutor.newSingleThreadExecutor(logger));
+                MoreExecutors.listeningDecorator(ThrowableExecutor.newSingleThreadExecutor(parent(), logger));
         this.multiRoleState = new MultiRoleStateImpl(this);
     }
 
@@ -132,7 +131,7 @@ public class RaftNodeImpl implements RaftNode {
     }
 
     @Override
-    public ListenableFuture<?> executeTransaction(Transaction transaction) {
+    public Object executeTransaction(Transaction transaction) {
         if (transaction.getStatusCode() == LifecycleEvent.FAILING) {
             notifyMultiRoleLeaderOfFailure();
         }
@@ -275,6 +274,10 @@ public class RaftNodeImpl implements RaftNode {
 
     private void alertMultiRoleLeaderOfMission(GeneratedMission generatedMission) {
         MultiRoleLeaderClientImpl leaderClient = (MultiRoleLeaderClientImpl) multiRoleState.getLeader();
+        if (leaderClient == null) {
+            return;
+        }
+
         RaftProtos.NotificationRequest request = RaftProtos.NotificationRequest.newBuilder()
                 .setClient(GrpcUtil.toProtoClient(this))
                 .setStatusCode(MultiRoleNotification.GENERATED_MISSION.toString())
@@ -295,7 +298,7 @@ public class RaftNodeImpl implements RaftNode {
         });
     }
 
-    void distributeMission(GeneratedMission generatedMission) {
+    public void distributeMission(GeneratedMission generatedMission) {
         ObjectMapper mapper = new ObjectMapper();
 
         String jsonMission;

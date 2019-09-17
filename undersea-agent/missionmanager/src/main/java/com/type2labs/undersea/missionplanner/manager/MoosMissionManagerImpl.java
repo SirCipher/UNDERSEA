@@ -77,7 +77,7 @@ public class MoosMissionManagerImpl implements MissionManager {
 
     public MoosMissionManagerImpl(MissionPlanner missionPlanner) {
         this.missionPlanner = missionPlanner;
-        this.taskExecutor = MoreExecutors.listeningDecorator(ThrowableExecutor.newSingleThreadExecutor(logger));
+        this.taskExecutor = MoreExecutors.listeningDecorator(ThrowableExecutor.newSingleThreadExecutor(parent(), logger));
     }
 
     private void runTask(Task task) {
@@ -264,7 +264,7 @@ public class MoosMissionManagerImpl implements MissionManager {
      * @return a {@link ListenableFuture} returned by the provided {@link java.util.concurrent.ExecutorService}
      */
     @Override
-    public ListenableFuture<?> executeTransaction(Transaction transaction) {
+    public Object executeTransaction(Transaction transaction) {
         logger.info(agent.name() + ": received transaction: " + transaction, agent);
         LifecycleEvent statusCode = (LifecycleEvent) transaction.getStatusCode();
 
