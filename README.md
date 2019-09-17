@@ -25,6 +25,7 @@ The repository comprises the following directories:
     - **common**: common functionality for all submodules
     - **dsl**: a DSL parser for the sample implementation
     - **mission-includes**: DSL templates for the sample implementation
+    - **missionmanager**: A mission manager and planner for agent missions
     - **monitor**: a monitoring application for the cluster
     - **prospect**: a custom [Raft](https://raft.github.io/raft.pdf) implementation for the cluster
     - **seachain**: a todo application which will migrate the distributed logging system to an Ethereum network
