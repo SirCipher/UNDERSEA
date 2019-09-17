@@ -1,0 +1,399 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Creating A Cluster &mdash; UNDERSEA  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Getting Started" href="gettingstarted.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> UNDERSEA
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="gettingstarted.html"> Getting Started</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Creating A Cluster</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#the-service-manager">The Service Manager</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#clients">Clients</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#raft">Raft</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#transactions-and-callbacks">Transactions and Callbacks</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#complete-code">Complete code</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">UNDERSEA</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="gettingstarted.html">Getting Started</a> &raquo;</li>
+        
+      <li>Creating A Cluster</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/tutorial1.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="creating-a-cluster">
+<span id="tutorial1"></span><h1>Creating A Cluster<a class="headerlink" href="#creating-a-cluster" title="Permalink to this headline">¶</a></h1>
+<p>Local clusters can be defined easily through using the <code class="code docutils literal notranslate"><span class="pre">AgentFactory</span></code> class. The <code class="code docutils literal notranslate"><span class="pre">AgentFactory</span></code> will initialise <cite>n</cite> (provided) agents with the functionality required for an <code class="code docutils literal notranslate"><span class="pre">Agent</span></code> to run; initialising a <code class="code docutils literal notranslate"><span class="pre">ServiceManager</span></code> and other core functionality. Let’s dive in and create five agents:</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="n">AgentFactory</span> <span class="n">agentFactory</span> <span class="o">=</span> <span class="k">new</span> <span class="n">AgentFactory</span><span class="o">();</span>
+<span class="n">List</span><span class="o">&lt;</span><span class="n">Agent</span><span class="o">&gt;</span> <span class="n">agents</span> <span class="o">=</span> <span class="n">agentFactory</span><span class="o">.</span><span class="na">createN</span><span class="o">(</span><span class="mi">5</span><span class="o">);</span>
+</pre></div>
+</div>
+<p>The above initialises each agent with a unique, human-readable, name, a <code class="code docutils literal notranslate"><span class="pre">PeerId</span></code> (which uniquely identifies each <code class="code docutils literal notranslate"><span class="pre">Agent</span></code>), and a <code class="code docutils literal notranslate"><span class="pre">ServiceManager</span></code> that has no registered services. This is as bare-bones that you can get to a default template for creating an <code class="code docutils literal notranslate"><span class="pre">Agent</span></code>.</p>
+<div class="section" id="the-service-manager">
+<h2>The Service Manager<a class="headerlink" href="#the-service-manager" title="Permalink to this headline">¶</a></h2>
+<p>The <code class="code docutils literal notranslate"><span class="pre">ServiceManager</span></code> is the backbone of each <code class="code docutils literal notranslate"><span class="pre">Agent</span></code>. Each <code class="code docutils literal notranslate"><span class="pre">Agent</span></code> is assigned one and can have a number of <code class="code docutils literal notranslate"><span class="pre">AgentService</span></code> instances registered against it. The <code class="code docutils literal notranslate"><span class="pre">ServiceManager</span></code> will manage initialising each registered service, ensuring that they start correctly and transition to a running state, or, if the service fails to start or fails at a later time, notifies all running services that a particular service has failed. Lets initialise all of our <code class="code docutils literal notranslate"><span class="pre">Agents</span></code> with a few services:</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="o">(</span><span class="n">Agent</span> <span class="n">agent</span> <span class="o">:</span> <span class="n">agents</span><span class="o">)</span> <span class="o">{</span>
+     <span class="n">ServiceManager</span> <span class="n">serviceManager</span> <span class="o">=</span> <span class="n">agent</span><span class="o">.</span><span class="na">serviceManager</span><span class="o">();</span>
+
+     <span class="n">serviceManager</span><span class="o">.</span><span class="na">registerService</span><span class="o">(</span><span class="k">new</span> <span class="n">RaftNodeImpl</span><span class="o">(</span><span class="k">new</span> <span class="n">RaftClusterConfig</span><span class="o">()));</span>
+     <span class="n">serviceManager</span><span class="o">.</span><span class="na">registerService</span><span class="o">(</span><span class="k">new</span> <span class="n">SubsystemMonitorSpoofer</span><span class="o">());</span>
+     <span class="n">serviceManager</span><span class="o">.</span><span class="na">registerService</span><span class="o">(</span><span class="k">new</span> <span class="n">MissionManagerSample</span><span class="o">());</span>
+     <span class="n">serviceManager</span><span class="o">.</span><span class="na">registerService</span><span class="o">(</span><span class="k">new</span> <span class="n">LogServiceImpl</span><span class="o">());</span>
+
+     <span class="n">serviceManager</span><span class="o">.</span><span class="na">startServices</span><span class="o">();</span>
+
+     <span class="n">agent</span><span class="o">.</span><span class="na">state</span><span class="o">().</span><span class="na">transitionTo</span><span class="o">(</span><span class="n">AgentState</span><span class="o">.</span><span class="na">State</span><span class="o">.</span><span class="na">ACTIVE</span><span class="o">);</span>
+ <span class="o">}</span>
+</pre></div>
+</div>
+<p>All services must implement the <code class="code docutils literal notranslate"><span class="pre">AgentService</span></code> interface in order to be able to be registered. In this interface, exists much of the functionality that the <code class="code docutils literal notranslate"><span class="pre">ServiceManager</span></code> uses to manage services effectively. For example, the service <code class="code docutils literal notranslate"><span class="pre">RaftNodeImpl</span></code> requires a number of services in order for itself to function correctly and these are defined by overriding the <code class="code docutils literal notranslate"><span class="pre">AgentService#requiredServices</span></code> method which the <code class="code docutils literal notranslate"><span class="pre">ServiceManager</span></code> will ensure are registered during its startup procedure. In addition to this, some services may require a long time to startup and transition to a running state but the <code class="code docutils literal notranslate"><span class="pre">ServiceManager</span></code> only allows for a certain transition timeout period to elapse, this can be overridden by <code class="code docutils literal notranslate"><span class="pre">AgentService#transitionTimeout</span></code>. In order to initiate the aforementioned process, the <code class="code docutils literal notranslate"><span class="pre">Agent</span></code> is started by <code class="code docutils literal notranslate"><span class="pre">serviceManager.startServices()</span></code> and requires transitioning to an active state: <code class="code docutils literal notranslate"><span class="pre">agent.state().transitionTo(AgentState.State.ACTIVE)</span></code></p>
+</div>
+<div class="section" id="clients">
+<h2>Clients<a class="headerlink" href="#clients" title="Permalink to this headline">¶</a></h2>
+<p>The UNDERSEA project has been developed with the view that the end-product will be a number of active robots in some unknown environment and as such, no automatic peer discovery is implemented at this time. However, local node discovery can be performed as follows:</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="o">(</span><span class="n">Agent</span> <span class="n">a</span> <span class="o">:</span> <span class="n">agents</span><span class="o">)</span> <span class="o">{</span>
+    <span class="k">for</span> <span class="o">(</span><span class="n">Agent</span> <span class="n">b</span> <span class="o">:</span> <span class="n">agents</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">a</span> <span class="o">!=</span> <span class="n">b</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">RaftNodeImpl</span> <span class="n">raftNodeA</span> <span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="na">serviceManager</span><span class="o">().</span><span class="na">getService</span><span class="o">(</span><span class="n">RaftNodeImpl</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+            <span class="n">RaftNodeImpl</span> <span class="n">raftNodeB</span> <span class="o">=</span> <span class="n">b</span><span class="o">.</span><span class="na">serviceManager</span><span class="o">().</span><span class="na">getService</span><span class="o">(</span><span class="n">RaftNodeImpl</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+
+            <span class="n">raftNodeA</span><span class="o">.</span><span class="na">state</span><span class="o">().</span><span class="na">discoverNode</span><span class="o">(</span><span class="n">raftNodeB</span><span class="o">);</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+<p>This will inform the <code class="code docutils literal notranslate"><span class="pre">Agent</span></code> of another client and build a gRPC client in order to perform the required Raft tasks throughout its availability. Once an <code class="code docutils literal notranslate"><span class="pre">Agent</span></code> discovers another, an automatic voting round is started and a leader is elected.</p>
+</div>
+<div class="section" id="raft">
+<h2>Raft<a class="headerlink" href="#raft" title="Permalink to this headline">¶</a></h2>
+<p>The UNDERSEA project uses a custom implementation of the Raft consensus algorithm in order deterministically elect a leader within a cluster. This leader will perform a number of tasks and manage the cluster state and work towards ensuring that a mission is completed successfully. This follows a three step process:</p>
+<ul class="simple">
+<li><p>Each node finds out the current state of every client in the cluster and works out an overall cost associated with that client; comprised of, the client’s battery level, number of subsystems that are present on it and their accuracy. This can be configured in your implementation. We wouldn’t want a leader to be elected and to perform more tasks when they have low battery.</p></li>
+<li><p>Every node votes for who they calculated to have the lowest cost.</p></li>
+<li><p>The leader is elected and transitions to a leader state.</p></li>
+</ul>
+<p>This process happens every time a client joins and leaves a cluster to ensure that the most suitable leader is always elected. Following this, there are two further principles that can be introduced: <code class="code docutils literal notranslate"><span class="pre">Transactions</span></code> and <code class="code docutils literal notranslate"><span class="pre">ServiceCallbacks</span></code>.</p>
+</div>
+<div class="section" id="transactions-and-callbacks">
+<h2>Transactions and Callbacks<a class="headerlink" href="#transactions-and-callbacks" title="Permalink to this headline">¶</a></h2>
+<p><code class="code docutils literal notranslate"><span class="pre">Transactions</span></code> lie at the core of how an <code class="code docutils literal notranslate"><span class="pre">AgentService</span></code> can communicate with one another in a simple fashion. If, for example, a service wishes to propagate a particular life cycle event to all other services, then a <code class="code docutils literal notranslate"><span class="pre">Transaction</span></code> is the most suitable choice. In the example below, the <code class="code docutils literal notranslate"><span class="pre">Transaction</span></code> and handling the response, is registered as a <code class="code docutils literal notranslate"><span class="pre">ServiceCallback</span></code> against the <code class="code docutils literal notranslate"><span class="pre">RaftNodeImpl</span></code> which will fire automatically when the node is elected as a leader.</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="n">raftNode</span><span class="o">.</span><span class="na">registerCallback</span><span class="o">(</span><span class="k">new</span> <span class="n">ServiceCallback</span><span class="o">(</span><span class="n">LifecycleEvent</span><span class="o">.</span><span class="na">ELECTED_LEADER</span><span class="o">,</span> <span class="o">()</span> <span class="o">-&gt;</span> <span class="o">{</span>
+    <span class="n">Transaction</span> <span class="n">transaction</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Transaction</span><span class="o">.</span><span class="na">Builder</span><span class="o">(</span><span class="n">agent</span><span class="o">)</span>
+            <span class="o">.</span><span class="na">forService</span><span class="o">(</span><span class="n">MissionManager</span><span class="o">.</span><span class="na">class</span><span class="o">)</span>
+            <span class="o">.</span><span class="na">withStatus</span><span class="o">(</span><span class="n">LifecycleEvent</span><span class="o">.</span><span class="na">ELECTED_LEADER</span><span class="o">)</span>
+            <span class="o">.</span><span class="na">usingExecutorService</span><span class="o">(</span><span class="n">raftNode</span><span class="o">.</span><span class="na">getListeningExecutorService</span><span class="o">())</span>
+            <span class="o">.</span><span class="na">invokedBy</span><span class="o">(</span><span class="n">raftNode</span><span class="o">)</span>
+            <span class="o">.</span><span class="na">build</span><span class="o">();</span>
+
+    <span class="n">Set</span><span class="o">&lt;</span><span class="n">ListenableFuture</span><span class="o">&lt;?&gt;&gt;</span> <span class="n">futures</span> <span class="o">=</span> <span class="n">agent</span><span class="o">.</span><span class="na">serviceManager</span><span class="o">().</span><span class="na">commitTransaction</span><span class="o">(</span><span class="n">transaction</span><span class="o">);</span>
+
+    <span class="k">for</span> <span class="o">(</span><span class="n">ListenableFuture</span><span class="o">&lt;?&gt;</span> <span class="n">future</span> <span class="o">:</span> <span class="n">futures</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">Futures</span><span class="o">.</span><span class="na">addCallback</span><span class="o">(</span><span class="n">future</span><span class="o">,</span> <span class="k">new</span> <span class="n">FutureCallback</span><span class="o">&lt;</span><span class="n">Object</span><span class="o">&gt;()</span> <span class="o">{</span>
+            <span class="nd">@Override</span>
+            <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onSuccess</span><span class="o">(</span><span class="nd">@Nullable</span> <span class="n">Object</span> <span class="n">result</span><span class="o">)</span> <span class="o">{</span>
+                <span class="n">raftNode</span><span class="o">.</span><span class="na">distributeMission</span><span class="o">((</span><span class="n">GeneratedMission</span><span class="o">)</span> <span class="n">result</span><span class="o">);</span>
+            <span class="o">}</span>
+
+            <span class="nd">@Override</span>
+            <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onFailure</span><span class="o">(</span><span class="n">Throwable</span> <span class="n">t</span><span class="o">)</span> <span class="o">{</span>
+                <span class="k">throw</span> <span class="k">new</span> <span class="n">RuntimeException</span><span class="o">(</span><span class="n">t</span><span class="o">);</span>
+            <span class="o">}</span>
+
+        <span class="o">},</span> <span class="n">raftNode</span><span class="o">.</span><span class="na">getSingleThreadScheduledExecutor</span><span class="o">());</span>
+    <span class="o">}</span>
+<span class="o">}));</span>
+</pre></div>
+</div>
+<p>The above will construct a <code class="code docutils literal notranslate"><span class="pre">Transaction</span></code> and commit it to the registered <code class="code docutils literal notranslate"><span class="pre">MissionManager</span></code> service and notify it that the <code class="code docutils literal notranslate"><span class="pre">RaftNode</span></code> has been elected the cluster leader and the <code class="code docutils literal notranslate"><span class="pre">ServiceManager</span></code> will commit the transaction to that service and return a set of futures that we can add callbacks. This, however, requires that the <code class="code docutils literal notranslate"><span class="pre">MissionManager</span></code> has overridden the <code class="code docutils literal notranslate"><span class="pre">AgentService#executeTransaction</span></code>. If not, the transaction will be lost and nothing will be returned. The destination service can switch on the status that the transaction has marked on it to ensure that it executes the correct path. The sample implementation for MOOS uses this system to fire a transaction to all services and transitions the system state to a leader elected state. This causes the registered mission manager to decompose the target polygon to over, generate mission paths for each client and distribute them respectively.</p>
+<div class="section" id="complete-code">
+<h3>Complete code<a class="headerlink" href="#complete-code" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kn">package</span> <span class="nn">com.type2labs.undersea.tutorials.tutoriala</span><span class="o">;</span>
+
+
+<span class="kn">import</span> <span class="nn">com.google.common.util.concurrent.FutureCallback</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">com.google.common.util.concurrent.Futures</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">com.google.common.util.concurrent.ListenableFuture</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">com.type2labs.undersea.common.agent.Agent</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">com.type2labs.undersea.common.agent.AgentFactory</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">com.type2labs.undersea.common.agent.AgentState</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">com.type2labs.undersea.common.consensus.RaftClusterConfig</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">com.type2labs.undersea.common.logger.LogServiceImpl</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">com.type2labs.undersea.common.missions.planner.model.GeneratedMission</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">com.type2labs.undersea.common.missions.planner.model.MissionManager</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">com.type2labs.undersea.common.monitor.impl.SubsystemMonitorSpoofer</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">com.type2labs.undersea.common.service.ServiceManager</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">com.type2labs.undersea.common.service.transaction.LifecycleEvent</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">com.type2labs.undersea.common.service.transaction.ServiceCallback</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">com.type2labs.undersea.common.service.transaction.Transaction</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">com.type2labs.undersea.prospect.impl.RaftNodeImpl</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.apache.logging.log4j.Level</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.apache.logging.log4j.LogManager</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.apache.logging.log4j.core.LoggerContext</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.apache.logging.log4j.core.config.Configuration</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.apache.logging.log4j.core.config.LoggerConfig</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.checkerframework.checker.nullness.qual.Nullable</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">java.util.List</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.Set</span><span class="o">;</span>
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">RunnerA</span> <span class="o">{</span>
+
+    <span class="kd">static</span> <span class="o">{</span>
+        <span class="n">LoggerContext</span> <span class="n">ctx</span> <span class="o">=</span> <span class="o">(</span><span class="n">LoggerContext</span><span class="o">)</span> <span class="n">LogManager</span><span class="o">.</span><span class="na">getContext</span><span class="o">(</span><span class="kc">false</span><span class="o">);</span>
+        <span class="n">Configuration</span> <span class="n">config</span> <span class="o">=</span> <span class="n">ctx</span><span class="o">.</span><span class="na">getConfiguration</span><span class="o">();</span>
+        <span class="n">LoggerConfig</span> <span class="n">loggerConfig</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="na">getLoggerConfig</span><span class="o">(</span><span class="s">&quot;io.netty&quot;</span><span class="o">);</span>
+        <span class="n">loggerConfig</span><span class="o">.</span><span class="na">setLevel</span><span class="o">(</span><span class="n">Level</span><span class="o">.</span><span class="na">INFO</span><span class="o">);</span>
+        <span class="n">ctx</span><span class="o">.</span><span class="na">updateLoggers</span><span class="o">();</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">AgentFactory</span> <span class="n">agentFactory</span> <span class="o">=</span> <span class="k">new</span> <span class="n">AgentFactory</span><span class="o">();</span>
+        <span class="n">List</span><span class="o">&lt;</span><span class="n">Agent</span><span class="o">&gt;</span> <span class="n">agents</span> <span class="o">=</span> <span class="n">agentFactory</span><span class="o">.</span><span class="na">createN</span><span class="o">(</span><span class="mi">5</span><span class="o">);</span>
+
+        <span class="k">for</span> <span class="o">(</span><span class="n">Agent</span> <span class="n">agent</span> <span class="o">:</span> <span class="n">agents</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">ServiceManager</span> <span class="n">serviceManager</span> <span class="o">=</span> <span class="n">agent</span><span class="o">.</span><span class="na">serviceManager</span><span class="o">();</span>
+            <span class="n">RaftNodeImpl</span> <span class="n">raftNode</span> <span class="o">=</span> <span class="k">new</span> <span class="n">RaftNodeImpl</span><span class="o">(</span><span class="k">new</span> <span class="n">RaftClusterConfig</span><span class="o">());</span>
+            <span class="n">raftNode</span><span class="o">.</span><span class="na">registerCallback</span><span class="o">(</span><span class="k">new</span> <span class="n">ServiceCallback</span><span class="o">(</span><span class="n">LifecycleEvent</span><span class="o">.</span><span class="na">ELECTED_LEADER</span><span class="o">,</span> <span class="o">()</span> <span class="o">-&gt;</span> <span class="o">{</span>
+                <span class="n">Transaction</span> <span class="n">transaction</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Transaction</span><span class="o">.</span><span class="na">Builder</span><span class="o">(</span><span class="n">agent</span><span class="o">)</span>
+                        <span class="o">.</span><span class="na">forService</span><span class="o">(</span><span class="n">MissionManager</span><span class="o">.</span><span class="na">class</span><span class="o">)</span>
+                        <span class="o">.</span><span class="na">withStatus</span><span class="o">(</span><span class="n">LifecycleEvent</span><span class="o">.</span><span class="na">ELECTED_LEADER</span><span class="o">)</span>
+                        <span class="o">.</span><span class="na">usingExecutorService</span><span class="o">(</span><span class="n">raftNode</span><span class="o">.</span><span class="na">getListeningExecutorService</span><span class="o">())</span>
+                        <span class="o">.</span><span class="na">invokedBy</span><span class="o">(</span><span class="n">raftNode</span><span class="o">)</span>
+                        <span class="o">.</span><span class="na">build</span><span class="o">();</span>
+
+                <span class="n">Set</span><span class="o">&lt;</span><span class="n">ListenableFuture</span><span class="o">&lt;?&gt;&gt;</span> <span class="n">futures</span> <span class="o">=</span> <span class="n">agent</span><span class="o">.</span><span class="na">serviceManager</span><span class="o">().</span><span class="na">commitTransaction</span><span class="o">(</span><span class="n">transaction</span><span class="o">);</span>
+
+                <span class="k">for</span> <span class="o">(</span><span class="n">ListenableFuture</span><span class="o">&lt;?&gt;</span> <span class="n">future</span> <span class="o">:</span> <span class="n">futures</span><span class="o">)</span> <span class="o">{</span>
+                    <span class="n">Futures</span><span class="o">.</span><span class="na">addCallback</span><span class="o">(</span><span class="n">future</span><span class="o">,</span> <span class="k">new</span> <span class="n">FutureCallback</span><span class="o">&lt;</span><span class="n">Object</span><span class="o">&gt;()</span> <span class="o">{</span>
+                        <span class="nd">@Override</span>
+                        <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onSuccess</span><span class="o">(</span><span class="nd">@Nullable</span> <span class="n">Object</span> <span class="n">result</span><span class="o">)</span> <span class="o">{</span>
+                            <span class="n">raftNode</span><span class="o">.</span><span class="na">distributeMission</span><span class="o">((</span><span class="n">GeneratedMission</span><span class="o">)</span> <span class="n">result</span><span class="o">);</span>
+                        <span class="o">}</span>
+
+                        <span class="nd">@Override</span>
+                        <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onFailure</span><span class="o">(</span><span class="n">Throwable</span> <span class="n">t</span><span class="o">)</span> <span class="o">{</span>
+                            <span class="k">throw</span> <span class="k">new</span> <span class="n">RuntimeException</span><span class="o">(</span><span class="n">t</span><span class="o">);</span>
+                        <span class="o">}</span>
+
+                    <span class="o">},</span> <span class="n">raftNode</span><span class="o">.</span><span class="na">getSingleThreadScheduledExecutor</span><span class="o">());</span>
+                <span class="o">}</span>
+            <span class="o">}));</span>
+
+            <span class="n">serviceManager</span><span class="o">.</span><span class="na">registerService</span><span class="o">(</span><span class="n">raftNode</span><span class="o">);</span>
+            <span class="n">serviceManager</span><span class="o">.</span><span class="na">registerService</span><span class="o">(</span><span class="k">new</span> <span class="n">SubsystemMonitorSpoofer</span><span class="o">());</span>
+            <span class="n">serviceManager</span><span class="o">.</span><span class="na">registerService</span><span class="o">(</span><span class="k">new</span> <span class="n">MissionManagerSample</span><span class="o">());</span>
+            <span class="n">serviceManager</span><span class="o">.</span><span class="na">registerService</span><span class="o">(</span><span class="k">new</span> <span class="n">LogServiceImpl</span><span class="o">());</span>
+
+            <span class="n">serviceManager</span><span class="o">.</span><span class="na">startServices</span><span class="o">();</span>
+
+            <span class="n">agent</span><span class="o">.</span><span class="na">state</span><span class="o">().</span><span class="na">transitionTo</span><span class="o">(</span><span class="n">AgentState</span><span class="o">.</span><span class="na">State</span><span class="o">.</span><span class="na">ACTIVE</span><span class="o">);</span>
+        <span class="o">}</span>
+
+        <span class="k">for</span> <span class="o">(</span><span class="n">Agent</span> <span class="n">a</span> <span class="o">:</span> <span class="n">agents</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">for</span> <span class="o">(</span><span class="n">Agent</span> <span class="n">b</span> <span class="o">:</span> <span class="n">agents</span><span class="o">)</span> <span class="o">{</span>
+                <span class="k">if</span> <span class="o">(</span><span class="n">a</span> <span class="o">!=</span> <span class="n">b</span><span class="o">)</span> <span class="o">{</span>
+                    <span class="n">RaftNodeImpl</span> <span class="n">raftNodeA</span> <span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="na">serviceManager</span><span class="o">().</span><span class="na">getService</span><span class="o">(</span><span class="n">RaftNodeImpl</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+                    <span class="n">RaftNodeImpl</span> <span class="n">raftNodeB</span> <span class="o">=</span> <span class="n">b</span><span class="o">.</span><span class="na">serviceManager</span><span class="o">().</span><span class="na">getService</span><span class="o">(</span><span class="n">RaftNodeImpl</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+
+                    <span class="n">raftNodeA</span><span class="o">.</span><span class="na">state</span><span class="o">().</span><span class="na">discoverNode</span><span class="o">(</span><span class="n">raftNodeB</span><span class="o">);</span>
+                <span class="o">}</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+
+    <span class="o">}</span>
+
+<span class="o">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href="gettingstarted.html" class="btn btn-neutral float-left" title="Getting Started" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Tom Klapwijk
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

@@ -47,8 +47,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.List;
 import java.util.Set;
-
-@SuppressWarnings("Duplicates")
 public class RunnerA {
 
     static {
@@ -99,7 +97,7 @@ public class RunnerA {
 
             serviceManager.startServices();
 
-            agent.state().setState(AgentState.State.ACTIVE);
+            agent.state().transitionTo(AgentState.State.ACTIVE);
         }
 
         for (Agent a : agents) {

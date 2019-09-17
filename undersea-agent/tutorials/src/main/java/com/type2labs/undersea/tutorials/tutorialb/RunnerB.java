@@ -62,7 +62,7 @@ public class RunnerB {
 
             serviceManager.startServices();
 
-            agent.state().setState(AgentState.State.ACTIVE);
+            agent.state().transitionTo(AgentState.State.ACTIVE);
         }
 
         for (Agent a : agents) {

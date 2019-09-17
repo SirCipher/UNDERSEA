@@ -36,7 +36,7 @@ public class AgentState {
         return state;
     }
 
-    public void setState(State state) {
+    public void transitionTo(State state) {
         this.state = state;
     }
 

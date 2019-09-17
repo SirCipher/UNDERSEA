@@ -86,9 +86,9 @@ public class AgentInitialiserImpl implements AgentInitialiser {
                     serviceManager);
 
             if (!((DslAgentProxy) value).isActive()) {
-                underseaAgent.state().setState(AgentState.State.BACKUP);
+                underseaAgent.state().transitionTo(AgentState.State.BACKUP);
             } else {
-                underseaAgent.state().setState(AgentState.State.ACTIVE);
+                underseaAgent.state().transitionTo(AgentState.State.ACTIVE);
             }
 
             RaftNodeImpl raftNode = new RaftNodeImpl(

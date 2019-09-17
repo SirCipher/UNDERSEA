@@ -10,11 +10,5 @@ Welcome to UNDERSEA's documentation!
    :maxdepth: 2
    :caption: Contents:
 
+    Getting Started <gettingstarted.rst>
 
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
