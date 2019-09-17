@@ -57,6 +57,9 @@ Developing on Linux 16.04/18.04:
 Run `setup.sh` in the root of this directory and all of the required external dependencies will pull. Run `setup.sh` in `moos-ivp-undersea`, add the `libraries/moos/bin` and `moos-ivp-undersea/bin` directories to your `$PATH`.
 
 ---
+Case Studies:
+===
+
 Case study 1
 ----
 Demonstrating automatic task decomposition, distribution and execution to local cluster clients. A leader is automatically elected and distributes the mission to the clients.
