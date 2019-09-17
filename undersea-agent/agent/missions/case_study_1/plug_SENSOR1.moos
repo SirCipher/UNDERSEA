@@ -1,0 +1,12 @@
+//---------------------------------
+// SENSOR1 Configuration Block
+//---------------------------------
+ProcessConfig = SENSOR1
+{
+	 AppTick			= 2.0
+	 CommsTick			= 2.0
+	 MAX_APPCAST_EVENTS = 25 
+	 NAME				= SENSOR1
+	 RELIABILITY		= 0.7
+	 CHANGE				= 10.0:50.0:2.0
+}

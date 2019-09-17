@@ -23,7 +23,6 @@ if (!JavaVersion.current().java8Compatible) {
     throw new GradleException("Gradle must be run with Java 8")
 }
 
-include 'dsl'
 include 'utilities'
 include 'agent'
 include 'missionmanager'

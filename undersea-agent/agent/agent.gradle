@@ -43,7 +43,6 @@ repositories {
 //}
 
 dependencies {
-    compile project(":dsl")
     compile project(":common")
     compile project(":prospect")
     compile project(":monitor")
@@ -59,4 +58,6 @@ dependencies {
 
     // https://mvnrepository.com/artifact/io.github.classgraph/classgraph
     compile group: 'io.github.classgraph', name: 'classgraph', version: '4.8.43'
+
+    compile group: 'org.antlr', name: 'antlr4', version: '4.7.2'
 }
