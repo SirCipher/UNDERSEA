@@ -3,7 +3,7 @@
 ---
 
 # UNDERSEA
-An Exemplar for Engineering Self-Adaptive Vehicles, prototyed using the Mission Oriented Operating Suite ([MOOS](https://oceanai.mit.edu/moos-ivp/pmwiki/pmwiki.php)). 
+An Exemplar for Engineering Self-Adaptive Vehicles, prototyped using the Mission Oriented Operating Suite ([MOOS](https://oceanai.mit.edu/moos-ivp/pmwiki/pmwiki.php)). 
 
 Additional information on the original UNDERSEA application can be found on the [UNDERSEA webpage](http://www-users.cs.york.ac.uk/simos/UNDERSEA/).
 
