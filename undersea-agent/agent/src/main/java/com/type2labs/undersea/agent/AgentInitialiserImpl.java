@@ -91,9 +91,7 @@ public class AgentInitialiserImpl implements AgentInitialiser {
                 underseaAgent.state().transitionTo(AgentState.State.ACTIVE);
             }
 
-            RaftNodeImpl raftNode = new RaftNodeImpl(
-                    raftClusterConfig
-            );
+            RaftNodeImpl raftNode = new RaftNodeImpl(raftClusterConfig);
 
             serviceManager.registerService(raftNode);
 
