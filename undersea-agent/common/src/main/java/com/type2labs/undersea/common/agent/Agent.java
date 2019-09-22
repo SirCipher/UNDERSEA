@@ -32,7 +32,7 @@ import com.type2labs.undersea.common.service.ServiceManager;
 import java.util.concurrent.ConcurrentMap;
 
 /**
- * The top-level interface that represents some agent. Be it a submersible, aeriel drone or similar, this structure
+ * The top-level interface that represents some agent. Be it a submersible, aerial drone or similar, this structure
  * represents it.
  * <p>
  * An agent has a number of {@link com.type2labs.undersea.common.service.AgentService}s associated

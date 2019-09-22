@@ -20,7 +20,7 @@ public class UnderseaExceptionHandler {
                 agent.serviceManager().handleFailure(underseaException.getAgentService().getClass());
                 break;
             case UNKNOWN:
-                break;
+                agent.serviceManager().handleFailure(underseaException.getAgentService().getClass());
         }
     }
 

@@ -36,37 +36,10 @@ import java.util.concurrent.ExecutorService;
  * A top-level structure that all services must implement. Services are registered and managed by the
  * {@link ServiceManager}. The {@link ServiceManager} will initialise, start and waiting for the service to
  * transition to a running state.
+ * <p>
+ * See {@link com.type2labs.undersea.common.agent.Agent}, {@link ServiceManager}
  */
 public interface AgentService extends Runnable, AgentAware {
-
-    /**
-     * Denotes that a service's requirement is critical to the {@link com.type2labs.undersea.common.agent.Agent}'s
-     * operation. Without it, the required duties cannot be performed. If a service fails, such as one which is
-     * performing a non-mission-critical task, then the {@link ServiceManager} will not start to shutdown the agent.
-     *
-     * @return whether or not the service is critical
-     */
-    default boolean isCritical() {
-        return true;
-    }
-
-    /**
-     * Signals that the service should start the shutdown procedure. This must be a non-blocking process
-     */
-    default void shutdown() {
-
-    }
-
-    /**
-     * Whether or not the service has started successfully. This is polled during startup before starting the next
-     * service. If the {@link AgentService#transitionTimeout()} has been exceeded before the service has started then
-     * it is assumed that an error has occurred.
-     *
-     * @return whether or not the service has successfully started
-     */
-    default boolean started() {
-        return true;
-    }
 
     /**
      * Executes a transaction on the service and returns the result
@@ -78,21 +51,26 @@ public interface AgentService extends Runnable, AgentAware {
         throw new NotSupportedException();
     }
 
-    default ExecutorService transactionExecutor() {
-        return ThrowableExecutor.newSingleThreadExecutor(parent());
+    /**
+     * Fire all {@link ServiceCallback}s that have been registered with the service that match the provided
+     * {@link LifecycleEvent}
+     *
+     * @param event to fire
+     */
+    default void fireCallback(LifecycleEvent event) {
+
     }
 
     /**
-     * The time (in milliseconds) that the {@link ServiceManager} should wait before assuming that there has been an
-     * error during a state transition. See {@link ServiceManager.ServiceState}. Transition events occur when a
-     * service is starting and stopping.
+     * Denotes that a service's requirement is critical to the {@link com.type2labs.undersea.common.agent.Agent}'s
+     * operation. Without it, the required duties cannot be performed. If a service fails, such as one which is
+     * performing a non-mission-critical task, then the {@link ServiceManager} will not start to shutdown the agent.
      *
-     * @return the transition timeout
+     * @return whether or not the service is critical
      */
-    default long transitionTimeout() {
-        return ServiceManager.DEFAULT_TRANSITION_TIMEOUT;
+    default boolean isCritical() {
+        return true;
     }
-
 
     /**
      * Register a {@link ServiceCallback} with the {@link AgentService} that will fire when the provided
@@ -114,12 +92,35 @@ public interface AgentService extends Runnable, AgentAware {
     }
 
     /**
-     * Fire all {@link ServiceCallback}s that have been registered with the service that match the provided
-     * {@link LifecycleEvent}
-     *
-     * @param event to fire
+     * Signals that the service should start the shutdown procedure. This must be a non-blocking process
      */
-    default void fireCallback(LifecycleEvent event) {
+    default void shutdown() {
 
+    }
+
+    /**
+     * Whether or not the service has started successfully. This is polled during startup before starting the next
+     * service. If the {@link AgentService#transitionTimeout()} has been exceeded before the service has started then
+     * it is assumed that an error has occurred.
+     *
+     * @return whether or not the service has successfully started
+     */
+    default boolean started() {
+        return true;
+    }
+
+    default ExecutorService transactionExecutor() {
+        return ThrowableExecutor.newSingleThreadExecutor(parent());
+    }
+
+    /**
+     * The time (in milliseconds) that the {@link ServiceManager} should wait before assuming that there has been an
+     * error during a state transition. See {@link ServiceManager.ServiceState}. Transition events occur when a
+     * service is starting and stopping.
+     *
+     * @return the transition timeout
+     */
+    default long transitionTimeout() {
+        return ServiceManager.DEFAULT_TRANSITION_TIMEOUT;
     }
 }
