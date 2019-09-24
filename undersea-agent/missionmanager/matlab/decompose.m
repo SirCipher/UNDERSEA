@@ -39,7 +39,7 @@ hold off
 
 % Plot pde
 figure
-pdeplot(pdem, 'ElementLabels','on');
+pdeplot(pdem);
 title('Generated mesh');
 
 % Centre points

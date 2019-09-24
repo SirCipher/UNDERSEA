@@ -66,6 +66,8 @@ public class Transaction {
      * The status/event code that has triggered this transaction. This transactionData type generic so
      * implementations may
      * implement their own status codes.
+     *
+     * TODO: This inheritance needs sorting...
      */
     private final Enum<? extends LifecycleEvent> statusCode;
 

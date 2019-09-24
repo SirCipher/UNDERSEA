@@ -1,4 +1,0 @@
-
-LogEntry{term=1, data=java.lang.Object@6e272f93, value=java.lang.Object@2f1a25a8, agentService=RaftNodeImpl}
-LogEntry{term=1, data=java.lang.Object@6faf43cd, value=java.lang.Object@2e9249f6, agentService=RaftNodeImpl}
-LogEntry{term=1, data=java.lang.Object@2ece57fa, value=java.lang.Object@6ff35dc1, agentService=RaftNodeImpl}

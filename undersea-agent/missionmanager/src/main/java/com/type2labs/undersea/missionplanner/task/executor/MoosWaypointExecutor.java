@@ -42,7 +42,7 @@ public class MoosWaypointExecutor implements TaskExecutor {
     @Override
     public void initialise(Agent parentAgent) {
         this.agent = parentAgent;
-        this.networkInterface = agent.serviceManager().getService(NetworkInterface.class);
+        this.networkInterface = agent.serviceManager().getService(NetworkInterface.class, true);
     }
 
     @Override

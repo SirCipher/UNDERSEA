@@ -23,7 +23,6 @@ package com.type2labs.undersea.missionplanner.manager;
 
 import com.google.common.util.concurrent.*;
 import com.type2labs.undersea.common.agent.Agent;
-import com.type2labs.undersea.common.blockchain.BlockchainNetwork;
 import com.type2labs.undersea.common.consensus.ConsensusAlgorithm;
 import com.type2labs.undersea.common.logger.model.LogEntry;
 import com.type2labs.undersea.common.missions.PlannerException;
@@ -38,7 +37,6 @@ import com.type2labs.undersea.common.missions.task.model.TaskStatus;
 import com.type2labs.undersea.common.monitor.model.SubsystemMonitor;
 import com.type2labs.undersea.common.service.AgentService;
 import com.type2labs.undersea.common.service.ServiceManager;
-import com.type2labs.undersea.common.service.hardware.NetworkInterface;
 import com.type2labs.undersea.common.service.transaction.LifecycleEvent;
 import com.type2labs.undersea.common.service.transaction.Transaction;
 import com.type2labs.undersea.common.service.transaction.TransactionData;
@@ -73,7 +71,6 @@ public class MoosMissionManagerImpl implements MissionManager {
     private Task currentTask;
     private GeneratedMission globalMission;
     private AgentMission missionAssigned;
-    private NetworkInterface networkInterface;
 
     public MoosMissionManagerImpl(MissionPlanner missionPlanner) {
         this.missionPlanner = missionPlanner;
@@ -241,7 +238,6 @@ public class MoosMissionManagerImpl implements MissionManager {
     @Override
     public void initialise(Agent parentAgent) {
         this.agent = parentAgent;
-        this.networkInterface = parentAgent.serviceManager().getService(NetworkInterface.class);
         missionPlanner.initialise(parentAgent);
     }
 
@@ -319,7 +315,7 @@ public class MoosMissionManagerImpl implements MissionManager {
 
     @Override
     public Collection<Class<? extends AgentService>> requiredServices() {
-        return Arrays.asList(ConsensusAlgorithm.class, NetworkInterface.class, BlockchainNetwork.class);
+        return Arrays.asList(ConsensusAlgorithm.class);
     }
 
 }
