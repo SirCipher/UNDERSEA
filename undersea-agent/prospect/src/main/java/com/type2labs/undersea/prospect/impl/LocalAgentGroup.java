@@ -130,7 +130,6 @@ public class LocalAgentGroup implements Closeable {
         logger.info("Shutting down local agent group");
 
         for (RaftNodeImpl node : raftNodes) {
-            node.shutdown();
             node.parent().shutdown();
         }
     }
@@ -157,8 +156,6 @@ public class LocalAgentGroup implements Closeable {
                     raftNode.state().discoverNode(nodeB);
                 }
             }
-
-            System.out.println(raftNode.parent().clusterClients().size());
         }
     }
 

@@ -420,21 +420,22 @@ public class RaftNodeImpl implements RaftNode {
                 if (t instanceof StatusRuntimeException) {
                     StatusRuntimeException statusRuntimeException = (StatusRuntimeException) t;
                     if (statusRuntimeException.getStatus().getCode() == Status.Code.UNAVAILABLE) {
-                        Client client = parent().clusterClients().remove(follower.peerId());
-                        client.shutdown();
-
-                        broadcastClusterMembers();
-
-                        UnderseaLogger.info(logger, parent(), "Failed to communicate with: " + follower.peerId());
-
-                        schedule(new AcquireStatusTask(RaftNodeImpl.this), 0);
+                        handleUnavailableAgent(follower);
                     }
                 } else {
                     t.printStackTrace();
                 }
             }
         });
+    }
 
+    private void handleUnavailableAgent(Client client) {
+        state().removeNode(client.peerId());
+        broadcastClusterMembers();
+
+        UnderseaLogger.info(logger, parent(), "Failed to communicate with: " + client.peerId());
+
+        schedule(new AcquireStatusTask(RaftNodeImpl.this), 0);
     }
 
     private void broadcastClusterMembers() {
@@ -469,6 +470,8 @@ public class RaftNodeImpl implements RaftNode {
     public void shutdown() {
         scheduledExecutor.shutdownNow();
         singleThreadScheduledExecutor.shutdown();
+
+        state().closeClients();
 
         if (started) {
             server.close();

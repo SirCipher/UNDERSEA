@@ -93,14 +93,13 @@ public class RaftClientImpl implements RaftClient {
 
     @Override
     public void shutdown() {
-        channel.shutdownNow();
         clientExecutor.shutdown();
 
         try {
-            channel.awaitTermination(3000, TimeUnit.MILLISECONDS);
+            channel.shutdown().awaitTermination(10, TimeUnit.SECONDS);
         } catch (InterruptedException e) {
-            e.printStackTrace();
-            logger.error(consensusAlgorithm.parent().name() + ": failed to shutdown channel successfully", e);
+            logger.error("Interrupted exception during gRPC channel close", e);
+            Thread.currentThread().interrupt();
         }
     }
 

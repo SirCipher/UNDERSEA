@@ -91,9 +91,8 @@ public class VoteTask implements Runnable {
 
                 @Override
                 public void onFailure(Throwable t) {
-                    logger.error(raftNode.parent().name() + ": exception thrown when contacting: " + raftClient.name(), t,
-                            raftNode.parent());
-                    localNodes.remove(raftClient.peerId());
+//                    logger.error(raftNode.parent().name() + ": exception thrown when contacting: " + raftClient.name(), t);
+                    raftNode.state().removeNode(raftClient.peerId());
                 }
             });
 

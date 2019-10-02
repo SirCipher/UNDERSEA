@@ -131,10 +131,9 @@ public class GrpcServer implements Closeable {
         String name = parentNode.parent().name();
 
         logger.info(name + ": shutting down gRPC server", parentNode.parent());
-        server.shutdown();
 
         try {
-            server.awaitTermination(10, TimeUnit.SECONDS);
+            server.shutdown().awaitTermination(10, TimeUnit.SECONDS);
         } catch (InterruptedException e) {
             logger.error(name + ": failed to gracefully shutdown gRPC server", parentNode.parent());
         }

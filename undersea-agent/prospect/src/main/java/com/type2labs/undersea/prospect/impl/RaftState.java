@@ -26,6 +26,7 @@ import com.type2labs.undersea.common.cluster.ClusterState;
 import com.type2labs.undersea.common.cluster.PeerId;
 import com.type2labs.undersea.prospect.model.RaftNode;
 import com.type2labs.undersea.prospect.networking.impl.RaftClientImpl;
+import com.type2labs.undersea.prospect.networking.model.RaftClient;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -139,6 +140,22 @@ public class RaftState {
     public void leaderFailed() {
         localNodes.remove(leader.peerId());
         this.leader = null;
+    }
+
+    public void closeClients() {
+        for (Client client : localNodes.values()) {
+            client.shutdown();
+        }
+    }
+
+    public void removeNode(PeerId peerId) {
+        Client client = localNodes.get(peerId);
+        if(client==null){
+            return;
+        }
+
+        client.shutdown();
+        localNodes.remove(client.peerId());
     }
 
     public class Candidate {

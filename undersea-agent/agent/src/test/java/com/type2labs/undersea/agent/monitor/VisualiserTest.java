@@ -25,6 +25,7 @@ import com.type2labs.undersea.agent.impl.UnderseaAgent;
 import com.type2labs.undersea.common.cluster.PeerId;
 import com.type2labs.undersea.common.config.RuntimeConfig;
 import com.type2labs.undersea.common.consensus.RaftClusterConfig;
+import com.type2labs.undersea.common.logger.LogServiceImpl;
 import com.type2labs.undersea.common.missions.planner.impl.MissionParametersImpl;
 import com.type2labs.undersea.common.missions.planner.model.MissionManager;
 import com.type2labs.undersea.common.monitor.impl.SubsystemMonitorImpl;
@@ -61,6 +62,7 @@ public class VisualiserTest {
 
         ServiceManager serviceManager = new ServiceManager();
         serviceManager.registerService(raftNode);
+        serviceManager.registerService(new LogServiceImpl());
 
         MissionManager missionManager = new MoosMissionManagerImpl(new VehicleRoutingOptimiser());
         serviceManager.registerService(missionManager);

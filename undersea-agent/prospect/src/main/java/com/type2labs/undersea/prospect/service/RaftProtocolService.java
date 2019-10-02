@@ -201,5 +201,4 @@ public class RaftProtocolService extends RaftProtocolServiceGrpc.RaftProtocolSer
         manager.assignMission(generatedMission);
     }
 
-
 }
