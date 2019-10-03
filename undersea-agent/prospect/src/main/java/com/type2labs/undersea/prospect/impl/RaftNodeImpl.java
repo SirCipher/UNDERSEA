@@ -69,9 +69,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
-import java.util.concurrent.Executors;
 import java.util.concurrent.RejectedExecutionException;
-import java.util.concurrent.ScheduledExecutorService;
 import java.util.stream.Collectors;
 
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
@@ -165,16 +163,15 @@ public class RaftNodeImpl implements RaftNode {
     }
 
     @Override
-    public void execute(Runnable task) {
+    public synchronized void execute(Runnable task) {
         try {
             if (singleThreadScheduledExecutor.isShutdown() || singleThreadScheduledExecutor.isTerminated() || singleThreadScheduledExecutor.isTerminating()) {
-                logger.warn("Attempted to submit task " + task + " when node is shutting down");
                 return;
             }
 
             singleThreadScheduledExecutor.execute(task);
         } catch (RejectedExecutionException e) {
-            logger.error(e);
+            logger.error("Rejected exception: ", e);
         }
     }
 
@@ -362,7 +359,6 @@ public class RaftNodeImpl implements RaftNode {
     public void schedule(Runnable task, long delayInMillis) {
         try {
             if (singleThreadScheduledExecutor.isShutdown() || singleThreadScheduledExecutor.isTerminated()) {
-                logger.warn("Attempted to schedule task " + task + " when node is shutting down");
                 return;
             }
 
@@ -431,7 +427,7 @@ public class RaftNodeImpl implements RaftNode {
                 if (t instanceof StatusRuntimeException) {
                     StatusRuntimeException statusRuntimeException = (StatusRuntimeException) t;
                     if (statusRuntimeException.getStatus().getCode() == Status.Code.UNAVAILABLE) {
-                        handleUnavailableAgent(follower);
+                        execute(() -> handleUnavailableAgent(follower));
                     }
                 } else {
                     t.printStackTrace();

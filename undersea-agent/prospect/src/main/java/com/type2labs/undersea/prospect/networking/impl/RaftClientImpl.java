@@ -110,6 +110,7 @@ public class RaftClientImpl implements RaftClient {
             if (channelInactive()) {
                 throw new StatusRuntimeException(Status.UNAVAILABLE);
             }
+            futureStub.withDeadline(deadline).getStatus(request);
 
             return blockingStub.withDeadline(deadline).getStatus(request);
         } catch (Exception e) {

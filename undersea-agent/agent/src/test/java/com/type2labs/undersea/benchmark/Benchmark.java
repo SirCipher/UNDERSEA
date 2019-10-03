@@ -31,7 +31,7 @@ public class Benchmark {
             return "Leader election results (size=" + size + ", runs =" + noRuns + ") {" +
                     "min time=" + min + "ms" +
                     ", max time=" + max + "ms" +
-                    ", averagetime =" + average + "ms" +
+                    ", average time =" + average + "ms" +
                     '}';
         }
     }
@@ -98,13 +98,13 @@ public class Benchmark {
     @Test
     @IgnoredOnCi
     public void test_3() {
-        run(3, 5);
+        run(3, 1);
     }
 
     @Test
     @IgnoredOnCi
     public void test_5() {
-        run(5, 5);
+        run(5, 1);
     }
 
     @Test
@@ -116,13 +116,13 @@ public class Benchmark {
     @Test
     @IgnoredOnCi
     public void test_10() {
-        run(10, 5);
+        run(10, 1);
     }
 
     @Test
     @IgnoredOnCi
     public void test_15() {
-        run(15, 5);
+        run(15, 1);
     }
 
     @Test
@@ -134,19 +134,25 @@ public class Benchmark {
     @Test
     @IgnoredOnCi
     public void test_30() {
-        run(30, 5);
+        run(30, 1);
     }
 
     @Test
     @IgnoredOnCi
     public void test_50() {
-        run(50, 5);
+        run(50, 1);
     }
 
     @Test
     @IgnoredOnCi
     public void test_100() {
-        run(100, 5);
+        run(100, 1);
+    }
+
+    @Test
+    @IgnoredOnCi
+    public void test_1000() {
+        run(1000, 1);
     }
 
     private void run(int size, int runs) {

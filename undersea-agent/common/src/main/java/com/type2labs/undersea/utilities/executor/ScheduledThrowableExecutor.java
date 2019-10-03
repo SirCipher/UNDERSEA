@@ -102,16 +102,13 @@ public class ScheduledThrowableExecutor extends ScheduledThreadPoolExecutor {
     }
 
     private <T> Callable<T> wrap(final Callable<T> callable) {
-        return new Callable<T>() {
-            @Override
-            public T call() throws Exception {
-                try {
-                    return callable.call();
-                } catch (Throwable t) {
-                    t.printStackTrace();
-                    ueh.uncaughtException(Thread.currentThread(), t);
-                    throw t;
-                }
+        return () -> {
+            try {
+                return callable.call();
+            } catch (Throwable t) {
+                t.printStackTrace();
+                ueh.uncaughtException(Thread.currentThread(), t);
+                throw t;
             }
         };
     }

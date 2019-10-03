@@ -141,7 +141,6 @@ public class RaftState {
     }
 
     public void leaderFailed() {
-        localNodes.remove(leader.peerId());
         this.leader = null;
     }
 

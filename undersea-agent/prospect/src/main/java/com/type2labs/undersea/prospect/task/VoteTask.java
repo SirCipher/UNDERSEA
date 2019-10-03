@@ -30,28 +30,32 @@ import com.type2labs.undersea.prospect.impl.RaftState;
 import com.type2labs.undersea.prospect.model.RaftNode;
 import com.type2labs.undersea.prospect.networking.model.RaftClient;
 import com.type2labs.undersea.prospect.util.GrpcUtil;
+import com.type2labs.undersea.utilities.executor.ThrowableExecutor;
 import io.grpc.Status;
 import io.grpc.StatusRuntimeException;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.ExecutorService;
 
 public class VoteTask implements Runnable {
 
     private static final Logger logger = LogManager.getLogger(VoteTask.class);
     private static final int MAX_RETRIES = 5;
+    private final ExecutorService executorService;
 
     private final RaftNode raftNode;
-    private final Map<Client, Integer> retries = new HashMap<>();
+    private final Map<Client, Integer> retries = new ConcurrentHashMap<>();
     private RaftState.Candidate candidate;
 
     public VoteTask(RaftNode raftNode) {
         this.raftNode = raftNode;
+        this.executorService = ThrowableExecutor.newExecutor(raftNode.parent(), 1, logger);
     }
 
     @Override
@@ -73,8 +77,7 @@ public class VoteTask implements Runnable {
             retries.put(raftClient, 0);
 
             int term = raftNode.state().getCurrentTerm();
-
-            sendMessage(term, raftClient);
+            executorService.submit(() -> sendVote(term, raftClient));
         }
 
         // Check if we voted for ourself
@@ -95,7 +98,7 @@ public class VoteTask implements Runnable {
         raftNode.schedule(new VoteTaskTimeout(raftNode), 10000);
     }
 
-    private void sendMessage(int term, RaftClient raftClient) {
+    private void sendVote(int term, RaftClient raftClient) {
         RaftProtos.VoteRequest request = RaftProtos.VoteRequest.newBuilder()
                 .setClient(GrpcUtil.toProtoClient(raftNode))
                 .setTerm(term)
@@ -123,14 +126,24 @@ public class VoteTask implements Runnable {
                 if (t instanceof StatusRuntimeException) {
                     StatusRuntimeException statusRuntimeException = (StatusRuntimeException) t;
 
-                    if (statusRuntimeException.getStatus() == Status.PERMISSION_DENIED) {
+                    if (statusRuntimeException.getStatus().getCode() == Status.Code.PERMISSION_DENIED) {
                         int count = retries.get(raftClient);
                         if (count == MAX_RETRIES) {
                             raftNode.state().removeNode(raftClient.peerId());
                             logger.warn(raftNode.parent().name() + ": exceeded maximum retries while contacting client: " + raftClient.peerId(), raftNode.parent());
-                        }
+                        } else {
+                            retries.put(raftClient, count + 1);
 
-                        retries.put(raftClient, count + 1);
+                            try {
+                                Thread.sleep(1000);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+
+                            executorService.submit(() -> sendVote(term, raftClient));
+
+                            logger.warn(raftNode.parent().name() + ": retry " + count, raftNode.parent());
+                        }
                     }
                 } else {
                     logger.warn(raftNode.parent().name() + ": exception thrown while contacting client: " + raftClient.peerId(), t);

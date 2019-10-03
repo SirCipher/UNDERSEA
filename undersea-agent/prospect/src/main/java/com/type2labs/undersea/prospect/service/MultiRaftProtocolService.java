@@ -37,14 +37,15 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
 
 public class MultiRaftProtocolService extends MultiRaftProtocolServiceGrpc.MultiRaftProtocolServiceImplBase {
 
     private static final Logger logger = LogManager.getLogger(RaftProtocolService.class);
     private final RaftNodeImpl raftNode;
-    private final Executor executor;
+    private final ExecutorService executor;
 
-    public MultiRaftProtocolService(RaftNode raftNode, Executor executor) {
+    public MultiRaftProtocolService(RaftNode raftNode, ExecutorService executor) {
         this.raftNode = (RaftNodeImpl) raftNode;
         this.executor = executor;
     }

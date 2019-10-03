@@ -52,15 +52,15 @@ import org.apache.logging.log4j.Logger;
 import java.net.InetSocketAddress;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
 
 public class RaftProtocolService extends RaftProtocolServiceGrpc.RaftProtocolServiceImplBase {
 
     private static final Logger logger = LogManager.getLogger(RaftProtocolService.class);
     private final RaftNodeImpl raftNode;
-    private final Executor executor;
+    private final ExecutorService executor;
 
-    public RaftProtocolService(RaftNode raftNode, Executor executor) {
+    public RaftProtocolService(RaftNode raftNode, ExecutorService executor) {
         this.raftNode = (RaftNodeImpl) raftNode;
         this.executor = executor;
     }
@@ -71,6 +71,12 @@ public class RaftProtocolService extends RaftProtocolServiceGrpc.RaftProtocolSer
         GrpcUtil.sendAbstractAsyncMessage(responseObserver, () -> {
             RaftProtos.AcquireStatusResponse.Builder builder = RaftProtos.AcquireStatusResponse.newBuilder();
             SubsystemMonitor subsystemMonitor = raftNode.parent().serviceManager().getService(SubsystemMonitor.class);
+
+            // TODO: 03/10/2019 Really not sure why this is returning null sometimes...
+            if (subsystemMonitor.parent() == null) {
+                subsystemMonitor.initialise(raftNode.parent());
+            }
+
             double cost = subsystemMonitor.getCurrentCost();
 
             builder.setCost(cost);
@@ -142,7 +148,6 @@ public class RaftProtocolService extends RaftProtocolServiceGrpc.RaftProtocolSer
     @Override
     public void broadcastMembershipChanges(RaftProtos.ClusterMembersRequest request,
                                            StreamObserver<RaftProtos.Empty> responseObserver) {
-        UnderseaLogger.info(logger, raftNode.parent(), "Received new members: " + request.getMembersList());
 
         List<Client> clients = new ArrayList<>(request.getMembersCount());
 
@@ -151,6 +156,10 @@ public class RaftProtocolService extends RaftProtocolServiceGrpc.RaftProtocolSer
 
             PeerId peerId = PeerId.valueOf(raftPeerProto.getRaftPeerId());
             Client member = raftNode.parent().clusterClients().get(peerId);
+
+            if (true) {
+                continue;
+            }
 
             if (member == null) {
                 member = new RaftClientImpl(raftNode,
@@ -170,22 +179,24 @@ public class RaftProtocolService extends RaftProtocolServiceGrpc.RaftProtocolSer
     public void requestVote(RaftProtos.VoteRequest request, StreamObserver<RaftProtos.VoteResponse> responseObserver) {
         GrpcUtil.sendAbstractAsyncMessage(responseObserver, () -> {
             if (raftNode.state().isPreVoteState()) {
+//                logger.info(raftNode.parent().name() + ": is still in a pre-vote state", raftNode.parent());
+
                 Status status = Status.newBuilder()
                         .setCode(Code.PERMISSION_DENIED.getNumber())
                         .setMessage("Not calculated costs")
                         .build();
-                responseObserver.onError(StatusProto.toStatusRuntimeException(status));
+
+                throw StatusProto.toStatusRuntimeException(status);
+            } else {
+                Pair<Client, ClusterState.ClientState> nominee = raftNode.state().getVotedFor();
+
+                logger.trace(raftNode.parent() + ": nominating: " + nominee.getKey().peerId() + ". With cost:" + nominee.getValue().getCost(), raftNode.parent());
+
+                return RaftProtos.VoteResponse.newBuilder()
+                        .setClient(GrpcUtil.toProtoClient(raftNode))
+                        .setNominee(GrpcUtil.toProtoClient(nominee.getKey()))
+                        .build();
             }
-
-            Pair<Client, ClusterState.ClientState> nominee = raftNode.state().getVotedFor();
-
-            UnderseaLogger.info(logger, raftNode.parent(), "Nominating: " + nominee.getKey().peerId() + ". With cost:" +
-                    " " + nominee.getValue().getCost());
-
-            return RaftProtos.VoteResponse.newBuilder()
-                    .setClient(GrpcUtil.toProtoClient(raftNode))
-                    .setNominee(GrpcUtil.toProtoClient(nominee.getKey()))
-                    .build();
         }, executor);
     }
 

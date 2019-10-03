@@ -41,7 +41,6 @@ public class ExecutorUtils {
      */
     public static ExecutorService newExecutor(int noThreads, String nameFormat) {
         return Executors.newFixedThreadPool(noThreads, new ThreadFactoryBuilder().setNameFormat(nameFormat).build());
-
     }
 
 }

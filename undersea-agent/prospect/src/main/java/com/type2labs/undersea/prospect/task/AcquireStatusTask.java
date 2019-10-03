@@ -41,7 +41,7 @@ public class AcquireStatusTask implements Runnable {
 
     private static final Logger logger = LogManager.getLogger(AcquireStatusTask.class);
     private final RaftNode raftNode;
-    private int noResponses = 0;
+    private int noResponses;
     private int clusterSize;
 
     public AcquireStatusTask(RaftNode raftNode) {
@@ -91,6 +91,8 @@ public class AcquireStatusTask implements Runnable {
                     logger.info(raftNode.parent().name() + ": deadline exceeded while contacting client: " + raftClient.name()
                             , raftNode.parent());
                     incrementAndVote();
+                } else {
+                    logger.error(e);
                 }
             }
         }

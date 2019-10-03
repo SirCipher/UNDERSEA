@@ -47,6 +47,8 @@ public class GrpcServer implements Closeable {
     private final Server server;
     private final InetSocketAddress socketAddress;
     private final RaftNode parentNode;
+    private final ExecutorService handlerExecutor;
+    private final ExecutorService serverExecutor;
 
     /**
      * Creates a new gRPC server for the given {@link RaftNode} and listening on the provided socket address.
@@ -80,15 +82,15 @@ public class GrpcServer implements Closeable {
         this.socketAddress = new InetSocketAddress(port);
         final ServerBuilder builder = NettyServerBuilder.forPort(port);
 
-        int executorThreads = ((RaftClusterConfig) raftNode.config()).executorThreads();
+        int executorThreads = raftNode.config().executorThreads();
 
-        ExecutorService handlerExecutor = ExecutorUtils.newExecutor(executorThreads, agentName + "-grpc-handler-%d");
+        handlerExecutor = ExecutorUtils.newExecutor(4, agentName + "-grpc-handler-%d");
         builder.addService(new RaftProtocolService(raftNode, handlerExecutor));
 
         // TODO: This service should be started and shutdown as required instead of always running
         builder.addService(new MultiRaftProtocolService(raftNode, handlerExecutor));
 
-        ExecutorService serverExecutor = ExecutorUtils.newExecutor(executorThreads, agentName + "-grpc-server-%d");
+        serverExecutor = ExecutorUtils.newExecutor(4, agentName + "-grpc-server-%d");
         this.server = builder.executor(serverExecutor).build();
 
         logger.info(agentName + ": gRPC server available at  " + socketAddress.getHostString() + ":" + port,
@@ -124,21 +126,23 @@ public class GrpcServer implements Closeable {
     }
 
     /**
-     * Indicates that the server should stop processing any new requests. Current requests are processed prior
+     * Indicates that the server should stop processing any new requests
      */
     @Override
     public void close() {
+        handlerExecutor.shutdownNow();
+        serverExecutor.shutdownNow();
+
         String name = parentNode.parent().name();
 
         logger.info(name + ": shutting down gRPC server", parentNode.parent());
 
         try {
-            server.shutdown().awaitTermination(10, TimeUnit.SECONDS);
+            server.shutdownNow().awaitTermination(10, TimeUnit.SECONDS);
+            logger.info(name + ": shutdown gRPC server", parentNode.parent());
         } catch (InterruptedException e) {
             logger.error(name + ": failed to gracefully shutdown gRPC server", parentNode.parent());
         }
-
-        logger.info(name + ": shutdown gRPC server", parentNode.parent());
     }
 
 }
