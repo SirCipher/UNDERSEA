@@ -1,7 +1,7 @@
 package com.type2labs.undersea.benchmark;
 
 import com.type2labs.undersea.prospect.impl.LocalAgentGroup;
-import com.type2labs.undersea.prospect.impl.RaftNodeImpl;
+import com.type2labs.undersea.utilities.testing.IgnoredOnCi;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.LoggerContext;
@@ -9,31 +9,52 @@ import org.apache.logging.log4j.core.config.Configuration;
 import org.apache.logging.log4j.core.config.LoggerConfig;
 import org.junit.Test;
 
-import java.util.List;
+import java.util.Arrays;
 
 import static com.type2labs.undersea.utilities.testing.TestUtil.assertTrueEventually;
 import static org.junit.Assert.assertNotNull;
 
 public class Benchmark {
 
+    static class Results {
+        double min;
+        double max;
+        double average;
+
+        public Results(double min, double max, double average) {
+            this.min = min;
+            this.max = max;
+            this.average = average;
+        }
+
+        public String toString(int size, int noRuns) {
+            return "Leader election results (size=" + size + ", runs =" + noRuns + ") {" +
+                    "min time=" + min + "ms" +
+                    ", max time=" + max + "ms" +
+                    ", averagetime =" + average + "ms" +
+                    '}';
+        }
+    }
+
     static {
         LoggerContext ctx = (LoggerContext) LogManager.getContext(false);
         Configuration config = ctx.getConfiguration();
         LoggerConfig loggerConfig = config.getLoggerConfig("io.netty");
-        loggerConfig.setLevel(Level.WARN);
+        loggerConfig.setLevel(Level.INFO);
         ctx.updateLoggers();
     }
 
-    private void warmup() {
+    //    @BeforeClass
+    public static void warmup() {
         for (int i = 0; i < 10; i++) {
-            System.out.println(i);
+            System.out.println("Warmup run: " + (i + 1));
             createAndWait(3);
 
             System.gc();
         }
     }
 
-    private void createAndWait(int size) {
+    private static void createAndWait(int size) {
         try (LocalAgentGroup localAgentGroup = new LocalAgentGroup(size)) {
             localAgentGroup.doManualDiscovery();
             localAgentGroup.start();
@@ -42,9 +63,100 @@ public class Benchmark {
         }
     }
 
+    private Results benchmark(int size, int runs) {
+        double[] results = new double[runs];
+
+        for (int i = 0; i < runs; i++) {
+            System.out.println("Run: " + (i + 1));
+
+            try (LocalAgentGroup localAgentGroup = new LocalAgentGroup(size)) {
+                localAgentGroup.doManualDiscovery();
+                localAgentGroup.start();
+
+                long startTime = System.currentTimeMillis();
+
+                while (localAgentGroup.getLeaderNode() == null) ;
+//if(true)while(true);
+                long finishTime = System.currentTimeMillis();
+
+                results[i] = finishTime - startTime;
+            }
+        }
+
+        return compileResults(results);
+    }
+
+    @SuppressWarnings("OptionalGetWithoutIsPresent")
+    private Results compileResults(double[] results) {
+        double min = Arrays.stream(results).min().getAsDouble();
+        double max = Arrays.stream(results).max().getAsDouble();
+        double average = Arrays.stream(results).average().getAsDouble();
+
+        return new Results(min, max, average);
+    }
+
     @Test
+    @IgnoredOnCi
     public void test_3() {
-        warmup();
+        run(3, 5);
+    }
+
+    @Test
+    @IgnoredOnCi
+    public void test_5() {
+        run(5, 5);
+    }
+
+    @Test
+    @IgnoredOnCi
+    public void test_7() {
+        run(7, 5);
+    }
+
+    @Test
+    @IgnoredOnCi
+    public void test_10() {
+        run(10, 5);
+    }
+
+    @Test
+    @IgnoredOnCi
+    public void test_15() {
+        run(15, 5);
+    }
+
+    @Test
+    @IgnoredOnCi
+    public void test_20() {
+        run(20, 1);
+    }
+
+    @Test
+    @IgnoredOnCi
+    public void test_30() {
+        run(30, 5);
+    }
+
+    @Test
+    @IgnoredOnCi
+    public void test_50() {
+        run(50, 5);
+    }
+
+    @Test
+    @IgnoredOnCi
+    public void test_100() {
+        run(100, 5);
+    }
+
+    private void run(int size, int runs) {
+//        warmup();
+
+        System.out.println("Benchmarking with a cluster size of " + size + " over " + runs + " runs");
+        Results results = benchmark(size, runs);
+
+        System.out.println(results.toString(size, runs));
+        System.out.println("------------------------------------------------------------------------------------");
     }
 
 }

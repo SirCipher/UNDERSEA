@@ -80,7 +80,6 @@ allprojects {
         testLogging {
             exceptionFormat = 'full'
             testLogging.showStandardStreams = true
-
         }
     }
 

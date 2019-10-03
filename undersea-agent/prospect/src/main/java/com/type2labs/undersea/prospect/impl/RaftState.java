@@ -26,7 +26,6 @@ import com.type2labs.undersea.common.cluster.ClusterState;
 import com.type2labs.undersea.common.cluster.PeerId;
 import com.type2labs.undersea.prospect.model.RaftNode;
 import com.type2labs.undersea.prospect.networking.impl.RaftClientImpl;
-import com.type2labs.undersea.prospect.networking.model.RaftClient;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -58,6 +57,10 @@ public class RaftState {
         return preVoteClusterState;
     }
 
+    public boolean isPreVoteState() {
+        return preVoteClusterState != null;
+    }
+
     public void initPreVoteClusterState() {
         this.preVoteClusterState = new ClusterState(raftNode);
     }
@@ -77,7 +80,7 @@ public class RaftState {
         return leader;
     }
 
-    public void toLeader(Client leader) {
+    public void setLeader(Client leader) {
         this.leader = leader;
     }
 
@@ -105,7 +108,7 @@ public class RaftState {
         localNodes.computeIfAbsent(node.parent().peerId(), n -> new RaftClientImpl(raftNode, address,
                 node.parent().peerId()));
 
-        logger.info(raftNode.parent().name() + ": discovered: " + node.parent().name() + ", with PeerId: " + node.parent().peerId(), raftNode);
+//        logger.info(raftNode.parent().name() + ": discovered: " + node.parent().name() + ", with PeerId: " + node.parent().peerId(), raftNode);
     }
 
     public ConcurrentMap<PeerId, Client> localNodes() {
@@ -150,9 +153,11 @@ public class RaftState {
 
     public void removeNode(PeerId peerId) {
         Client client = localNodes.get(peerId);
-        if(client==null){
+        if (client == null) {
             return;
         }
+
+        logger.info(raftNode.parent().name() + ": removing node: " + peerId, raftNode.parent());
 
         client.shutdown();
         localNodes.remove(client.peerId());

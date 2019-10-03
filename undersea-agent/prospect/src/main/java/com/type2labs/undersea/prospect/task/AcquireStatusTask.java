@@ -51,6 +51,10 @@ public class AcquireStatusTask implements Runnable {
 
     @Override
     public void run() {
+        if (raftNode.state().isPreVoteState()) {
+            return;
+        }
+
         Collection<Client> localNodes = raftNode.state().localNodes().values();
 
         raftNode.state().initPreVoteClusterState();
@@ -72,7 +76,7 @@ public class AcquireStatusTask implements Runnable {
             ClusterState preVoteClusterState = raftNode.state().getPreVoteClusterState();
 
             try {
-                RaftClusterConfig config = (RaftClusterConfig) raftNode.config();
+                RaftClusterConfig config = raftNode.config();
 
                 response = raftClient.getStatus(request, Deadline.after(config.getStatusDeadline(), TimeUnit.SECONDS));
 

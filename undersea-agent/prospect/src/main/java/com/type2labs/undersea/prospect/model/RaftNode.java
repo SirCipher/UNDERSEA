@@ -21,6 +21,7 @@
 
 package com.type2labs.undersea.prospect.model;
 
+import com.type2labs.undersea.common.cluster.Client;
 import com.type2labs.undersea.common.consensus.ConsensusAlgorithm;
 import com.type2labs.undersea.common.consensus.ConsensusAlgorithmRole;
 import com.type2labs.undersea.prospect.impl.GrpcServer;
@@ -37,7 +38,7 @@ public interface RaftNode extends ConsensusAlgorithm {
 
     void toLeader(int term);
 
-    void toFollower(int term);
+    void toFollower(int term, Client leader);
 
     void toCandidate();
 

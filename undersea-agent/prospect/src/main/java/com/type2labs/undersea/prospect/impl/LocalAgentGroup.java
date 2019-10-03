@@ -39,6 +39,7 @@ import com.type2labs.undersea.common.service.AgentService;
 import com.type2labs.undersea.common.service.ServiceManager;
 import com.type2labs.undersea.prospect.model.RaftNode;
 import com.type2labs.undersea.prospect.networking.impl.RaftClientImpl;
+import com.type2labs.undersea.utilities.executor.ExecutorUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -47,10 +48,13 @@ import java.net.InetSocketAddress;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.ExecutorService;
 
 public class LocalAgentGroup implements Closeable {
 
     private static final Logger logger = LogManager.getLogger(LocalAgentGroup.class);
+
+    private ExecutorService executorService;
 
     private final List<RaftNodeImpl> raftNodes;
     private final List<Agent> agents = new ArrayList<>();
@@ -58,6 +62,8 @@ public class LocalAgentGroup implements Closeable {
 
     public LocalAgentGroup(int size, Set<Class<? extends AgentService>> services, boolean withVisualiser,
                            boolean withCallbacks) {
+        executorService = ExecutorUtils.newExecutor(size, "%d");
+
         raftNodes = new ArrayList<>(size);
         clients = new RaftClientImpl[size];
 
@@ -132,6 +138,8 @@ public class LocalAgentGroup implements Closeable {
         for (RaftNodeImpl node : raftNodes) {
             node.parent().shutdown();
         }
+
+        executorService.shutdown();
     }
 
     private RaftClusterConfig defaultConfig() {
@@ -157,6 +165,8 @@ public class LocalAgentGroup implements Closeable {
                 }
             }
         }
+
+        System.out.println();
     }
 
     public RaftNode getLeaderNode() {
@@ -191,7 +201,7 @@ public class LocalAgentGroup implements Closeable {
                 if (RaftNode.class.isAssignableFrom(agentService.getClass())) {
                     continue;
                 } else {
-                    serviceManager.startService(agentService.getClass());
+                    executorService.submit(() -> serviceManager.startService(agentService.getClass()));
                 }
             }
         }

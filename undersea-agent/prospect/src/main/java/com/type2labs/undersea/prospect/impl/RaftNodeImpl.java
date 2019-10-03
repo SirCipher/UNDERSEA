@@ -55,6 +55,7 @@ import com.type2labs.undersea.prospect.task.RequireRoleTask;
 import com.type2labs.undersea.prospect.util.GrpcUtil;
 import com.type2labs.undersea.utilities.exception.NotSupportedException;
 import com.type2labs.undersea.utilities.exception.UnderseaException;
+import com.type2labs.undersea.utilities.executor.ScheduledThrowableExecutor;
 import com.type2labs.undersea.utilities.executor.ThrowableExecutor;
 import com.type2labs.undersea.utilities.lang.ReschedulableTask;
 import io.grpc.Status;
@@ -80,9 +81,8 @@ public class RaftNodeImpl implements RaftNode {
     private static final Logger logger = LogManager.getLogger(RaftNodeImpl.class);
 
     // TODO: 20/08/2019 Migrate to 4 threads
-    private final ThrowableExecutor singleThreadScheduledExecutor;
+    private final ScheduledThrowableExecutor singleThreadScheduledExecutor;
     private final ListeningExecutorService listeningExecutorService;
-    private final ScheduledExecutorService scheduledExecutor = Executors.newSingleThreadScheduledExecutor();
     private final RaftClusterConfig raftClusterConfig;
     private final InetSocketAddress address;
     private GrpcServer server;
@@ -111,13 +111,13 @@ public class RaftNodeImpl implements RaftNode {
             throw new IllegalStateException("Auto port discovery is not enabled");
         }
 
-        this.singleThreadScheduledExecutor = ThrowableExecutor.newSingleThreadExecutor(parent(), logger);
+        this.singleThreadScheduledExecutor = ScheduledThrowableExecutor.newSingleThreadExecutor(parent(), logger);
         this.listeningExecutorService =
                 MoreExecutors.listeningDecorator(ThrowableExecutor.newSingleThreadExecutor(parent(), logger));
         this.multiRoleState = new MultiRoleStateImpl(this);
     }
 
-    public ThrowableExecutor getSingleThreadScheduledExecutor() {
+    public ScheduledThrowableExecutor getSingleThreadScheduledExecutor() {
         return singleThreadScheduledExecutor;
     }
 
@@ -167,6 +167,11 @@ public class RaftNodeImpl implements RaftNode {
     @Override
     public void execute(Runnable task) {
         try {
+            if (singleThreadScheduledExecutor.isShutdown() || singleThreadScheduledExecutor.isTerminated() || singleThreadScheduledExecutor.isTerminating()) {
+                logger.warn("Attempted to submit task " + task + " when node is shutting down");
+                return;
+            }
+
             singleThreadScheduledExecutor.execute(task);
         } catch (RejectedExecutionException e) {
             logger.error(e);
@@ -212,11 +217,11 @@ public class RaftNodeImpl implements RaftNode {
 
         multiRoleState.updateStatus();
 
-        logger.info(parent().name() + " is now the leader", agent);
+        logger.info(parent().name() + " is now the leader {" + parent().peerId() + "}", agent);
         agent.log(new LogEntry(leaderPeerId(), new Object(), new Object(), state().getCurrentTerm(), this, true));
 
         fireCallback(LifecycleEvent.ELECTED_LEADER);
-        state().toLeader(selfRaftClientImpl);
+        state().setLeader(selfRaftClientImpl);
         scheduleHeartbeat();
     }
 
@@ -240,11 +245,12 @@ public class RaftNodeImpl implements RaftNode {
     }
 
     @Override
-    public void toFollower(int term) {
+    public void toFollower(int term, Client leader) {
         multiRoleState.updateStatus();
 
         role = ConsensusAlgorithmRole.FOLLOWER;
         raftState.clearCandidate();
+        raftState.setLeader(leader);
         raftState.setCurrentTerm(term);
         logger.info(parent().name() + " is now a follower", agent);
 
@@ -337,7 +343,7 @@ public class RaftNodeImpl implements RaftNode {
 
                 @Override
                 public void onFailure(Throwable t) {
-                    throw new RuntimeException(t);
+                    t.printStackTrace();
                 }
             });
         }
@@ -355,7 +361,12 @@ public class RaftNodeImpl implements RaftNode {
     @Override
     public void schedule(Runnable task, long delayInMillis) {
         try {
-            scheduledExecutor.schedule(task, delayInMillis, MILLISECONDS);
+            if (singleThreadScheduledExecutor.isShutdown() || singleThreadScheduledExecutor.isTerminated()) {
+                logger.warn("Attempted to schedule task " + task + " when node is shutting down");
+                return;
+            }
+
+            singleThreadScheduledExecutor.schedule(task, delayInMillis, MILLISECONDS);
         } catch (RejectedExecutionException e) {
             if (task instanceof ReschedulableTask) {
                 ReschedulableTask reschedulableTask = (ReschedulableTask) task;
@@ -468,8 +479,8 @@ public class RaftNodeImpl implements RaftNode {
 
     @Override
     public void shutdown() {
-        scheduledExecutor.shutdownNow();
-        singleThreadScheduledExecutor.shutdown();
+        singleThreadScheduledExecutor.shutdownNow();
+        listeningExecutorService.shutdownNow();
 
         state().closeClients();
 

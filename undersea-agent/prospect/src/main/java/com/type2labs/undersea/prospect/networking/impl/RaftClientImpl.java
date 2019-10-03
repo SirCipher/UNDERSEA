@@ -26,15 +26,11 @@ import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.type2labs.undersea.common.cluster.PeerId;
-import com.type2labs.undersea.common.consensus.RaftClusterConfig;
 import com.type2labs.undersea.prospect.RaftProtocolServiceGrpc;
 import com.type2labs.undersea.prospect.RaftProtos;
 import com.type2labs.undersea.prospect.model.RaftNode;
 import com.type2labs.undersea.prospect.networking.model.RaftClient;
-import io.grpc.Deadline;
-import io.grpc.ManagedChannel;
-import io.grpc.ManagedChannelBuilder;
-import io.grpc.StatusRuntimeException;
+import io.grpc.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -66,7 +62,7 @@ public class RaftClientImpl implements RaftClient {
         this.futureStub = RaftProtocolServiceGrpc.newFutureStub(channel);
         this.blockingStub = RaftProtocolServiceGrpc.newBlockingStub(channel);
 
-        int executorThreads = ((RaftClusterConfig) consensusAlgorithm.config()).executorThreads();
+        int executorThreads = consensusAlgorithm.config().executorThreads();
         this.clientExecutor = Executors.newFixedThreadPool(executorThreads,
                 new ThreadFactoryBuilder().setNameFormat(consensusAlgorithm.parent().name() + "-rpc-client-%d").build());
     }
@@ -111,6 +107,10 @@ public class RaftClientImpl implements RaftClient {
     @Override
     public RaftProtos.AcquireStatusResponse getStatus(RaftProtos.AcquireStatusRequest request, Deadline deadline) throws StatusRuntimeException {
         try {
+            if (channelInactive()) {
+                throw new StatusRuntimeException(Status.UNAVAILABLE);
+            }
+
             return blockingStub.withDeadline(deadline).getStatus(request);
         } catch (Exception e) {
             if (e instanceof StatusRuntimeException) {
@@ -121,9 +121,17 @@ public class RaftClientImpl implements RaftClient {
         }
     }
 
+    private boolean channelInactive() {
+        return clientExecutor.isShutdown() || clientExecutor.isTerminated();
+    }
+
     @Override
     public void appendEntry(RaftProtos.AppendEntryRequest request,
                             FutureCallback<RaftProtos.AppendEntryResponse> callback) {
+        if (channelInactive()) {
+            return;
+        }
+
         ListenableFuture<RaftProtos.AppendEntryResponse> response =
                 futureStub.withDeadline(Deadline.after(10, TimeUnit.SECONDS)).appendEntry(request);
         Futures.addCallback(response, callback, clientExecutor);
@@ -131,6 +139,10 @@ public class RaftClientImpl implements RaftClient {
 
     @Override
     public void requestVote(RaftProtos.VoteRequest request, FutureCallback<RaftProtos.VoteResponse> callback) {
+        if (channelInactive()) {
+            return;
+        }
+
         ListenableFuture<RaftProtos.VoteResponse> response = futureStub.requestVote(request);
         Futures.addCallback(response, callback, clientExecutor);
     }
@@ -138,6 +150,10 @@ public class RaftClientImpl implements RaftClient {
     @Override
     public void distributeMission(RaftProtos.DistributeMissionRequest request,
                                   FutureCallback<RaftProtos.DisributeMissionResponse> callback) {
+        if (channelInactive()) {
+            return;
+        }
+
         ListenableFuture<RaftProtos.DisributeMissionResponse> response = futureStub.distributeMission(request);
         Futures.addCallback(response, callback, clientExecutor);
     }
@@ -145,6 +161,10 @@ public class RaftClientImpl implements RaftClient {
     @Override
     public void broadcastMembershipChanges(RaftProtos.ClusterMembersRequest request,
                                            FutureCallback<RaftProtos.Empty> callback) {
+        if (channelInactive()) {
+            return;
+        }
+
         ListenableFuture<RaftProtos.Empty> response = futureStub.broadcastMembershipChanges(request);
         Futures.addCallback(response, callback, clientExecutor);
     }

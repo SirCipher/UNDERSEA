@@ -30,18 +30,25 @@ import com.type2labs.undersea.prospect.impl.RaftState;
 import com.type2labs.undersea.prospect.model.RaftNode;
 import com.type2labs.undersea.prospect.networking.model.RaftClient;
 import com.type2labs.undersea.prospect.util.GrpcUtil;
+import io.grpc.Status;
+import io.grpc.StatusRuntimeException;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.concurrent.ConcurrentMap;
 
 public class VoteTask implements Runnable {
 
     private static final Logger logger = LogManager.getLogger(VoteTask.class);
+    private static final int MAX_RETRIES = 5;
 
     private final RaftNode raftNode;
+    private final Map<Client, Integer> retries = new HashMap<>();
+    private RaftState.Candidate candidate;
 
     public VoteTask(RaftNode raftNode) {
         this.raftNode = raftNode;
@@ -49,12 +56,11 @@ public class VoteTask implements Runnable {
 
     @Override
     public void run() {
-        raftNode.toCandidate();
-
         logger.info(raftNode.parent().name() + " starting voting", raftNode.parent());
+        raftNode.toCandidate();
+        candidate = raftNode.state().getCandidate();
 
         ConcurrentMap<PeerId, Client> localNodes = raftNode.parent().clusterClients();
-        RaftState.Candidate candidate = raftNode.state().getCandidate();
 
         if (localNodes.size() == 0) {
             logger.warn(raftNode.parent().name() + " has no peers", raftNode.parent());
@@ -64,38 +70,11 @@ public class VoteTask implements Runnable {
 
         while (iterator.hasNext()) {
             RaftClient raftClient = (RaftClient) iterator.next();
+            retries.put(raftClient, 0);
 
             int term = raftNode.state().getCurrentTerm();
 
-            RaftProtos.VoteRequest request = RaftProtos.VoteRequest.newBuilder()
-                    .setClient(GrpcUtil.toProtoClient(raftNode))
-                    .setTerm(term)
-                    .build();
-
-            raftClient.requestVote(request, new FutureCallback<RaftProtos.VoteResponse>() {
-                @Override
-                public void onSuccess(RaftProtos.VoteResponse result) {
-                    PeerId nomineeId = PeerId.valueOf(result.getNominee().getRaftPeerId());
-                    PeerId responderId = PeerId.valueOf(result.getClient().getRaftPeerId());
-
-                    // Grant vote if we were nominated
-                    if (nomineeId.equals(raftNode.parent().peerId())) {
-                        Client responderClient = raftNode.state().getClient(responderId);
-                        candidate.vote(responderClient);
-                    }
-
-                    if (candidate.wonRound()) {
-                        raftNode.toLeader(raftNode.state().getCurrentTerm());
-                    }
-                }
-
-                @Override
-                public void onFailure(Throwable t) {
-//                    logger.error(raftNode.parent().name() + ": exception thrown when contacting: " + raftClient.name(), t);
-                    raftNode.state().removeNode(raftClient.peerId());
-                }
-            });
-
+            sendMessage(term, raftClient);
         }
 
         // Check if we voted for ourself
@@ -114,7 +93,51 @@ public class VoteTask implements Runnable {
         }
 
         raftNode.schedule(new VoteTaskTimeout(raftNode), 10000);
+    }
 
+    private void sendMessage(int term, RaftClient raftClient) {
+        RaftProtos.VoteRequest request = RaftProtos.VoteRequest.newBuilder()
+                .setClient(GrpcUtil.toProtoClient(raftNode))
+                .setTerm(term)
+                .build();
+
+        raftClient.requestVote(request, new FutureCallback<RaftProtos.VoteResponse>() {
+            @Override
+            public void onSuccess(RaftProtos.VoteResponse result) {
+                PeerId nomineeId = PeerId.valueOf(result.getNominee().getRaftPeerId());
+                PeerId responderId = PeerId.valueOf(result.getClient().getRaftPeerId());
+
+                // Grant vote if we were nominated
+                if (nomineeId.equals(raftNode.parent().peerId())) {
+                    Client responderClient = raftNode.state().getClient(responderId);
+                    candidate.vote(responderClient);
+                }
+
+                if (candidate.wonRound()) {
+                    raftNode.toLeader(raftNode.state().getCurrentTerm());
+                }
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                if (t instanceof StatusRuntimeException) {
+                    StatusRuntimeException statusRuntimeException = (StatusRuntimeException) t;
+
+                    if (statusRuntimeException.getStatus() == Status.PERMISSION_DENIED) {
+                        int count = retries.get(raftClient);
+                        if (count == MAX_RETRIES) {
+                            raftNode.state().removeNode(raftClient.peerId());
+                            logger.warn(raftNode.parent().name() + ": exceeded maximum retries while contacting client: " + raftClient.peerId(), raftNode.parent());
+                        }
+
+                        retries.put(raftClient, count + 1);
+                    }
+                } else {
+                    logger.warn(raftNode.parent().name() + ": exception thrown while contacting client: " + raftClient.peerId(), t);
+                    raftNode.state().removeNode(raftClient.peerId());
+                }
+            }
+        });
     }
 
 }
