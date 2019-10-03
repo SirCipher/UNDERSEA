@@ -30,7 +30,10 @@ import com.type2labs.undersea.prospect.RaftProtocolServiceGrpc;
 import com.type2labs.undersea.prospect.RaftProtos;
 import com.type2labs.undersea.prospect.model.RaftNode;
 import com.type2labs.undersea.prospect.networking.model.RaftClient;
-import io.grpc.*;
+import io.grpc.Deadline;
+import io.grpc.ManagedChannel;
+import io.grpc.ManagedChannelBuilder;
+import io.grpc.StatusRuntimeException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -47,7 +50,6 @@ public class RaftClientImpl implements RaftClient {
     private final InetSocketAddress socketAddress;
     private final ManagedChannel channel;
     private final RaftProtocolServiceGrpc.RaftProtocolServiceFutureStub futureStub;
-    private final RaftProtocolServiceGrpc.RaftProtocolServiceBlockingStub blockingStub;
     private final ExecutorService clientExecutor;
     private final PeerId clientId;
     private RaftNode consensusAlgorithm;
@@ -60,11 +62,7 @@ public class RaftClientImpl implements RaftClient {
         this.channel =
                 ManagedChannelBuilder.forAddress(socketAddress.getHostString(), socketAddress.getPort()).usePlaintext().build();
         this.futureStub = RaftProtocolServiceGrpc.newFutureStub(channel);
-        this.blockingStub = RaftProtocolServiceGrpc.newBlockingStub(channel);
-
-        int executorThreads = consensusAlgorithm.config().executorThreads();
-        this.clientExecutor = Executors.newFixedThreadPool(executorThreads,
-                new ThreadFactoryBuilder().setNameFormat(consensusAlgorithm.parent().name() + "-rpc-client-%d").build());
+        this.clientExecutor = Executors.newCachedThreadPool(new ThreadFactoryBuilder().setNameFormat(consensusAlgorithm.parent().name() + "-rpc-client-%d").build());
     }
 
     public RaftClientImpl(RaftNode consensusAlgorithm, InetSocketAddress socketAddress, PeerId peerId, boolean isSelf) {
@@ -105,14 +103,14 @@ public class RaftClientImpl implements RaftClient {
     }
 
     @Override
-    public RaftProtos.AcquireStatusResponse getStatus(RaftProtos.AcquireStatusRequest request, Deadline deadline) throws StatusRuntimeException {
-        try {
-            if (channelInactive()) {
-                throw new StatusRuntimeException(Status.UNAVAILABLE);
-            }
-            futureStub.withDeadline(deadline).getStatus(request);
+    public void getStatus(RaftProtos.AcquireStatusRequest request, Deadline deadline, FutureCallback<RaftProtos.AcquireStatusResponse> callback) throws StatusRuntimeException {
+        if (channelInactive()) {
+            return;
+        }
 
-            return blockingStub.withDeadline(deadline).getStatus(request);
+        try {
+            ListenableFuture<RaftProtos.AcquireStatusResponse> response = futureStub.withDeadline(deadline).getStatus(request);
+            Futures.addCallback(response, callback, clientExecutor);
         } catch (Exception e) {
             if (e instanceof StatusRuntimeException) {
                 throw e;

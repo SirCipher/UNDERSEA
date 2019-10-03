@@ -38,7 +38,7 @@ public class RaftClusterConfig implements UnderseaConfig {
     private final long statusDeadlineLong = 60;
     private RuntimeConfig runtimeConfig;
     private boolean autoPortDiscovery = true;
-    private int executorThreads = 4;
+    private int executorThreads = 10;
     private long getStatusDeadline = 60;
 
     public RaftClusterConfig() {

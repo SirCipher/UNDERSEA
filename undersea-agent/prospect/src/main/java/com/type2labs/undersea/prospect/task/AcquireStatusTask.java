@@ -21,6 +21,7 @@
 
 package com.type2labs.undersea.prospect.task;
 
+import com.google.common.util.concurrent.FutureCallback;
 import com.type2labs.undersea.common.cluster.Client;
 import com.type2labs.undersea.common.cluster.ClusterState;
 import com.type2labs.undersea.common.consensus.RaftClusterConfig;
@@ -28,11 +29,13 @@ import com.type2labs.undersea.prospect.RaftProtos;
 import com.type2labs.undersea.prospect.model.RaftNode;
 import com.type2labs.undersea.prospect.networking.model.RaftClient;
 import com.type2labs.undersea.prospect.util.GrpcUtil;
+import com.type2labs.undersea.utilities.lang.ThreadUtils;
 import io.grpc.Deadline;
 import io.grpc.Status;
 import io.grpc.StatusRuntimeException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.Collection;
 import java.util.concurrent.TimeUnit;
@@ -55,6 +58,8 @@ public class AcquireStatusTask implements Runnable {
             return;
         }
 
+        logger.info(raftNode.parent().name() + ": acquiring cluster status", raftNode.parent());
+
         Collection<Client> localNodes = raftNode.state().localNodes().values();
 
         raftNode.state().initPreVoteClusterState();
@@ -64,41 +69,51 @@ public class AcquireStatusTask implements Runnable {
             return;
         }
 
+        ClusterState preVoteClusterState = raftNode.state().getPreVoteClusterState();
+        RaftClusterConfig config = raftNode.config();
+        RaftProtos.AcquireStatusRequest request = RaftProtos.AcquireStatusRequest
+                .newBuilder()
+                .setClient(GrpcUtil.toProtoClient(raftNode))
+                .build();
+
         for (Client localNode : localNodes) {
             RaftClient raftClient = (RaftClient) localNode;
 
-            RaftProtos.AcquireStatusRequest request = RaftProtos.AcquireStatusRequest
-                    .newBuilder()
-                    .setClient(GrpcUtil.toProtoClient(raftNode))
-                    .build();
+            raftClient.getStatus(request, Deadline.after(config.getStatusDeadline(), TimeUnit.SECONDS), new FutureCallback<RaftProtos.AcquireStatusResponse>() {
+                @Override
+                public void onSuccess(RaftProtos.@Nullable AcquireStatusResponse response) {
+                    ClusterState.ClientState agentInfo = new ClusterState.ClientState(localNode, response.getCost());
+                    preVoteClusterState.setAgentInformation(localNode, agentInfo);
 
-            RaftProtos.AcquireStatusResponse response;
-            ClusterState preVoteClusterState = raftNode.state().getPreVoteClusterState();
-
-            try {
-                RaftClusterConfig config = raftNode.config();
-
-                response = raftClient.getStatus(request, Deadline.after(config.getStatusDeadline(), TimeUnit.SECONDS));
-
-                ClusterState.ClientState agentInfo = new ClusterState.ClientState(localNode, response.getCost());
-                preVoteClusterState.setAgentInformation(localNode, agentInfo);
-
-                incrementAndVote();
-            } catch (StatusRuntimeException e) {
-                Status.Code code = e.getStatus().getCode();
-
-                if (code.equals(Status.Code.DEADLINE_EXCEEDED)) {
-                    logger.info(raftNode.parent().name() + ": deadline exceeded while contacting client: " + raftClient.name()
-                            , raftNode.parent());
-                    incrementAndVote();
-                } else {
-                    logger.error(e);
+                    incrementAndStartVoting();
                 }
-            }
+
+                @Override
+                public void onFailure(Throwable t) {
+                    if (t instanceof StatusRuntimeException) {
+                        StatusRuntimeException sre = (StatusRuntimeException) t;
+
+                        Status.Code code = sre.getStatus().getCode();
+
+                        if (code.equals(Status.Code.DEADLINE_EXCEEDED)) {
+                            logger.info(raftNode.parent().name() + ": deadline exceeded while contacting client: " + raftClient.name()
+                                    , raftNode.parent());
+                            incrementAndStartVoting();
+                        } else {
+                            logger.error(sre);
+                        }
+                    } else {
+                        logger.error(t);
+                    }
+                }
+            });
+
+            ThreadUtils.sleep(100);
         }
+
     }
 
-    private void incrementAndVote() {
+    private synchronized void incrementAndStartVoting() {
         noResponses++;
 
         if (noResponses == clusterSize) {

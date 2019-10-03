@@ -108,7 +108,7 @@ public class RaftState {
         localNodes.computeIfAbsent(node.parent().peerId(), n -> new RaftClientImpl(raftNode, address,
                 node.parent().peerId()));
 
-//        logger.info(raftNode.parent().name() + ": discovered: " + node.parent().name() + ", with PeerId: " + node.parent().peerId(), raftNode);
+        logger.info(raftNode.parent().name() + ": discovered: " + node.parent().name() + ", with PeerId: " + node.parent().peerId(), raftNode);
     }
 
     public ConcurrentMap<PeerId, Client> localNodes() {

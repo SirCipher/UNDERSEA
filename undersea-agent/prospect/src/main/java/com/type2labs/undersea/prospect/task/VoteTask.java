@@ -31,6 +31,7 @@ import com.type2labs.undersea.prospect.model.RaftNode;
 import com.type2labs.undersea.prospect.networking.model.RaftClient;
 import com.type2labs.undersea.prospect.util.GrpcUtil;
 import com.type2labs.undersea.utilities.executor.ThrowableExecutor;
+import com.type2labs.undersea.utilities.lang.ThreadUtils;
 import io.grpc.Status;
 import io.grpc.StatusRuntimeException;
 import org.apache.commons.lang3.tuple.Pair;
@@ -78,6 +79,8 @@ public class VoteTask implements Runnable {
 
             int term = raftNode.state().getCurrentTerm();
             executorService.submit(() -> sendVote(term, raftClient));
+
+            ThreadUtils.sleep(100);
         }
 
         // Check if we voted for ourself

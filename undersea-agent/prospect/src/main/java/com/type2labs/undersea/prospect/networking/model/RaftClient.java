@@ -40,8 +40,7 @@ public interface RaftClient extends Client {
      * @throws StatusRuntimeException if there is an issue performing the request. Or, as expected, if the deadline
      *                                is exceeded
      */
-    RaftProtos.AcquireStatusResponse getStatus(RaftProtos.AcquireStatusRequest request,
-                                               Deadline deadline) throws StatusRuntimeException;
+    void getStatus(RaftProtos.AcquireStatusRequest request, Deadline deadline, FutureCallback<RaftProtos.AcquireStatusResponse> callback) throws StatusRuntimeException;
 
     void appendEntry(RaftProtos.AppendEntryRequest request, FutureCallback<RaftProtos.AppendEntryResponse> callback);
 

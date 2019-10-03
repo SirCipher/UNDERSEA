@@ -115,7 +115,10 @@ allprojects {
     }
 
     tasks.withType(Test) {
-        String path = "";
+        minHeapSize = "512m"
+        maxHeapSize = "2048m"
+
+        String path = ""
 
         if (Os.isFamily(Os.FAMILY_MAC)) {
             System.out.println("Detected OS MAC")

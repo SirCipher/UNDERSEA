@@ -16,6 +16,8 @@ import static org.junit.Assert.assertNotNull;
 
 public class Benchmark {
 
+    private final int NO_RUNS = 1;
+
     static class Results {
         double min;
         double max;
@@ -98,70 +100,70 @@ public class Benchmark {
     @Test
     @IgnoredOnCi
     public void test_3() {
-        run(3, 1);
+        run(3);
     }
 
     @Test
     @IgnoredOnCi
     public void test_5() {
-        run(5, 1);
+        run(5);
     }
 
     @Test
     @IgnoredOnCi
     public void test_7() {
-        run(7, 5);
+        run(7);
     }
 
     @Test
     @IgnoredOnCi
     public void test_10() {
-        run(10, 1);
+        run(10);
     }
 
     @Test
     @IgnoredOnCi
     public void test_15() {
-        run(15, 1);
+        run(15);
     }
 
     @Test
     @IgnoredOnCi
     public void test_20() {
-        run(20, 1);
+        run(20);
     }
 
     @Test
     @IgnoredOnCi
     public void test_30() {
-        run(30, 1);
+        run(30);
     }
 
     @Test
     @IgnoredOnCi
     public void test_50() {
-        run(50, 1);
+        run(50);
     }
 
     @Test
     @IgnoredOnCi
     public void test_100() {
-        run(100, 1);
+        run(100);
     }
 
     @Test
     @IgnoredOnCi
     public void test_1000() {
-        run(1000, 1);
+        run(1000);
     }
 
-    private void run(int size, int runs) {
+    private void run(int size) {
 //        warmup();
 
-        System.out.println("Benchmarking with a cluster size of " + size + " over " + runs + " runs");
-        Results results = benchmark(size, runs);
+        System.out.println("Benchmarking with a cluster size of " + size + " over " + NO_RUNS + " runs");
+        Results results = benchmark(size, NO_RUNS);
 
-        System.out.println(results.toString(size, runs));
+        System.out.println(results.toString(size, NO_RUNS));
         System.out.println("------------------------------------------------------------------------------------");
     }
 

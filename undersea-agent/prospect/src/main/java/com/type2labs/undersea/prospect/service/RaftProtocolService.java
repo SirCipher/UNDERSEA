@@ -25,6 +25,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.rpc.Code;
 import com.google.rpc.Status;
+import com.type2labs.undersea.common.agent.Subsystem;
 import com.type2labs.undersea.common.cluster.Client;
 import com.type2labs.undersea.common.cluster.ClusterState;
 import com.type2labs.undersea.common.cluster.PeerId;
@@ -43,6 +44,7 @@ import com.type2labs.undersea.prospect.impl.RaftNodeImpl;
 import com.type2labs.undersea.prospect.model.RaftNode;
 import com.type2labs.undersea.prospect.networking.impl.RaftClientImpl;
 import com.type2labs.undersea.prospect.util.GrpcUtil;
+import io.grpc.Grpc;
 import io.grpc.protobuf.StatusProto;
 import io.grpc.stub.StreamObserver;
 import org.apache.commons.lang3.tuple.Pair;
@@ -59,10 +61,14 @@ public class RaftProtocolService extends RaftProtocolServiceGrpc.RaftProtocolSer
     private static final Logger logger = LogManager.getLogger(RaftProtocolService.class);
     private final RaftNodeImpl raftNode;
     private final ExecutorService executor;
+    private RaftProtos.RaftPeerProto client;
+    private SubsystemMonitor subsystemMonitor;
 
     public RaftProtocolService(RaftNode raftNode, ExecutorService executor) {
         this.raftNode = (RaftNodeImpl) raftNode;
         this.executor = executor;
+        this.client = GrpcUtil.toProtoClient(raftNode);
+        this.subsystemMonitor = raftNode.parent().serviceManager().getService(SubsystemMonitor.class);
     }
 
     @Override
@@ -70,7 +76,8 @@ public class RaftProtocolService extends RaftProtocolServiceGrpc.RaftProtocolSer
                           StreamObserver<RaftProtos.AcquireStatusResponse> responseObserver) {
         GrpcUtil.sendAbstractAsyncMessage(responseObserver, () -> {
             RaftProtos.AcquireStatusResponse.Builder builder = RaftProtos.AcquireStatusResponse.newBuilder();
-            SubsystemMonitor subsystemMonitor = raftNode.parent().serviceManager().getService(SubsystemMonitor.class);
+            builder.setClient(client);
+
 
             // TODO: 03/10/2019 Really not sure why this is returning null sometimes...
             if (subsystemMonitor.parent() == null) {
@@ -140,7 +147,7 @@ public class RaftProtocolService extends RaftProtocolServiceGrpc.RaftProtocolSer
 
     private RaftProtos.AppendEntryResponse emptyAppendResponse() {
         return RaftProtos.AppendEntryResponse.newBuilder()
-                .setClient(GrpcUtil.toProtoClient(raftNode))
+                .setClient(client)
                 .setTerm(raftNode.term())
                 .build();
     }
@@ -179,8 +186,6 @@ public class RaftProtocolService extends RaftProtocolServiceGrpc.RaftProtocolSer
     public void requestVote(RaftProtos.VoteRequest request, StreamObserver<RaftProtos.VoteResponse> responseObserver) {
         GrpcUtil.sendAbstractAsyncMessage(responseObserver, () -> {
             if (raftNode.state().isPreVoteState()) {
-//                logger.info(raftNode.parent().name() + ": is still in a pre-vote state", raftNode.parent());
-
                 Status status = Status.newBuilder()
                         .setCode(Code.PERMISSION_DENIED.getNumber())
                         .setMessage("Not calculated costs")
@@ -193,7 +198,7 @@ public class RaftProtocolService extends RaftProtocolServiceGrpc.RaftProtocolSer
                 logger.trace(raftNode.parent() + ": nominating: " + nominee.getKey().peerId() + ". With cost:" + nominee.getValue().getCost(), raftNode.parent());
 
                 return RaftProtos.VoteResponse.newBuilder()
-                        .setClient(GrpcUtil.toProtoClient(raftNode))
+                        .setClient(client)
                         .setNominee(GrpcUtil.toProtoClient(nominee.getKey()))
                         .build();
             }

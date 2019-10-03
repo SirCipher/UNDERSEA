@@ -99,7 +99,6 @@ public class RaftNodeImpl implements RaftNode {
         this(raftClusterConfig, new InetSocketAddress(0));
     }
 
-
     public RaftNodeImpl(RaftClusterConfig raftClusterConfig,
                         InetSocketAddress address) {
         this.raftClusterConfig = raftClusterConfig;

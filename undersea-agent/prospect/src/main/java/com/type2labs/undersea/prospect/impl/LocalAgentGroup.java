@@ -49,6 +49,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class LocalAgentGroup implements Closeable {
 
@@ -62,7 +63,7 @@ public class LocalAgentGroup implements Closeable {
 
     public LocalAgentGroup(int size, Set<Class<? extends AgentService>> services, boolean withVisualiser,
                            boolean withCallbacks) {
-        executorService = ExecutorUtils.newExecutor(size, "%d");
+        executorService = ExecutorUtils.newExecutor("%d");
 
         raftNodes = new ArrayList<>(size);
         clients = new RaftClientImpl[size];
@@ -156,14 +157,18 @@ public class LocalAgentGroup implements Closeable {
     }
 
     public void doManualDiscovery() {
-        for (RaftNodeImpl raftNode : raftNodes) {
-            for (int j = raftNodes.size() - 1; j >= 0; j--) {
-                RaftNode nodeB = raftNodes.get(j);
+        ExecutorService executorService = Executors.newCachedThreadPool();
 
-                if (raftNode != nodeB) {
-                    raftNode.state().discoverNode(nodeB);
+        for (RaftNodeImpl raftNode : raftNodes) {
+            executorService.submit(() -> {
+                for (int j = raftNodes.size() - 1; j >= 0; j--) {
+                    RaftNode nodeB = raftNodes.get(j);
+
+                    if (raftNode != nodeB) {
+                        raftNode.state().discoverNode(nodeB);
+                    }
                 }
-            }
+            });
         }
     }
 

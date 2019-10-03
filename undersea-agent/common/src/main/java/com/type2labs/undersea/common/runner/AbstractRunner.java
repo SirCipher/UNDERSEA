@@ -84,7 +84,7 @@ public abstract class AbstractRunner {
     public void start() {
         agents.stream().filter(a -> (boolean) a.metadata().getProperty(AgentMetaData.PropertyKey.IS_MASTER_NODE)).forEach(a -> a.serviceManager().startServices());
 
-        ExecutorService executorService = ExecutorUtils.newExecutor(agents.size(), "abstract-runner-%d");
+        ExecutorService executorService = ExecutorUtils.newExecutor("abstract-runner-%d");
 
         agents.stream().filter(a -> !(boolean) a.metadata().getProperty(AgentMetaData.PropertyKey.IS_MASTER_NODE)).forEach(a -> executorService.submit(() -> a.serviceManager().startServices()));
     }
