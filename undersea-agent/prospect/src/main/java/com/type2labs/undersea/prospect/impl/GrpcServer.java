@@ -82,13 +82,13 @@ public class GrpcServer implements Closeable {
         this.socketAddress = new InetSocketAddress(port);
         final ServerBuilder builder = NettyServerBuilder.forPort(port);
 
-        handlerExecutor = ExecutorUtils.newExecutor(agentName + "-grpc-handler-%d");
+        handlerExecutor = ExecutorUtils.newCachedThreadPool(agentName + "-grpc-handler-%d", parentNode.parent(), logger);
         builder.addService(new RaftProtocolService(raftNode, handlerExecutor));
 
         // TODO: This service should be started and shutdown as required instead of always running
         builder.addService(new MultiRaftProtocolService(raftNode, handlerExecutor));
 
-        serverExecutor = ExecutorUtils.newExecutor(agentName + "-grpc-server-%d");
+        serverExecutor = ExecutorUtils.newCachedThreadPool(agentName + "-grpc-server-%d", parentNode.parent(), logger);
         this.server = builder.executor(serverExecutor).build();
 
         logger.info(agentName + ": gRPC server available at  " + socketAddress.getHostString() + ":" + port,
@@ -111,7 +111,6 @@ public class GrpcServer implements Closeable {
         } catch (IOException e) {
             logger.error(parentNode.parent().name() + " failed to start. Attempted to use port: " + socketAddress.getPort(),
                     parentNode.parent());
-            e.printStackTrace();
             throw new RuntimeException("Failed to start", e);
         }
     }

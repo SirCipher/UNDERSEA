@@ -31,14 +31,12 @@ import com.type2labs.undersea.prospect.model.RaftNode;
 import com.type2labs.undersea.prospect.networking.model.RaftClient;
 import com.type2labs.undersea.prospect.util.GrpcUtil;
 import com.type2labs.undersea.utilities.executor.ThrowableExecutor;
-import com.type2labs.undersea.utilities.lang.ThreadUtils;
 import io.grpc.Status;
 import io.grpc.StatusRuntimeException;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -71,16 +69,14 @@ public class VoteTask implements Runnable {
             logger.warn(raftNode.parent().name() + " has no peers", raftNode.parent());
         }
 
-        final Iterator<Client> iterator = localNodes.values().iterator();
-
-        while (iterator.hasNext()) {
-            RaftClient raftClient = (RaftClient) iterator.next();
+        for (Client client : localNodes.values()) {
+            RaftClient raftClient = (RaftClient) client;
             retries.put(raftClient, 0);
 
             int term = raftNode.state().getCurrentTerm();
             executorService.submit(() -> sendVote(term, raftClient));
 
-            ThreadUtils.sleep(100);
+//            ThreadUtils.sleep(100);
         }
 
         // Check if we voted for ourself
@@ -139,13 +135,12 @@ public class VoteTask implements Runnable {
 
                             try {
                                 Thread.sleep(1000);
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
+                            } catch (InterruptedException ignored) {
                             }
 
                             executorService.submit(() -> sendVote(term, raftClient));
 
-                            logger.warn(raftNode.parent().name() + ": retry " + count, raftNode.parent());
+                            logger.warn(raftNode.parent().name() + ": attempt " + (count + 1) + " to get vote from: " + raftClient.peerId() + ". Will try " + MAX_RETRIES + " times", raftNode.parent());
                         }
                     }
                 } else {

@@ -25,7 +25,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.rpc.Code;
 import com.google.rpc.Status;
-import com.type2labs.undersea.common.agent.Subsystem;
 import com.type2labs.undersea.common.cluster.Client;
 import com.type2labs.undersea.common.cluster.ClusterState;
 import com.type2labs.undersea.common.cluster.PeerId;
@@ -44,7 +43,6 @@ import com.type2labs.undersea.prospect.impl.RaftNodeImpl;
 import com.type2labs.undersea.prospect.model.RaftNode;
 import com.type2labs.undersea.prospect.networking.impl.RaftClientImpl;
 import com.type2labs.undersea.prospect.util.GrpcUtil;
-import io.grpc.Grpc;
 import io.grpc.protobuf.StatusProto;
 import io.grpc.stub.StreamObserver;
 import org.apache.commons.lang3.tuple.Pair;
@@ -111,6 +109,8 @@ public class RaftProtocolService extends RaftProtocolServiceGrpc.RaftProtocolSer
     public void appendEntry(RaftProtos.AppendEntryRequest request,
                             StreamObserver<RaftProtos.AppendEntryResponse> responseObserver) {
         GrpcUtil.sendAbstractAsyncMessage(responseObserver, () -> {
+            logger.info(raftNode.parent().name() + ": received heartbeat");
+
             int requestTerm = request.getTerm();
             int currentTerm = raftNode.state().getCurrentTerm();
 
@@ -118,13 +118,14 @@ public class RaftProtocolService extends RaftProtocolServiceGrpc.RaftProtocolSer
             Client leader = raftNode.parent().clusterClients().get(peerId);
 
             if (requestTerm < currentTerm) {
+                logger.info(raftNode.parent().name() + ": ignoring append request; request term: " + requestTerm + ", current term: " + currentTerm);
                 return emptyAppendResponse();
             }
 
             if (requestTerm > raftNode.state().getCurrentTerm()) {
-                raftNode.toFollower(requestTerm, leader);
                 UnderseaLogger.info(logger, raftNode.parent(), "Demoting to follower due to receiving a greater term: "
                         + requestTerm);
+                raftNode.toFollower(requestTerm, leader);
                 return emptyAppendResponse();
             }
 

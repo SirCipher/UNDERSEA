@@ -29,7 +29,6 @@ import com.type2labs.undersea.prospect.RaftProtos;
 import com.type2labs.undersea.prospect.model.RaftNode;
 import com.type2labs.undersea.prospect.networking.model.RaftClient;
 import com.type2labs.undersea.prospect.util.GrpcUtil;
-import com.type2labs.undersea.utilities.lang.ThreadUtils;
 import io.grpc.Deadline;
 import io.grpc.Status;
 import io.grpc.StatusRuntimeException;
@@ -45,11 +44,9 @@ public class AcquireStatusTask implements Runnable {
     private static final Logger logger = LogManager.getLogger(AcquireStatusTask.class);
     private final RaftNode raftNode;
     private int noResponses;
-    private int clusterSize;
 
     public AcquireStatusTask(RaftNode raftNode) {
         this.raftNode = raftNode;
-        this.clusterSize = raftNode.parent().clusterClients().size();
     }
 
     @Override
@@ -58,7 +55,7 @@ public class AcquireStatusTask implements Runnable {
             return;
         }
 
-        logger.info(raftNode.parent().name() + ": acquiring cluster status", raftNode.parent());
+        logger.info(raftNode.parent().name() + ": querying cluster clients for their state", raftNode.parent());
 
         Collection<Client> localNodes = raftNode.state().localNodes().values();
 
@@ -99,8 +96,9 @@ public class AcquireStatusTask implements Runnable {
                             logger.info(raftNode.parent().name() + ": deadline exceeded while contacting client: " + raftClient.name()
                                     , raftNode.parent());
                             incrementAndStartVoting();
-                        } else {
-                            logger.error(sre);
+                        } else if (code.equals(Status.Code.UNAVAILABLE)) {
+                            incrementAndStartVoting();
+                            raftNode.state().removeNode(raftClient.peerId());
                         }
                     } else {
                         logger.error(t);
@@ -108,13 +106,13 @@ public class AcquireStatusTask implements Runnable {
                 }
             });
 
-            ThreadUtils.sleep(100);
+//            ThreadUtils.sleep(100);
         }
-
     }
 
     private synchronized void incrementAndStartVoting() {
         noResponses++;
+        int clusterSize = raftNode.state().localNodes().size();
 
         if (noResponses == clusterSize) {
             raftNode.execute(new VoteTask(raftNode));

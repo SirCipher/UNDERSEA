@@ -4,6 +4,7 @@ import com.type2labs.undersea.prospect.impl.LocalAgentGroup;
 import com.type2labs.undersea.utilities.testing.IgnoredOnCi;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.core.LoggerContext;
 import org.apache.logging.log4j.core.config.Configuration;
 import org.apache.logging.log4j.core.config.LoggerConfig;
@@ -14,9 +15,11 @@ import java.util.Arrays;
 import static com.type2labs.undersea.utilities.testing.TestUtil.assertTrueEventually;
 import static org.junit.Assert.assertNotNull;
 
-public class Benchmark {
+public class LeaderElectionBenchmark {
 
-    private final int NO_RUNS = 1;
+    private static final Logger logger = LogManager.getLogger(LeaderElectionBenchmark.class);
+
+    private final int NO_RUNS = 5;
 
     static class Results {
         double min;
@@ -42,7 +45,7 @@ public class Benchmark {
         LoggerContext ctx = (LoggerContext) LogManager.getContext(false);
         Configuration config = ctx.getConfiguration();
         LoggerConfig loggerConfig = config.getLoggerConfig("io.netty");
-        loggerConfig.setLevel(Level.INFO);
+        loggerConfig.setLevel(Level.FATAL);
         ctx.updateLoggers();
     }
 
@@ -65,7 +68,7 @@ public class Benchmark {
         }
     }
 
-    private Results benchmark(int size, int runs) {
+    private Results benchmarkResults(int size, int runs) {
         double[] results = new double[runs];
 
         for (int i = 0; i < runs; i++) {
@@ -75,17 +78,50 @@ public class Benchmark {
                 localAgentGroup.doManualDiscovery();
                 localAgentGroup.start();
 
+                logger.info("Starting counting");
                 long startTime = System.currentTimeMillis();
 
                 while (localAgentGroup.getLeaderNode() == null) ;
-//if(true)while(true);
+
+                logger.info("Finished counting");
+                long finishTime = System.currentTimeMillis();
+
+                results[i] = finishTime - startTime;
+            }
+
+            try {
+                Thread.sleep(5000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return compileResults(results);
+    }
+
+    private double[] benchmarkRaw(int size, int runs) {
+        double[] results = new double[runs];
+
+        for (int i = 0; i < runs; i++) {
+            System.out.println("Run: " + (i + 1));
+
+            try (LocalAgentGroup localAgentGroup = new LocalAgentGroup(size)) {
+                localAgentGroup.doManualDiscovery();
+                localAgentGroup.start();
+
+                logger.info("Starting counting");
+                long startTime = System.currentTimeMillis();
+
+                while (localAgentGroup.getLeaderNode() == null) ;
+
+                logger.info("Finished counting");
                 long finishTime = System.currentTimeMillis();
 
                 results[i] = finishTime - startTime;
             }
         }
 
-        return compileResults(results);
+        return results;
     }
 
     @SuppressWarnings("OptionalGetWithoutIsPresent")
@@ -153,17 +189,20 @@ public class Benchmark {
 
     @Test
     @IgnoredOnCi
-    public void test_1000() {
-        run(1000);
+    public void test_150() {
+        run(150);
     }
 
     private void run(int size) {
-//        warmup();
+        warmup();
 
         System.out.println("Benchmarking with a cluster size of " + size + " over " + NO_RUNS + " runs");
-        Results results = benchmark(size, NO_RUNS);
+//        double[] results = benchmarkRaw(size, NO_RUNS);
+//        System.out.println(Arrays.toString(results));
 
-        System.out.println(results.toString(size, NO_RUNS));
+        Results results = benchmarkResults(size, 3);
+        System.out.println(results.toString(size, 3));
+
         System.out.println("------------------------------------------------------------------------------------");
     }
 

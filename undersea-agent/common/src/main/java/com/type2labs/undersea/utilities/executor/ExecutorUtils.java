@@ -22,9 +22,13 @@
 package com.type2labs.undersea.utilities.executor;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
+import com.type2labs.undersea.common.agent.Agent;
+import org.apache.logging.log4j.Logger;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.SynchronousQueue;
+import java.util.concurrent.TimeUnit;
 
 public class ExecutorUtils {
 
@@ -38,8 +42,15 @@ public class ExecutorUtils {
      * @return a newly created thread pool
      * @throws IllegalArgumentException is the number of threads if <=0
      */
-    public static ExecutorService newExecutor(String nameFormat) {
+    public static ExecutorService newCachedThreadPool(String nameFormat) {
         return Executors.newCachedThreadPool(new ThreadFactoryBuilder().setNameFormat(nameFormat).build());
+    }
+
+    public static ExecutorService newCachedThreadPool(String nameFormat, Agent agent, Logger logger) {
+        return new ThrowableCachedThreadPool(0, Integer.MAX_VALUE,
+                60L, TimeUnit.SECONDS,
+                new SynchronousQueue<>(),
+                new ThreadFactoryBuilder().setNameFormat(nameFormat).build(), logger, agent);
     }
 
 }

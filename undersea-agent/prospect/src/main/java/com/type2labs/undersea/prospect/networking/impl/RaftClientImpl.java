@@ -24,12 +24,12 @@ package com.type2labs.undersea.prospect.networking.impl;
 import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
-import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.type2labs.undersea.common.cluster.PeerId;
 import com.type2labs.undersea.prospect.RaftProtocolServiceGrpc;
 import com.type2labs.undersea.prospect.RaftProtos;
 import com.type2labs.undersea.prospect.model.RaftNode;
 import com.type2labs.undersea.prospect.networking.model.RaftClient;
+import com.type2labs.undersea.utilities.executor.ExecutorUtils;
 import io.grpc.Deadline;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
@@ -40,7 +40,6 @@ import org.apache.logging.log4j.Logger;
 import java.net.InetSocketAddress;
 import java.util.Objects;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 public class RaftClientImpl implements RaftClient {
@@ -62,7 +61,7 @@ public class RaftClientImpl implements RaftClient {
         this.channel =
                 ManagedChannelBuilder.forAddress(socketAddress.getHostString(), socketAddress.getPort()).usePlaintext().build();
         this.futureStub = RaftProtocolServiceGrpc.newFutureStub(channel);
-        this.clientExecutor = Executors.newCachedThreadPool(new ThreadFactoryBuilder().setNameFormat(consensusAlgorithm.parent().name() + "-rpc-client-%d").build());
+        this.clientExecutor = ExecutorUtils.newCachedThreadPool(consensusAlgorithm.parent().name() + "-rpc-client-%d", consensusAlgorithm.parent(), logger);
     }
 
     public RaftClientImpl(RaftNode consensusAlgorithm, InetSocketAddress socketAddress, PeerId peerId, boolean isSelf) {
@@ -87,12 +86,11 @@ public class RaftClientImpl implements RaftClient {
 
     @Override
     public void shutdown() {
-        clientExecutor.shutdown();
+        clientExecutor.shutdownNow();
 
         try {
-            channel.shutdown().awaitTermination(10, TimeUnit.SECONDS);
+            channel.shutdownNow().awaitTermination(20, TimeUnit.SECONDS);
         } catch (InterruptedException e) {
-            logger.error("Interrupted exception during gRPC channel close", e);
             Thread.currentThread().interrupt();
         }
     }

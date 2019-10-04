@@ -63,7 +63,7 @@ public class LocalAgentGroup implements Closeable {
 
     public LocalAgentGroup(int size, Set<Class<? extends AgentService>> services, boolean withVisualiser,
                            boolean withCallbacks) {
-        executorService = ExecutorUtils.newExecutor("%d");
+        executorService = Executors.newFixedThreadPool(size);
 
         raftNodes = new ArrayList<>(size);
         clients = new RaftClientImpl[size];
@@ -185,8 +185,6 @@ public class LocalAgentGroup implements Closeable {
 
         if (count == 1) {
             return match;
-        } else if (count > 1) {
-            throw new RuntimeException("More than one leader elected");
         } else {
             return null;
         }

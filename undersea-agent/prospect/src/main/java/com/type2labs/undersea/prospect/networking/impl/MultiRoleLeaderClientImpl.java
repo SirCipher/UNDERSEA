@@ -62,7 +62,7 @@ public class MultiRoleLeaderClientImpl implements MultiRoleLeaderClient {
         this.futureStub = MultiRaftProtocolServiceGrpc.newFutureStub(channel);
         this.blockingStub = MultiRaftProtocolServiceGrpc.newBlockingStub(channel);
 
-        int executorThreads = ((RaftClusterConfig) consensusAlgorithm.config()).executorThreads();
+        int executorThreads = consensusAlgorithm.config().executorThreads();
         this.clientExecutor = Executors.newFixedThreadPool(executorThreads,
                 new ThreadFactoryBuilder().setNameFormat(consensusAlgorithm.parent().name() + "-rpc-client-%d").build());
     }
@@ -84,11 +84,10 @@ public class MultiRoleLeaderClientImpl implements MultiRoleLeaderClient {
 
     @Override
     public void shutdown() {
-        channel.shutdownNow();
-        clientExecutor.shutdown();
+        clientExecutor.shutdownNow();
 
         try {
-            channel.awaitTermination(3000, TimeUnit.MILLISECONDS);
+            channel.shutdownNow().awaitTermination(5, TimeUnit.SECONDS);
         } catch (InterruptedException e) {
             e.printStackTrace();
             logger.error(consensusAlgorithm.parent().name() + ": failed to shutdown channel successfully", e);

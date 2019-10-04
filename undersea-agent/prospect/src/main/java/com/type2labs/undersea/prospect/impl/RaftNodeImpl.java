@@ -78,8 +78,8 @@ public class RaftNodeImpl implements RaftNode {
 
     private static final Logger logger = LogManager.getLogger(RaftNodeImpl.class);
 
-    // TODO: 20/08/2019 Migrate to 4 threads
     private final ScheduledThrowableExecutor singleThreadScheduledExecutor;
+    private final ScheduledThrowableExecutor serviceExecutor;
     private final ListeningExecutorService listeningExecutorService;
     private final RaftClusterConfig raftClusterConfig;
     private final InetSocketAddress address;
@@ -109,6 +109,7 @@ public class RaftNodeImpl implements RaftNode {
         }
 
         this.singleThreadScheduledExecutor = ScheduledThrowableExecutor.newSingleThreadExecutor(parent(), logger);
+        this.serviceExecutor = ScheduledThrowableExecutor.newSingleThreadExecutor(parent(), logger);
         this.listeningExecutorService =
                 MoreExecutors.listeningDecorator(ThrowableExecutor.newSingleThreadExecutor(parent(), logger));
         this.multiRoleState = new MultiRoleStateImpl(this);
@@ -250,6 +251,7 @@ public class RaftNodeImpl implements RaftNode {
         raftState.setCurrentTerm(term);
         logger.info(parent().name() + " is now a follower", agent);
 
+        scheduleVerifyLeaderTask();
         getMonitor().update();
     }
 
@@ -351,6 +353,7 @@ public class RaftNodeImpl implements RaftNode {
 
     @Override
     public void run() {
+        server.start();
         scheduleVerifyLeaderTask();
     }
 
@@ -418,7 +421,14 @@ public class RaftNodeImpl implements RaftNode {
         follower.appendEntry(request, new FutureCallback<RaftProtos.AppendEntryResponse>() {
             @Override
             public void onSuccess(RaftProtos.@Nullable AppendEntryResponse result) {
-//                logger.info(agent.name() + ": successfully sent request. Response: {" + result + "}", agent);
+                if(result==null){
+                    return;
+                }
+
+                // This can happen if we become a leader and the client's verify leader task just missed out heartbeat
+                if (result.getTerm() > state().getCurrentTerm()) {
+                    execute(new AcquireStatusTask(RaftNodeImpl.this));
+                }
             }
 
             @Override
@@ -497,8 +507,6 @@ public class RaftNodeImpl implements RaftNode {
         this.selfRaftClientImpl = new RaftClientImpl(agent.serviceManager().getService(RaftNode.class),
                 new InetSocketAddress(0), agent.peerId(), true);
 
-        server.start();
-
         registerCallback(new ServiceCallback(LifecycleEvent.ELECTED_LEADER, () -> getMonitor().update()));
 
         UnderseaLogger.info(logger, agent, "Started node. Peer ID: " + agent.peerId());
@@ -507,7 +515,9 @@ public class RaftNodeImpl implements RaftNode {
     }
 
     private void scheduleVerifyLeaderTask() {
-        schedule(new VerifyLeaderTask(), 5000);
+        if (role != ConsensusAlgorithmRole.LEADER) {
+            schedule(new VerifyLeaderTask(), 500);
+        }
     }
 
     @Override
@@ -547,8 +557,6 @@ public class RaftNodeImpl implements RaftNode {
 
         @Override
         protected void innerRun() {
-            logger.info(agent.name() + ": running heartbeat task");
-
             if (lastHeartbeatTime < System.currentTimeMillis() - RaftClusterConfig.HEARTBEAT_PERIOD) {
                 for (Client follower : state().localNodes().values()) {
                     sendAppendRequest((RaftClient) follower);
