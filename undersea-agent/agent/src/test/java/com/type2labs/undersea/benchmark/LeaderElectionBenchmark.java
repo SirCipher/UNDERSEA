@@ -181,13 +181,13 @@ public class LeaderElectionBenchmark {
         run(50);
     }
 
-    @Test
+//    @Test
     @IgnoredOnCi
     public void test_100() {
         run(100);
     }
 
-    @Test
+//    @Test
     @IgnoredOnCi
     public void test_150() {
         run(150);

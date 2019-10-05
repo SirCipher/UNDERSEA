@@ -76,7 +76,6 @@ public class RaftProtocolService extends RaftProtocolServiceGrpc.RaftProtocolSer
             RaftProtos.AcquireStatusResponse.Builder builder = RaftProtos.AcquireStatusResponse.newBuilder();
             builder.setClient(client);
 
-
             // TODO: 03/10/2019 Really not sure why this is returning null sometimes...
             if (subsystemMonitor.parent() == null) {
                 subsystemMonitor.initialise(raftNode.parent());

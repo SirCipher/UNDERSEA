@@ -68,7 +68,6 @@ public class AgentInitialiserImpl implements AgentInitialiser {
         agents.forEach((key, value) -> {
             ServiceManager serviceManager = new ServiceManager();
 
-            serviceManager.registerService(new BlockchainNetworkImpl());
             serviceManager.registerService(new LogServiceImpl());
             serviceManager.registerService(new MoosMissionManagerImpl(new VehicleRoutingOptimiser()));
 
