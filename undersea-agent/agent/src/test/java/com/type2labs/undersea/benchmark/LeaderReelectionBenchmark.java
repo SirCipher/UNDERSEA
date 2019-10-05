@@ -79,7 +79,6 @@ public class LeaderReelectionBenchmark {
                 localAgentGroup.doManualDiscovery();
                 localAgentGroup.start();
 
-                logger.info("Starting counting");
 
 //                if(true) while (true) ;
                 while (localAgentGroup.getLeaderNode() == null) ;
@@ -87,6 +86,8 @@ public class LeaderReelectionBenchmark {
                 raftNode.parent().shutdown();
 
                 localAgentGroup.getRaftNodes().remove(localAgentGroup.getLeaderNode());
+
+                logger.info("Starting counting");
                 long startTime = System.currentTimeMillis();
 
                 while (localAgentGroup.getLeaderNode() == null) ;
@@ -189,13 +190,13 @@ public class LeaderReelectionBenchmark {
         run(50);
     }
 
-    @Test
+//    @Test
     @IgnoredOnCi
     public void test_100() {
         run(100);
     }
 
-    @Test
+//    @Test
     @IgnoredOnCi
     public void test_150() {
         run(150);
