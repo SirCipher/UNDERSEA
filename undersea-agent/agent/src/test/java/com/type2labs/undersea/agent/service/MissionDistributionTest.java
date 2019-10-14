@@ -22,14 +22,18 @@
 package com.type2labs.undersea.agent.service;
 
 import com.google.common.collect.Sets;
+import com.google.common.graph.Network;
+import com.type2labs.undersea.agent.impl.MoosConnector;
 import com.type2labs.undersea.common.agent.Agent;
 import com.type2labs.undersea.common.monitor.impl.SubsystemMonitorSpoofer;
+import com.type2labs.undersea.common.service.hardware.NetworkInterface;
 import com.type2labs.undersea.missionplanner.manager.MoosMissionManagerImpl;
 import com.type2labs.undersea.missionplanner.planner.vrp.VehicleRoutingOptimiser;
 import com.type2labs.undersea.prospect.impl.LocalAgentGroup;
 import com.type2labs.undersea.prospect.model.RaftNode;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.core.LoggerContext;
 import org.apache.logging.log4j.core.config.Configuration;
 import org.apache.logging.log4j.core.config.LoggerConfig;
@@ -39,6 +43,8 @@ import static com.type2labs.undersea.utilities.testing.TestUtil.assertTrueEventu
 import static junit.framework.TestCase.assertNotNull;
 
 public class MissionDistributionTest {
+
+    private static final Logger logger = LogManager.getLogger(MissionDistributionTest.class);
 
     static {
         LoggerContext ctx = (LoggerContext) LogManager.getContext(false);
@@ -50,7 +56,7 @@ public class MissionDistributionTest {
 
     @Test
     public void test() throws InterruptedException {
-        try (LocalAgentGroup localAgentGroup = new LocalAgentGroup(5, Sets.newHashSet(SubsystemMonitorSpoofer.class),
+        try (LocalAgentGroup localAgentGroup = new LocalAgentGroup(1, Sets.newHashSet(MoosConnector.class),
                 false, true)) {
             for (RaftNode raftNode : localAgentGroup.getRaftNodes()) {
                 Agent agent = raftNode.parent();
@@ -62,7 +68,7 @@ public class MissionDistributionTest {
 
             assertTrueEventually(() -> assertNotNull(localAgentGroup.getLeaderNode()), 120);
 
-            Thread.sleep(5000);
+            Thread.sleep(20000);
         }
     }
 }

@@ -33,7 +33,6 @@ import com.type2labs.undersea.common.cost.CostConfiguration;
 import com.type2labs.undersea.common.logger.LogServiceImpl;
 import com.type2labs.undersea.common.missions.planner.impl.MissionParametersImpl;
 import com.type2labs.undersea.common.missions.planner.impl.NoMissionManager;
-import com.type2labs.undersea.common.missions.planner.model.MissionParameters;
 import com.type2labs.undersea.common.monitor.impl.SubsystemMonitorSpoofer;
 import com.type2labs.undersea.common.monitor.impl.VisualiserClientImpl;
 import com.type2labs.undersea.common.monitor.model.SubsystemMonitor;
@@ -43,12 +42,12 @@ import com.type2labs.undersea.common.service.ServiceManager;
 import com.type2labs.undersea.prospect.model.RaftNode;
 import com.type2labs.undersea.prospect.networking.impl.RaftClientImpl;
 import com.type2labs.undersea.utilities.Utility;
-import com.type2labs.undersea.utilities.executor.ExecutorUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.Closeable;
 import java.net.InetSocketAddress;
+import java.net.NetworkInterface;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -115,6 +114,9 @@ public class LocalAgentGroup implements Closeable {
                 client.initialise(agent);
 
                 serviceManager.registerService(subsystemMonitor);
+            } else {
+                serviceManager.registerService(new SubsystemMonitorSpoofer(),
+                        ServiceManager.ServiceExecutionPriority.HIGH);
             }
 
             raftNode.initialise(agent);
@@ -205,11 +207,17 @@ public class LocalAgentGroup implements Closeable {
         for (RaftNodeImpl node : raftNodes) {
             ServiceManager serviceManager = node.parent().serviceManager();
 
+            if (serviceManager.getService(SubsystemMonitor.class) != null) {
+                serviceManager.startService(SubsystemMonitor.class, false);
+            }
+
             for (AgentService agentService : serviceManager.getServices()) {
-                if (RaftNode.class.isAssignableFrom(agentService.getClass())) {
+                if (RaftNode.class.isAssignableFrom(agentService.getClass())
+                        || SubsystemMonitor.class.isAssignableFrom(agentService.getClass())|| NetworkInterface.class.isAssignableFrom(agentService.getClass())) {
+
                     continue;
                 } else {
-                    executorService.submit(() -> serviceManager.startService(agentService.getClass()));
+                    executorService.submit(() -> serviceManager.startService(agentService.getClass(), false));
                 }
             }
         }

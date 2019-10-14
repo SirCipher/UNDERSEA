@@ -243,7 +243,6 @@ public class RaftNodeImpl implements RaftNode {
                     logger)));
         }
 
-
         state().setLeader(selfRaftClientImpl);
         scheduleHeartbeat();
     }
@@ -329,6 +328,8 @@ public class RaftNodeImpl implements RaftNode {
     }
 
     public void distributeMission(GeneratedMission generatedMission) {
+        logger.info(agent.name() + ": distributing mission");
+
         ObjectMapper mapper = new ObjectMapper();
 
         String jsonMission;
@@ -447,7 +448,7 @@ public class RaftNodeImpl implements RaftNode {
         follower.appendEntry(request, new FutureCallback<RaftProtos.AppendEntryResponse>() {
             @Override
             public void onSuccess(RaftProtos.@Nullable AppendEntryResponse result) {
-                if(result==null){
+                if (result == null) {
                     return;
                 }
 
@@ -559,7 +560,7 @@ public class RaftNodeImpl implements RaftNode {
 
         @Override
         public void innerRun() {
-            if(role==ConsensusAlgorithmRole.LEADER){
+            if (role == ConsensusAlgorithmRole.LEADER) {
                 return;
             }
 

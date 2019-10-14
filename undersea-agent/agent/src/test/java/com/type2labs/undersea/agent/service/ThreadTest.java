@@ -28,12 +28,15 @@ import com.google.common.util.concurrent.MoreExecutors;
 import com.type2labs.undersea.common.agent.Agent;
 import com.type2labs.undersea.common.agent.AgentFactory;
 import com.type2labs.undersea.common.consensus.NoConsensusAlgorithm;
+import com.type2labs.undersea.common.consensus.RaftClusterConfig;
 import com.type2labs.undersea.common.logger.LogServiceImpl;
+import com.type2labs.undersea.common.monitor.impl.SubsystemMonitorSpoofer;
 import com.type2labs.undersea.common.service.ServiceManager;
 import com.type2labs.undersea.common.service.transaction.LifecycleEvent;
 import com.type2labs.undersea.common.service.transaction.Transaction;
 import com.type2labs.undersea.missionplanner.manager.MoosMissionManagerImpl;
 import com.type2labs.undersea.missionplanner.planner.vrp.VehicleRoutingOptimiser;
+import com.type2labs.undersea.prospect.impl.RaftNodeImpl;
 import com.type2labs.undersea.utilities.executor.ThrowableExecutor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -53,7 +56,8 @@ public class ThreadTest {
         ServiceManager serviceManager = agent.serviceManager();
         LogServiceImpl logService = new LogServiceImpl();
 
-        serviceManager.registerService(new NoConsensusAlgorithm());
+        serviceManager.registerService(new RaftNodeImpl(new RaftClusterConfig()));
+        serviceManager.registerService(new SubsystemMonitorSpoofer());
         serviceManager.registerService(new MoosMissionManagerImpl(new VehicleRoutingOptimiser()));
         serviceManager.registerService(logService);
         serviceManager.startServices();

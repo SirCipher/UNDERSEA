@@ -20,7 +20,7 @@ Behavior = BHV_Waypoint
   capture_radius = 0.1
   condition = MODE == SURVEYING
   endflag   = RETURN = true
-  updates   = WAYPOINT_$(VNAME)_UPDATES
+  updates   = WAYPOINT_delta_UPDATES
   perpetual = false
   speed = 2.0
   //points = $(POINTS)
@@ -41,3 +41,4 @@ Behavior = BHV_Waypoint
    nm_radius = 8.0
        points = 0,-20
 }
+

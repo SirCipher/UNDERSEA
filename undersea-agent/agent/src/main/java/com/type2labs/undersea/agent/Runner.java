@@ -46,9 +46,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Map;
 import java.util.Properties;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.stream.Collectors;
 
 /**
  * Entry point of UNDERSEA application
@@ -136,64 +133,48 @@ public class Runner extends AbstractRunner {
         boolean localNodeDiscovery = Boolean.parseBoolean(Utility.getProperty(properties, "config.localnodediscovery"));
 
         if (localNodeDiscovery) {
-            ExecutorService executorService = Executors.newFixedThreadPool(getAgents().size());
-            executorService.submit(() -> {
-                for (Agent agentA : super.getAgents()) {
-                    while (!agentA.serviceManager().isHealthy()) {
-                        sleep();
+            for (Agent agentA : super.getAgents()) {
+                while (!agentA.serviceManager().isHealthy()) {
+                    Thread.sleep(500);
+                }
+
+                RaftNodeImpl raftNodeA = agentA.serviceManager().startService(RaftNodeImpl.class, true);
+
+                if (raftNodeA.multiRoleState().isLeader()) {
+                    continue;
+                }
+
+                raftNodeA.multiRoleState().setLeader(shoresideClient);
+
+                if (agentA.state().getState() == AgentState.State.BACKUP) {
+                    shoresideRaftNode.state().discoverNode(raftNodeA);
+                }
+
+                for (Agent agentB : super.getAgents()) {
+                    while (!agentB.serviceManager().isHealthy()) {
+                        Thread.sleep(500);
                     }
 
-                    RaftNodeImpl raftNodeA = agentA.serviceManager().getService(RaftNodeImpl.class);
+                    RaftNodeImpl raftNodeB = agentB.serviceManager().startService(RaftNodeImpl.class, true);
 
-                    if (raftNodeA.multiRoleState().isLeader()) {
+                    if (agentB.state().getState() != AgentState.State.BACKUP) {
+                        shoresideRaftNode.multiRoleState().remotePeers().put(agentB.peerId(), raftNodeB.self());
+                    }
+
+                    if (raftNodeB.multiRoleState().isLeader()) {
                         continue;
                     }
 
-                    agentA.serviceManager().startService(RaftNodeImpl.class);
-
-                    raftNodeA.multiRoleState().setLeader(shoresideClient);
-
-                    if (agentA.state().getState() == AgentState.State.BACKUP) {
-                        shoresideRaftNode.state().discoverNode(raftNodeA);
-
-                        for (Agent agentB :
-                                super.getAgents().stream().filter(a -> a.state().getState() == AgentState.State.BACKUP).collect(Collectors.toList())) {
-                            while (!agentB.serviceManager().isHealthy()) {
-                                sleep();
-                            }
-
-                            RaftNodeImpl raftNodeB = agentB.serviceManager().getService(RaftNodeImpl.class);
-                            if (raftNodeB.multiRoleState().isLeader()) {
-                                continue;
-                            }
-
-                            if (raftNodeA != raftNodeB) {
-                                raftNodeA.state().discoverNode(raftNodeB);
-                            }
-                        }
-                    } else {
-                        for (Agent agentB :
-                                super.getAgents().stream().filter(a -> a.state().getState() != AgentState.State.BACKUP).collect(Collectors.toList())) {
-                            while (!agentB.serviceManager().isHealthy()) {
-                                sleep();
-                            }
-
-                            RaftNodeImpl raftNodeB = agentB.serviceManager().getService(RaftNodeImpl.class);
-                            shoresideRaftNode.multiRoleState().remotePeers().put(agentB.peerId(), raftNodeB.self());
-
-                            if (raftNodeB.multiRoleState().isLeader()) {
-                                continue;
-                            }
-
-                            if (raftNodeA != raftNodeB) {
-                                raftNodeA.state().discoverNode(raftNodeB);
-                            }
-                        }
+                    if (raftNodeA != raftNodeB) {
+                        raftNodeA.state().discoverNode(raftNodeB);
                     }
                 }
-            });
+            }
+
+            Thread.sleep(1000);
         }
     }
+
 
     @Override
     protected void generateFiles() {

@@ -350,7 +350,7 @@ public class ServiceManager {
      */
     public synchronized void registerService(AgentService service) {
         if (services.containsKey(service.getClass())) {
-            throw new IllegalArgumentException("Service already exists");
+            throw new IllegalArgumentException("Service is already registered");
         }
 
         registerService(service, ServiceExecutionPriority.MEDIUM);
@@ -497,11 +497,18 @@ public class ServiceManager {
      * Starts the given {@link AgentService}
      *
      * @param service to start
+     * @return
      */
-    public synchronized void startService(Class<? extends AgentService> service) {
+    public synchronized <T extends AgentService> T startService(Class<? extends AgentService> service, boolean force) {
         initialise();
 
         AgentService agentService = getService(service, true);
+
+        ServiceState state = serviceStates.get(service);
+
+        if (state == ServiceState.RUNNING && !force) {
+            return (T) agentService;
+        }
 
         agentService.initialise(agent);
 
@@ -515,6 +522,8 @@ public class ServiceManager {
         }
 
         scheduledFutures.put(service, future);
+
+        return (T) agentService;
     }
 
     /**
@@ -560,7 +569,7 @@ public class ServiceManager {
 
         for (Map.Entry<Class<? extends AgentService>, Pair<AgentService, ServiceExecutionPriority>> e :
                 prioritySorted()) {
-            startService(e.getKey());
+            startService(e.getKey(), false);
         }
 
         starting = false;
@@ -582,7 +591,7 @@ public class ServiceManager {
             Class<? extends AgentService> agentService = e.getKey();
 
             if (!excludedService.isAssignableFrom(agentService)) {
-                startService(e.getKey());
+                startService(e.getKey(), false);
             } else {
                 transitionService(agentService, ServiceState.RUNNING);
             }

@@ -37,6 +37,7 @@ import com.type2labs.undersea.common.missions.task.model.TaskStatus;
 import com.type2labs.undersea.common.monitor.model.SubsystemMonitor;
 import com.type2labs.undersea.common.service.AgentService;
 import com.type2labs.undersea.common.service.ServiceManager;
+import com.type2labs.undersea.common.service.hardware.NetworkInterface;
 import com.type2labs.undersea.common.service.transaction.LifecycleEvent;
 import com.type2labs.undersea.common.service.transaction.Transaction;
 import com.type2labs.undersea.common.service.transaction.TransactionData;
@@ -74,7 +75,8 @@ public class MoosMissionManagerImpl implements MissionManager {
 
     public MoosMissionManagerImpl(MissionPlanner missionPlanner) {
         this.missionPlanner = missionPlanner;
-        this.taskExecutor = MoreExecutors.listeningDecorator(ThrowableExecutor.newSingleThreadExecutor(parent(), logger));
+        this.taskExecutor = MoreExecutors.listeningDecorator(ThrowableExecutor.newSingleThreadExecutor(parent(),
+                logger));
     }
 
     private void runTask(Task task) {
@@ -265,16 +267,14 @@ public class MoosMissionManagerImpl implements MissionManager {
         LifecycleEvent statusCode = (LifecycleEvent) transaction.getStatusCode();
 
         if (statusCode == LifecycleEvent.ELECTED_LEADER) {
-            return transaction.getExecutorService().submit(() -> {
-                try {
-                    GeneratedMission generatedMission = missionPlanner.generate();
-                    missionPlanner.print(generatedMission);
+            try {
+                GeneratedMission generatedMission = missionPlanner.generate();
+                missionPlanner.print(generatedMission);
 
-                    return generatedMission;
-                } catch (PlannerException e) {
-                    throw new RuntimeException(e);
-                }
-            });
+                return generatedMission;
+            } catch (PlannerException e) {
+                throw new RuntimeException(e);
+            }
         } else if (statusCode == LifecycleEvent.APPEND_REQUEST) {
             handleAppendTransaction(transaction);
         }
@@ -291,7 +291,7 @@ public class MoosMissionManagerImpl implements MissionManager {
 
         if (!StringUtils.isEmpty(uuid)) {
             // Our mission hasn't been assigned yet
-            if(globalMission==null){
+            if (globalMission == null) {
                 return;
             }
 
@@ -320,7 +320,7 @@ public class MoosMissionManagerImpl implements MissionManager {
 
     @Override
     public Collection<Class<? extends AgentService>> requiredServices() {
-        return Arrays.asList(ConsensusAlgorithm.class);
+        return Arrays.asList(ConsensusAlgorithm.class, NetworkInterface.class);
     }
 
 }
