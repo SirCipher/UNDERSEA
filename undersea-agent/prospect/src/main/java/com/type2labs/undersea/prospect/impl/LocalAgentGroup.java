@@ -24,13 +24,16 @@ package com.type2labs.undersea.prospect.impl;
 import com.google.common.collect.Sets;
 import com.type2labs.undersea.common.agent.Agent;
 import com.type2labs.undersea.common.agent.AgentFactory;
+import com.type2labs.undersea.common.agent.AgentState;
 import com.type2labs.undersea.common.cluster.Client;
 import com.type2labs.undersea.common.config.RuntimeConfig;
 import com.type2labs.undersea.common.consensus.ConsensusAlgorithmRole;
 import com.type2labs.undersea.common.consensus.RaftClusterConfig;
 import com.type2labs.undersea.common.cost.CostConfiguration;
 import com.type2labs.undersea.common.logger.LogServiceImpl;
+import com.type2labs.undersea.common.missions.planner.impl.MissionParametersImpl;
 import com.type2labs.undersea.common.missions.planner.impl.NoMissionManager;
+import com.type2labs.undersea.common.missions.planner.model.MissionParameters;
 import com.type2labs.undersea.common.monitor.impl.SubsystemMonitorSpoofer;
 import com.type2labs.undersea.common.monitor.impl.VisualiserClientImpl;
 import com.type2labs.undersea.common.monitor.model.SubsystemMonitor;
@@ -39,6 +42,7 @@ import com.type2labs.undersea.common.service.AgentService;
 import com.type2labs.undersea.common.service.ServiceManager;
 import com.type2labs.undersea.prospect.model.RaftNode;
 import com.type2labs.undersea.prospect.networking.impl.RaftClientImpl;
+import com.type2labs.undersea.utilities.Utility;
 import com.type2labs.undersea.utilities.executor.ExecutorUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -81,7 +85,7 @@ public class LocalAgentGroup implements Closeable {
             ServiceManager serviceManager = new ServiceManager();
 
             Agent agent = agentFactory.createWith(config.getRuntimeConfig(), name, serviceManager);
-
+            agent.state().transitionTo(AgentState.State.ACTIVE);
             serviceManager.registerService(raftNode);
 
             for (Class<? extends AgentService> clazz : services) {
@@ -98,6 +102,9 @@ public class LocalAgentGroup implements Closeable {
             serviceManager.registerService(new LogServiceImpl());
 
             if (withCallbacks) {
+                double[][] area = Utility.stringTo2dDoubleArray("0 0; 150 0; 150 -140; 0 -140;");
+
+                config.getRuntimeConfig().missionParameters(new MissionParametersImpl(0, area, 40));
                 raftNode.registerCallback(DefaultServiceCallbacks.defaultMissionCallback(agent, raftNode, config));
             }
 

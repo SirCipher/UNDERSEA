@@ -23,8 +23,8 @@ package com.type2labs.undersea.common.runner;
 
 import com.type2labs.undersea.common.agent.Agent;
 import com.type2labs.undersea.common.agent.AgentMetaData;
+import com.type2labs.undersea.common.consensus.ConsensusAlgorithm;
 import com.type2labs.undersea.utilities.Utility;
-import com.type2labs.undersea.utilities.executor.ExecutorUtils;
 
 import java.io.FileNotFoundException;
 import java.util.List;
@@ -87,7 +87,7 @@ public abstract class AbstractRunner {
 
         ExecutorService executorService = Executors.newFixedThreadPool(agents.size());
 
-        agents.stream().filter(a -> !(boolean) a.metadata().getProperty(AgentMetaData.PropertyKey.IS_MASTER_NODE)).forEach(a -> executorService.submit(() -> a.serviceManager().startServices()));
+        agents.stream().filter(a -> !(boolean) a.metadata().getProperty(AgentMetaData.PropertyKey.IS_MASTER_NODE)).forEach(a -> executorService.submit(() -> a.serviceManager().startServices(ConsensusAlgorithm.class)));
     }
 
     private void _setup() {

@@ -48,9 +48,9 @@ public class RaftState {
     private ClusterState preVoteClusterState;
     private Client leader;
 
-    public RaftState(RaftNode agent) {
-        this.raftNode = agent;
-        this.localNodes = agent.parent().clusterClients();
+    public RaftState(RaftNode raftNode) {
+        this.raftNode = raftNode;
+        this.localNodes = raftNode.parent().clusterClients();
     }
 
     public ClusterState getPreVoteClusterState() {

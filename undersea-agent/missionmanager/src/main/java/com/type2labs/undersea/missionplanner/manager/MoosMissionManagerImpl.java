@@ -290,6 +290,11 @@ public class MoosMissionManagerImpl implements MissionManager {
         String uuid = (String) uuidTransactionData.getData();
 
         if (!StringUtils.isEmpty(uuid)) {
+            // Our mission hasn't been assigned yet
+            if(globalMission==null){
+                return;
+            }
+
             List<Task> subTasks = globalMission.allTasks();
 
             for (Task t : subTasks) {

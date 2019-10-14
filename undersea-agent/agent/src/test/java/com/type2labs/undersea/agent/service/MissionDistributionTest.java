@@ -21,39 +21,48 @@
 
 package com.type2labs.undersea.agent.service;
 
-import com.type2labs.undersea.common.cluster.ClusterState;
+import com.google.common.collect.Sets;
+import com.type2labs.undersea.common.agent.Agent;
+import com.type2labs.undersea.common.monitor.impl.SubsystemMonitorSpoofer;
+import com.type2labs.undersea.missionplanner.manager.MoosMissionManagerImpl;
+import com.type2labs.undersea.missionplanner.planner.vrp.VehicleRoutingOptimiser;
 import com.type2labs.undersea.prospect.impl.LocalAgentGroup;
-import com.type2labs.undersea.prospect.impl.RaftNodeImpl;
+import com.type2labs.undersea.prospect.model.RaftNode;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.core.LoggerContext;
+import org.apache.logging.log4j.core.config.Configuration;
+import org.apache.logging.log4j.core.config.LoggerConfig;
+import org.junit.Test;
 
 import static com.type2labs.undersea.utilities.testing.TestUtil.assertTrueEventually;
+import static junit.framework.TestCase.assertNotNull;
 
 public class MissionDistributionTest {
 
-    //    @Test
-    public void test() {
+    static {
+        LoggerContext ctx = (LoggerContext) LogManager.getContext(false);
+        Configuration config = ctx.getConfiguration();
+        LoggerConfig loggerConfig = config.getLoggerConfig("io.netty");
+        loggerConfig.setLevel(Level.INFO);
+        ctx.updateLoggers();
+    }
 
-        int count = 5;
-//        Set<Class<? extends AgentService>> services = Sets.newHashSet(
-//                new MoosMissionManagerImpl(new VehicleRoutingOptimiser()),
-//                new NoNetworkInterfaceImpl()
-//        );
+    @Test
+    public void test() throws InterruptedException {
+        try (LocalAgentGroup localAgentGroup = new LocalAgentGroup(5, Sets.newHashSet(SubsystemMonitorSpoofer.class),
+                false, true)) {
+            for (RaftNode raftNode : localAgentGroup.getRaftNodes()) {
+                Agent agent = raftNode.parent();
+                agent.serviceManager().registerService(new MoosMissionManagerImpl(new VehicleRoutingOptimiser()));
+            }
 
-        try (LocalAgentGroup localAgentGroup = new LocalAgentGroup(count, null, true, false)) {
             localAgentGroup.doManualDiscovery();
             localAgentGroup.start();
 
-            assertTrueEventually(() -> {
-                for (RaftNodeImpl node : localAgentGroup.getRaftNodes()) {
-                    ClusterState clusterState = node.state().clusterState();
-// TODO: 02/09/2019
-//                    assertNotNull(clusterState);
-//                    assertEquals(count, clusterState.getMembers().size());
-                }
-            }, 5);
+            assertTrueEventually(() -> assertNotNull(localAgentGroup.getLeaderNode()), 120);
 
-            Thread.sleep(30000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+            Thread.sleep(5000);
         }
     }
 }

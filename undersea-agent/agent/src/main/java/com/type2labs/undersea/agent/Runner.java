@@ -46,6 +46,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Map;
 import java.util.Properties;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
 /**
@@ -96,6 +98,14 @@ public class Runner extends AbstractRunner {
         runner.onParsed(args[0]);
     }
 
+    private void sleep() {
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
     @SuppressWarnings("DuplicatedCode")
     public void onParsed(String args) throws InterruptedException {
         Agent shoreside = null;
@@ -126,59 +136,62 @@ public class Runner extends AbstractRunner {
         boolean localNodeDiscovery = Boolean.parseBoolean(Utility.getProperty(properties, "config.localnodediscovery"));
 
         if (localNodeDiscovery) {
-            for (Agent agentA : super.getAgents()) {
-                while (!agentA.serviceManager().isHealthy()) {
-                    Thread.sleep(500);
-                }
+            ExecutorService executorService = Executors.newFixedThreadPool(getAgents().size());
+            executorService.submit(() -> {
+                for (Agent agentA : super.getAgents()) {
+                    while (!agentA.serviceManager().isHealthy()) {
+                        sleep();
+                    }
 
-                RaftNodeImpl raftNodeA = agentA.serviceManager().getService(RaftNodeImpl.class);
+                    RaftNodeImpl raftNodeA = agentA.serviceManager().getService(RaftNodeImpl.class);
 
-                if (raftNodeA.multiRoleState().isLeader()) {
-                    continue;
-                }
+                    if (raftNodeA.multiRoleState().isLeader()) {
+                        continue;
+                    }
 
-                raftNodeA.multiRoleState().setLeader(shoresideClient);
+                    agentA.serviceManager().startService(RaftNodeImpl.class);
 
-                if (agentA.state().getState() == AgentState.State.BACKUP) {
-                    shoresideRaftNode.state().discoverNode(raftNodeA);
+                    raftNodeA.multiRoleState().setLeader(shoresideClient);
 
-                    for (Agent agentB :
-                            super.getAgents().stream().filter(a -> a.state().getState() == AgentState.State.BACKUP).collect(Collectors.toList())) {
-                        while (!agentB.serviceManager().isHealthy()) {
-                            Thread.sleep(500);
+                    if (agentA.state().getState() == AgentState.State.BACKUP) {
+                        shoresideRaftNode.state().discoverNode(raftNodeA);
+
+                        for (Agent agentB :
+                                super.getAgents().stream().filter(a -> a.state().getState() == AgentState.State.BACKUP).collect(Collectors.toList())) {
+                            while (!agentB.serviceManager().isHealthy()) {
+                                sleep();
+                            }
+
+                            RaftNodeImpl raftNodeB = agentB.serviceManager().getService(RaftNodeImpl.class);
+                            if (raftNodeB.multiRoleState().isLeader()) {
+                                continue;
+                            }
+
+                            if (raftNodeA != raftNodeB) {
+                                raftNodeA.state().discoverNode(raftNodeB);
+                            }
                         }
+                    } else {
+                        for (Agent agentB :
+                                super.getAgents().stream().filter(a -> a.state().getState() != AgentState.State.BACKUP).collect(Collectors.toList())) {
+                            while (!agentB.serviceManager().isHealthy()) {
+                                sleep();
+                            }
 
-                        RaftNodeImpl raftNodeB = agentB.serviceManager().getService(RaftNodeImpl.class);
-                        if (raftNodeB.multiRoleState().isLeader()) {
-                            continue;
-                        }
+                            RaftNodeImpl raftNodeB = agentB.serviceManager().getService(RaftNodeImpl.class);
+                            shoresideRaftNode.multiRoleState().remotePeers().put(agentB.peerId(), raftNodeB.self());
 
-                        if (raftNodeA != raftNodeB) {
-                            raftNodeA.state().discoverNode(raftNodeB);
+                            if (raftNodeB.multiRoleState().isLeader()) {
+                                continue;
+                            }
+
+                            if (raftNodeA != raftNodeB) {
+                                raftNodeA.state().discoverNode(raftNodeB);
+                            }
                         }
                     }
-                } else {
-                    for (Agent agentB :
-                            super.getAgents().stream().filter(a -> a.state().getState() != AgentState.State.BACKUP).collect(Collectors.toList())) {
-                        while (!agentB.serviceManager().isHealthy()) {
-                            Thread.sleep(500);
-                        }
-
-
-                        RaftNodeImpl raftNodeB = agentB.serviceManager().getService(RaftNodeImpl.class);
-                        shoresideRaftNode.multiRoleState().remotePeers().put(agentB.peerId(), raftNodeB.self());
-                        if (raftNodeB.multiRoleState().isLeader()) {
-                            continue;
-                        }
-
-                        if (raftNodeA != raftNodeB) {
-                            raftNodeA.state().discoverNode(raftNodeB);
-                        }
-                    }
                 }
-            }
-
-            Thread.sleep(1000);
+            });
         }
     }
 
@@ -216,7 +229,8 @@ public class Runner extends AbstractRunner {
                 continue;
             }
 
-            MoosMissionManagerImpl missionManager = agent.serviceManager().getService(MoosMissionManagerImpl.class, true);
+            MoosMissionManagerImpl missionManager = agent.serviceManager().getService(MoosMissionManagerImpl.class,
+                    true);
             while (!missionManager.missionHasBeenAssigned()) {
                 try {
                     Thread.sleep(500);

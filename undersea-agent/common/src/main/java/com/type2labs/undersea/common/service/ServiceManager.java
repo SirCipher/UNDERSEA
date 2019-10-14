@@ -224,7 +224,8 @@ public class ServiceManager {
             AgentService _registeredService = checkServiceAndThrow(service);
 
             try {
-                ListenableFuture<?> future = listeningExecutorService.submit(() -> _registeredService.executeTransaction(transaction));
+                ListenableFuture<?> future =
+                        listeningExecutorService.submit(() -> _registeredService.executeTransaction(transaction));
 
                 futures.add(future);
             } catch (NotSupportedException ignored) {
@@ -560,6 +561,31 @@ public class ServiceManager {
         for (Map.Entry<Class<? extends AgentService>, Pair<AgentService, ServiceExecutionPriority>> e :
                 prioritySorted()) {
             startService(e.getKey());
+        }
+
+        starting = false;
+        started = true;
+
+        updateVisualiser();
+    }
+
+    /**
+     * Starts the {@link ServiceManager} and all the registered {@link AgentService}s except the provided
+     *
+     * @param excludedService to exclude
+     */
+    public synchronized void startServices(Class<? extends AgentService> excludedService) {
+        starting = true;
+
+        for (Map.Entry<Class<? extends AgentService>, Pair<AgentService, ServiceExecutionPriority>> e :
+                prioritySorted()) {
+            Class<? extends AgentService> agentService = e.getKey();
+
+            if (!excludedService.isAssignableFrom(agentService)) {
+                startService(e.getKey());
+            } else {
+                transitionService(agentService, ServiceState.RUNNING);
+            }
         }
 
         starting = false;

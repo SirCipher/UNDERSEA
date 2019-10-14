@@ -23,9 +23,7 @@ package com.type2labs.undersea.prospect.impl;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.util.concurrent.FutureCallback;
-import com.google.common.util.concurrent.ListeningExecutorService;
-import com.google.common.util.concurrent.MoreExecutors;
+import com.google.common.util.concurrent.*;
 import com.type2labs.undersea.common.agent.Agent;
 import com.type2labs.undersea.common.agent.AgentState;
 import com.type2labs.undersea.common.cluster.Client;
@@ -39,6 +37,7 @@ import com.type2labs.undersea.common.logger.model.LogService;
 import com.type2labs.undersea.common.missions.planner.model.AgentMission;
 import com.type2labs.undersea.common.missions.planner.model.GeneratedMission;
 import com.type2labs.undersea.common.missions.planner.model.MissionManager;
+import com.type2labs.undersea.common.missions.planner.model.MissionParameters;
 import com.type2labs.undersea.common.monitor.model.SubsystemMonitor;
 import com.type2labs.undersea.common.service.AgentService;
 import com.type2labs.undersea.common.service.transaction.LifecycleEvent;
@@ -65,10 +64,7 @@ import org.apache.logging.log4j.Logger;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.net.InetSocketAddress;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.RejectedExecutionException;
 import java.util.stream.Collectors;
 
@@ -215,7 +211,39 @@ public class RaftNodeImpl implements RaftNode {
         logger.info(parent().name() + " is now the leader {" + parent().peerId() + "}", agent);
         agent.log(new LogEntry(leaderPeerId(), new Object(), new Object(), state().getCurrentTerm(), this, true));
 
-        fireCallback(LifecycleEvent.ELECTED_LEADER);
+//        fireCallback(LifecycleEvent.ELECTED_LEADER);
+
+        MissionParameters parameters = config().getRuntimeConfig().missionParameters();
+
+        parameters.setClients(new ArrayList<>(agent.clusterClients().values()));
+        parameters.getClients().add(this.self());
+
+        Transaction transaction = new Transaction.Builder(agent)
+                .forService(MissionManager.class)
+                .withStatus(LifecycleEvent.ELECTED_LEADER)
+                .usingExecutorService(MoreExecutors.listeningDecorator(ThrowableExecutor.newSingleThreadExecutor(agent, logger)))
+                .invokedBy(this)
+                .build();
+
+        Set<ListenableFuture<?>> futures = agent.serviceManager().commitTransaction(transaction);
+
+        for (ListenableFuture<?> future : futures) {
+            Futures.addCallback(future, new FutureCallback<Object>() {
+                @Override
+                public void onSuccess(@Nullable Object result) {
+                    distributeMission((GeneratedMission) result);
+                }
+
+                @Override
+                public void onFailure(Throwable t) {
+                    throw new RuntimeException(t);
+                }
+
+            }, MoreExecutors.listeningDecorator(ThrowableExecutor.newSingleThreadExecutor(parent(),
+                    logger)));
+        }
+
+
         state().setLeader(selfRaftClientImpl);
         scheduleHeartbeat();
     }
@@ -512,7 +540,7 @@ public class RaftNodeImpl implements RaftNode {
         this.started = true;
     }
 
-    private void scheduleVerifyLeaderTask() {
+    public void scheduleVerifyLeaderTask() {
         if (role != ConsensusAlgorithmRole.LEADER) {
             schedule(new VerifyLeaderTask(), 500);
         }
@@ -528,8 +556,13 @@ public class RaftNodeImpl implements RaftNode {
     }
 
     private class VerifyLeaderTask extends ReschedulableTask {
+
         @Override
         public void innerRun() {
+            if(role==ConsensusAlgorithmRole.LEADER){
+                return;
+            }
+
             // If we don't have a leader
             if (state().getLeader() == null) {
                 if (!multiRoleState().isLeader() && state().getCandidate() == null) {
