@@ -40,7 +40,7 @@ import java.util.Set;
 
 public class Utility {
 
-    public static final String ARRAY_KEY = ";";
+    private static final String ARRAY_KEY = ";";
     private static final Logger logger = LogManager.getLogger(Utility.class);
 
     private Utility() {

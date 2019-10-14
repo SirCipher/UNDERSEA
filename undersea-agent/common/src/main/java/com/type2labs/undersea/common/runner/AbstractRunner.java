@@ -31,6 +31,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * Abstract runner for initialising agents for local simulations. Performing agent initialisation in the required
@@ -84,7 +85,7 @@ public abstract class AbstractRunner {
     public void start() {
         agents.stream().filter(a -> (boolean) a.metadata().getProperty(AgentMetaData.PropertyKey.IS_MASTER_NODE)).forEach(a -> a.serviceManager().startServices());
 
-        ExecutorService executorService = ExecutorUtils.newCachedThreadPool("abstract-runner-%d");
+        ExecutorService executorService = Executors.newFixedThreadPool(agents.size());
 
         agents.stream().filter(a -> !(boolean) a.metadata().getProperty(AgentMetaData.PropertyKey.IS_MASTER_NODE)).forEach(a -> executorService.submit(() -> a.serviceManager().startServices()));
     }

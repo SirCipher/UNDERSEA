@@ -94,7 +94,7 @@ public class VoteTask implements Runnable {
             }
         }
 
-        raftNode.schedule(new VoteTaskTimeout(raftNode), 10000);
+        raftNode.schedule(new VoteTaskTimeout(raftNode), raftNode.config().getVoteTaskTimeout());
     }
 
     private void sendVote(int term, RaftClient raftClient) {

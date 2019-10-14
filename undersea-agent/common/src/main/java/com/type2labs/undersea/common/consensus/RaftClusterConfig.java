@@ -29,17 +29,25 @@ import com.type2labs.undersea.common.config.UnderseaConfig;
  */
 public class RaftClusterConfig implements UnderseaConfig {
 
-    public static final long HEARTBEAT_PERIOD = 100;
-    private static final long heatbeatTimeout = 3000L;
-    private final long appendRequestDeadline = 10;
-    /**
-     * In seconds
-     */
-    private final long statusDeadlineLong = 60;
+    public long getHeartbeatPeriod() {
+        return heartbeatPeriod;
+    }
+
+    private final long heartbeatPeriod = 100;
+    private final long heatbeatTimeout = 3000L;
+    private long voteTaskTimeout = 10000;
+
+    public long getVoteTaskTimeout() {
+        return voteTaskTimeout;
+    }
+
+    public void setVoteTaskTimeout(long voteTaskTimeout) {
+        this.voteTaskTimeout = voteTaskTimeout;
+    }
+
     private RuntimeConfig runtimeConfig;
     private boolean autoPortDiscovery = true;
-    private int executorThreads = 10;
-    private long getStatusDeadline = 60;
+    private long requestDeadline = 60;
 
     public RaftClusterConfig() {
     }
@@ -48,21 +56,8 @@ public class RaftClusterConfig implements UnderseaConfig {
         this.runtimeConfig = runtimeConfig;
     }
 
-    public long getStatusDeadlineLong() {
-        return statusDeadlineLong;
-    }
-
-    public long getStatusDeadline() {
-        return getStatusDeadline;
-    }
-
-    public RaftClusterConfig setStatusDeadline(long duration) {
-        this.getStatusDeadline = duration;
-        return this;
-    }
-
-    public long getAppendRequestDeadline() {
-        return appendRequestDeadline;
+    public long requestDeadline() {
+        return requestDeadline;
     }
 
     /**
@@ -84,26 +79,6 @@ public class RaftClusterConfig implements UnderseaConfig {
         return runtimeConfig;
     }
 
-    /**
-     * Signifies the number of threads that the {@link java.util.concurrent.ExecutorService}s should use for the gRPC
-     * server handlers, clients, and servers
-     *
-     * @param executorThreads to use per {@link java.util.concurrent.ExecutorService}
-     * @return this
-     */
-    public RaftClusterConfig noExecutorThreads(int executorThreads) {
-        this.executorThreads = executorThreads;
-        return this;
-    }
-
-    /**
-     * Returns the number of threads that an {@link java.util.concurrent.ExecutorService} should use
-     *
-     * @return the number of threads
-     */
-    public int executorThreads() {
-        return executorThreads;
-    }
 
     public long heartbeatTimeout() {
         return heatbeatTimeout;

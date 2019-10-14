@@ -45,7 +45,7 @@ public class LeaderElectionBenchmark {
         LoggerContext ctx = (LoggerContext) LogManager.getContext(false);
         Configuration config = ctx.getConfiguration();
         LoggerConfig loggerConfig = config.getLoggerConfig("io.netty");
-        loggerConfig.setLevel(Level.FATAL);
+        loggerConfig.setLevel(Level.INFO);
         ctx.updateLoggers();
     }
 
@@ -86,7 +86,10 @@ public class LeaderElectionBenchmark {
                 logger.info("Finished counting");
                 long finishTime = System.currentTimeMillis();
 
-                results[i] = finishTime - startTime;
+                long runDuration = finishTime - startTime;
+                logger.info("Run: " + (i + 1) + " duration: " + runDuration + "ms");
+
+                results[i] = runDuration;
             }
 
             try {
@@ -139,37 +142,37 @@ public class LeaderElectionBenchmark {
         run(3);
     }
 
-    @Test
+    //    @Test
     @IgnoredOnCi
     public void test_5() {
         run(5);
     }
 
-    @Test
+    //    @Test
     @IgnoredOnCi
     public void test_7() {
         run(7);
     }
 
-    @Test
+    //    @Test
     @IgnoredOnCi
     public void test_10() {
         run(10);
     }
 
-    @Test
+    //    @Test
     @IgnoredOnCi
     public void test_15() {
         run(15);
     }
 
-    @Test
+    //    @Test
     @IgnoredOnCi
     public void test_20() {
         run(20);
     }
 
-    @Test
+    //    @Test
     @IgnoredOnCi
     public void test_30() {
         run(30);
@@ -181,20 +184,20 @@ public class LeaderElectionBenchmark {
         run(50);
     }
 
-//    @Test
+    @Test
     @IgnoredOnCi
     public void test_100() {
         run(100);
     }
 
-//    @Test
+    //    @Test
     @IgnoredOnCi
     public void test_150() {
         run(150);
     }
 
     private void run(int size) {
-        warmup();
+//        warmup();
 
         System.out.println("Benchmarking with a cluster size of " + size + " over " + NO_RUNS + " runs");
 //        double[] results = benchmarkRaw(size, NO_RUNS);

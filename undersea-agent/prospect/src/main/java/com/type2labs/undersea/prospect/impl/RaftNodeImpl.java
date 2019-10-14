@@ -79,7 +79,6 @@ public class RaftNodeImpl implements RaftNode {
     private static final Logger logger = LogManager.getLogger(RaftNodeImpl.class);
 
     private final ScheduledThrowableExecutor singleThreadScheduledExecutor;
-    private final ScheduledThrowableExecutor serviceExecutor;
     private final ListeningExecutorService listeningExecutorService;
     private final RaftClusterConfig raftClusterConfig;
     private final InetSocketAddress address;
@@ -109,7 +108,6 @@ public class RaftNodeImpl implements RaftNode {
         }
 
         this.singleThreadScheduledExecutor = ScheduledThrowableExecutor.newSingleThreadExecutor(parent(), logger);
-        this.serviceExecutor = ScheduledThrowableExecutor.newSingleThreadExecutor(parent(), logger);
         this.listeningExecutorService =
                 MoreExecutors.listeningDecorator(ThrowableExecutor.newSingleThreadExecutor(parent(), logger));
         this.multiRoleState = new MultiRoleStateImpl(this);
@@ -557,7 +555,7 @@ public class RaftNodeImpl implements RaftNode {
 
         @Override
         protected void innerRun() {
-            if (lastHeartbeatTime < System.currentTimeMillis() - RaftClusterConfig.HEARTBEAT_PERIOD) {
+            if (lastHeartbeatTime < System.currentTimeMillis() - raftClusterConfig.getHeartbeatPeriod()) {
                 for (Client follower : state().localNodes().values()) {
                     sendAppendRequest((RaftClient) follower);
                 }

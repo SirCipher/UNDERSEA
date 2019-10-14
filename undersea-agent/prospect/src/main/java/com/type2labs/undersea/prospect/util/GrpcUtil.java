@@ -29,7 +29,6 @@ import io.grpc.StatusRuntimeException;
 import io.grpc.stub.StreamObserver;
 
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.function.Supplier;
 
@@ -52,29 +51,24 @@ public class GrpcUtil {
     public static synchronized <M extends AbstractMessage> void sendAbstractAsyncMessage(StreamObserver<M> responseObserver,
                                                                                          Supplier<M> supplier,
                                                                                          ExecutorService executor) {
-        if(executor.isShutdown()||executor.isTerminated()){
+        if (executor.isShutdown() || executor.isTerminated()) {
             return;
         }
 
-        try {
-            final CompletableFuture<M> future = CompletableFuture.supplyAsync(supplier, executor);
+        final CompletableFuture<M> future = CompletableFuture.supplyAsync(supplier, executor);
 
-            future.whenComplete((result, e) -> {
-                if (e == null) {
-                    responseObserver.onNext(result);
-                    responseObserver.onCompleted();
+        future.whenComplete((result, e) -> {
+            if (e == null) {
+                responseObserver.onNext(result);
+                responseObserver.onCompleted();
+            } else {
+                if (e.getCause() instanceof StatusRuntimeException) {
+                    responseObserver.onError(e.getCause());
                 } else {
-                    if(e.getCause() instanceof StatusRuntimeException){
-                        responseObserver.onError(e.getCause());
-                    } else {
-                        responseObserver.onError(e);
-                    }
+                    responseObserver.onError(e);
                 }
-            });
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw e;
-        }
+            }
+        });
     }
 
 

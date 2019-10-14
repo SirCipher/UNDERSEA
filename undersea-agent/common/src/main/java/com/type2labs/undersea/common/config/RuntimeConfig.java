@@ -87,9 +87,10 @@ public class RuntimeConfig {
      * While testing, a {@link com.type2labs.undersea.common.agent.Subsystem}'s cost will exponentially decay. This
      * returns the decay factor, lambda
      *
-     * @return the decay time
+     * @return the decay factor, lambda
      */
     public double subsystemDecayTime() {
         return subsystemDecayTime;
     }
+
 }

@@ -71,4 +71,5 @@ public enum LifecycleEvent {
      * Denotes that the agent should shutdown
      */
     SHUTDOWN
+
 }

@@ -24,6 +24,7 @@ package com.type2labs.undersea.agent.impl;
 import com.type2labs.undersea.common.agent.Agent;
 import com.type2labs.undersea.common.agent.AgentMetaData;
 import com.type2labs.undersea.common.service.AgentService;
+import com.type2labs.undersea.utilities.exception.UnderseaException;
 import com.type2labs.undersea.utilities.processbuilder.ProcessBuilderUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -34,6 +35,7 @@ import java.io.IOException;
 /**
  * Interface for running the moos library that the agent operates on
  */
+@SuppressWarnings("PlaceholderCountMatchesArgumentCount")
 public class HardwareInterface implements AgentService {
 
     private final Logger logger = LogManager.getLogger(HardwareInterface.class);
@@ -70,8 +72,7 @@ public class HardwareInterface implements AgentService {
         try {
             process = pb.start();
         } catch (IOException e) {
-            e.printStackTrace();
-            throw new RuntimeException(e);
+            throw new UnderseaException("Failed to start agent " + agent.name() + "'s MOOS process", e);
         }
     }
 
@@ -107,7 +108,7 @@ public class HardwareInterface implements AgentService {
             }
 
             if (process.isAlive()) {
-                logger.error(agent + ": attempted to cleanly kill interface but failed. Forcibily destroying", agent);
+                logger.error(agent + ": attempted to cleanly kill interface but failed. Forcibly destroying", agent);
                 process.destroyForcibly();
             } else {
                 logger.info(agent.name() + ": shut down MOOS process", agent);

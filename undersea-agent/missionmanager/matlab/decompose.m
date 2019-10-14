@@ -6,11 +6,12 @@ tr = triangulation(pg);
 
 plot(pg);
 title('Input shape');
+saveas(gcf,'InputShape','eps')
 
 pdem = createpde;
 
 pdem.geometryFromMesh(tr.Points', tr.ConnectivityList')
-mesh = generateMesh(pdem, 'GeometricOrder', 'linear', 'Hmax', 2, 'Hgrad', 1.01);
+mesh = generateMesh(pdem, 'GeometricOrder', 'linear', 'Hmax', 5, 'Hgrad', 1.01);
 
 % TODO: Preallocate array size
 centroids = [];
@@ -25,6 +26,8 @@ for elem = mesh.Elements()
     centroids = [centroids; [x_cent, y_cent]];
 end
 
+size(centroids)
+
 %return;
 
 % TODO: Remove from production
@@ -36,13 +39,16 @@ pdeplot(pdem, 'ElementLabels','on');
 scatter(centroids(:,1), centroids(:,2));
 title('Centre points of each element');
 hold off
+saveas(gcf,'CentrePoints','eps')
 
 % Plot pde
 figure
 pdeplot(pdem);
 title('Generated mesh');
+saveas(gcf,'GeneratedMesh','eps')
 
 % Centre points
 figure
 scatter(centroids(:,1), centroids(:,2));
 title('Centre points of elements');
+saveas(gcf,'Centroids','eps')

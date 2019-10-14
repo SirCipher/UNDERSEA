@@ -33,6 +33,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.Closeable;
+import java.io.File;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
@@ -71,6 +72,7 @@ public class GrpcServer implements Closeable {
             unavailable. This should be improved in the future
          */
         try {
+
             serverSocket = new ServerSocket(socketAddress.getPort());
             port = serverSocket.getLocalPort();
             serverSocket.close();

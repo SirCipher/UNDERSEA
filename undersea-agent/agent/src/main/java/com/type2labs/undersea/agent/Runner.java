@@ -199,7 +199,7 @@ public class Runner extends AbstractRunner {
         EnvironmentProperties environmentProperties;
 
         try {
-            environmentProperties = parserEngine.parseMission();
+            environmentProperties = parserEngine.parseConfiguration();
             agentInitialiser.setEnvironmentProperties(environmentProperties);
         } catch (IOException e) {
             throw new RuntimeException("Failed to parse mission: ", e);
@@ -216,7 +216,7 @@ public class Runner extends AbstractRunner {
                 continue;
             }
 
-            MoosMissionManagerImpl missionManager = agent.serviceManager().getService(MoosMissionManagerImpl.class);
+            MoosMissionManagerImpl missionManager = agent.serviceManager().getService(MoosMissionManagerImpl.class, true);
             while (!missionManager.missionHasBeenAssigned()) {
                 try {
                     Thread.sleep(500);

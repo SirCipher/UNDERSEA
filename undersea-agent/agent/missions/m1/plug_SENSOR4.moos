@@ -1,0 +1,12 @@
+//---------------------------------
+// SENSOR4 Configuration Block
+//---------------------------------
+ProcessConfig = SENSOR4
+{
+	 AppTick			= 6.0
+	 CommsTick			= 6.0
+	 MAX_APPCAST_EVENTS = 25 
+	 NAME				= SENSOR4
+	 RELIABILITY		= 1.0
+	 CHANGE				= 10.0:50.0:2.0
+}

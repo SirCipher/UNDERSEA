@@ -46,6 +46,7 @@ import java.util.function.BooleanSupplier;
  * The backing manager for all registered {@link AgentService} for an {@link Agent}. This manages all the registered
  * services; starting, shutting down and handling them if there is a failure when they run.
  */
+@SuppressWarnings("unchecked")
 @ThreadSafe
 public class ServiceManager {
 
@@ -169,7 +170,7 @@ public class ServiceManager {
 
                     String message = String.format(agent.name() + ": service "
                             + service.getClass().getSimpleName() + " did not transition in the allocated time" +
-                            " %s ms", startupTimeout) + ". Attempted to go from " + starting + " to " + successful;
+                            " %s ms", startupTimeout) + ". Attempted to transition from " + starting + " to " + successful;
                     logger.error(message, agent);
 
                     if (service.isCritical()) {
@@ -262,13 +263,13 @@ public class ServiceManager {
      * @return the requested {@link AgentService}
      */
     public <T extends AgentService> T getService(Class<T> s, boolean required) {
-        AgentService agentService = getService(s);
+        T agentService = getService(s);
 
         if (required && agentService == null) {
             throw new NullPointerException("Required service " + s.getSimpleName() + " is missing");
         }
 
-        return (T) agentService;
+        return agentService;
     }
 
     /**
@@ -590,7 +591,7 @@ public class ServiceManager {
                     " Missing:\n");
 
             for (Class<? extends AgentService> clazz : missingServices) {
-                msg.append(clazz.getSimpleName() + " ");
+                msg.append(clazz.getSimpleName()).append(" ");
             }
 
             throw new ServiceNotRegisteredException(msg.toString());
@@ -603,7 +604,7 @@ public class ServiceManager {
      * If the {@link SubsystemMonitor} is registered, then make a call to update the
      * {@link com.type2labs.undersea.common.monitor.model.VisualiserClient} with the current state of the {@link Agent}
      */
-    public void updateVisualiser() {
+    private void updateVisualiser() {
         SubsystemMonitor subsystemMonitor = getService(SubsystemMonitor.class);
 
         if (subsystemMonitor != null) {

@@ -131,7 +131,7 @@ allprojects {
             path += "${rootProject.projectDir}/../libraries/repo/prism/linux";
             environment "LD_LIBRARY_PATH", "${rootProject.projectDir}/../libraries/MATLAB/v95/sys/os/glnxa64/:${rootProject.projectDir}/../libraries/MATLAB/v95/bin/glnxa64/:${rootProject.projectDir}/../libraries/MATLAB/v95/runtime/glnxa64/:${rootProject.projectDir}/../libraries/repo/prism/linux/"
         } else if (Os.isFamily(Os.FAMILY_WINDOWS)) {
-            System.out.printlben("Detected OS Windows")
+            System.out.println("Detected OS Windows")
             path += "${rootProject.projectDir}\\..\\libraries\\repo\\ortools;";
             path += "${rootProject.projectDir}\\..\\libraries\\repo\\prism\\windows;";
             path += "${rootProject.projectDir}\\..\\libraries\\MATLAB\\v95\\sys\\os\\win64\\;${rootProject.projectDir}\\..\\libraries\\MATLAB\\v95\\bin\\win64\\;${rootProject.projectDir}\\..\\libraries\\MATLAB\\v95\\runtime\\win64\\"

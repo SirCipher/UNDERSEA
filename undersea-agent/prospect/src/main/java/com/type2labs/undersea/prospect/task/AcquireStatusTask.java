@@ -76,7 +76,7 @@ public class AcquireStatusTask implements Runnable {
         for (Client localNode : localNodes) {
             RaftClient raftClient = (RaftClient) localNode;
 
-            raftClient.getStatus(request, Deadline.after(config.getStatusDeadline(), TimeUnit.SECONDS), new FutureCallback<RaftProtos.AcquireStatusResponse>() {
+            raftClient.getStatus(request, Deadline.after(config.requestDeadline(), TimeUnit.SECONDS), new FutureCallback<RaftProtos.AcquireStatusResponse>() {
                 @Override
                 public void onSuccess(RaftProtos.@Nullable AcquireStatusResponse response) {
                     ClusterState.ClientState agentInfo = new ClusterState.ClientState(localNode, response.getCost());
