@@ -79,10 +79,12 @@ public class Knowledge {
     }
 
     public double getSensorState(String sensorName) {
-        try {
-            return sensorsMap.get(sensorName).getCurrentState();
-        } catch (NullPointerException e) {
+        UUVSensor uuvSensor = sensorsMap.get(sensorName);
+
+        if (uuvSensor == null) {
             return 0;
+        } else {
+            return uuvSensor.getCurrentState();
         }
     }
 

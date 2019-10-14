@@ -109,7 +109,7 @@ public class RaftProtocolService extends RaftProtocolServiceGrpc.RaftProtocolSer
     public void appendEntry(RaftProtos.AppendEntryRequest request,
                             StreamObserver<RaftProtos.AppendEntryResponse> responseObserver) {
         GrpcUtil.sendAbstractAsyncMessage(responseObserver, () -> {
-            logger.info(raftNode.parent().name() + ": received heartbeat");
+            logger.trace(raftNode.parent().name() + ": received heartbeat");
 
             int requestTerm = request.getTerm();
             int currentTerm = raftNode.state().getCurrentTerm();

@@ -211,39 +211,9 @@ public class RaftNodeImpl implements RaftNode {
         logger.info(parent().name() + " is now the leader {" + parent().peerId() + "}", agent);
         agent.log(new LogEntry(leaderPeerId(), new Object(), new Object(), state().getCurrentTerm(), this, true));
 
-//        fireCallback(LifecycleEvent.ELECTED_LEADER);
-
-        MissionParameters parameters = config().getRuntimeConfig().missionParameters();
-
-        parameters.setClients(new ArrayList<>(agent.clusterClients().values()));
-        parameters.getClients().add(this.self());
-
-        Transaction transaction = new Transaction.Builder(agent)
-                .forService(MissionManager.class)
-                .withStatus(LifecycleEvent.ELECTED_LEADER)
-                .usingExecutorService(MoreExecutors.listeningDecorator(ThrowableExecutor.newSingleThreadExecutor(agent, logger)))
-                .invokedBy(this)
-                .build();
-
-        Set<ListenableFuture<?>> futures = agent.serviceManager().commitTransaction(transaction);
-
-        for (ListenableFuture<?> future : futures) {
-            Futures.addCallback(future, new FutureCallback<Object>() {
-                @Override
-                public void onSuccess(@Nullable Object result) {
-                    distributeMission((GeneratedMission) result);
-                }
-
-                @Override
-                public void onFailure(Throwable t) {
-                    throw new RuntimeException(t);
-                }
-
-            }, MoreExecutors.listeningDecorator(ThrowableExecutor.newSingleThreadExecutor(parent(),
-                    logger)));
-        }
-
+        fireCallback(LifecycleEvent.ELECTED_LEADER);
         state().setLeader(selfRaftClientImpl);
+
         scheduleHeartbeat();
     }
 
