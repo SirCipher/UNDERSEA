@@ -113,8 +113,6 @@ public class SubsystemMonitorImpl implements SubsystemMonitor {
                 }
             }, 500);
         }
-
-        logger.info("initialised subsystemmonitorimpl");
     }
 
     @Override

@@ -221,13 +221,7 @@ public class VehicleRoutingOptimiser implements MissionPlanner {
         // Define cost of each arc.
         routing.addDimension(transitCallbackIndex, 0, 3000, true, "Time");
 
-//        final Random randomGenerator = new Random(0xBEEF);
-//        final int costCoefficientMax = 3;
-
-//        final int[] speeds = {1, 2, 3, 4, 5, 500};
-
         List<Client> clients = new ArrayList<>(parentAgent.clusterClients().values());
-        // Sort by raft peer ids
         clients.sort(Comparator.comparing(client -> client.peerId().toString()));
 
         for (int vehicle = 0; vehicle < clients.size(); ++vehicle) {

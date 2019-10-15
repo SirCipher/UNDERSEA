@@ -1,0 +1,311 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Subsystem Monitoring &mdash; UNDERSEA  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Implementing a new service" href="logging.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> UNDERSEA
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="gettingstarted.html"> Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="logging.html"> Implementing a New Service</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#"> Subsystem Monitoring</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#complete-code">Complete code</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">UNDERSEA</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Subsystem Monitoring</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/monitoring.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="subsystem-monitoring">
+<span id="monitoring"></span><h1>Subsystem Monitoring<a class="headerlink" href="#subsystem-monitoring" title="Permalink to this headline">¶</a></h1>
+<p>UNDERSEA features a subsystem monitoring system that users can register callbacks with to perform various activities against. This may include logging their current state or validating their health. This functionality is demonstrated in this tutorial.</p>
+<p>Subsystems in UNDERSEA are an important part of how the consensus algorithm achieves a deterministic consensus. The consensus is a function of the UUV’s current battery level, speed and all the subsystem’s current state. Users may wish to alter the system’s representation of a subsystem based on signals not received through UNDERSEA itself. To achieve this, users can utilise monitor callbacks.</p>
+<p>Subsystems are registered against a <code class="code docutils literal notranslate"><span class="pre">SubsystemMonitor</span></code> instance. For the purposes of local development, a <code class="code docutils literal notranslate"><span class="pre">SubsystemMonitorSpoofer</span></code> instance is used which decays a subsystem’s performance over time. Lets create a simple sensor and register it:</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="n">SubsystemMonitorSpoofer</span> <span class="n">monitorSpoofer</span> <span class="o">=</span> <span class="k">new</span> <span class="n">SubsystemMonitorSpoofer</span><span class="o">();</span>
+<span class="n">monitorSpoofer</span><span class="o">.</span><span class="na">monitorSubsystem</span><span class="o">(</span><span class="k">new</span> <span class="n">Sensor</span><span class="o">(</span><span class="s">&quot;test&quot;</span><span class="o">,</span> <span class="mi">50</span><span class="o">,</span> <span class="mi">50</span><span class="o">,</span> <span class="n">Sensor</span><span class="o">.</span><span class="na">SensorType</span><span class="o">.</span><span class="na">SIDESCAN_SONAR</span><span class="o">));</span>
+</pre></div>
+</div>
+<p>From here, we can register a monitor callback that will shutdown the system if the sensor’s health drops below 10%:</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="n">monitorSpoofer</span><span class="o">.</span><span class="na">setMonitorCallback</span><span class="o">((</span><span class="n">subsystem</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="o">{</span>
+    <span class="k">if</span> <span class="o">(</span><span class="n">subsystem</span><span class="o">.</span><span class="na">health</span><span class="o">()</span> <span class="o">&lt;</span> <span class="mi">10</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">throw</span> <span class="k">new</span> <span class="n">UnderseaException</span><span class="o">(</span><span class="n">ErrorCode</span><span class="o">.</span><span class="na">SERVICE_FAILED</span><span class="o">,</span> <span class="n">monitorSpoofer</span><span class="o">,</span> <span class="n">subsystem</span><span class="o">.</span><span class="na">name</span><span class="o">()</span> <span class="o">+</span> <span class="s">&quot; health is too low to continue&quot;</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">});</span>
+</pre></div>
+</div>
+<p>Now we can spoof this sensor’s health degrading using the <code class="code docutils literal notranslate"><span class="pre">ServiceManager</span></code>’s task scheduling system:</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="n">serviceManager</span><span class="o">.</span><span class="na">scheduleTask</span><span class="o">(()</span> <span class="o">-&gt;</span> <span class="o">{</span>
+    <span class="k">for</span> <span class="o">(</span><span class="n">Subsystem</span> <span class="n">s</span> <span class="o">:</span> <span class="n">monitorSpoofer</span><span class="o">.</span><span class="na">getSubsystems</span><span class="o">())</span> <span class="o">{</span>
+        <span class="n">Sensor</span> <span class="n">sensor</span> <span class="o">=</span> <span class="o">(</span><span class="n">Sensor</span><span class="o">)</span> <span class="n">s</span><span class="o">;</span>
+        <span class="n">sensor</span><span class="o">.</span><span class="na">setHealth</span><span class="o">(</span><span class="mi">0</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">},</span> <span class="mi">5</span><span class="o">);</span>
+</pre></div>
+</div>
+<p>This creates a task that will start in five seconds time and drops the sensor’s health to zero. Subsystem monitoring occurs every 500 milliseconds and will call the callback that we registered against the <code class="code docutils literal notranslate"><span class="pre">monitorSpoofer</span></code> instance. This will cause our agent to fail and initiate shutdown procedure.</p>
+<div class="section" id="complete-code">
+<h2>Complete code<a class="headerlink" href="#complete-code" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kn">package</span> <span class="nn">com.type2labs.undersea.tutorials.tutorialc</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">com.type2labs.undersea.common.agent.*</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">com.type2labs.undersea.common.consensus.ConsensusClusterConfig</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">com.type2labs.undersea.common.logger.LogServiceImpl</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">com.type2labs.undersea.common.monitor.impl.SubsystemMonitorSpoofer</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">com.type2labs.undersea.common.service.ServiceManager</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">com.type2labs.undersea.prospect.impl.ConsensusNodeImpl</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">com.type2labs.undersea.tutorials.tutoriala.MissionManagerSample</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">com.type2labs.undersea.utilities.exception.ErrorCode</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">com.type2labs.undersea.utilities.exception.UnderseaException</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.apache.logging.log4j.Level</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.apache.logging.log4j.LogManager</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.apache.logging.log4j.core.LoggerContext</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.apache.logging.log4j.core.config.Configuration</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.apache.logging.log4j.core.config.LoggerConfig</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">java.util.List</span><span class="o">;</span>
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">RunnerC</span> <span class="o">{</span>
+
+    <span class="kd">static</span> <span class="o">{</span>
+        <span class="n">LoggerContext</span> <span class="n">ctx</span> <span class="o">=</span> <span class="o">(</span><span class="n">LoggerContext</span><span class="o">)</span> <span class="n">LogManager</span><span class="o">.</span><span class="na">getContext</span><span class="o">(</span><span class="kc">false</span><span class="o">);</span>
+        <span class="n">Configuration</span> <span class="n">config</span> <span class="o">=</span> <span class="n">ctx</span><span class="o">.</span><span class="na">getConfiguration</span><span class="o">();</span>
+        <span class="n">LoggerConfig</span> <span class="n">loggerConfig</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="na">getLoggerConfig</span><span class="o">(</span><span class="s">&quot;io.netty&quot;</span><span class="o">);</span>
+        <span class="n">loggerConfig</span><span class="o">.</span><span class="na">setLevel</span><span class="o">(</span><span class="n">Level</span><span class="o">.</span><span class="na">INFO</span><span class="o">);</span>
+        <span class="n">ctx</span><span class="o">.</span><span class="na">updateLoggers</span><span class="o">();</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">AgentFactory</span> <span class="n">agentFactory</span> <span class="o">=</span> <span class="k">new</span> <span class="n">AgentFactory</span><span class="o">();</span>
+        <span class="n">List</span><span class="o">&lt;</span><span class="n">Agent</span><span class="o">&gt;</span> <span class="n">agents</span> <span class="o">=</span> <span class="n">agentFactory</span><span class="o">.</span><span class="na">createN</span><span class="o">(</span><span class="mi">5</span><span class="o">);</span>
+
+        <span class="k">for</span> <span class="o">(</span><span class="n">Agent</span> <span class="n">agent</span> <span class="o">:</span> <span class="n">agents</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">ServiceManager</span> <span class="n">serviceManager</span> <span class="o">=</span> <span class="n">agent</span><span class="o">.</span><span class="na">serviceManager</span><span class="o">();</span>
+            <span class="n">serviceManager</span><span class="o">.</span><span class="na">registerService</span><span class="o">(</span><span class="k">new</span> <span class="n">ConsensusNodeImpl</span><span class="o">(</span><span class="k">new</span> <span class="n">ConsensusClusterConfig</span><span class="o">()));</span>
+
+            <span class="n">SubsystemMonitorSpoofer</span> <span class="n">monitorSpoofer</span> <span class="o">=</span> <span class="k">new</span> <span class="n">SubsystemMonitorSpoofer</span><span class="o">();</span>
+            <span class="n">monitorSpoofer</span><span class="o">.</span><span class="na">monitorSubsystem</span><span class="o">(</span><span class="k">new</span> <span class="n">Sensor</span><span class="o">(</span><span class="s">&quot;test&quot;</span><span class="o">,</span> <span class="mi">50</span><span class="o">,</span> <span class="mi">50</span><span class="o">,</span> <span class="n">Sensor</span><span class="o">.</span><span class="na">SensorType</span><span class="o">.</span><span class="na">SIDESCAN_SONAR</span><span class="o">));</span>
+
+            <span class="n">monitorSpoofer</span><span class="o">.</span><span class="na">setMonitorCallback</span><span class="o">((</span><span class="n">subsystem</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="o">{</span>
+                <span class="k">if</span> <span class="o">(</span><span class="n">subsystem</span><span class="o">.</span><span class="na">health</span><span class="o">()</span> <span class="o">&lt;</span> <span class="mi">10</span><span class="o">)</span> <span class="o">{</span>
+                    <span class="k">throw</span> <span class="k">new</span> <span class="n">UnderseaException</span><span class="o">(</span><span class="n">ErrorCode</span><span class="o">.</span><span class="na">SERVICE_FAILED</span><span class="o">,</span> <span class="n">monitorSpoofer</span><span class="o">,</span> <span class="n">subsystem</span><span class="o">.</span><span class="na">name</span><span class="o">()</span> <span class="o">+</span> <span class="s">&quot; health is too low to continue&quot;</span><span class="o">);</span>
+                <span class="o">}</span>
+            <span class="o">});</span>
+
+            <span class="n">serviceManager</span><span class="o">.</span><span class="na">registerService</span><span class="o">(</span><span class="n">monitorSpoofer</span><span class="o">);</span>
+            <span class="n">serviceManager</span><span class="o">.</span><span class="na">registerService</span><span class="o">(</span><span class="k">new</span> <span class="n">MissionManagerSample</span><span class="o">());</span>
+            <span class="n">serviceManager</span><span class="o">.</span><span class="na">registerService</span><span class="o">(</span><span class="k">new</span> <span class="n">LogServiceImpl</span><span class="o">());</span>
+
+            <span class="n">serviceManager</span><span class="o">.</span><span class="na">scheduleTask</span><span class="o">(()</span> <span class="o">-&gt;</span> <span class="o">{</span>
+                <span class="k">for</span> <span class="o">(</span><span class="n">Subsystem</span> <span class="n">s</span> <span class="o">:</span> <span class="n">monitorSpoofer</span><span class="o">.</span><span class="na">getSubsystems</span><span class="o">())</span> <span class="o">{</span>
+                    <span class="n">Sensor</span> <span class="n">sensor</span> <span class="o">=</span> <span class="o">(</span><span class="n">Sensor</span><span class="o">)</span> <span class="n">s</span><span class="o">;</span>
+                    <span class="n">sensor</span><span class="o">.</span><span class="na">setHealth</span><span class="o">(</span><span class="mi">0</span><span class="o">);</span>
+                <span class="o">}</span>
+            <span class="o">},</span> <span class="mi">5</span><span class="o">);</span>
+
+            <span class="n">serviceManager</span><span class="o">.</span><span class="na">startServices</span><span class="o">();</span>
+
+            <span class="n">agent</span><span class="o">.</span><span class="na">state</span><span class="o">().</span><span class="na">transitionTo</span><span class="o">(</span><span class="n">AgentState</span><span class="o">.</span><span class="na">State</span><span class="o">.</span><span class="na">ACTIVE</span><span class="o">);</span>
+        <span class="o">}</span>
+
+        <span class="k">for</span> <span class="o">(</span><span class="n">Agent</span> <span class="n">a</span> <span class="o">:</span> <span class="n">agents</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">for</span> <span class="o">(</span><span class="n">Agent</span> <span class="n">b</span> <span class="o">:</span> <span class="n">agents</span><span class="o">)</span> <span class="o">{</span>
+                <span class="k">if</span> <span class="o">(</span><span class="n">a</span> <span class="o">!=</span> <span class="n">b</span><span class="o">)</span> <span class="o">{</span>
+                    <span class="n">ConsensusNodeImpl</span> <span class="n">consensusNodeA</span> <span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="na">serviceManager</span><span class="o">().</span><span class="na">getService</span><span class="o">(</span><span class="n">ConsensusNodeImpl</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+                    <span class="n">ConsensusNodeImpl</span> <span class="n">consensusNodeB</span> <span class="o">=</span> <span class="n">b</span><span class="o">.</span><span class="na">serviceManager</span><span class="o">().</span><span class="na">getService</span><span class="o">(</span><span class="n">ConsensusNodeImpl</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+
+                    <span class="n">consensusNodeA</span><span class="o">.</span><span class="na">state</span><span class="o">().</span><span class="na">discoverNode</span><span class="o">(</span><span class="n">consensusNodeB</span><span class="o">);</span>
+                <span class="o">}</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+
+    <span class="o">}</span>
+
+<span class="o">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href="logging.html" class="btn btn-neutral float-left" title="Implementing a new service" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Tom Klapwijk
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

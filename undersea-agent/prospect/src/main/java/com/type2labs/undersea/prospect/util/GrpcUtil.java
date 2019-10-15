@@ -23,52 +23,48 @@ package com.type2labs.undersea.prospect.util;
 
 import com.google.protobuf.AbstractMessage;
 import com.type2labs.undersea.common.cluster.Client;
-import com.type2labs.undersea.prospect.RaftProtos;
-import com.type2labs.undersea.prospect.model.RaftNode;
-import io.grpc.StatusRuntimeException;
+import com.type2labs.undersea.prospect.ConsensusProtos;
+import com.type2labs.undersea.prospect.model.ConsensusNode;
 import io.grpc.stub.StreamObserver;
 
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executor;
 import java.util.function.Supplier;
 
 public class GrpcUtil {
 
-    public static RaftProtos.RaftPeerProto toProtoClient(Client client) {
-        RaftProtos.RaftPeerProto.Builder builder = RaftProtos.RaftPeerProto.newBuilder();
-        builder.setRaftPeerId(client.peerId().toString());
+    public static ConsensusProtos.ConsensusPeerProto toProtoClient(Client client) {
+        ConsensusProtos.ConsensusPeerProto.Builder builder = ConsensusProtos.ConsensusPeerProto.newBuilder();
+        builder.setConsensusPeerId(client.peerId().toString());
 
         return builder.build();
     }
 
-    public static RaftProtos.RaftPeerProto toProtoClient(RaftNode raftNode) {
-        RaftProtos.RaftPeerProto.Builder builder = RaftProtos.RaftPeerProto.newBuilder();
-        builder.setRaftPeerId(raftNode.parent().peerId().toString());
+    public static ConsensusProtos.ConsensusPeerProto toProtoClient(ConsensusNode consensusNode) {
+        ConsensusProtos.ConsensusPeerProto.Builder builder = ConsensusProtos.ConsensusPeerProto.newBuilder();
+        builder.setConsensusPeerId(consensusNode.parent().peerId().toString());
 
         return builder.build();
     }
 
     public static synchronized <M extends AbstractMessage> void sendAbstractAsyncMessage(StreamObserver<M> responseObserver,
                                                                                          Supplier<M> supplier,
-                                                                                         ExecutorService executor) {
-        if (executor.isShutdown() || executor.isTerminated()) {
-            return;
-        }
+                                                                                         Executor executor) {
+        try {
+            final CompletableFuture<M> future = CompletableFuture.supplyAsync(supplier, executor);
 
-        final CompletableFuture<M> future = CompletableFuture.supplyAsync(supplier, executor);
-
-        future.whenComplete((result, e) -> {
-            if (e == null) {
-                responseObserver.onNext(result);
-                responseObserver.onCompleted();
-            } else {
-                if (e.getCause() instanceof StatusRuntimeException) {
-                    responseObserver.onError(e.getCause());
+            future.whenComplete((result, e) -> {
+                if (e == null) {
+                    responseObserver.onNext(result);
+                    responseObserver.onCompleted();
                 } else {
                     responseObserver.onError(e);
                 }
-            }
-        });
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw e;
+        }
     }
 
 

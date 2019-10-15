@@ -24,7 +24,7 @@ package com.type2labs.undersea.agent.monitor;
 import com.type2labs.undersea.agent.impl.UnderseaAgent;
 import com.type2labs.undersea.common.cluster.PeerId;
 import com.type2labs.undersea.common.config.RuntimeConfig;
-import com.type2labs.undersea.common.consensus.RaftClusterConfig;
+import com.type2labs.undersea.common.consensus.ConsensusClusterConfig;
 import com.type2labs.undersea.common.logger.LogServiceImpl;
 import com.type2labs.undersea.common.missions.planner.impl.MissionParametersImpl;
 import com.type2labs.undersea.common.missions.planner.model.MissionManager;
@@ -35,8 +35,8 @@ import com.type2labs.undersea.common.service.ServiceManager;
 import com.type2labs.undersea.missionplanner.manager.MoosMissionManagerImpl;
 import com.type2labs.undersea.missionplanner.planner.vrp.VehicleRoutingOptimiser;
 import com.type2labs.undersea.monitor.Visualiser;
-import com.type2labs.undersea.prospect.impl.RaftNodeImpl;
-import com.type2labs.undersea.prospect.model.RaftNode;
+import com.type2labs.undersea.prospect.impl.ConsensusNodeImpl;
+import com.type2labs.undersea.prospect.model.ConsensusNode;
 import com.type2labs.undersea.utilities.testing.IgnoredOnCi;
 import com.type2labs.undersea.utilities.testing.UnderseaRunner;
 import org.junit.Test;
@@ -56,12 +56,12 @@ public class VisualiserTest {
         String name = UUID.randomUUID().toString();
 
         RuntimeConfig config = new RuntimeConfig();
-        RaftNodeImpl raftNode = new RaftNodeImpl(
-                new RaftClusterConfig(config)
+        ConsensusNodeImpl consensusNode = new ConsensusNodeImpl(
+                new ConsensusClusterConfig(config)
         );
 
         ServiceManager serviceManager = new ServiceManager();
-        serviceManager.registerService(raftNode);
+        serviceManager.registerService(consensusNode);
         serviceManager.registerService(new LogServiceImpl());
 
         MissionManager missionManager = new MoosMissionManagerImpl(new VehicleRoutingOptimiser());
@@ -80,7 +80,7 @@ public class VisualiserTest {
         subsystemMonitor.setVisualiser(visualiserClient);
         visualiserClient.initialise(underseaAgent);
 
-        raftNode.initialise(underseaAgent);
+        consensusNode.initialise(underseaAgent);
 
         serviceManager.registerService(subsystemMonitor);
 
@@ -112,17 +112,17 @@ public class VisualiserTest {
         new Visualiser();
 
         UnderseaAgent leader = createAgent(0);
-        RaftNodeImpl raftNode = (RaftNodeImpl) leader.getConsensusAlgorithm();
+        ConsensusNodeImpl consensusNode = (ConsensusNodeImpl) leader.getConsensusAlgorithm();
         List<UnderseaAgent> agents = new ArrayList<>();
 
         for (int i = 0; i < 10; i++) {
             UnderseaAgent t = createAgent(0);
             agents.add(t);
-            raftNode.state().discoverNode((RaftNode) t.getConsensusAlgorithm());
+            consensusNode.state().discoverNode((ConsensusNode) t.getConsensusAlgorithm());
         }
 
         Thread.sleep(3000);
-        raftNode.toLeader(0);
+        consensusNode.toLeader(0);
         Thread.sleep(30000);
         System.out.println("Shutting down");
     }

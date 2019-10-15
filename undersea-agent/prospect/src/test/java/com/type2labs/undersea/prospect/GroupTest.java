@@ -22,7 +22,7 @@
 package com.type2labs.undersea.prospect;
 
 import com.type2labs.undersea.prospect.impl.LocalAgentGroup;
-import com.type2labs.undersea.prospect.impl.RaftNodeImpl;
+import com.type2labs.undersea.prospect.impl.ConsensusNodeImpl;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.LoggerContext;
@@ -79,7 +79,7 @@ public class GroupTest {
             assertTrueEventually(() -> assertNotNull(localAgentGroup.getLeaderNode()), 120);
             Thread.sleep(1000);
 
-            RaftNodeImpl leaderNode = (RaftNodeImpl) localAgentGroup.getLeaderNode();
+            ConsensusNodeImpl leaderNode = (ConsensusNodeImpl) localAgentGroup.getLeaderNode();
             System.out.println("Removing leader: " + leaderNode.parent().peerId());
 
             localAgentGroup.removeNode(leaderNode);
@@ -88,7 +88,7 @@ public class GroupTest {
             Thread.sleep(10000);
 
             assertTrueEventually(() -> {
-                RaftNodeImpl newLeader = (RaftNodeImpl) localAgentGroup.getLeaderNode();
+                ConsensusNodeImpl newLeader = (ConsensusNodeImpl) localAgentGroup.getLeaderNode();
 
                 assertNotNull(newLeader);
                 assertNotEquals(newLeader, leaderNode);

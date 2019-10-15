@@ -46,7 +46,6 @@ import java.util.function.BooleanSupplier;
  * The backing manager for all registered {@link AgentService} for an {@link Agent}. This manages all the registered
  * services; starting, shutting down and handling them if there is a failure when they run.
  */
-@SuppressWarnings("unchecked")
 @ThreadSafe
 public class ServiceManager {
 
@@ -127,7 +126,7 @@ public class ServiceManager {
                 f.get();
             } catch (NotSupportedException ignored) {
             } catch (InterruptedException | ExecutionException e) {
-                logger.error(agent.name() + ": " + e.getLocalizedMessage());
+                logger.error(agent.name() + ": attempted to handle failure: Exception: " + e.getLocalizedMessage());
             }
         });
 
@@ -154,13 +153,13 @@ public class ServiceManager {
      * @param successful    {@link ServiceState} to set if the service transitions successfully
      * @return true if the service transitioned successfully. False only if the thread throws an exception
      */
-    private synchronized boolean _waitForTransition(BooleanSupplier supplier, AgentService service,
-                                                    ScheduledFuture<?> serviceFuture, ServiceState starting,
-                                                    ServiceState successful) {
+    private synchronized void _transition(BooleanSupplier supplier, AgentService service,
+                                          ScheduledFuture<?> serviceFuture, ServiceState starting,
+                                          ServiceState successful) {
         long startupTimeout = service.transitionTimeout();
         transitionService(service.getClass(), starting);
 
-        Future<Boolean> future = serviceInitialiser.submit(() -> {
+        serviceInitialiser.submit(() -> {
             long start = System.currentTimeMillis();
 
             while (!supplier.getAsBoolean()) {
@@ -170,7 +169,7 @@ public class ServiceManager {
 
                     String message = String.format(agent.name() + ": service "
                             + service.getClass().getSimpleName() + " did not transition in the allocated time" +
-                            " %s ms", startupTimeout) + ". Attempted to transition from " + starting + " to " + successful;
+                            " %s ms", startupTimeout) + ". Attempted to go from " + starting + " to " + successful;
                     logger.error(message, agent);
 
                     if (service.isCritical()) {
@@ -183,15 +182,7 @@ public class ServiceManager {
                     agent);
 
             transitionService(service.getClass(), successful);
-
-            return true;
         });
-
-        try {
-            return future.get();
-        } catch (InterruptedException | ExecutionException e) {
-            return false;
-        }
     }
 
     /**
@@ -224,7 +215,8 @@ public class ServiceManager {
             AgentService _registeredService = checkServiceAndThrow(service);
 
             try {
-                ListenableFuture<?> future = listeningExecutorService.submit(() -> _registeredService.executeTransaction(transaction));
+                ListenableFuture<?> future =
+                        listeningExecutorService.submit(() -> _registeredService.executeTransaction(transaction));
 
                 futures.add(future);
             } catch (NotSupportedException ignored) {
@@ -263,13 +255,13 @@ public class ServiceManager {
      * @return the requested {@link AgentService}
      */
     public <T extends AgentService> T getService(Class<T> s, boolean required) {
-        T agentService = getService(s);
+        AgentService agentService = getService(s);
 
         if (required && agentService == null) {
             throw new NullPointerException("Required service " + s.getSimpleName() + " is missing");
         }
 
-        return agentService;
+        return (T) agentService;
     }
 
     /**
@@ -492,15 +484,25 @@ public class ServiceManager {
         logger.info(agent.name() + ": started repeating task at period: " + period, agent);
     }
 
+    public synchronized void startService(Class<? extends AgentService> service) {
+        startService(service, false);
+    }
+
     /**
      * Starts the given {@link AgentService}
      *
      * @param service to start
      */
-    public synchronized void startService(Class<? extends AgentService> service) {
+    public synchronized void startService(Class<? extends AgentService> service, boolean force) {
         initialise();
 
         AgentService agentService = getService(service, true);
+
+        ServiceState state = serviceStates.get(service);
+
+        if (state == ServiceState.RUNNING && !force) {
+            return;
+        }
 
         agentService.initialise(agent);
 
@@ -508,10 +510,7 @@ public class ServiceManager {
 
         ScheduledFuture<?> future = serviceExecutor.schedule(wrapAgentService(agentService), 1, TimeUnit.NANOSECONDS);
 
-        //noinspection StatementWithEmptyBody
-        while (!_waitForTransition(agentService::started, agentService, future, ServiceState.STARTING,
-                ServiceState.RUNNING)) {
-        }
+        _transition(agentService::started, agentService, future, ServiceState.STARTING, ServiceState.RUNNING);
 
         scheduledFutures.put(service, future);
     }
@@ -551,15 +550,32 @@ public class ServiceManager {
         serviceExecutor = ScheduledThrowableExecutor.newExecutor(agent, services.size(), logger);
     }
 
+    public synchronized void startServices() {
+        startServices(DefaultService.class);
+    }
+
+    private static abstract class DefaultService implements AgentService{
+
+    }
+
     /**
      * Starts the {@link ServiceManager} and all the registered {@link AgentService}s
      */
-    public synchronized void startServices() {
+    public synchronized void startServices(Class<? extends AgentService> excludedService) {
         starting = true;
 
         for (Map.Entry<Class<? extends AgentService>, Pair<AgentService, ServiceExecutionPriority>> e :
                 prioritySorted()) {
-            startService(e.getKey());
+            Class<? extends AgentService> agentService = e.getKey();
+
+            if (!excludedService.isAssignableFrom(agentService)) {
+                startService(e.getKey(), false);
+            } else {
+                AgentService instance = getService(agentService, true);
+                instance.initialise(agent);
+
+                transitionService(agentService, ServiceState.RUNNING);
+            }
         }
 
         starting = false;
@@ -591,7 +607,7 @@ public class ServiceManager {
                     " Missing:\n");
 
             for (Class<? extends AgentService> clazz : missingServices) {
-                msg.append(clazz.getSimpleName()).append(" ");
+                msg.append(clazz.getSimpleName() + " ");
             }
 
             throw new ServiceNotRegisteredException(msg.toString());
@@ -604,7 +620,7 @@ public class ServiceManager {
      * If the {@link SubsystemMonitor} is registered, then make a call to update the
      * {@link com.type2labs.undersea.common.monitor.model.VisualiserClient} with the current state of the {@link Agent}
      */
-    private void updateVisualiser() {
+    public void updateVisualiser() {
         SubsystemMonitor subsystemMonitor = getService(SubsystemMonitor.class);
 
         if (subsystemMonitor != null) {

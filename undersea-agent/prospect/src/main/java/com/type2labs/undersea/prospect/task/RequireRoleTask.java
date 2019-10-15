@@ -22,33 +22,33 @@
 package com.type2labs.undersea.prospect.task;
 
 import com.type2labs.undersea.common.consensus.ConsensusAlgorithmRole;
-import com.type2labs.undersea.prospect.model.RaftNode;
+import com.type2labs.undersea.prospect.model.ConsensusNode;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 public abstract class RequireRoleTask implements Runnable {
 
     private final Logger logger = LogManager.getLogger(RequireRoleTask.class);
-    private final RaftNode raftNode;
+    private final ConsensusNode consensusNode;
     private final ConsensusAlgorithmRole requestedRole;
 
-    public RequireRoleTask(RaftNode raftNode, ConsensusAlgorithmRole requestedRole) {
-        this.raftNode = raftNode;
+    public RequireRoleTask(ConsensusNode consensusNode, ConsensusAlgorithmRole requestedRole) {
+        this.consensusNode = consensusNode;
         this.requestedRole = requestedRole;
     }
 
     @Override
     public void run() {
-        if (raftNode.raftRole() != requestedRole) {
-            logger.error(raftNode.parent().name() + ": unable to run task as agent does not meet requested role: " + requestedRole,
-                    raftNode.parent());
+        if (consensusNode.clusterRole() != requestedRole) {
+            logger.error(consensusNode.parent().name() + ": unable to run task as agent does not meet requested role: " + requestedRole,
+                    consensusNode.parent());
             return;
         }
 
         try {
             innerRun();
         } catch (Throwable e) {
-            logger.error("Exception caught", raftNode.parent(), e);
+            logger.error("Exception caught", consensusNode.parent(), e);
         }
     }
 

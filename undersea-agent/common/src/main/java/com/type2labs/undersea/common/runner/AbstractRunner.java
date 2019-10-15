@@ -23,6 +23,7 @@ package com.type2labs.undersea.common.runner;
 
 import com.type2labs.undersea.common.agent.Agent;
 import com.type2labs.undersea.common.agent.AgentMetaData;
+import com.type2labs.undersea.common.consensus.ConsensusAlgorithm;
 import com.type2labs.undersea.utilities.Utility;
 import com.type2labs.undersea.utilities.executor.ExecutorUtils;
 
@@ -31,7 +32,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 /**
  * Abstract runner for initialising agents for local simulations. Performing agent initialisation in the required
@@ -85,9 +85,9 @@ public abstract class AbstractRunner {
     public void start() {
         agents.stream().filter(a -> (boolean) a.metadata().getProperty(AgentMetaData.PropertyKey.IS_MASTER_NODE)).forEach(a -> a.serviceManager().startServices());
 
-        ExecutorService executorService = Executors.newFixedThreadPool(agents.size());
+        ExecutorService executorService = ExecutorUtils.newExecutor(agents.size(), "abstract-runner-%d");
 
-        agents.stream().filter(a -> !(boolean) a.metadata().getProperty(AgentMetaData.PropertyKey.IS_MASTER_NODE)).forEach(a -> executorService.submit(() -> a.serviceManager().startServices()));
+        agents.stream().filter(a -> !(boolean) a.metadata().getProperty(AgentMetaData.PropertyKey.IS_MASTER_NODE)).forEach(a -> executorService.submit(() -> a.serviceManager().startServices(ConsensusAlgorithm.class)));
     }
 
     private void _setup() {

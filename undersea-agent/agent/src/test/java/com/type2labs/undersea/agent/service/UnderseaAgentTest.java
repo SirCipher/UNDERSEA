@@ -24,12 +24,11 @@ package com.type2labs.undersea.agent.service;
 import com.type2labs.undersea.agent.impl.UnderseaAgent;
 import com.type2labs.undersea.common.cluster.PeerId;
 import com.type2labs.undersea.common.config.RuntimeConfig;
-import com.type2labs.undersea.common.consensus.RaftClusterConfig;
+import com.type2labs.undersea.common.consensus.ConsensusClusterConfig;
 import com.type2labs.undersea.common.monitor.impl.SubsystemMonitorImpl;
 import com.type2labs.undersea.common.monitor.model.SubsystemMonitor;
 import com.type2labs.undersea.common.service.ServiceManager;
-import com.type2labs.undersea.prospect.impl.RaftNodeImpl;
-import com.type2labs.undersea.seachain.BlockchainNetworkImpl;
+import com.type2labs.undersea.prospect.impl.ConsensusNodeImpl;
 import org.junit.Test;
 
 import java.net.InetSocketAddress;
@@ -43,14 +42,13 @@ public class UnderseaAgentTest {
 
     @Test
     public void testServices() {
-        RaftNodeImpl raftNode = new RaftNodeImpl(
-                new RaftClusterConfig(new RuntimeConfig()),
+        ConsensusNodeImpl consensusNode = new ConsensusNodeImpl(
+                new ConsensusClusterConfig(new RuntimeConfig()),
                 new InetSocketAddress("localhost", 5000)
         );
 
         ServiceManager serviceManager = new ServiceManager();
-        serviceManager.registerService(raftNode);
-        serviceManager.registerService(new BlockchainNetworkImpl());
+        serviceManager.registerService(consensusNode);
         serviceManager.registerService(new SubsystemMonitorImpl());
 
         UnderseaAgent underseaAgent = new UnderseaAgent(new RuntimeConfig(),

@@ -27,7 +27,7 @@ import com.type2labs.undersea.common.agent.AgentFactory;
 import com.type2labs.undersea.common.cluster.Client;
 import com.type2labs.undersea.common.config.RuntimeConfig;
 import com.type2labs.undersea.common.consensus.ConsensusAlgorithmRole;
-import com.type2labs.undersea.common.consensus.RaftClusterConfig;
+import com.type2labs.undersea.common.consensus.ConsensusClusterConfig;
 import com.type2labs.undersea.common.cost.CostConfiguration;
 import com.type2labs.undersea.common.logger.LogServiceImpl;
 import com.type2labs.undersea.common.missions.planner.impl.NoMissionManager;
@@ -37,9 +37,8 @@ import com.type2labs.undersea.common.monitor.model.SubsystemMonitor;
 import com.type2labs.undersea.common.monitor.model.VisualiserClient;
 import com.type2labs.undersea.common.service.AgentService;
 import com.type2labs.undersea.common.service.ServiceManager;
-import com.type2labs.undersea.prospect.model.RaftNode;
-import com.type2labs.undersea.prospect.networking.impl.RaftClientImpl;
-import com.type2labs.undersea.utilities.executor.ExecutorUtils;
+import com.type2labs.undersea.prospect.model.ConsensusNode;
+import com.type2labs.undersea.prospect.networking.impl.ConsensusAlgorithmClientImpl;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -48,32 +47,26 @@ import java.net.InetSocketAddress;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 public class LocalAgentGroup implements Closeable {
 
     private static final Logger logger = LogManager.getLogger(LocalAgentGroup.class);
 
-    private ExecutorService executorService;
-
-    private final List<RaftNodeImpl> raftNodes;
+    private final List<ConsensusNodeImpl> consensusNodes;
     private final List<Agent> agents = new ArrayList<>();
     private final Client[] clients;
 
     public LocalAgentGroup(int size, Set<Class<? extends AgentService>> services, boolean withVisualiser,
                            boolean withCallbacks) {
-        executorService = Executors.newFixedThreadPool(size);
+        consensusNodes = new ArrayList<>(size);
+        clients = new ConsensusAlgorithmClientImpl[size];
 
-        raftNodes = new ArrayList<>(size);
-        clients = new RaftClientImpl[size];
-
-        RaftClusterConfig config = defaultConfig();
+        ConsensusClusterConfig config = defaultConfig();
         AgentFactory agentFactory = new AgentFactory();
 
         for (int i = 0; i < size; i++) {
             String name = "agent:" + i;
-            RaftNodeImpl raftNode = new RaftNodeImpl(
+            ConsensusNodeImpl consensusNode = new ConsensusNodeImpl(
                     config,
                     new InetSocketAddress("localhost", 0)
             );
@@ -82,7 +75,7 @@ public class LocalAgentGroup implements Closeable {
 
             Agent agent = agentFactory.createWith(config.getRuntimeConfig(), name, serviceManager);
 
-            serviceManager.registerService(raftNode);
+            serviceManager.registerService(consensusNode);
 
             for (Class<? extends AgentService> clazz : services) {
                 AgentService agentService;
@@ -98,7 +91,7 @@ public class LocalAgentGroup implements Closeable {
             serviceManager.registerService(new LogServiceImpl());
 
             if (withCallbacks) {
-                raftNode.registerCallback(DefaultServiceCallbacks.defaultMissionCallback(agent, raftNode, config));
+                consensusNode.registerCallback(DefaultServiceCallbacks.defaultMissionCallback(agent, consensusNode, config));
             }
 
             if (withVisualiser) {
@@ -110,10 +103,10 @@ public class LocalAgentGroup implements Closeable {
                 serviceManager.registerService(subsystemMonitor);
             }
 
-            raftNode.initialise(agent);
-            raftNode.run();
+            consensusNode.initialise(agent);
+            consensusNode.run();
 
-            raftNodes.add(raftNode);
+            consensusNodes.add(consensusNode);
             agents.add(agent);
         }
 
@@ -136,16 +129,14 @@ public class LocalAgentGroup implements Closeable {
     public void close() {
         logger.info("Shutting down local agent group");
 
-        for (RaftNodeImpl node : raftNodes) {
-            executorService.submit(() -> node.parent().shutdown());
+        for (ConsensusNodeImpl node : consensusNodes) {
+            node.parent().shutdown();
         }
-
-        executorService.shutdown();
     }
 
-    private RaftClusterConfig defaultConfig() {
+    private ConsensusClusterConfig defaultConfig() {
         RuntimeConfig underseaConfig = new RuntimeConfig();
-        RaftClusterConfig config = new RaftClusterConfig(underseaConfig);
+        ConsensusClusterConfig config = new ConsensusClusterConfig(underseaConfig);
 
         CostConfiguration costConfiguration = new CostConfiguration();
         costConfiguration.setBias("ACCURACY", 30.0);
@@ -157,58 +148,56 @@ public class LocalAgentGroup implements Closeable {
     }
 
     public void doManualDiscovery() {
-        ExecutorService executorService = Executors.newCachedThreadPool();
+        for (ConsensusNodeImpl consensusNode : consensusNodes) {
+            for (int j = consensusNodes.size() - 1; j >= 0; j--) {
+                ConsensusNode nodeB = consensusNodes.get(j);
 
-        for (RaftNodeImpl raftNode : raftNodes) {
-            executorService.submit(() -> {
-                for (int j = raftNodes.size() - 1; j >= 0; j--) {
-                    RaftNode nodeB = raftNodes.get(j);
-
-                    if (raftNode != nodeB) {
-                        raftNode.state().discoverNode(nodeB);
-                    }
+                if (consensusNode != nodeB) {
+                    consensusNode.state().discoverNode(nodeB);
                 }
-            });
+            }
         }
     }
 
-    public RaftNode getLeaderNode() {
+    public ConsensusNode getLeaderNode() {
         int count = 0;
-        RaftNode match = null;
+        ConsensusNode match = null;
 
-        for (RaftNodeImpl raftNode : raftNodes) {
-            if (raftNode.raftRole() == ConsensusAlgorithmRole.LEADER) {
-                match = raftNode;
+        for (ConsensusNodeImpl consensusNode : consensusNodes) {
+            if (consensusNode.clusterRole() == ConsensusAlgorithmRole.LEADER) {
+                match = consensusNode;
                 count++;
             }
         }
 
         if (count == 1) {
             return match;
+        } else if (count > 1) {
+            throw new RuntimeException("More than one leader elected");
         } else {
             return null;
         }
     }
 
-    public List<RaftNodeImpl> getRaftNodes() {
-        return raftNodes;
+    public List<ConsensusNodeImpl> getNodes() {
+        return consensusNodes;
     }
 
     public void start() {
-        for (RaftNodeImpl node : raftNodes) {
+        for (ConsensusNodeImpl node : consensusNodes) {
             ServiceManager serviceManager = node.parent().serviceManager();
 
             for (AgentService agentService : serviceManager.getServices()) {
-                if (RaftNode.class.isAssignableFrom(agentService.getClass())) {
+                if (ConsensusNode.class.isAssignableFrom(agentService.getClass())) {
                     continue;
                 } else {
-                    executorService.submit(() -> serviceManager.startService(agentService.getClass()));
+                    serviceManager.startService(agentService.getClass());
                 }
             }
         }
     }
 
-    public void removeNode(RaftNodeImpl leaderNode) {
-        raftNodes.remove(leaderNode);
+    public void removeNode(ConsensusNodeImpl leaderNode) {
+        consensusNodes.remove(leaderNode);
     }
 }

@@ -1,7 +1,16 @@
 //-------------------------
 // Meta vehicle config file
 //-------------------------
-#include plug_origin_info.moos
+ServerHost      = localhost
+ServerPort      = 9025
+
+// Community name IS the vehicle name
+Community       = foxtrot
+MOOSTimeWarp    = 5
+LatOrigin       = 43.825300 
+LongOrigin      = -70.330400
+
+
 //---------------------------
 // Antler configuration block
 //---------------------------
@@ -32,18 +41,181 @@ ProcessConfig = sUUVfoxtrot
 	 CommsTick = 4
 	 MAX_APPCAST_EVENTS = 25 
 	 NAME = foxtrot
-	 PORT = $(SUUV_PORT)
-	 INBOUND_PORT = $(INBOUND_SUUV_PORT)
+	 PORT = 9027
+	 INBOUND_PORT = 9028
 	 SENSORS = SENSOR1,SENSOR2
 }
-#include plug_uSimMarine.moos
-#include plug_pNodeReporter.moos
-#include plug_pMarinePID.moos
-#include plug_pHelmIvP_foxtrot.moos
-#include plug_uProcessWatch.moos
-#include plug_pShare.moos
-#include plug_pHostInfo.moos
-#include plug_uFldNodeBroker.moos
-#include plug_uTimerScript.moos
-#include plug_SENSOR1.moos
-#include plug_SENSOR2.moos
+//-------------------------------
+// uSimMarine Configuration Block
+//-------------------------------
+ProcessConfig = uSimMarine
+{
+  AppTick   = 10
+  CommsTick = 10
+
+  //START_POS = x=0,y=-75, 180, 0
+
+  start_x       = 0
+  start_y       = -10
+  start_speed   = 0
+  start_heading = 180
+
+  PREFIX    = NAV
+}
+
+
+//----------------------------------
+// pNodeReporter Configuration Block
+//----------------------------------
+ProcessConfig = pNodeReporter
+{
+  AppTick     = 2
+  CommsTick   = 2
+  
+  VESSEL_TYPE = KAYAK
+}
+
+//-------------------------------
+// pMarinePID Configuration Block
+//-------------------------------
+ProcessConfig = pMarinePID
+{
+  AppTick       = 10
+  CommsTick     = 10
+  
+  VERBOSE       = true
+  DEPTH_CONTROL = false
+  ACTIVE_START  = true
+  
+  // Yaw PID controller
+  YAW_PID_KP             = 0.4
+  YAW_PID_KD             = 0.1
+  YAW_PID_KI             = 0.0
+  YAW_PID_INTEGRAL_LIMIT = 0.07
+  
+  // Speed PID controller
+  SPEED_PID_KP           = 1.0
+  SPEED_PID_KD           = 0.0
+  SPEED_PID_KI           = 0.0
+  SPEED_PID_INTEGRAL_LIMIT = 0.07
+  
+  // Maximums
+  MAXRUDDER  = 100
+  MAXTHRUST  = 100
+  
+  // A non-zero SPEED_FACTOR overrides use of SPEED_PID
+  // Will set DESIRED_THRUST = DESIRED_SPEED * SPEED_FACTOR
+  SPEED_FACTOR = 20
+}
+
+//-----------------------------
+// Helm IvP configuration block
+//-----------------------------
+ProcessConfig = pHelmIvP
+{
+	AppTick			= 4
+	CommsTick		= 4
+	Behaviors		= meta_foxtrot.bhv
+	Verbose			= quiet
+	ok_skew			= any
+	active_start	= false
+	Domain			= course:0:359:360
+	Domain			= speed:0.0:1.0:20
+}
+//----------------------------------
+// uProcessWatch Configuration Block
+//----------------------------------
+ProcessConfig = uProcessWatch
+{
+  AppTick   = 2
+  CommsTick = 2
+  
+  WATCH     = uSimMarine
+  WATCH     = pNodeReporter
+  WATCH     = pMarinePID
+  WATCH     = pHelmIvP
+
+  NOWATCH=uXMS*
+  NOWATCH=uMAC*
+}
+//---------------------------
+// pShare Configuration Block
+//---------------------------
+ProcessConfig = pShare
+{
+  AppTick       = 2
+  CommsTick     = 2
+
+  input = route =  localhost:9026
+}
+
+//------------------------------
+// pHostInfo Configuration Block
+//------------------------------
+ProcessConfig = pHostInfo
+{
+  AppTick 	  = 1
+  CommsTick 	= 1
+
+  DEFAULT_HOSTIP_FORCE = localhost
+}
+
+//-----------------------------------
+// uFldNodeBroker Configuration Block
+//-----------------------------------
+ProcessConfig = uFldNodeBroker
+{
+  AppTick   = 1
+  CommsTick = 1
+
+  TRY_SHORE_HOST = pshare_route=localhost:9000
+
+  BRIDGE = src=VIEW_POLYGON
+  BRIDGE = src=VIEW_POINT
+  BRIDGE = src=VIEW_SEGLIST
+  BRIDGE = src=APPCAST
+  BRIDGE = src=NODE_REPORT_LOCAL,  alias=NODE_REPORT
+  BRIDGE = src=NODE_MESSAGE_LOCAL, alias=NODE_MESSAGE
+}
+
+//------------------------------------
+// AutoStartScript Configuration Block
+//------------------------------------
+ProcessConfig = uTimerScript
+{
+	AppTick 	= 2
+	CommsTick	= 2
+
+	delay_start = 5
+	event = var=MOOS_MANUAL_OVERIDE, val=false
+	event = var=DEPLOY, val=true
+	event = quit, time=10:20
+}
+
+//---------------------------------
+// SENSOR1 Configuration Block
+//---------------------------------
+ProcessConfig = SENSOR1
+{
+	 AppTick			= 2.0
+	 CommsTick			= 2.0
+	 MAX_APPCAST_EVENTS = 25 
+	 NAME				= SENSOR1
+	 RELIABILITY		= 0.7
+	 CHANGE				= 10.0:50.0:2.0
+}
+
+//---------------------------------
+// SENSOR2 Configuration Block
+//---------------------------------
+ProcessConfig = SENSOR2
+{
+	 AppTick			= 4.0
+	 CommsTick			= 4.0
+	 MAX_APPCAST_EVENTS = 25 
+	 NAME				= SENSOR2
+	 RELIABILITY		= 0.8
+	 CHANGE				= 10.0:50.0:2.0
+}
+
+

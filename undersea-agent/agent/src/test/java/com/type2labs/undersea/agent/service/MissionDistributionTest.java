@@ -23,7 +23,7 @@ package com.type2labs.undersea.agent.service;
 
 import com.type2labs.undersea.common.cluster.ClusterState;
 import com.type2labs.undersea.prospect.impl.LocalAgentGroup;
-import com.type2labs.undersea.prospect.impl.RaftNodeImpl;
+import com.type2labs.undersea.prospect.impl.ConsensusNodeImpl;
 
 import static com.type2labs.undersea.utilities.testing.TestUtil.assertTrueEventually;
 
@@ -43,11 +43,8 @@ public class MissionDistributionTest {
             localAgentGroup.start();
 
             assertTrueEventually(() -> {
-                for (RaftNodeImpl node : localAgentGroup.getRaftNodes()) {
+                for (ConsensusNodeImpl node : localAgentGroup.getNodes()) {
                     ClusterState clusterState = node.state().clusterState();
-// TODO: 02/09/2019
-//                    assertNotNull(clusterState);
-//                    assertEquals(count, clusterState.getMembers().size());
                 }
             }, 5);
 

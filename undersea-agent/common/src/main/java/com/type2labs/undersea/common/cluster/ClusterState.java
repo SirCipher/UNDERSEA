@@ -24,8 +24,6 @@ package com.type2labs.undersea.common.cluster;
 import com.type2labs.undersea.common.consensus.ConsensusAlgorithm;
 import com.type2labs.undersea.common.monitor.model.SubsystemMonitor;
 import org.apache.commons.lang3.tuple.Pair;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import java.util.Comparator;
 import java.util.HashMap;
@@ -39,20 +37,18 @@ import java.util.Optional;
  */
 public class ClusterState {
 
-    private static final Logger logger = LogManager.getLogger(ClusterState.class);
-
     private final Map<Client, ClientState> clusterState;
-    private final ConsensusAlgorithm parentNode;
+    private final ConsensusAlgorithm associatedAlg;
     private boolean calculatedCosts = false;
 
-    public ClusterState(ConsensusAlgorithm parentNode) {
-        this.parentNode = parentNode;
+    public ClusterState(ConsensusAlgorithm associatedAlg) {
+        this.associatedAlg = associatedAlg;
         this.clusterState = new HashMap<>();
     }
 
     private void addSelf(Client self) {
         ClientState agentInfo = new ClientState(self);
-        agentInfo.cost = parentNode.parent().serviceManager().getService(SubsystemMonitor.class).getCurrentCost();
+        agentInfo.cost = associatedAlg.parent().serviceManager().getService(SubsystemMonitor.class).getCurrentCost();
         this.clusterState.put(self, agentInfo);
     }
 
@@ -65,8 +61,6 @@ public class ClusterState {
     }
 
     public Pair<Client, ClientState> getNominee(Client self) {
-        logger.info(parentNode.parent().name() + ": calculating cluster costs", parentNode.parent());
-
         if (!calculatedCosts) {
             addSelf(self);
             calculatedCosts = true;

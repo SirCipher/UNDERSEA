@@ -2,7 +2,6 @@
  * Adapted from https://stackoverflow.com/questions/25091148/single-tcp-ip-server-that-handles-multiple-clients-in-c
  */
 
-#include <sys/filio.h>
 #include "communication.h"
 #include "Utilities.h"
 

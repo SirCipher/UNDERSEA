@@ -21,10 +21,10 @@
 
 package com.type2labs.undersea.prospect.impl;
 
-import com.type2labs.undersea.common.consensus.RaftClusterConfig;
-import com.type2labs.undersea.prospect.model.RaftNode;
-import com.type2labs.undersea.prospect.service.MultiRaftProtocolService;
-import com.type2labs.undersea.prospect.service.RaftProtocolService;
+import com.type2labs.undersea.common.consensus.ConsensusClusterConfig;
+import com.type2labs.undersea.prospect.model.ConsensusNode;
+import com.type2labs.undersea.prospect.service.MultiConsensusProtocolService;
+import com.type2labs.undersea.prospect.service.ConsensusProtocolService;
 import com.type2labs.undersea.utilities.executor.ExecutorUtils;
 import io.grpc.Server;
 import io.grpc.ServerBuilder;
@@ -33,7 +33,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.Closeable;
-import java.io.File;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
@@ -47,23 +46,21 @@ public class GrpcServer implements Closeable {
 
     private final Server server;
     private final InetSocketAddress socketAddress;
-    private final RaftNode parentNode;
-    private final ExecutorService handlerExecutor;
-    private final ExecutorService serverExecutor;
+    private final ConsensusNode parentNode;
 
     /**
-     * Creates a new gRPC server for the given {@link RaftNode} and listening on the provided socket address.
+     * Creates a new gRPC server for the given {@link ConsensusNode} and listening on the provided socket address.
      * The server is initialised with a handler executor for services and a server executor for the {@link Server}.
      * Both are initialised using the number of threads defined in the
-     * {@link RaftClusterConfig}
+     * {@link ConsensusClusterConfig}
      *
-     * @param raftNode      that this server belongs to
+     * @param consensusNode      that this server belongs to
      * @param socketAddress to bind the server to. If the port is defined to be 0 then an attempt is made to discover
      *                      an available local port on the machine
      */
-    public GrpcServer(RaftNode raftNode, InetSocketAddress socketAddress) {
-        this.parentNode = raftNode;
-        String agentName = raftNode.parent().name();
+    public GrpcServer(ConsensusNode consensusNode, InetSocketAddress socketAddress) {
+        this.parentNode = consensusNode;
+        String agentName = consensusNode.parent().name();
         ServerSocket serverSocket;
         int port;
 
@@ -72,7 +69,6 @@ public class GrpcServer implements Closeable {
             unavailable. This should be improved in the future
          */
         try {
-
             serverSocket = new ServerSocket(socketAddress.getPort());
             port = serverSocket.getLocalPort();
             serverSocket.close();
@@ -84,17 +80,19 @@ public class GrpcServer implements Closeable {
         this.socketAddress = new InetSocketAddress(port);
         final ServerBuilder builder = NettyServerBuilder.forPort(port);
 
-        handlerExecutor = ExecutorUtils.newCachedThreadPool(agentName + "-grpc-handler-%d", parentNode.parent(), logger);
-        builder.addService(new RaftProtocolService(raftNode, handlerExecutor));
+        int executorThreads = ((ConsensusClusterConfig) consensusNode.config()).executorThreads();
+
+        ExecutorService handlerExecutor = ExecutorUtils.newExecutor(executorThreads, agentName + "-grpc-handler-%d");
+        builder.addService(new ConsensusProtocolService(consensusNode, handlerExecutor));
 
         // TODO: This service should be started and shutdown as required instead of always running
-        builder.addService(new MultiRaftProtocolService(raftNode, handlerExecutor));
+        builder.addService(new MultiConsensusProtocolService(consensusNode, handlerExecutor));
 
-        serverExecutor = ExecutorUtils.newCachedThreadPool(agentName + "-grpc-server-%d", parentNode.parent(), logger);
+        ExecutorService serverExecutor = ExecutorUtils.newExecutor(executorThreads, agentName + "-grpc-server-%d");
         this.server = builder.executor(serverExecutor).build();
 
         logger.info(agentName + ": gRPC server available at  " + socketAddress.getHostString() + ":" + port,
-                raftNode.parent());
+                consensusNode.parent());
     }
 
     /**
@@ -113,6 +111,7 @@ public class GrpcServer implements Closeable {
         } catch (IOException e) {
             logger.error(parentNode.parent().name() + " failed to start. Attempted to use port: " + socketAddress.getPort(),
                     parentNode.parent());
+            e.printStackTrace();
             throw new RuntimeException("Failed to start", e);
         }
     }
@@ -125,23 +124,21 @@ public class GrpcServer implements Closeable {
     }
 
     /**
-     * Indicates that the server should stop processing any new requests
+     * Indicates that the server should stop processing any new requests. Current requests are processed prior
      */
     @Override
     public void close() {
-        handlerExecutor.shutdownNow();
-        serverExecutor.shutdownNow();
-
         String name = parentNode.parent().name();
 
         logger.info(name + ": shutting down gRPC server", parentNode.parent());
 
         try {
-            server.shutdownNow().awaitTermination(10, TimeUnit.SECONDS);
-            logger.info(name + ": shutdown gRPC server", parentNode.parent());
+            server.shutdown().awaitTermination(10, TimeUnit.SECONDS);
         } catch (InterruptedException e) {
             logger.error(name + ": failed to gracefully shutdown gRPC server", parentNode.parent());
         }
+
+        logger.info(name + ": shutdown gRPC server", parentNode.parent());
     }
 
 }

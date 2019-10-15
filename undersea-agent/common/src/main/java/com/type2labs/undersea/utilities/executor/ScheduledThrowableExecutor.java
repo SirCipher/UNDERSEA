@@ -57,6 +57,8 @@ public class ScheduledThrowableExecutor extends ScheduledThreadPoolExecutor {
         return newExecutor(agent, 1, logger);
     }
 
+
+
     protected void afterExecute(Runnable r, Throwable t) {
         super.afterExecute(r, t);
 
@@ -100,13 +102,16 @@ public class ScheduledThrowableExecutor extends ScheduledThreadPoolExecutor {
     }
 
     private <T> Callable<T> wrap(final Callable<T> callable) {
-        return () -> {
-            try {
-                return callable.call();
-            } catch (Throwable t) {
-                t.printStackTrace();
-                ueh.uncaughtException(Thread.currentThread(), t);
-                throw t;
+        return new Callable<T>() {
+            @Override
+            public T call() throws Exception {
+                try {
+                    return callable.call();
+                } catch (Throwable t) {
+                    logger.error(t);
+                    ueh.uncaughtException(Thread.currentThread(), t);
+                    throw t;
+                }
             }
         };
     }
@@ -116,6 +121,7 @@ public class ScheduledThrowableExecutor extends ScheduledThreadPoolExecutor {
             try {
                 runnable.run();
             } catch (final Throwable t) {
+                logger.error(t);
                 ueh.uncaughtException(Thread.currentThread(), t);
                 throw t;
             }

@@ -25,7 +25,7 @@ import com.type2labs.undersea.agent.impl.HardwareInterface;
 import com.type2labs.undersea.agent.impl.MoosConnector;
 import com.type2labs.undersea.common.agent.*;
 import com.type2labs.undersea.common.consensus.MultiRoleStatus;
-import com.type2labs.undersea.common.consensus.RaftClusterConfig;
+import com.type2labs.undersea.common.consensus.ConsensusClusterConfig;
 import com.type2labs.undersea.common.logger.LogServiceImpl;
 import com.type2labs.undersea.common.monitor.impl.SubsystemMonitorSpoofer;
 import com.type2labs.undersea.common.monitor.impl.VisualiserClientImpl;
@@ -39,8 +39,7 @@ import com.type2labs.undersea.dsl.uuv.model.DslAgentProxy;
 import com.type2labs.undersea.missionplanner.manager.MoosMissionManagerImpl;
 import com.type2labs.undersea.missionplanner.planner.vrp.VehicleRoutingOptimiser;
 import com.type2labs.undersea.prospect.impl.DefaultServiceCallbacks;
-import com.type2labs.undersea.prospect.impl.RaftNodeImpl;
-import com.type2labs.undersea.seachain.BlockchainNetworkImpl;
+import com.type2labs.undersea.prospect.impl.ConsensusNodeImpl;
 
 import java.io.File;
 import java.util.LinkedList;
@@ -53,11 +52,11 @@ import java.util.Properties;
  */
 public class AgentInitialiserImpl implements AgentInitialiser {
 
-    private final RaftClusterConfig raftClusterConfig;
+    private final ConsensusClusterConfig consensusClusterConfig;
     private EnvironmentProperties environmentProperties;
 
-    public AgentInitialiserImpl(RaftClusterConfig raftClusterConfig) {
-        this.raftClusterConfig = raftClusterConfig;
+    public AgentInitialiserImpl(ConsensusClusterConfig consensusClusterConfig) {
+        this.consensusClusterConfig = consensusClusterConfig;
     }
 
     @Override
@@ -79,9 +78,9 @@ public class AgentInitialiserImpl implements AgentInitialiser {
                 subsystemMonitor.monitorSubsystem(sensor);
             }
 
-            serviceManager.registerService(subsystemMonitor);
+            serviceManager.registerService(subsystemMonitor, ServiceManager.ServiceExecutionPriority.HIGH);
 
-            Agent underseaAgent = agentFactory.createWith(raftClusterConfig.getRuntimeConfig(), key,
+            Agent underseaAgent = agentFactory.createWith(consensusClusterConfig.getRuntimeConfig(), key,
                     serviceManager);
 
             if (!((DslAgentProxy) value).isActive()) {
@@ -90,12 +89,12 @@ public class AgentInitialiserImpl implements AgentInitialiser {
                 underseaAgent.state().transitionTo(AgentState.State.ACTIVE);
             }
 
-            RaftNodeImpl raftNode = new RaftNodeImpl(raftClusterConfig);
+            ConsensusNodeImpl consensusNode = new ConsensusNodeImpl(consensusClusterConfig);
 
-            serviceManager.registerService(raftNode);
+            serviceManager.registerService(consensusNode, ServiceManager.ServiceExecutionPriority.LOW);
 
-            raftNode.registerCallback(DefaultServiceCallbacks.defaultMissionCallback(underseaAgent, raftNode,
-                    raftClusterConfig));
+            consensusNode.registerCallback(DefaultServiceCallbacks.defaultMissionCallback(underseaAgent, consensusNode,
+                    consensusClusterConfig));
 
             Properties properties = environmentProperties.getRunnerProperties();
             AgentMetaData metaData = value.metadata();
@@ -104,7 +103,7 @@ public class AgentInitialiserImpl implements AgentInitialiser {
 
             if (value.name().equals("shoreside")) {
                 metaData.setProperty(AgentMetaData.PropertyKey.IS_MASTER_NODE, true);
-                raftNode.multiRoleState().setStatus(MultiRoleStatus.LEADER);
+                consensusNode.multiRoleState().setStatus(MultiRoleStatus.LEADER);
             } else {
                 metaData.setProperty(AgentMetaData.PropertyKey.IS_MASTER_NODE, false);
             }

@@ -25,10 +25,10 @@ package com.type2labs.undersea.tutorials.tutorialb;
 import com.type2labs.undersea.common.agent.Agent;
 import com.type2labs.undersea.common.agent.AgentFactory;
 import com.type2labs.undersea.common.agent.AgentState;
-import com.type2labs.undersea.common.consensus.RaftClusterConfig;
+import com.type2labs.undersea.common.consensus.ConsensusClusterConfig;
 import com.type2labs.undersea.common.monitor.impl.SubsystemMonitorSpoofer;
 import com.type2labs.undersea.common.service.ServiceManager;
-import com.type2labs.undersea.prospect.impl.RaftNodeImpl;
+import com.type2labs.undersea.prospect.impl.ConsensusNodeImpl;
 import com.type2labs.undersea.tutorials.tutoriala.MissionManagerSample;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
@@ -55,7 +55,7 @@ public class RunnerB {
 
         for (Agent agent : agents) {
             ServiceManager serviceManager = agent.serviceManager();
-            serviceManager.registerService(new RaftNodeImpl(new RaftClusterConfig()));
+            serviceManager.registerService(new ConsensusNodeImpl(new ConsensusClusterConfig()));
             serviceManager.registerService(new SubsystemMonitorSpoofer());
             serviceManager.registerService(new MissionManagerSample());
             serviceManager.registerService(new DiskLogService());
@@ -68,10 +68,10 @@ public class RunnerB {
         for (Agent a : agents) {
             for (Agent b : agents) {
                 if (a != b) {
-                    RaftNodeImpl raftNodeA = a.serviceManager().getService(RaftNodeImpl.class);
-                    RaftNodeImpl raftNodeB = b.serviceManager().getService(RaftNodeImpl.class);
+                    ConsensusNodeImpl consensusNodeA = a.serviceManager().getService(ConsensusNodeImpl.class);
+                    ConsensusNodeImpl consensusNodeB = b.serviceManager().getService(ConsensusNodeImpl.class);
 
-                    raftNodeA.state().discoverNode(raftNodeB);
+                    consensusNodeA.state().discoverNode(consensusNodeB);
                 }
             }
         }

@@ -1,0 +1,107 @@
+syntax = "proto3";
+option java_package = "com.type2labs.undersea.prospect";
+option java_outer_classname = "ConsensusProtos";
+option java_generate_equals_and_hash = true;
+package proto;
+import "google/protobuf/any.proto";
+
+service ConsensusProtocolService {
+    rpc GetStatus (AcquireStatusRequest) returns (AcquireStatusResponse) {
+    }
+
+    rpc AppendEntry (AppendEntryRequest) returns (AppendEntryResponse) {
+
+    }
+
+    rpc RequestVote (VoteRequest) returns (VoteResponse) {
+
+    }
+
+    rpc DistributeMission (DistributeMissionRequest) returns (DisributeMissionResponse) {
+
+    }
+
+    rpc BroadcastMembershipChanges (ClusterMembersRequest) returns (Empty) {
+
+    }
+}
+
+service MultiConsensusProtocolService {
+    rpc Notify (NotificationRequest) returns (Empty) {
+    }
+}
+
+message ClusterMembersRequest {
+    repeated ConsensusPeerProto members = 1;
+    ConsensusPeerProto client = 2;
+}
+
+message NotificationRequest {
+    ConsensusPeerProto client = 1;
+    string notification = 2;
+    string statusCode = 3;
+}
+
+message Empty {
+
+}
+
+message DistributeMissionRequest {
+    ConsensusPeerProto client = 1;
+    string mission = 2;
+}
+
+message DisributeMissionResponse {
+    ConsensusPeerProto client = 1;
+    int32 response = 2;
+}
+
+message ConsensusPeerProto {
+    string consensusPeerId = 1;
+    string host = 2;
+    uint32 port = 3;
+}
+
+message AcquireStatusRequest {
+    ConsensusPeerProto client = 1;
+    string status = 2;
+}
+
+message AcquireStatusResponse {
+    ConsensusPeerProto client = 1;
+    double cost = 2;
+}
+
+message AppendEntryRequest {
+    ConsensusPeerProto client = 1;
+    ConsensusPeerProto leader = 2;
+    repeated LogEntryProto logEntry = 3;
+
+    uint32 term = 4;
+    uint32 prevLogIndex = 5;
+}
+
+message AppendEntryResponse {
+    ConsensusPeerProto client = 1;
+    uint32 term = 2;
+}
+
+message LogEntryProto {
+    string data = 1;
+    string value = 2;
+    uint32 term = 3;
+    string agentService = 4;
+    ConsensusPeerProto leader = 5;
+}
+
+message VoteRequest {
+    ConsensusPeerProto client = 1;
+    uint32 term = 2;
+}
+
+message VoteResponse {
+    ConsensusPeerProto client = 1;
+    ConsensusPeerProto nominee = 2;
+}
+
+

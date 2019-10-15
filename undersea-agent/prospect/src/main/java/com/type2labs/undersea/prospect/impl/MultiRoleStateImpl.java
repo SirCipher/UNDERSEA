@@ -28,7 +28,7 @@ import com.type2labs.undersea.common.cluster.Client;
 import com.type2labs.undersea.common.cluster.PeerId;
 import com.type2labs.undersea.common.consensus.*;
 import com.type2labs.undersea.common.service.transaction.LifecycleEvent;
-import com.type2labs.undersea.prospect.model.RaftNode;
+import com.type2labs.undersea.prospect.model.ConsensusNode;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -46,12 +46,12 @@ public class MultiRoleStateImpl implements MultiRoleState {
     private static final Logger logger = LogManager.getLogger(MultiRoleStateImpl.class);
 
     /**
-     * The leader of the parent cluster. Followers know of their raft node leader's multi role leader. This is in
+     * The leader of the parent cluster. Followers know of their node leader's multi layer leader. This is in
      * case their leader fails and their is a shift in the hierarchy
      */
     private Client leader;
     private MultiRoleStatus status = MultiRoleStatus.NOT_APPLIED;
-    private RaftNode raftNode;
+    private ConsensusNode consensusNode;
     private Map<PeerId, Client> remotePeers = new HashMap<>();
     /**
      * A map of clients that we have communicated with and their respective states. This will be different to what
@@ -59,8 +59,8 @@ public class MultiRoleStateImpl implements MultiRoleState {
      */
     private Map<Client, MultiRoleClientState> clientStates = new HashMap<>();
 
-    MultiRoleStateImpl(RaftNode raftNode) {
-        this.raftNode = Objects.requireNonNull(raftNode);
+    MultiRoleStateImpl(ConsensusNode consensusNode) {
+        this.consensusNode = Objects.requireNonNull(consensusNode);
     }
 
     public Client getLeader() {
@@ -91,10 +91,10 @@ public class MultiRoleStateImpl implements MultiRoleState {
     }
 
     /**
-     * Sets the {@link MultiRoleStatus} based on the current {@link ConsensusAlgorithm#raftRole()}
+     * Sets the {@link MultiRoleStatus} based on the current {@link ConsensusAlgorithm#clusterRole()}
      */
     void updateStatus() {
-        if (raftNode.raftRole() == ConsensusAlgorithmRole.LEADER && this.leader != null) {
+        if (consensusNode.clusterRole() == ConsensusAlgorithmRole.LEADER && this.leader != null) {
             this.status = MultiRoleStatus.LEADER_FOLLOWER;
         } else {
             this.status = MultiRoleStatus.NOT_APPLIED;
@@ -117,8 +117,8 @@ public class MultiRoleStateImpl implements MultiRoleState {
         ObjectMapper objectMapper = new ObjectMapper();
         String missionCoordinates = clientStates.get(client).getJsonMissionCoordinates();
         if (StringUtils.isEmpty(missionCoordinates)) {
-            logger.error(raftNode.parent() + ": failed client {" + client.peerId() + "} did not sent a mission",
-                    raftNode.parent());
+            logger.error(consensusNode.parent() + ": failed client {" + client.peerId() + "} did not sent a mission",
+                    consensusNode.parent());
             return;
         }
 
@@ -127,8 +127,8 @@ public class MultiRoleStateImpl implements MultiRoleState {
             coordinates = objectMapper.readValue(missionCoordinates, Double[][].class);
         } catch (JsonProcessingException e) {
             e.printStackTrace();
-            logger.error(raftNode.parent() + ": failed to parse json mission: " + e.getLocalizedMessage(),
-                    raftNode.parent());
+            logger.error(consensusNode.parent() + ": failed to parse json mission: " + e.getLocalizedMessage(),
+                    consensusNode.parent());
             return;
         }
 
@@ -141,8 +141,8 @@ public class MultiRoleStateImpl implements MultiRoleState {
             }
         }
 
-        raftNode.config().getRuntimeConfig().missionParameters().setPolygon(unboxed);
-        raftNode.fireCallback(LifecycleEvent.ELECTED_LEADER);
+        consensusNode.config().getRuntimeConfig().missionParameters().setPolygon(unboxed);
+        consensusNode.fireCallback(LifecycleEvent.ELECTED_LEADER);
     }
 
     @Override

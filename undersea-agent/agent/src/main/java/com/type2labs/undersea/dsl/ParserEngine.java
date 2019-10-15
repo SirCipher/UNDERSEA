@@ -116,7 +116,7 @@ public class ParserEngine {
         return parser;
     }
 
-    public EnvironmentProperties parseConfiguration() throws IOException {
+    public EnvironmentProperties parseMission() throws IOException {
         runSensorListener();
         runUUVListener();
 
@@ -161,13 +161,13 @@ public class ParserEngine {
         // begin parsing at model rule
         ParseTree tree = parser.model();
 
-        // Create a generic parseConfiguration tree walker that can trigger callbacks
+        // Create a generic parseMission tree walker that can trigger callbacks
         ParseTreeWalker walker = new ParseTreeWalker();
 
         // Create a listener
         SensorListener listener = new SensorListener();
 
-        // Walk the tree created during the parseConfiguration, trigger callbacks
+        // Walk the tree created during the parseMission, trigger callbacks
         walker.walk(listener, tree);
     }
 
@@ -178,14 +178,14 @@ public class ParserEngine {
         // begin parsing at model rule
         ParseTree tree = parser.model();
 
-        // Create a generic parseConfiguration tree walker that can trigger callbacks
+        // Create a generic parseMission tree walker that can trigger callbacks
         ParseTreeWalker walker = new ParseTreeWalker();
 
         // Create a listener
         UUVListener listener = new UUVListener();
         listener.setEnvironmentProperties(environmentProperties);
 
-        // Walk the tree created during the parseConfiguration, trigger callbacks
+        // Walk the tree created during the parseMission, trigger callbacks
         walker.walk(listener, tree);
     }
 

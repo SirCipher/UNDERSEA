@@ -162,13 +162,13 @@ public class VisualiserClientImpl implements VisualiserClient {
 
         ConsensusAlgorithm consensusAlgorithm = serviceManager.getService(ConsensusAlgorithm.class);
 
-        String raftRole = "";
+        String consensusRole = "";
         String multiRoleStatus = "";
         String leaderPeerId = "N/A";
         int noPeers = parent.clusterClients().size();
 
         if (consensusAlgorithm != null) {
-            raftRole = String.valueOf(consensusAlgorithm.raftRole());
+            consensusRole = String.valueOf(consensusAlgorithm.clusterRole());
             multiRoleStatus = String.valueOf(consensusAlgorithm.multiRoleState().status());
 
             PeerId peerId = consensusAlgorithm.leaderPeerId();
@@ -202,7 +202,7 @@ public class VisualiserClientImpl implements VisualiserClient {
                 parent.peerId().toString(),
                 multiRoleStatus,
                 serviceManagerStatus,
-                raftRole,
+                consensusRole,
                 leaderPeerId,
                 assignedTasks.size(),
                 completedTasks,

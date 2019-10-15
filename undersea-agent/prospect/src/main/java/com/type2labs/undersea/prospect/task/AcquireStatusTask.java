@@ -21,20 +21,18 @@
 
 package com.type2labs.undersea.prospect.task;
 
-import com.google.common.util.concurrent.FutureCallback;
 import com.type2labs.undersea.common.cluster.Client;
 import com.type2labs.undersea.common.cluster.ClusterState;
-import com.type2labs.undersea.common.consensus.RaftClusterConfig;
-import com.type2labs.undersea.prospect.RaftProtos;
-import com.type2labs.undersea.prospect.model.RaftNode;
-import com.type2labs.undersea.prospect.networking.model.RaftClient;
+import com.type2labs.undersea.common.consensus.ConsensusClusterConfig;
+import com.type2labs.undersea.prospect.ConsensusProtos;
+import com.type2labs.undersea.prospect.model.ConsensusNode;
+import com.type2labs.undersea.prospect.networking.model.ConsensusAlgorithmClient;
 import com.type2labs.undersea.prospect.util.GrpcUtil;
 import io.grpc.Deadline;
 import io.grpc.Status;
 import io.grpc.StatusRuntimeException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.Collection;
 import java.util.concurrent.TimeUnit;
@@ -42,80 +40,67 @@ import java.util.concurrent.TimeUnit;
 public class AcquireStatusTask implements Runnable {
 
     private static final Logger logger = LogManager.getLogger(AcquireStatusTask.class);
-    private final RaftNode raftNode;
-    private int noResponses;
+    private final ConsensusNode consensusNode;
+    private int noResponses = 0;
+    private int clusterSize;
 
-    public AcquireStatusTask(RaftNode raftNode) {
-        this.raftNode = raftNode;
+    public AcquireStatusTask(ConsensusNode consensusNode) {
+        this.consensusNode = consensusNode;
+        this.clusterSize = consensusNode.parent().clusterClients().size();
     }
 
     @Override
     public void run() {
-        if (raftNode.state().isPreVoteState()) {
+        if (consensusNode.state().isPreVoteState()) {
             return;
         }
 
-        logger.info(raftNode.parent().name() + ": querying cluster clients for their state", raftNode.parent());
+        Collection<Client> localNodes = consensusNode.state().localNodes().values();
 
-        Collection<Client> localNodes = raftNode.state().localNodes().values();
-
-        raftNode.state().initPreVoteClusterState();
+        consensusNode.state().initPreVoteClusterState();
 
         if (localNodes.size() == 0) {
-            raftNode.execute(new VoteTask(raftNode));
+            consensusNode.execute(new VoteTask(consensusNode));
             return;
         }
 
-        ClusterState preVoteClusterState = raftNode.state().getPreVoteClusterState();
-        RaftClusterConfig config = raftNode.config();
-        RaftProtos.AcquireStatusRequest request = RaftProtos.AcquireStatusRequest
-                .newBuilder()
-                .setClient(GrpcUtil.toProtoClient(raftNode))
-                .build();
-
         for (Client localNode : localNodes) {
-            RaftClient raftClient = (RaftClient) localNode;
+            ConsensusAlgorithmClient consensusAlgorithmClient = (ConsensusAlgorithmClient) localNode;
 
-            raftClient.getStatus(request, Deadline.after(config.requestDeadline(), TimeUnit.SECONDS), new FutureCallback<RaftProtos.AcquireStatusResponse>() {
-                @Override
-                public void onSuccess(RaftProtos.@Nullable AcquireStatusResponse response) {
-                    ClusterState.ClientState agentInfo = new ClusterState.ClientState(localNode, response.getCost());
-                    preVoteClusterState.setAgentInformation(localNode, agentInfo);
+            ConsensusProtos.AcquireStatusRequest request = ConsensusProtos.AcquireStatusRequest
+                    .newBuilder()
+                    .setClient(GrpcUtil.toProtoClient(consensusNode))
+                    .build();
 
-                    incrementAndStartVoting();
+            ConsensusProtos.AcquireStatusResponse response;
+            ClusterState preVoteClusterState = consensusNode.state().getPreVoteClusterState();
+
+            try {
+                ConsensusClusterConfig config = (ConsensusClusterConfig) consensusNode.config();
+
+                response = consensusAlgorithmClient.getStatus(request, Deadline.after(config.getStatusDeadline(), TimeUnit.SECONDS));
+
+                ClusterState.ClientState agentInfo = new ClusterState.ClientState(localNode, response.getCost());
+                preVoteClusterState.setAgentInformation(localNode, agentInfo);
+
+                incrementAndVote();
+            } catch (StatusRuntimeException e) {
+                Status.Code code = e.getStatus().getCode();
+
+                if (code.equals(Status.Code.DEADLINE_EXCEEDED)) {
+                    logger.info(consensusNode.parent().name() + ": deadline exceeded while contacting client: " + consensusAlgorithmClient.name()
+                            , consensusNode.parent());
+                    incrementAndVote();
                 }
-
-                @Override
-                public void onFailure(Throwable t) {
-                    if (t instanceof StatusRuntimeException) {
-                        StatusRuntimeException sre = (StatusRuntimeException) t;
-
-                        Status.Code code = sre.getStatus().getCode();
-
-                        if (code.equals(Status.Code.DEADLINE_EXCEEDED)) {
-                            logger.info(raftNode.parent().name() + ": deadline exceeded while contacting client: " + raftClient.name()
-                                    , raftNode.parent());
-                            incrementAndStartVoting();
-                        } else if (code.equals(Status.Code.UNAVAILABLE)) {
-                            incrementAndStartVoting();
-                            raftNode.state().removeNode(raftClient.peerId());
-                        }
-                    } else {
-                        logger.error(t);
-                    }
-                }
-            });
-
-//            ThreadUtils.sleep(100);
+            }
         }
     }
 
-    private synchronized void incrementAndStartVoting() {
+    private void incrementAndVote() {
         noResponses++;
-        int clusterSize = raftNode.state().localNodes().size();
 
         if (noResponses == clusterSize) {
-            raftNode.execute(new VoteTask(raftNode));
+            consensusNode.execute(new VoteTask(consensusNode));
         }
     }
 }

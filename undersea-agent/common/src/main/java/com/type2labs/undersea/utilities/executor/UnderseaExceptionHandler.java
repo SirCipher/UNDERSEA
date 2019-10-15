@@ -21,9 +21,6 @@ public class UnderseaExceptionHandler {
                 break;
             case UNKNOWN:
                 agent.serviceManager().handleFailure(underseaException.getAgentService().getClass());
-                break;
-            default:
-                t.printStackTrace();
         }
     }
 

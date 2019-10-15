@@ -40,7 +40,7 @@ public class ParserEngineTest {
             Properties properties = Utility.getPropertiesByName(configurationFileLocation);
             properties.put("pwd", new File(configurationFileLocation).getAbsoluteFile().getParent());
             ParserEngine parserEngine = new ParserEngine(properties);
-            parserEngine.parseConfiguration();
+            parserEngine.parseMission();
 
             parserEngine.generateFiles();
         } catch (Exception e) {

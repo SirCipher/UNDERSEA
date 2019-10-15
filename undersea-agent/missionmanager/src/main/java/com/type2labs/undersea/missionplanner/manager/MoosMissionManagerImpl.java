@@ -74,7 +74,8 @@ public class MoosMissionManagerImpl implements MissionManager {
 
     public MoosMissionManagerImpl(MissionPlanner missionPlanner) {
         this.missionPlanner = missionPlanner;
-        this.taskExecutor = MoreExecutors.listeningDecorator(ThrowableExecutor.newSingleThreadExecutor(parent(), logger));
+        this.taskExecutor = MoreExecutors.listeningDecorator(ThrowableExecutor.newSingleThreadExecutor(parent(),
+                logger));
     }
 
     private void runTask(Task task) {
@@ -265,16 +266,14 @@ public class MoosMissionManagerImpl implements MissionManager {
         LifecycleEvent statusCode = (LifecycleEvent) transaction.getStatusCode();
 
         if (statusCode == LifecycleEvent.ELECTED_LEADER) {
-            return transaction.getExecutorService().submit(() -> {
-                try {
-                    GeneratedMission generatedMission = missionPlanner.generate();
-                    missionPlanner.print(generatedMission);
+            try {
+                GeneratedMission generatedMission = missionPlanner.generate();
+                missionPlanner.print(generatedMission);
 
-                    return generatedMission;
-                } catch (PlannerException e) {
-                    throw new RuntimeException(e);
-                }
-            });
+                return generatedMission;
+            } catch (PlannerException e) {
+                throw new RuntimeException(e);
+            }
         } else if (statusCode == LifecycleEvent.APPEND_REQUEST) {
             handleAppendTransaction(transaction);
         }

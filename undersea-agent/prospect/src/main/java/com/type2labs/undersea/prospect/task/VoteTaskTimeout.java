@@ -23,7 +23,7 @@ package com.type2labs.undersea.prospect.task;
 
 import com.type2labs.undersea.common.consensus.ConsensusAlgorithmRole;
 import com.type2labs.undersea.common.logger.UnderseaLogger;
-import com.type2labs.undersea.prospect.model.RaftNode;
+import com.type2labs.undersea.prospect.model.ConsensusNode;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -31,19 +31,19 @@ public class VoteTaskTimeout implements Runnable {
 
     private static final Logger logger = LogManager.getLogger(VoteTaskTimeout.class);
 
-    private final RaftNode raftNode;
+    private final ConsensusNode consensusNode;
 
-    VoteTaskTimeout(RaftNode raftNode) {
-        this.raftNode = raftNode;
+    VoteTaskTimeout(ConsensusNode consensusNode) {
+        this.consensusNode = consensusNode;
     }
 
     @Override
     public void run() {
-        if (raftNode.raftRole() != ConsensusAlgorithmRole.CANDIDATE) {
+        if (consensusNode.clusterRole() != ConsensusAlgorithmRole.CANDIDATE) {
             return;
         }
 
-        UnderseaLogger.info(logger, raftNode.parent(), "Voting round timed out, trying again");
-        raftNode.execute(new AcquireStatusTask(raftNode));
+        UnderseaLogger.info(logger, consensusNode.parent(), "Voting round timed out, trying again");
+        consensusNode.execute(new AcquireStatusTask(consensusNode));
     }
 }

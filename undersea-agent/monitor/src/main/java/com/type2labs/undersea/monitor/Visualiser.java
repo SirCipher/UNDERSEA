@@ -131,8 +131,8 @@ public class Visualiser {
         GridBagConstraints c = new GridBagConstraints();
         c.fill = GridBagConstraints.HORIZONTAL;
 
-        String[] columnNames = {"Raft Peer ID", "Name", "Multi-Role status", "Service Manager Status",
-                "Raft Role", "Leader Peer ID", "No. Tasks", "No. Completed Tasks", "No. Peers", "Error count"};
+        String[] columnNames = {"Peer ID", "Name", "Multi-Role status", "Service Manager Status",
+                "Role", "Leader Peer ID", "No. Tasks", "No. Peers", "Error count"};
         DefaultTableModel model = new DefaultTableModel(new Object[0][0], columnNames);
         table = new JTable(model) {
             @Override
@@ -230,7 +230,7 @@ public class Visualiser {
         frame.add(statusPanel, BorderLayout.SOUTH);
         statusPanel.setPreferredSize(new Dimension(frame.getWidth(), 16));
         statusPanel.setLayout(new BoxLayout(statusPanel, BoxLayout.X_AXIS));
-        JLabel statusLabel = new JLabel("status");
+        JLabel statusLabel = new JLabel();
         statusLabel.setHorizontalAlignment(SwingConstants.LEFT);
         statusPanel.add(statusLabel);
 
@@ -302,7 +302,7 @@ public class Visualiser {
 
             if (received instanceof VisualiserData) {
                 final VisualiserData agentState = (VisualiserData) received;
-                final String peerId = agentState.getRaftPeerId();
+                final String peerId = agentState.getConsensusPeerId();
 
                 AgentInfo agentInfo = agents.get(peerId);
 
@@ -314,14 +314,13 @@ public class Visualiser {
                     agentInfo.port = agentState.getPort();
 
                     model.addRow(new Object[]{
-                            agentState.getRaftPeerId(),
+                            agentState.getConsensusPeerId(),
                             agentState.getName(),
                             agentState.getMultiRoleStatus(),
                             agentState.getServiceManagerStatus(),
-                            agentState.getRaftRole(),
+                            agentState.getRole(),
                             agentState.getLeaderPeerId(),
                             agentState.getNoAssignedTasks(),
-                            agentState.getCompletedTasks(),
                             agentState.getNoPeers(),
                             0
                     });
@@ -329,24 +328,23 @@ public class Visualiser {
                     int rowId = getRowByPeerId(peerId);
 
                     if (rowId != -1) {
-                        model.setValueAt(agentState.getRaftPeerId(), rowId, 0);
+                        model.setValueAt(agentState.getConsensusPeerId(), rowId, 0);
                         model.setValueAt(agentState.getName(), rowId, 1);
                         model.setValueAt(agentState.getMultiRoleStatus(), rowId, 2);
                         model.setValueAt(agentState.getServiceManagerStatus(), rowId, 3);
-                        model.setValueAt(agentState.getRaftRole(), rowId, 4);
+                        model.setValueAt(agentState.getRole(), rowId, 4);
                         model.setValueAt(agentState.getLeaderPeerId(), rowId, 5);
                         model.setValueAt(agentState.getNoAssignedTasks(), rowId, 6);
-                        model.setValueAt(agentState.getCompletedTasks(), rowId, 7);
-                        model.setValueAt(agentState.getNoPeers(), rowId, 8);
+                        model.setValueAt(agentState.getNoPeers(), rowId, 7);
                     }
                 }
             } else if (received instanceof VisualiserMessage) {
                 VisualiserMessage visualiserMessage = (VisualiserMessage) received;
                 int rowId = getRowByPeerId(visualiserMessage.getPeerId());
-                int errorCount = (int) model.getValueAt(rowId, 9);
+                int errorCount = (int) model.getValueAt(rowId, 8);
                 errorCount = visualiserMessage.isError() ? errorCount + 1 : errorCount;
 
-                model.setValueAt(errorCount, rowId, 9);
+                model.setValueAt(errorCount, rowId, 8);
 
                 AgentInfo agentInfo = agents.get(visualiserMessage.getPeerId());
                 if (agentInfo == null) {

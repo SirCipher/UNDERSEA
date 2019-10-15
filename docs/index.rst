@@ -11,4 +11,6 @@ Welcome to UNDERSEA's documentation!
    :caption: Contents:
 
     Getting Started <gettingstarted.rst>
+    Implementing a New Service <logging.rst>
+    Subsystem Monitoring <monitoring.rst>
 

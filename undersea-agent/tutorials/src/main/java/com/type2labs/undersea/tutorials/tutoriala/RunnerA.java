@@ -28,7 +28,7 @@ import com.google.common.util.concurrent.ListenableFuture;
 import com.type2labs.undersea.common.agent.Agent;
 import com.type2labs.undersea.common.agent.AgentFactory;
 import com.type2labs.undersea.common.agent.AgentState;
-import com.type2labs.undersea.common.consensus.RaftClusterConfig;
+import com.type2labs.undersea.common.consensus.ConsensusClusterConfig;
 import com.type2labs.undersea.common.logger.LogServiceImpl;
 import com.type2labs.undersea.common.missions.planner.model.GeneratedMission;
 import com.type2labs.undersea.common.missions.planner.model.MissionManager;
@@ -37,7 +37,7 @@ import com.type2labs.undersea.common.service.ServiceManager;
 import com.type2labs.undersea.common.service.transaction.LifecycleEvent;
 import com.type2labs.undersea.common.service.transaction.ServiceCallback;
 import com.type2labs.undersea.common.service.transaction.Transaction;
-import com.type2labs.undersea.prospect.impl.RaftNodeImpl;
+import com.type2labs.undersea.prospect.impl.ConsensusNodeImpl;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.LoggerContext;
@@ -63,13 +63,13 @@ public class RunnerA {
 
         for (Agent agent : agents) {
             ServiceManager serviceManager = agent.serviceManager();
-            RaftNodeImpl raftNode = new RaftNodeImpl(new RaftClusterConfig());
-            raftNode.registerCallback(new ServiceCallback(LifecycleEvent.ELECTED_LEADER, () -> {
+            ConsensusNodeImpl consensusNode = new ConsensusNodeImpl(new ConsensusClusterConfig());
+            consensusNode.registerCallback(new ServiceCallback(LifecycleEvent.ELECTED_LEADER, () -> {
                 Transaction transaction = new Transaction.Builder(agent)
                         .forService(MissionManager.class)
                         .withStatus(LifecycleEvent.ELECTED_LEADER)
-                        .usingExecutorService(raftNode.getListeningExecutorService())
-                        .invokedBy(raftNode)
+                        .usingExecutorService(consensusNode.getListeningExecutorService())
+                        .invokedBy(consensusNode)
                         .build();
 
                 Set<ListenableFuture<?>> futures = agent.serviceManager().commitTransaction(transaction);
@@ -78,7 +78,7 @@ public class RunnerA {
                     Futures.addCallback(future, new FutureCallback<Object>() {
                         @Override
                         public void onSuccess(@Nullable Object result) {
-                            raftNode.distributeMission((GeneratedMission) result);
+                            consensusNode.distributeMission((GeneratedMission) result);
                         }
 
                         @Override
@@ -86,11 +86,11 @@ public class RunnerA {
                             throw new RuntimeException(t);
                         }
 
-                    }, raftNode.getSingleThreadScheduledExecutor());
+                    }, consensusNode.getSingleThreadScheduledExecutor());
                 }
             }));
 
-            serviceManager.registerService(raftNode);
+            serviceManager.registerService(consensusNode);
             serviceManager.registerService(new SubsystemMonitorSpoofer());
             serviceManager.registerService(new MissionManagerSample());
             serviceManager.registerService(new LogServiceImpl());
@@ -103,10 +103,10 @@ public class RunnerA {
         for (Agent a : agents) {
             for (Agent b : agents) {
                 if (a != b) {
-                    RaftNodeImpl raftNodeA = a.serviceManager().getService(RaftNodeImpl.class);
-                    RaftNodeImpl raftNodeB = b.serviceManager().getService(RaftNodeImpl.class);
+                    ConsensusNodeImpl consensusNodeA = a.serviceManager().getService(ConsensusNodeImpl.class);
+                    ConsensusNodeImpl consensusNodeB = b.serviceManager().getService(ConsensusNodeImpl.class);
 
-                    raftNodeA.state().discoverNode(raftNodeB);
+                    consensusNodeA.state().discoverNode(consensusNodeB);
                 }
             }
         }

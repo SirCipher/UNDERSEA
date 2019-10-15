@@ -30,29 +30,29 @@ public class VisualiserData implements Serializable {
 
     private static final long serialVersionUID = 1980452255341789631L;
     private final String name;
-    private final String raftPeerId;
+    private final String consensusPeerId;
     private String multiRoleStatus = "N/A";
     private String serviceManagerStatus = "N/A";
-    private String raftRole = "N/A";
+    private String consensusRole = "N/A";
     private String leaderPeerId;
     private int noAssignedTasks;
     private int completedTasks;
     private int port;
     private int noPeers;
 
-    public VisualiserData(String raftPeerId, String name) {
-        this.raftPeerId = raftPeerId;
+    public VisualiserData(String consensusPeerId, String name) {
+        this.consensusPeerId = consensusPeerId;
         this.name = name;
     }
 
-    public VisualiserData(String name, String raftPeerId, String multiRoleStatus, String serviceManagerStatus,
-                          String raftRole, String leaderPeerId, int noAssignedTasks, int completedTasks, int port,
+    public VisualiserData(String name, String consensusPeerId, String multiRoleStatus, String serviceManagerStatus,
+                          String consensusRole, String leaderPeerId, int noAssignedTasks, int completedTasks, int port,
                           int noPeers) {
         this.name = name;
-        this.raftPeerId = raftPeerId;
+        this.consensusPeerId = consensusPeerId;
         this.multiRoleStatus = multiRoleStatus;
         this.serviceManagerStatus = serviceManagerStatus;
-        this.raftRole = raftRole;
+        this.consensusRole = consensusRole;
         this.leaderPeerId = leaderPeerId;
         this.noAssignedTasks = noAssignedTasks;
         this.completedTasks = completedTasks;
@@ -76,10 +76,10 @@ public class VisualiserData implements Serializable {
     public String toString() {
         return "VisualiserData{" +
                 "name='" + name + '\'' +
-                ", raftPeerId='" + raftPeerId + '\'' +
+                ", consensusPeerId='" + consensusPeerId + '\'' +
                 ", multiRoleStatus='" + multiRoleStatus + '\'' +
                 ", serviceManagerStatus='" + serviceManagerStatus + '\'' +
-                ", raftRole='" + raftRole + '\'' +
+                ", consensusRole='" + consensusRole + '\'' +
                 ", leaderPeerId='" + leaderPeerId + '\'' +
                 ", noTasks=" + noAssignedTasks +
                 ", completedTasks=" + completedTasks +
@@ -96,20 +96,20 @@ public class VisualiserData implements Serializable {
         this.serviceManagerStatus = serviceManagerStatus;
     }
 
-    public String getRaftPeerId() {
-        return raftPeerId;
+    public String getConsensusPeerId() {
+        return consensusPeerId;
     }
 
     public String getName() {
         return name;
     }
 
-    public String getRaftRole() {
-        return raftRole;
+    public String getRole() {
+        return consensusRole;
     }
 
-    public void setRaftRole(String raftRole) {
-        this.raftRole = raftRole;
+    public void setRole(String consensusRole) {
+        this.consensusRole = consensusRole;
     }
 
     public int getNoAssignedTasks() {

@@ -80,6 +80,7 @@ allprojects {
         testLogging {
             exceptionFormat = 'full'
             testLogging.showStandardStreams = true
+
         }
     }
 
@@ -115,10 +116,7 @@ allprojects {
     }
 
     tasks.withType(Test) {
-        minHeapSize = "512m"
-        maxHeapSize = "2048m"
-
-        String path = ""
+        String path = "";
 
         if (Os.isFamily(Os.FAMILY_MAC)) {
             System.out.println("Detected OS MAC")
@@ -142,6 +140,10 @@ allprojects {
         systemProperty "java.library.path", path;
         systemProperty "buildserver", isBuildServer
     }
+
+}
+
+dependencies {
 
 }
 

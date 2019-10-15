@@ -21,8 +21,8 @@
 
 package com.type2labs.undersea.prospect;
 
-import com.type2labs.undersea.prospect.model.RaftNode;
-import com.type2labs.undersea.prospect.service.RaftProtocolService;
+import com.type2labs.undersea.prospect.model.ConsensusNode;
+import com.type2labs.undersea.prospect.service.ConsensusProtocolService;
 import io.github.classgraph.ClassGraph;
 import io.github.classgraph.ClassInfo;
 import io.github.classgraph.ScanResult;
@@ -48,7 +48,7 @@ public class ServerBuilder {
 //                .verbose()
 //                .enableAllInfo()
                 .disableModuleScanning()
-                .whitelistPackages(RaftProtocolService.class.getPackage().getName())
+                .whitelistPackages(ConsensusProtocolService.class.getPackage().getName())
                 .scan();
 
         registeredServices = scanResult
@@ -73,13 +73,13 @@ public class ServerBuilder {
 
     }
 
-    public static Server build(InetSocketAddress address, RaftNode raftNode, ExecutorService executorService) {
+    public static Server build(InetSocketAddress address, ConsensusNode consensusNode, ExecutorService executorService) {
         NettyServerBuilder builder = NettyServerBuilder.forPort(address.getPort());
 
         for (Class<?> service : registeredServices) {
             BindableService instance;
             try {
-                instance = (BindableService) service.getDeclaredConstructor(RaftNode.class).newInstance(raftNode);
+                instance = (BindableService) service.getDeclaredConstructor(ConsensusNode.class).newInstance(consensusNode);
             } catch (InstantiationException | IllegalAccessException | InvocationTargetException |
                     NoSuchMethodException e) {
                 throw new RuntimeException("Failed to build server", e);

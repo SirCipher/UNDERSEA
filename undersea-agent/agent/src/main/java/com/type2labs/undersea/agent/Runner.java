@@ -24,7 +24,8 @@ package com.type2labs.undersea.agent;
 import com.type2labs.undersea.common.agent.Agent;
 import com.type2labs.undersea.common.agent.AgentState;
 import com.type2labs.undersea.common.config.RuntimeConfig;
-import com.type2labs.undersea.common.consensus.RaftClusterConfig;
+import com.type2labs.undersea.common.consensus.ConsensusAlgorithm;
+import com.type2labs.undersea.common.consensus.ConsensusClusterConfig;
 import com.type2labs.undersea.common.cost.CostConfiguration;
 import com.type2labs.undersea.common.missions.planner.impl.MissionParametersImpl;
 import com.type2labs.undersea.common.missions.planner.model.MissionParameters;
@@ -34,8 +35,8 @@ import com.type2labs.undersea.dsl.EnvironmentProperties;
 import com.type2labs.undersea.dsl.ParserEngine;
 import com.type2labs.undersea.dsl.uuv.model.DslAgentProxy;
 import com.type2labs.undersea.missionplanner.manager.MoosMissionManagerImpl;
-import com.type2labs.undersea.prospect.impl.RaftNodeImpl;
-import com.type2labs.undersea.prospect.model.RaftNode;
+import com.type2labs.undersea.prospect.impl.ConsensusNodeImpl;
+import com.type2labs.undersea.prospect.model.ConsensusNode;
 import com.type2labs.undersea.prospect.networking.impl.MultiRoleLeaderClientImpl;
 import com.type2labs.undersea.utilities.Utility;
 import com.type2labs.undersea.utilities.exception.UnderseaException;
@@ -63,9 +64,9 @@ public class Runner extends AbstractRunner {
         this.agentInitialiser = (AgentInitialiserImpl) super.getAgentInitialiser();
     }
 
-    private static RaftClusterConfig defaultConfig(String configurationFileLocation) {
+    private static ConsensusClusterConfig defaultConfig(String configurationFileLocation) {
         RuntimeConfig runtimeConfig = new RuntimeConfig();
-        RaftClusterConfig raftClusterConfig = new RaftClusterConfig(runtimeConfig);
+        ConsensusClusterConfig consensusClusterConfig = new ConsensusClusterConfig(runtimeConfig);
 
         CostConfiguration costConfiguration = new CostConfiguration();
         costConfiguration.setBias("ACCURACY", 30.0);
@@ -81,7 +82,7 @@ public class Runner extends AbstractRunner {
 
         runtimeConfig.enableVisualiser(true);
 
-        return raftClusterConfig;
+        return consensusClusterConfig;
     }
 
     public static void main(String[] args) throws InterruptedException {
@@ -110,15 +111,15 @@ public class Runner extends AbstractRunner {
             throw new UnderseaException("Shoreside agent not found");
         }
 
-        RaftNode shoresideRaftNode = shoreside.serviceManager().getService(RaftNode.class);
-        MultiRoleLeaderClientImpl shoresideClient = new MultiRoleLeaderClientImpl(shoresideRaftNode,
-                shoresideRaftNode.server().getSocketAddress(),
-                shoresideRaftNode.parent().peerId());
+        ConsensusNode shoresideConsensusNode = shoreside.serviceManager().getService(ConsensusNode.class);
+        MultiRoleLeaderClientImpl shoresideClient = new MultiRoleLeaderClientImpl(shoresideConsensusNode,
+                shoresideConsensusNode.server().getSocketAddress(),
+                shoresideConsensusNode.parent().peerId());
 
         super.getAgents().forEach((a) -> {
             if (a.name().equals("shoreside")) {
-                RaftNode raftNode = a.serviceManager().getService(RaftNode.class);
-                raftNode.multiRoleState().setLeader(shoresideClient);
+                ConsensusNode consensusNode = a.serviceManager().getService(ConsensusNode.class);
+                consensusNode.multiRoleState().setLeader(shoresideClient);
             }
         });
 
@@ -131,16 +132,16 @@ public class Runner extends AbstractRunner {
                     Thread.sleep(500);
                 }
 
-                RaftNodeImpl raftNodeA = agentA.serviceManager().getService(RaftNodeImpl.class);
+                ConsensusNodeImpl consensusNodeA = agentA.serviceManager().getService(ConsensusNodeImpl.class);
 
-                if (raftNodeA.multiRoleState().isLeader()) {
+                if (consensusNodeA.multiRoleState().isLeader()) {
                     continue;
                 }
 
-                raftNodeA.multiRoleState().setLeader(shoresideClient);
+                consensusNodeA.multiRoleState().setLeader(shoresideClient);
 
                 if (agentA.state().getState() == AgentState.State.BACKUP) {
-                    shoresideRaftNode.state().discoverNode(raftNodeA);
+                    shoresideConsensusNode.state().discoverNode(consensusNodeA);
 
                     for (Agent agentB :
                             super.getAgents().stream().filter(a -> a.state().getState() == AgentState.State.BACKUP).collect(Collectors.toList())) {
@@ -148,13 +149,13 @@ public class Runner extends AbstractRunner {
                             Thread.sleep(500);
                         }
 
-                        RaftNodeImpl raftNodeB = agentB.serviceManager().getService(RaftNodeImpl.class);
-                        if (raftNodeB.multiRoleState().isLeader()) {
+                        ConsensusNodeImpl consensusNodeB = agentB.serviceManager().getService(ConsensusNodeImpl.class);
+                        if (consensusNodeB.multiRoleState().isLeader()) {
                             continue;
                         }
 
-                        if (raftNodeA != raftNodeB) {
-                            raftNodeA.state().discoverNode(raftNodeB);
+                        if (consensusNodeA != consensusNodeB) {
+                            consensusNodeA.state().discoverNode(consensusNodeB);
                         }
                     }
                 } else {
@@ -164,21 +165,26 @@ public class Runner extends AbstractRunner {
                             Thread.sleep(500);
                         }
 
-
-                        RaftNodeImpl raftNodeB = agentB.serviceManager().getService(RaftNodeImpl.class);
-                        shoresideRaftNode.multiRoleState().remotePeers().put(agentB.peerId(), raftNodeB.self());
-                        if (raftNodeB.multiRoleState().isLeader()) {
+                        ConsensusNodeImpl consensusNodeB = agentB.serviceManager().getService(ConsensusNodeImpl.class);
+                        shoresideConsensusNode.multiRoleState().remotePeers().put(agentB.peerId(),
+                                consensusNodeB.self());
+                        if (consensusNodeB.multiRoleState().isLeader()) {
                             continue;
                         }
 
-                        if (raftNodeA != raftNodeB) {
-                            raftNodeA.state().discoverNode(raftNodeB);
+                        if (consensusNodeA != consensusNodeB) {
+                            consensusNodeA.state().discoverNode(consensusNodeB);
                         }
                     }
                 }
             }
 
             Thread.sleep(1000);
+        }
+
+        for (Agent agent : super.getAgents()) {
+            ConsensusAlgorithm consensusAlgorithm = agent.serviceManager().getService(ConsensusAlgorithm.class);
+            consensusAlgorithm.run();
         }
     }
 
@@ -199,7 +205,7 @@ public class Runner extends AbstractRunner {
         EnvironmentProperties environmentProperties;
 
         try {
-            environmentProperties = parserEngine.parseConfiguration();
+            environmentProperties = parserEngine.parseMission();
             agentInitialiser.setEnvironmentProperties(environmentProperties);
         } catch (IOException e) {
             throw new RuntimeException("Failed to parse mission: ", e);
@@ -216,7 +222,7 @@ public class Runner extends AbstractRunner {
                 continue;
             }
 
-            MoosMissionManagerImpl missionManager = agent.serviceManager().getService(MoosMissionManagerImpl.class, true);
+            MoosMissionManagerImpl missionManager = agent.serviceManager().getService(MoosMissionManagerImpl.class);
             while (!missionManager.missionHasBeenAssigned()) {
                 try {
                     Thread.sleep(500);

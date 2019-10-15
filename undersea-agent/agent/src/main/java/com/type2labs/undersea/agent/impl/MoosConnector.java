@@ -69,6 +69,7 @@ public class MoosConnector implements NetworkInterface {
             }
         }
 
+        logger.error("Failed to connect to server", exception);
         throw new UnderseaException("Failed to connect to server", exception);
     }
 
@@ -82,7 +83,7 @@ public class MoosConnector implements NetworkInterface {
         return agent;
     }
 
-    public void listenOnInbound() {
+    private void listenOnInbound() {
         Thread serverThread = new Thread(() -> {
             try {
                 int port = (int) agent.metadata().getProperty(AgentMetaData.PropertyKey.INBOUND_HARDWARE_PORT);
@@ -138,6 +139,8 @@ public class MoosConnector implements NetworkInterface {
     public void run() {
         Socket socket = connectToServer();
         try {
+            logger.info(agent.name() + ": sending server acknowledgement message", agent);
+
             PrintWriter out = new PrintWriter(socket.getOutputStream(), false);
             out.print("ACQ");
             out.flush();
@@ -146,10 +149,10 @@ public class MoosConnector implements NetworkInterface {
             String res = in.readLine();
 
             if (!"ACQ".equals(res)) {
-                throw new RuntimeException("Failed to receive server acknowledgement");
+                throw new RuntimeException("Failed to receive server acknowledgement message");
             }
 
-            logger.info(agent.name() + ": received server acknowledgement", agent);
+            logger.info(agent.name() + ": received server acknowledgement message", agent);
 
             in.close();
             out.close();

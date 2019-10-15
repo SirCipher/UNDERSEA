@@ -33,7 +33,6 @@ import com.type2labs.undersea.common.service.ServiceManager;
 import com.type2labs.undersea.common.service.transaction.LifecycleEvent;
 import com.type2labs.undersea.common.service.transaction.Transaction;
 import com.type2labs.undersea.common.service.transaction.TransactionData;
-import com.type2labs.undersea.utilities.exception.NotSupportedException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -151,9 +150,7 @@ public class LogServiceImpl implements LogService {
 
                     @Override
                     public void onFailure(Throwable t) {
-                        if(!(t instanceof NotSupportedException)){
-                            throw new RuntimeException(t);
-                        }
+                        throw new RuntimeException(t);
                     }
 
                 }, e.getAgentService().transactionExecutor());

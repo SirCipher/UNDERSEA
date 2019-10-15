@@ -25,7 +25,6 @@ if (!JavaVersion.current().java8Compatible) {
 
 include 'agent'
 include 'missionmanager'
-include 'seachain'
 include 'controller'
 include 'common'
 include 'prospect'

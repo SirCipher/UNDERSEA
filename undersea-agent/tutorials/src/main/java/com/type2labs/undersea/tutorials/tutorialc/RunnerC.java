@@ -23,11 +23,11 @@ package com.type2labs.undersea.tutorials.tutorialc;
 
 
 import com.type2labs.undersea.common.agent.*;
-import com.type2labs.undersea.common.consensus.RaftClusterConfig;
+import com.type2labs.undersea.common.consensus.ConsensusClusterConfig;
 import com.type2labs.undersea.common.logger.LogServiceImpl;
 import com.type2labs.undersea.common.monitor.impl.SubsystemMonitorSpoofer;
 import com.type2labs.undersea.common.service.ServiceManager;
-import com.type2labs.undersea.prospect.impl.RaftNodeImpl;
+import com.type2labs.undersea.prospect.impl.ConsensusNodeImpl;
 import com.type2labs.undersea.tutorials.tutoriala.MissionManagerSample;
 import com.type2labs.undersea.utilities.exception.ErrorCode;
 import com.type2labs.undersea.utilities.exception.UnderseaException;
@@ -56,7 +56,7 @@ public class RunnerC {
 
         for (Agent agent : agents) {
             ServiceManager serviceManager = agent.serviceManager();
-            serviceManager.registerService(new RaftNodeImpl(new RaftClusterConfig()));
+            serviceManager.registerService(new ConsensusNodeImpl(new ConsensusClusterConfig()));
 
             SubsystemMonitorSpoofer monitorSpoofer = new SubsystemMonitorSpoofer();
             monitorSpoofer.monitorSubsystem(new Sensor("test", 50, 50, Sensor.SensorType.SIDESCAN_SONAR));
@@ -89,10 +89,10 @@ public class RunnerC {
         for (Agent a : agents) {
             for (Agent b : agents) {
                 if (a != b) {
-                    RaftNodeImpl raftNodeA = a.serviceManager().getService(RaftNodeImpl.class);
-                    RaftNodeImpl raftNodeB = b.serviceManager().getService(RaftNodeImpl.class);
+                    ConsensusNodeImpl consensusNodeA = a.serviceManager().getService(ConsensusNodeImpl.class);
+                    ConsensusNodeImpl consensusNodeB = b.serviceManager().getService(ConsensusNodeImpl.class);
 
-                    raftNodeA.state().discoverNode(raftNodeB);
+                    consensusNodeA.state().discoverNode(consensusNodeB);
                 }
             }
         }

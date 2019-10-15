@@ -33,7 +33,7 @@ import java.util.Map;
 import java.util.Objects;
 
 /**
- * Creates {@link Sensor}s from the data provided in the sensors.config file, for
+ * Creates {@link Sensor}s from the data provided in the mission.config file, for
  * {@link com.type2labs.undersea.common.agent.Agent}s
  */
 public class SensorFactory implements AbstractFactory<Sensor> {
@@ -66,6 +66,7 @@ public class SensorFactory implements AbstractFactory<Sensor> {
         }
 
         sensors.put(name, newSensor);
+
     }
 
     @Override

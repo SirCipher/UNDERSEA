@@ -77,6 +77,7 @@ class EnvironmentBuilder {
 
         nsplug(shoreside.getMetaFileName(), shoreside.getMetaFileName(), nsPlugArgs);
 
+
         for (Map.Entry<String, DslAgentProxy> entry : environmentProperties.getAgents().entrySet()) {
             DslAgentProxy agent = entry.getValue();
 

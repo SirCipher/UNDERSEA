@@ -34,7 +34,7 @@ public class SimpleServer {
     private final Logger logger;
     private final ServerCallback serverCallback;
     private final int port;
-    private final ExecutorService clientProcessingPool = Executors.newCachedThreadPool();
+    private final ExecutorService clientProcessingPool = Executors.newFixedThreadPool(10);
     private boolean shutdown = false;
 
     public SimpleServer(int port, ServerCallback serverCallback, Logger logger) {

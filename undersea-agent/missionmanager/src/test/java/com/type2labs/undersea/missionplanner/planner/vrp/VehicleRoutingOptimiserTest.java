@@ -69,8 +69,7 @@ public class VehicleRoutingOptimiserTest {
 
         String configurationFileLocation = "src/test/resources/case-study-1/runner.properties";
         Properties properties = Utility.getPropertiesByName(configurationFileLocation);
-        properties.put("pwd", new File(configurationFileLocation).getAbsoluteFile().getParent());
-        double[][] area = Utility.propertyKeyTo2dDoubleArray(properties, "environment.area");
+        properties.put("pwd", new File(configurationFileLocation).getAbsoluteFile().getParent());        double[][] area = Utility.propertyKeyTo2dDoubleArray(properties, "environment.area");
 
         List<Agent> agents = agentFactory.createN(5);
         agentFactory.populateCluster(agent, agents);

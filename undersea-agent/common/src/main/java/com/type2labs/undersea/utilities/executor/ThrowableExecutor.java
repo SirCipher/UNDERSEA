@@ -86,12 +86,16 @@ public class ThrowableExecutor extends ThreadPoolExecutor {
     }
 
     private <T> Callable<T> wrap(final Callable<T> callable) {
-        return () -> {
-            try {
-                return callable.call();
-            } catch (Throwable t) {
-                ueh.uncaughtException(Thread.currentThread(), t);
-                throw t;
+        return new Callable<T>() {
+            @Override
+            public T call() throws Exception {
+                try {
+                    return callable.call();
+                } catch (Throwable t) {
+                    logger.error(t);
+                    ueh.uncaughtException(Thread.currentThread(), t);
+                    throw t;
+                }
             }
         };
     }
@@ -101,6 +105,7 @@ public class ThrowableExecutor extends ThreadPoolExecutor {
             try {
                 runnable.run();
             } catch (final Throwable t) {
+                logger.error(t);
                 ueh.uncaughtException(Thread.currentThread(), t);
                 throw t;
             }

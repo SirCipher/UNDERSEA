@@ -14,17 +14,23 @@ import java.util.List;
 public class DiskLogService implements LogService {
 
     private Agent agent;
+    private BufferedWriter writer;
 
     @Override
     public void add(LogEntry logEntry) {
         try {
-            BufferedWriter writer = new BufferedWriter(new FileWriter("log-" + agent.name() + ".txt", true));
-
-            writer.newLine();
             writer.write(logEntry.toString());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public void shutdown() {
+        try {
             writer.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
     }
 
@@ -51,6 +57,11 @@ public class DiskLogService implements LogService {
     @Override
     public void initialise(Agent parentAgent) {
         this.agent = parentAgent;
+        try {
+            this.writer = new BufferedWriter(new FileWriter("log-" + agent.name() + ".txt", true));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override

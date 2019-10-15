@@ -25,10 +25,10 @@ import com.google.common.util.concurrent.FutureCallback;
 import com.type2labs.undersea.common.cluster.Client;
 import com.type2labs.undersea.common.cluster.ClusterState;
 import com.type2labs.undersea.common.cluster.PeerId;
-import com.type2labs.undersea.prospect.RaftProtos;
-import com.type2labs.undersea.prospect.impl.RaftState;
-import com.type2labs.undersea.prospect.model.RaftNode;
-import com.type2labs.undersea.prospect.networking.model.RaftClient;
+import com.type2labs.undersea.prospect.ConsensusProtos;
+import com.type2labs.undersea.prospect.impl.ConsensusAlgorithmState;
+import com.type2labs.undersea.prospect.model.ConsensusNode;
+import com.type2labs.undersea.prospect.networking.model.ConsensusAlgorithmClient;
 import com.type2labs.undersea.prospect.util.GrpcUtil;
 import com.type2labs.undersea.utilities.executor.ThrowableExecutor;
 import io.grpc.Status;
@@ -48,75 +48,74 @@ public class VoteTask implements Runnable {
     private static final int MAX_RETRIES = 5;
     private final ExecutorService executorService;
 
-    private final RaftNode raftNode;
+    private final ConsensusNode consensusNode;
     private final Map<Client, Integer> retries = new ConcurrentHashMap<>();
-    private RaftState.Candidate candidate;
+    private ConsensusAlgorithmState.Candidate candidate;
 
-    public VoteTask(RaftNode raftNode) {
-        this.raftNode = raftNode;
-        this.executorService = ThrowableExecutor.newExecutor(raftNode.parent(), 1, logger);
+
+    public VoteTask(ConsensusNode consensusNode) {
+        this.consensusNode = consensusNode;
+        this.executorService = ThrowableExecutor.newExecutor(consensusNode.parent(), 1, logger);
     }
 
     @Override
     public void run() {
-        logger.info(raftNode.parent().name() + " starting voting", raftNode.parent());
-        raftNode.toCandidate();
-        candidate = raftNode.state().getCandidate();
+        logger.info(consensusNode.parent().name() + " starting voting", consensusNode.parent());
+        consensusNode.toCandidate();
+        candidate = consensusNode.state().getCandidate();
 
-        ConcurrentMap<PeerId, Client> localNodes = raftNode.parent().clusterClients();
+        ConcurrentMap<PeerId, Client> localNodes = consensusNode.parent().clusterClients();
 
         if (localNodes.size() == 0) {
-            logger.warn(raftNode.parent().name() + " has no peers", raftNode.parent());
+            logger.warn(consensusNode.parent().name() + " has no peers", consensusNode.parent());
         }
 
         for (Client client : localNodes.values()) {
-            RaftClient raftClient = (RaftClient) client;
-            retries.put(raftClient, 0);
+            ConsensusAlgorithmClient consensusClient = (ConsensusAlgorithmClient) client;
+            retries.put(consensusClient, 0);
 
-            int term = raftNode.state().getCurrentTerm();
-            executorService.submit(() -> sendVote(term, raftClient));
-
-//            ThreadUtils.sleep(100);
+            int term = consensusNode.state().getCurrentTerm();
+            executorService.submit(() -> sendVote(term, consensusClient));
         }
 
         // Check if we voted for ourself
-        Client self = raftNode.self();
-        Pair<Client, ClusterState.ClientState> nominee = raftNode.state().getVotedFor();
+        Client self = consensusNode.self();
+        Pair<Client, ClusterState.ClientState> nominee = consensusNode.state().getVotedFor();
         PeerId nomineeId = nominee.getKey().peerId();
 
-        if (nomineeId.equals(raftNode.parent().peerId())) {
+        if (nomineeId.equals(consensusNode.parent().peerId())) {
             candidate.vote(self);
 
             if (localNodes.size() == 0) {
                 if (candidate.wonRound()) {
-                    raftNode.toLeader(raftNode.state().getCurrentTerm());
+                    consensusNode.toLeader(consensusNode.state().getCurrentTerm());
                 }
             }
         }
 
-        raftNode.schedule(new VoteTaskTimeout(raftNode), raftNode.config().getVoteTaskTimeout());
+        consensusNode.schedule(new VoteTaskTimeout(consensusNode), consensusNode.config().getVoteTaskTimeout());
     }
 
-    private void sendVote(int term, RaftClient raftClient) {
-        RaftProtos.VoteRequest request = RaftProtos.VoteRequest.newBuilder()
-                .setClient(GrpcUtil.toProtoClient(raftNode))
+    private void sendVote(int term, ConsensusAlgorithmClient consensusClient) {
+        ConsensusProtos.VoteRequest request = ConsensusProtos.VoteRequest.newBuilder()
+                .setClient(GrpcUtil.toProtoClient(consensusNode))
                 .setTerm(term)
                 .build();
 
-        raftClient.requestVote(request, new FutureCallback<RaftProtos.VoteResponse>() {
+        consensusClient.requestVote(request, new FutureCallback<ConsensusProtos.VoteResponse>() {
             @Override
-            public void onSuccess(RaftProtos.VoteResponse result) {
-                PeerId nomineeId = PeerId.valueOf(result.getNominee().getRaftPeerId());
-                PeerId responderId = PeerId.valueOf(result.getClient().getRaftPeerId());
+            public void onSuccess(ConsensusProtos.VoteResponse result) {
+                PeerId nomineeId = PeerId.valueOf(result.getNominee().getConsensusPeerId());
+                PeerId responderId = PeerId.valueOf(result.getClient().getConsensusPeerId());
 
                 // Grant vote if we were nominated
-                if (nomineeId.equals(raftNode.parent().peerId())) {
-                    Client responderClient = raftNode.state().getClient(responderId);
+                if (nomineeId.equals(consensusNode.parent().peerId())) {
+                    Client responderClient = consensusNode.state().getClient(responderId);
                     candidate.vote(responderClient);
                 }
 
                 if (candidate.wonRound()) {
-                    raftNode.toLeader(raftNode.state().getCurrentTerm());
+                    consensusNode.toLeader(consensusNode.state().getCurrentTerm());
                 }
             }
 
@@ -126,26 +125,30 @@ public class VoteTask implements Runnable {
                     StatusRuntimeException statusRuntimeException = (StatusRuntimeException) t;
 
                     if (statusRuntimeException.getStatus().getCode() == Status.Code.PERMISSION_DENIED) {
-                        int count = retries.get(raftClient);
+                        int count = retries.get(consensusClient);
                         if (count == MAX_RETRIES) {
-                            raftNode.state().removeNode(raftClient.peerId());
-                            logger.warn(raftNode.parent().name() + ": exceeded maximum retries while contacting client: " + raftClient.peerId(), raftNode.parent());
+                            consensusNode.state().removeNode(consensusClient.peerId());
+                            logger.warn(consensusNode.parent().name() + ": exceeded maximum retries while contacting " +
+                                    "client: " + consensusClient.peerId(), consensusNode.parent());
                         } else {
-                            retries.put(raftClient, count + 1);
+                            retries.put(consensusClient, count + 1);
 
                             try {
                                 Thread.sleep(1000);
                             } catch (InterruptedException ignored) {
                             }
 
-                            executorService.submit(() -> sendVote(term, raftClient));
+                            executorService.submit(() -> sendVote(term, consensusClient));
 
-                            logger.warn(raftNode.parent().name() + ": attempt " + (count + 1) + " to get vote from: " + raftClient.peerId() + ". Will try " + MAX_RETRIES + " times", raftNode.parent());
+                            logger.warn(consensusNode.parent().name() + ": attempt " + (count + 1) + " to get vote " +
+                                            "from: " + consensusClient.peerId() + ". Will try " + MAX_RETRIES + " " +
+                                            "times",
+                                    consensusNode.parent());
                         }
                     }
                 } else {
-                    logger.warn(raftNode.parent().name() + ": exception thrown while contacting client: " + raftClient.peerId(), t);
-                    raftNode.state().removeNode(raftClient.peerId());
+                    logger.warn(consensusNode.parent().name() + ": exception thrown while contacting client: " + consensusClient.peerId(), t);
+                    consensusNode.state().removeNode(consensusClient.peerId());
                 }
             }
         });

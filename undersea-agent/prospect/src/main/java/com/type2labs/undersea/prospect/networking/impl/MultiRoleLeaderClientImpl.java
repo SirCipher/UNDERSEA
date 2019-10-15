@@ -26,11 +26,11 @@ import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.type2labs.undersea.common.cluster.PeerId;
-import com.type2labs.undersea.prospect.MultiRaftProtocolServiceGrpc;
-import com.type2labs.undersea.prospect.RaftProtos;
-import com.type2labs.undersea.prospect.model.RaftNode;
+import com.type2labs.undersea.common.consensus.ConsensusClusterConfig;
+import com.type2labs.undersea.prospect.ConsensusProtos;
+import com.type2labs.undersea.prospect.MultiConsensusProtocolServiceGrpc;
+import com.type2labs.undersea.prospect.model.ConsensusNode;
 import com.type2labs.undersea.prospect.networking.model.MultiRoleLeaderClient;
-import com.type2labs.undersea.utilities.executor.ExecutorUtils;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import org.apache.logging.log4j.LogManager;
@@ -38,27 +38,33 @@ import org.apache.logging.log4j.Logger;
 
 import java.net.InetSocketAddress;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 public class MultiRoleLeaderClientImpl implements MultiRoleLeaderClient {
 
-    private static final Logger logger = LogManager.getLogger(RaftClientImpl.class);
+    private static final Logger logger = LogManager.getLogger(ConsensusAlgorithmClientImpl.class);
 
     private final InetSocketAddress socketAddress;
     private final ManagedChannel channel;
-    private final MultiRaftProtocolServiceGrpc.MultiRaftProtocolServiceFutureStub futureStub;
+    private final MultiConsensusProtocolServiceGrpc.MultiConsensusProtocolServiceFutureStub futureStub;
+    private final MultiConsensusProtocolServiceGrpc.MultiConsensusProtocolServiceBlockingStub blockingStub;
     private final ExecutorService clientExecutor;
     private final PeerId clientId;
-    private RaftNode consensusAlgorithm;
+    private ConsensusNode consensusAlgorithm;
 
-    public MultiRoleLeaderClientImpl(RaftNode consensusAlgorithm, InetSocketAddress socketAddress, PeerId peerId) {
+    public MultiRoleLeaderClientImpl(ConsensusNode consensusAlgorithm, InetSocketAddress socketAddress, PeerId peerId) {
         this.consensusAlgorithm = consensusAlgorithm;
         this.clientId = peerId;
         this.socketAddress = socketAddress;
         this.channel =
                 ManagedChannelBuilder.forAddress(socketAddress.getHostString(), socketAddress.getPort()).usePlaintext().build();
-        this.futureStub = MultiRaftProtocolServiceGrpc.newFutureStub(channel);
-        this.clientExecutor = ExecutorUtils.newCachedThreadPool(consensusAlgorithm.parent().name() + "-rpc-client-%d");
+        this.futureStub = MultiConsensusProtocolServiceGrpc.newFutureStub(channel);
+        this.blockingStub = MultiConsensusProtocolServiceGrpc.newBlockingStub(channel);
+
+        int executorThreads = ((ConsensusClusterConfig) consensusAlgorithm.config()).executorThreads();
+        this.clientExecutor = Executors.newFixedThreadPool(executorThreads,
+                new ThreadFactoryBuilder().setNameFormat(consensusAlgorithm.parent().name() + "-rpc-client-%d").build());
     }
 
     @Override
@@ -78,10 +84,11 @@ public class MultiRoleLeaderClientImpl implements MultiRoleLeaderClient {
 
     @Override
     public void shutdown() {
-        clientExecutor.shutdownNow();
+        channel.shutdownNow();
+        clientExecutor.shutdown();
 
         try {
-            channel.shutdownNow().awaitTermination(5, TimeUnit.SECONDS);
+            channel.awaitTermination(3000, TimeUnit.MILLISECONDS);
         } catch (InterruptedException e) {
             e.printStackTrace();
             logger.error(consensusAlgorithm.parent().name() + ": failed to shutdown channel successfully", e);
@@ -95,8 +102,8 @@ public class MultiRoleLeaderClientImpl implements MultiRoleLeaderClient {
     }
 
     @Override
-    public void notify(RaftProtos.NotificationRequest request, FutureCallback<RaftProtos.Empty> callback) {
-        ListenableFuture<RaftProtos.Empty> response = futureStub.notify(request);
+    public void notify(ConsensusProtos.NotificationRequest request, FutureCallback<ConsensusProtos.Empty> callback) {
+        ListenableFuture<ConsensusProtos.Empty> response = futureStub.notify(request);
         Futures.addCallback(response, callback, clientExecutor);
     }
 
