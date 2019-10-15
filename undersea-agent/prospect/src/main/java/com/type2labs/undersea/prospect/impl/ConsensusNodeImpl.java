@@ -23,9 +23,7 @@ package com.type2labs.undersea.prospect.impl;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.util.concurrent.FutureCallback;
-import com.google.common.util.concurrent.ListeningExecutorService;
-import com.google.common.util.concurrent.MoreExecutors;
+import com.google.common.util.concurrent.*;
 import com.type2labs.undersea.common.agent.Agent;
 import com.type2labs.undersea.common.agent.AgentState;
 import com.type2labs.undersea.common.cluster.Client;
@@ -39,6 +37,7 @@ import com.type2labs.undersea.common.logger.model.LogService;
 import com.type2labs.undersea.common.missions.planner.model.AgentMission;
 import com.type2labs.undersea.common.missions.planner.model.GeneratedMission;
 import com.type2labs.undersea.common.missions.planner.model.MissionManager;
+import com.type2labs.undersea.common.missions.planner.model.MissionParameters;
 import com.type2labs.undersea.common.monitor.model.SubsystemMonitor;
 import com.type2labs.undersea.common.service.AgentService;
 import com.type2labs.undersea.common.service.transaction.LifecycleEvent;
@@ -65,10 +64,7 @@ import org.apache.logging.log4j.Logger;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.net.InetSocketAddress;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.RejectedExecutionException;
 import java.util.stream.Collectors;
 
@@ -214,7 +210,12 @@ public class ConsensusNodeImpl implements ConsensusNode {
         agent.log(new LogEntry(leaderPeerId(), new Object(), new Object(), state().getCurrentTerm(), this, true));
 
         fireCallback(LifecycleEvent.ELECTED_LEADER);
+<<<<<<< HEAD:undersea-agent/prospect/src/main/java/com/type2labs/undersea/prospect/impl/ConsensusNodeImpl.java
         state().toLeader(selfClientImpl);
+=======
+        state().setLeader(selfRaftClientImpl);
+
+>>>>>>> c35af36b162c0461ecfe03f2eb037933002a9cd0:undersea-agent/prospect/src/main/java/com/type2labs/undersea/prospect/impl/RaftNodeImpl.java
         scheduleHeartbeat();
     }
 
@@ -297,6 +298,8 @@ public class ConsensusNodeImpl implements ConsensusNode {
     }
 
     public void distributeMission(GeneratedMission generatedMission) {
+        logger.info(agent.name() + ": distributing mission");
+
         ObjectMapper mapper = new ObjectMapper();
 
         String jsonMission;
@@ -414,8 +417,20 @@ public class ConsensusNodeImpl implements ConsensusNode {
 
         follower.appendEntry(request, new FutureCallback<ConsensusProtos.AppendEntryResponse>() {
             @Override
+<<<<<<< HEAD:undersea-agent/prospect/src/main/java/com/type2labs/undersea/prospect/impl/ConsensusNodeImpl.java
             public void onSuccess(ConsensusProtos.@Nullable AppendEntryResponse result) {
 //                logger.info(agent.name() + ": successfully sent request. Response: {" + result + "}", agent);
+=======
+            public void onSuccess(RaftProtos.@Nullable AppendEntryResponse result) {
+                if (result == null) {
+                    return;
+                }
+
+                // This can happen if we become a leader and the client's verify leader task just missed out heartbeat
+                if (result.getTerm() > state().getCurrentTerm()) {
+                    execute(new AcquireStatusTask(RaftNodeImpl.this));
+                }
+>>>>>>> c35af36b162c0461ecfe03f2eb037933002a9cd0:undersea-agent/prospect/src/main/java/com/type2labs/undersea/prospect/impl/RaftNodeImpl.java
             }
 
             @Override
@@ -503,8 +518,15 @@ public class ConsensusNodeImpl implements ConsensusNode {
         this.started = true;
     }
 
+<<<<<<< HEAD:undersea-agent/prospect/src/main/java/com/type2labs/undersea/prospect/impl/ConsensusNodeImpl.java
     private void scheduleVerifyLeaderTask() {
         schedule(new VerifyLeaderTask(), 5000);
+=======
+    public void scheduleVerifyLeaderTask() {
+        if (role != ConsensusAlgorithmRole.LEADER) {
+            schedule(new VerifyLeaderTask(), 500);
+        }
+>>>>>>> c35af36b162c0461ecfe03f2eb037933002a9cd0:undersea-agent/prospect/src/main/java/com/type2labs/undersea/prospect/impl/RaftNodeImpl.java
     }
 
     @Override
@@ -517,8 +539,13 @@ public class ConsensusNodeImpl implements ConsensusNode {
     }
 
     private class VerifyLeaderTask extends ReschedulableTask {
+
         @Override
         public void innerRun() {
+            if (role == ConsensusAlgorithmRole.LEADER) {
+                return;
+            }
+
             // If we don't have a leader
             if (state().getLeader() == null) {
                 if (!multiRoleState().isLeader() && state().getCandidate() == null) {

@@ -22,6 +22,7 @@
 package com.type2labs.undersea.agent.runner;
 
 import com.type2labs.undersea.agent.Runner;
+import com.type2labs.undersea.common.consensus.ConsensusAlgorithmRole;
 import com.type2labs.undersea.monitor.Visualiser;
 import com.type2labs.undersea.utilities.Utility;
 import com.type2labs.undersea.utilities.testing.IgnoredOnCi;

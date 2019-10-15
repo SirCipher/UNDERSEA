@@ -24,6 +24,7 @@ package com.type2labs.undersea.prospect.impl;
 import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
+import com.google.common.util.concurrent.MoreExecutors;
 import com.type2labs.undersea.common.agent.Agent;
 import com.type2labs.undersea.common.consensus.ConsensusClusterConfig;
 import com.type2labs.undersea.common.missions.planner.model.GeneratedMission;
@@ -32,6 +33,10 @@ import com.type2labs.undersea.common.missions.planner.model.MissionParameters;
 import com.type2labs.undersea.common.service.transaction.LifecycleEvent;
 import com.type2labs.undersea.common.service.transaction.ServiceCallback;
 import com.type2labs.undersea.common.service.transaction.Transaction;
+<<<<<<< HEAD
+=======
+import com.type2labs.undersea.utilities.executor.ThrowableExecutor;
+>>>>>>> c35af36b162c0461ecfe03f2eb037933002a9cd0
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -43,7 +48,11 @@ public class DefaultServiceCallbacks {
 
     private static final Logger logger = LogManager.getLogger(DefaultServiceCallbacks.class);
 
+<<<<<<< HEAD
     public static ServiceCallback defaultMissionCallback(Agent agent, ConsensusNodeImpl consensusNode, ConsensusClusterConfig config) {
+=======
+    public static ServiceCallback defaultMissionCallback(Agent agent, RaftNodeImpl raftNode, RaftClusterConfig config) {
+>>>>>>> c35af36b162c0461ecfe03f2eb037933002a9cd0
         return new ServiceCallback(LifecycleEvent.ELECTED_LEADER, () -> {
             MissionParameters parameters = config.getRuntimeConfig().missionParameters();
 
@@ -53,8 +62,13 @@ public class DefaultServiceCallbacks {
             Transaction transaction = new Transaction.Builder(agent)
                     .forService(MissionManager.class)
                     .withStatus(LifecycleEvent.ELECTED_LEADER)
+<<<<<<< HEAD
                     .usingExecutorService(consensusNode.getListeningExecutorService())
                     .invokedBy(consensusNode)
+=======
+                    .usingExecutorService(MoreExecutors.listeningDecorator(ThrowableExecutor.newSingleThreadExecutor(agent, logger)))
+                    .invokedBy(raftNode)
+>>>>>>> c35af36b162c0461ecfe03f2eb037933002a9cd0
                     .build();
 
             Set<ListenableFuture<?>> futures = agent.serviceManager().commitTransaction(transaction);
@@ -72,7 +86,12 @@ public class DefaultServiceCallbacks {
                         throw new RuntimeException(t);
                     }
 
+<<<<<<< HEAD
                 }, consensusNode.getSingleThreadScheduledExecutor());
+=======
+                }, MoreExecutors.listeningDecorator(ThrowableExecutor.newSingleThreadExecutor(raftNode.parent(),
+                        logger)));
+>>>>>>> c35af36b162c0461ecfe03f2eb037933002a9cd0
             }
         });
     }

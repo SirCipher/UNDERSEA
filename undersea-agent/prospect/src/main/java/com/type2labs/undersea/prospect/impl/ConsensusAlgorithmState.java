@@ -48,9 +48,15 @@ public class ConsensusAlgorithmState {
     private ClusterState preVoteClusterState;
     private Client leader;
 
+<<<<<<< HEAD:undersea-agent/prospect/src/main/java/com/type2labs/undersea/prospect/impl/ConsensusAlgorithmState.java
     public ConsensusAlgorithmState(ConsensusNode agent) {
         this.consensusNode = agent;
         this.localNodes = agent.parent().clusterClients();
+=======
+    public RaftState(RaftNode raftNode) {
+        this.raftNode = raftNode;
+        this.localNodes = raftNode.parent().clusterClients();
+>>>>>>> c35af36b162c0461ecfe03f2eb037933002a9cd0:undersea-agent/prospect/src/main/java/com/type2labs/undersea/prospect/impl/RaftState.java
     }
 
     public boolean isPreVoteState() {

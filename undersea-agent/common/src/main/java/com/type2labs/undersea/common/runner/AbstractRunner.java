@@ -25,7 +25,6 @@ import com.type2labs.undersea.common.agent.Agent;
 import com.type2labs.undersea.common.agent.AgentMetaData;
 import com.type2labs.undersea.common.consensus.ConsensusAlgorithm;
 import com.type2labs.undersea.utilities.Utility;
-import com.type2labs.undersea.utilities.executor.ExecutorUtils;
 
 import java.io.FileNotFoundException;
 import java.util.List;

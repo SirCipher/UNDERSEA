@@ -24,12 +24,14 @@ package com.type2labs.undersea.prospect.impl;
 import com.google.common.collect.Sets;
 import com.type2labs.undersea.common.agent.Agent;
 import com.type2labs.undersea.common.agent.AgentFactory;
+import com.type2labs.undersea.common.agent.AgentState;
 import com.type2labs.undersea.common.cluster.Client;
 import com.type2labs.undersea.common.config.RuntimeConfig;
 import com.type2labs.undersea.common.consensus.ConsensusAlgorithmRole;
 import com.type2labs.undersea.common.consensus.ConsensusClusterConfig;
 import com.type2labs.undersea.common.cost.CostConfiguration;
 import com.type2labs.undersea.common.logger.LogServiceImpl;
+import com.type2labs.undersea.common.missions.planner.impl.MissionParametersImpl;
 import com.type2labs.undersea.common.missions.planner.impl.NoMissionManager;
 import com.type2labs.undersea.common.monitor.impl.SubsystemMonitorSpoofer;
 import com.type2labs.undersea.common.monitor.impl.VisualiserClientImpl;
@@ -37,13 +39,20 @@ import com.type2labs.undersea.common.monitor.model.SubsystemMonitor;
 import com.type2labs.undersea.common.monitor.model.VisualiserClient;
 import com.type2labs.undersea.common.service.AgentService;
 import com.type2labs.undersea.common.service.ServiceManager;
+<<<<<<< HEAD
 import com.type2labs.undersea.prospect.model.ConsensusNode;
 import com.type2labs.undersea.prospect.networking.impl.ConsensusAlgorithmClientImpl;
+=======
+import com.type2labs.undersea.prospect.model.RaftNode;
+import com.type2labs.undersea.prospect.networking.impl.RaftClientImpl;
+import com.type2labs.undersea.utilities.Utility;
+>>>>>>> c35af36b162c0461ecfe03f2eb037933002a9cd0
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.Closeable;
 import java.net.InetSocketAddress;
+import java.net.NetworkInterface;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -74,8 +83,13 @@ public class LocalAgentGroup implements Closeable {
             ServiceManager serviceManager = new ServiceManager();
 
             Agent agent = agentFactory.createWith(config.getRuntimeConfig(), name, serviceManager);
+<<<<<<< HEAD
 
             serviceManager.registerService(consensusNode);
+=======
+            agent.state().transitionTo(AgentState.State.ACTIVE);
+            serviceManager.registerService(raftNode);
+>>>>>>> c35af36b162c0461ecfe03f2eb037933002a9cd0
 
             for (Class<? extends AgentService> clazz : services) {
                 AgentService agentService;
@@ -91,7 +105,14 @@ public class LocalAgentGroup implements Closeable {
             serviceManager.registerService(new LogServiceImpl());
 
             if (withCallbacks) {
+<<<<<<< HEAD
                 consensusNode.registerCallback(DefaultServiceCallbacks.defaultMissionCallback(agent, consensusNode, config));
+=======
+                double[][] area = Utility.stringTo2dDoubleArray("0 0; 150 0; 150 -140; 0 -140;");
+
+                config.getRuntimeConfig().missionParameters(new MissionParametersImpl(0, area, 40));
+                raftNode.registerCallback(DefaultServiceCallbacks.defaultMissionCallback(agent, raftNode, config));
+>>>>>>> c35af36b162c0461ecfe03f2eb037933002a9cd0
             }
 
             if (withVisualiser) {
@@ -101,6 +122,9 @@ public class LocalAgentGroup implements Closeable {
                 client.initialise(agent);
 
                 serviceManager.registerService(subsystemMonitor);
+            } else {
+                serviceManager.registerService(new SubsystemMonitorSpoofer(),
+                        ServiceManager.ServiceExecutionPriority.HIGH);
             }
 
             consensusNode.initialise(agent);
@@ -187,11 +211,24 @@ public class LocalAgentGroup implements Closeable {
         for (ConsensusNodeImpl node : consensusNodes) {
             ServiceManager serviceManager = node.parent().serviceManager();
 
+            if (serviceManager.getService(SubsystemMonitor.class) != null) {
+                serviceManager.startService(SubsystemMonitor.class, false);
+            }
+
             for (AgentService agentService : serviceManager.getServices()) {
+<<<<<<< HEAD
                 if (ConsensusNode.class.isAssignableFrom(agentService.getClass())) {
                     continue;
                 } else {
                     serviceManager.startService(agentService.getClass());
+=======
+                if (RaftNode.class.isAssignableFrom(agentService.getClass())
+                        || SubsystemMonitor.class.isAssignableFrom(agentService.getClass())|| NetworkInterface.class.isAssignableFrom(agentService.getClass())) {
+
+                    continue;
+                } else {
+                    executorService.submit(() -> serviceManager.startService(agentService.getClass(), false));
+>>>>>>> c35af36b162c0461ecfe03f2eb037933002a9cd0
                 }
             }
         }

@@ -341,7 +341,7 @@ public class ServiceManager {
      */
     public synchronized void registerService(AgentService service) {
         if (services.containsKey(service.getClass())) {
-            throw new IllegalArgumentException("Service already exists");
+            throw new IllegalArgumentException("Service is already registered");
         }
 
         registerService(service, ServiceExecutionPriority.MEDIUM);
@@ -492,8 +492,13 @@ public class ServiceManager {
      * Starts the given {@link AgentService}
      *
      * @param service to start
+     * @return
      */
+<<<<<<< HEAD
     public synchronized void startService(Class<? extends AgentService> service, boolean force) {
+=======
+    public synchronized <T extends AgentService> T startService(Class<? extends AgentService> service, boolean force) {
+>>>>>>> c35af36b162c0461ecfe03f2eb037933002a9cd0
         initialise();
 
         AgentService agentService = getService(service, true);
@@ -501,7 +506,11 @@ public class ServiceManager {
         ServiceState state = serviceStates.get(service);
 
         if (state == ServiceState.RUNNING && !force) {
+<<<<<<< HEAD
             return;
+=======
+            return (T) agentService;
+>>>>>>> c35af36b162c0461ecfe03f2eb037933002a9cd0
         }
 
         agentService.initialise(agent);
@@ -513,6 +522,8 @@ public class ServiceManager {
         _transition(agentService::started, agentService, future, ServiceState.STARTING, ServiceState.RUNNING);
 
         scheduledFutures.put(service, future);
+
+        return (T) agentService;
     }
 
     /**
@@ -566,14 +577,39 @@ public class ServiceManager {
 
         for (Map.Entry<Class<? extends AgentService>, Pair<AgentService, ServiceExecutionPriority>> e :
                 prioritySorted()) {
+<<<<<<< HEAD
+=======
+            startService(e.getKey(), false);
+        }
+
+        starting = false;
+        started = true;
+
+        updateVisualiser();
+    }
+
+    /**
+     * Starts the {@link ServiceManager} and all the registered {@link AgentService}s except the provided
+     *
+     * @param excludedService to exclude
+     */
+    public synchronized void startServices(Class<? extends AgentService> excludedService) {
+        starting = true;
+
+        for (Map.Entry<Class<? extends AgentService>, Pair<AgentService, ServiceExecutionPriority>> e :
+                prioritySorted()) {
+>>>>>>> c35af36b162c0461ecfe03f2eb037933002a9cd0
             Class<? extends AgentService> agentService = e.getKey();
 
             if (!excludedService.isAssignableFrom(agentService)) {
                 startService(e.getKey(), false);
             } else {
+<<<<<<< HEAD
                 AgentService instance = getService(agentService, true);
                 instance.initialise(agent);
 
+=======
+>>>>>>> c35af36b162c0461ecfe03f2eb037933002a9cd0
                 transitionService(agentService, ServiceState.RUNNING);
             }
         }

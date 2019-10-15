@@ -22,11 +22,14 @@
 package com.type2labs.undersea.common.missions.task.model;
 
 import com.type2labs.undersea.common.agent.AgentAware;
+import com.type2labs.undersea.common.service.AgentService;
+
+import java.util.ArrayList;
+import java.util.Collection;
 
 /**
  * A model for executing a {@link Task}. This is to be migrated to a more suitable structure
  */
 public interface TaskExecutor extends Runnable, AgentAware {
-
 
 }

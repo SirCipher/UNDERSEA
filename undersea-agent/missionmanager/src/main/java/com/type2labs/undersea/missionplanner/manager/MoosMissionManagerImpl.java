@@ -37,6 +37,7 @@ import com.type2labs.undersea.common.missions.task.model.TaskStatus;
 import com.type2labs.undersea.common.monitor.model.SubsystemMonitor;
 import com.type2labs.undersea.common.service.AgentService;
 import com.type2labs.undersea.common.service.ServiceManager;
+import com.type2labs.undersea.common.service.hardware.NetworkInterface;
 import com.type2labs.undersea.common.service.transaction.LifecycleEvent;
 import com.type2labs.undersea.common.service.transaction.Transaction;
 import com.type2labs.undersea.common.service.transaction.TransactionData;
@@ -289,6 +290,11 @@ public class MoosMissionManagerImpl implements MissionManager {
         String uuid = (String) uuidTransactionData.getData();
 
         if (!StringUtils.isEmpty(uuid)) {
+            // Our mission hasn't been assigned yet
+            if (globalMission == null) {
+                return;
+            }
+
             List<Task> subTasks = globalMission.allTasks();
 
             for (Task t : subTasks) {
@@ -314,7 +320,7 @@ public class MoosMissionManagerImpl implements MissionManager {
 
     @Override
     public Collection<Class<? extends AgentService>> requiredServices() {
-        return Arrays.asList(ConsensusAlgorithm.class);
+        return Arrays.asList(ConsensusAlgorithm.class, NetworkInterface.class);
     }
 
 }

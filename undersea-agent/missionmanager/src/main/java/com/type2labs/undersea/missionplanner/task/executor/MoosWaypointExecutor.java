@@ -22,11 +22,18 @@
 package com.type2labs.undersea.missionplanner.task.executor;
 
 import com.type2labs.undersea.common.agent.Agent;
+import com.type2labs.undersea.common.logger.model.LogService;
 import com.type2labs.undersea.common.missions.planner.impl.AgentMissionImpl;
+import com.type2labs.undersea.common.missions.planner.model.MissionManager;
 import com.type2labs.undersea.common.missions.task.model.TaskExecutor;
+import com.type2labs.undersea.common.monitor.model.SubsystemMonitor;
+import com.type2labs.undersea.common.service.AgentService;
 import com.type2labs.undersea.common.service.hardware.NetworkInterface;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import java.util.Arrays;
+import java.util.Collection;
 
 public class MoosWaypointExecutor implements TaskExecutor {
 
@@ -42,7 +49,7 @@ public class MoosWaypointExecutor implements TaskExecutor {
     @Override
     public void initialise(Agent parentAgent) {
         this.agent = parentAgent;
-        this.networkInterface = agent.serviceManager().getService(NetworkInterface.class, true);
+        this.networkInterface = agent.serviceManager().getService(NetworkInterface.class);
     }
 
     @Override

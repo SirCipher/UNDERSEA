@@ -127,6 +127,11 @@ public class LogServiceImpl implements LogService {
                 .build();
     }
 
+    @Override
+    public Object executeTransaction(Transaction transaction) {
+        return "HELLO";
+    }
+
     /**
      * Upon receiving a number of log entries, notify the corresponding
      * {@link com.type2labs.undersea.common.service.AgentService}s that {@link LifecycleEvent#APPEND_REQUEST} were
